@@ -1,4 +1,10 @@
+@import './__vars';
+@import './__typo';
+@import './__buttons';
+@import './__misc';
+
 .App {
+  background: $white;
   text-align: center;
 }
 
@@ -35,4 +41,19 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+html{
+  background: $gradient;
+  height: 104vh;
+}
+
+body{
+  background: none;
+  position: relative;
+  left: 1vw;
+  width: 98vw;
+  top: 1vh;
+  bottom: 1vh;
+  height: 98vh;
 }

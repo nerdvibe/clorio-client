@@ -1,0 +1,180 @@
+@mixin outlineButton($color,$background) {
+    cursor: pointer;
+    border: 3px solid $background;
+    color:$color;
+    border-radius: 10px;
+    padding: 10px 40px;
+    width: fit-content;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+@mixin fullMonoButton($background) {
+    cursor: pointer;
+    color: $white;
+    background: $background;
+    border-radius: 10px;
+    padding: 10px 40px;
+    width: fit-content;
+    font-weight: 700;
+}
+
+.lightGreenButton__fullMono:active,
+.darkGreenButton__fullMono:active,
+.redButton__fullMono:active,
+.yellowButton__fullMono:active,
+.orangeButton__fullMono:active {
+    -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+        -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Old versions of Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+                user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+    top: 5px;
+    opacity: .8;
+    transition: .25s
+}
+
+.darkGreenButton__fullMono{
+    @include fullMonoButton($dark-green);
+}
+
+
+/* dark green Button - Outline mono */
+
+.darkGreenButton__outlineMono{
+    @include outlineButton($dark-green,$dark-green);
+}
+
+
+/* dark green Button - Outline black */
+
+.darkGreenButton__blackOutline{
+    @include outlineButton($black,$dark-green);
+}
+
+
+/* DArk green Button - Outline white */
+
+.darkGreenButton__whiteOutline{
+    @include outlineButton($white,$dark-green);
+}
+
+
+/* light green Button - Full mono */
+
+.lightGreenButton__fullMono{
+    @include fullMonoButton($light-green);
+}
+
+
+/* light green Button - Outline mono */
+
+.lightGreenButton__outlineMono{
+    @include outlineButton($light-green,$light-green);
+}
+
+
+/* light green Button - Outline black */
+
+.lightGreenButton__blackOutline{
+    @include outlineButton($black,$light-green);
+}
+
+
+/* Light green Button - Outline white */
+
+.lightGreenButton__whiteOutline{
+    @include outlineButton($white,$light-green);
+}
+
+
+/* yellow Button - Full mono */
+
+.yellowButton__fullMono{
+    @include fullMonoButton($yellow);
+}
+
+
+/* yellow Button - Outline mono */
+
+.yellowButton__outlineMono{
+    @include outlineButton($yellow,$yellow);
+}
+
+
+/* orange Button - Full mono */
+
+.orangeButton__fullMono{
+    @include fullMonoButton($orange);
+}
+
+
+/* orange Button - Outline mono */
+
+.orangeButton__outlineMono{
+    @include outlineButton($orange,$orange);
+}
+
+
+/* orange Button - Full mono */
+
+.redButton__fullMono{
+    @include fullMonoButton($red);
+}
+
+
+/* red Button - Outline mono */
+
+.redButton__outlineMono{
+    @include outlineButton($red,$red);
+}
+
+
+/* yellow Button - Outline black */
+
+.yellowButton__blackOutline{
+    @include outlineButton($black,$yellow);
+}
+
+
+/* orange Button - Outline black */
+
+.orangeButton___blackOutline{
+    @include outlineButton($black,$orange);
+}
+
+
+/* red Button - Outline black */
+
+.redButton__blackOutline{
+    @include outlineButton($black,$red);
+}
+
+
+/* yellow Button - Outline white */
+
+.yellowButton__whiteOutline{
+    @include outlineButton($white,$yellow);
+}
+
+
+/* orange Button - Outline white */
+
+.orangeButton__whiteOutline{
+    @include outlineButton($white,$orange);
+}
+
+
+/* red Button - Outline white */
+
+.redButon__whiteOutline{
+    @include outlineButton($white,$red);
+}
+
+.link-button{
+    color: $red;
+    padding: 10px;
+    cursor: pointer;
+}

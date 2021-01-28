@@ -1,0 +1,262 @@
+.walletImage {
+    background: $red;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.small-walletImage {    
+    background: #E76F51;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    top: -18px;
+    border: 2px solid #E76F51;
+    position: relative;
+    left: -10px;
+}
+
+.walletImageOutline {
+    border-radius: 50%;
+    border: 3px solid $red;
+    width: 90px;
+    height: 90px;
+    padding-top: 2px;
+}
+
+.small-image-outline{
+    border-radius: 50%;
+    border: 3px solid $red;
+    width: 32.5px;
+    height: 32.5px;
+    padding-top: 1px;
+}
+
+.contentWrapper {
+    padding: 20px;
+    margin: 0px !important;
+}
+
+.walletImageContainer {
+    padding-left: 4%;
+    padding-top: 0.5%;
+}
+
+.small-image {
+    padding-left: 4%;
+    padding-top: 0.5%;
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 100% !important;
+    }
+}
+
+.v-div {
+    border-left: 1px solid rgba(0, 0, 0, 0.25);
+    height: 50px;
+    width: 1px;
+}
+
+.block-container {
+    padding: 20px;
+    border-radius: 10px;
+    background: white;
+    margin: 10px;
+}
+
+input {
+    font-family: 'Lato', sans-serif;
+    outline: none;
+    border: none;
+}
+
+textarea {
+    font-family: 'Lato', sans-serif;
+    outline: none;
+    border: none;
+}
+
+textarea:focus,
+input:focus {
+    font-family: 'Lato', sans-serif;
+    border-color: transparent !important;
+}
+
+input::-webkit-input-placeholder {
+    font-family: 'Lato', sans-serif;
+    color: #999999;
+}
+input:-moz-placeholder {
+    font-family: 'Lato', sans-serif;
+    color: #999999;
+}
+input::-moz-placeholder {
+    font-family: 'Lato', sans-serif;
+    color: #999999;
+}
+input:-ms-input-placeholder {
+    font-family: 'Lato', sans-serif;
+    color: #999999;
+}
+
+textarea::-webkit-input-placeholder {
+    font-family: 'Lato', sans-serif;
+    color: #999999;
+}
+textarea:-moz-placeholder {
+    font-family: 'Lato', sans-serif;
+    color: #999999;
+}
+textarea::-moz-placeholder {
+    font-family: 'Lato', sans-serif;
+    color: #999999;
+}
+textarea:-ms-input-placeholder {
+    font-family: 'Lato', sans-serif;
+    color: #999999;
+}
+
+.wrap-input1 {
+    font-family: 'Lato', sans-serif;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+    margin-bottom: 20px;
+}
+
+.input1 {
+    font-family: 'Lato', sans-serif;
+    display: block;
+    width: 100%;
+    background: #e6e6e6;
+    font-family: Montserrat-Bold;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #666666;
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+
+.shadow-input1 {
+    font-family: 'Lato', sans-serif;
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0px 0px 0px 0px;
+    color: rgba(87, 184, 70, 0.5);
+    border-radius: 10px;
+}
+
+.input1:focus + .shadow-input1 {
+    font-family: 'Lato', sans-serif;
+    -webkit-animation: anim-shadow 0.5s ease-in-out forwards;
+    animation: anim-shadow 0.5s ease-in-out forwards;
+}
+
+@-webkit-keyframes anim-shadow {
+    to {
+        box-shadow: 0px 0px 80px 30px;
+        opacity: 0;
+    }
+}
+
+@keyframes anim-shadow {
+    to {
+        box-shadow: 0px 0px 80px 30px;
+        opacity: 0;
+    }
+}
+
+.inline-element{
+    display: inline;
+}
+
+.fee-label{
+    padding: 8.5px;
+}
+
+.align-initial {
+    text-align: initial;
+}
+
+.align-end {
+    text-align: end;
+}
+
+.fit-content{
+    width: fit-content;
+}
+
+.v-spacer{
+    width: 100%;
+    height: 50px;
+}
+
+.full-page-container{
+    height: 70vh;
+}
+
+.vertical-center {
+    top: 15%;
+    position: relative;
+}
+
+.half-page-container{
+    height: 50vh;
+}
+
+.real-full-page-container{
+    height: 90vh;
+}
+
+a:hover{
+    text-decoration: none !important;
+}
+
+.full-width-align-center{
+    text-align: center;
+    width: 100%;
+}
+
+.full-width-align-left{
+    text-align: left;
+    width: 100%;
+}
+
+.modal-background{
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    opacity: 0.25;
+    background-color: black;
+    z-index: 4;
+}
+
+.modal-container{
+    width: fit-content;
+    padding: 50px 100px;
+    opacity: 1;
+    border-radius: 10px;
+    left: 40%;
+    background-color: #FAFAFA;
+    z-index: 5;
+    position: fixed;
+    top: 40%;;
+}
+
+.level-zero{
+    z-index: 0!important;
+}
+
+.sidebar-item{
+    color:black !important;
+}
