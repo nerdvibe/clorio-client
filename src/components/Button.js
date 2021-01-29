@@ -1,7 +1,10 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
 export default function Button(props) {
-    return (
-        <div className={props.className} onClick={props.onClick}>{props.text}</div>
-    )
+    const button = <div className={props.className + " button"} onClick={props.onClick}>{props.icon} {props.text}</div>
+
+    return props.link ? (
+        <Link to={props.link}> {button} </Link>
+    ) : button
 }

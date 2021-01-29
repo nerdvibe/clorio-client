@@ -10,33 +10,44 @@ import Stake from './pages/Stake';
 import SplashScreen from './pages/SplashScreen';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Entropy from './pages/Entropy';
+import Verify from './pages/Verify';
+import ProtectedRoute from './components/ProtectedRoute';
+import Authentication from "./tools/auth";
+import { useCookies,CookiesProvider } from 'react-cookie';
 
 function App() {
+    const [cookies, setCookie] = useCookies(['isAuthenticated']);
+    console.log("🚀 ~ file: App.js ~ line 21 ~ App ~ cookies", cookies.isAuthenticated)
   return (
     <div className="App">
+      <CookiesProvider>
       <Router>
         <Container fluid>
           <Row>
-              <Col md={3} lg={2} xl={2} id="sidebar-wrapper">      
-                <Sidebar />
-              </Col>
+              {
+                !!cookies.isAuthenticated && 
+                <Col md={3} lg={2} xl={2} id="sidebar-wrapper">      
+                  <Sidebar />
+                </Col>
+              }
               <Col id="page-content-wrapper">
                 <Container className="contentWrapper animate__animated animate__fadeIn">
                   <Switch>
-                    <Route path="/send-tx">
-                      <SendTX />
-                    </Route>
-                    <Route path="/overview">
-                      <Overview />
-                    </Route>
-                    <Route path="/stake">
-                      <Stake/>
-                    </Route>
+                    <ProtectedRoute exact path="/overview" component={Overview} />
+                    <ProtectedRoute exact path="/send-tx" component={SendTX} />
+                    <ProtectedRoute exact path="/stake" component={Stake} />
                     <Route path="/login">
                       <Login/>
                     </Route>
                     <Route path="/register">
-                      <Register/>
+                      <Entropy />
+                    </Route>
+                    <Route path="/register-2">
+                      <Register />
+                    </Route>
+                    <Route path="/verify">
+                      <Verify />
                     </Route>
                     <Route path="/">
                       <SplashScreen />
@@ -47,6 +58,7 @@ function App() {
           </Row>
         </Container>
       </Router>
+      </CookiesProvider>
     </div>
   );
 }

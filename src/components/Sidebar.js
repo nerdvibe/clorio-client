@@ -4,9 +4,16 @@ import { withRouter } from "react-router";
 import '../pages/style/Dashboard.css'
 import { Link } from 'react-router-dom';
 import {  Cpu } from 'react-feather';
+import { useCookies } from 'react-cookie';
 import Logo from '../Logo.svg'
 
 const Side = props => {
+    const [cookies, setCookie, removeCookie] = useCookies(['isAuthenticated']);
+
+    const logout = () => {
+        removeCookie('isAuthenticated');
+        location.replace('/overview')
+    }
     return (
         <>
             <div style={{padding:'10px'}}>
@@ -28,7 +35,7 @@ const Side = props => {
                         <Link to="/stake"> <span className="sidebar-item">Stake</span></Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Link to="/splashscreen"> <span className="sidebar-item">Logout</span> </Link>
+                        <Link to="/splashscreen"> <span className="sidebar-item" onClick={logout}>Logout</span> </Link>
                     </Nav.Item>
                 </Nav>
             </div>

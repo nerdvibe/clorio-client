@@ -19,22 +19,6 @@
     font-weight: 700;
 }
 
-.lightGreenButton__fullMono:active,
-.darkGreenButton__fullMono:active,
-.redButton__fullMono:active,
-.yellowButton__fullMono:active,
-.orangeButton__fullMono:active {
-    -webkit-touch-callout: none; /* iOS Safari */
-        -webkit-user-select: none; /* Safari */
-        -khtml-user-select: none; /* Konqueror HTML */
-        -moz-user-select: none; /* Old versions of Firefox */
-            -ms-user-select: none; /* Internet Explorer/Edge */
-                user-select: none; /* Non-prefixed version, currently
-                                    supported by Chrome, Edge, Opera and Firefox */
-    top: 5px;
-    opacity: .8;
-    transition: .25s
-}
 
 .darkGreenButton__fullMono{
     @include fullMonoButton($dark-green);
@@ -177,4 +161,31 @@
     color: $red;
     padding: 10px;
     cursor: pointer;
+}
+
+.button{
+    cursor: pointer;
+    position: relative;
+    top: 0;
+    left: 0;
+    transition: 0.2s;
+}
+
+.button:active{
+    position: relative;
+    -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+        -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Old versions of Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+                user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+    top: 5px;
+    opacity: .8;
+    left: 0; // This one is important!
+    -webkit-transition: 0.2s;
+    -moz-transition: 0.2s;
+    -o-transition: 0.2s;
+    transition: 0.2s;
+    transition: 0.2s;
 }

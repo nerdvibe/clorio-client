@@ -3,9 +3,18 @@ import {Row,Col,Container} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
 import Button from '../components/Button'
 import Hoc from '../components/Hoc'
+import {Copy} from 'react-feather'
 
 
 export default class Register extends Component {
+    copyToClipboard = (content) => {
+        const el = document.createElement('textarea');
+        el.value = content;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+    };
     render() {
         return (
             <Hoc className="mx-auto">
@@ -31,9 +40,11 @@ export default class Register extends Component {
                                 <div class="wrap-input1 validate-input" data-validate="Name is required">
                                     <h5 className="full-width-align-center">
                                         <strong>
-                                            witch collapse practice feed shame open despair creek road again ice least
+                                            witch collapse practice feed shame open despair creek road again ice least &nbsp;
+                                            <Button className="inline-element" icon={<Copy />}  onClick={() => this.copyToClipboard("witch collapse practice feed shame open despair creek road again ice least")}/>
                                         </strong>
                                     </h5>
+                                    <input style={{display: "none"}} value="" id="passphrase"/> 
                                 </div>
                                 <div className="v-spacer" />
 
@@ -42,7 +53,7 @@ export default class Register extends Component {
                                     <h5 className="full-width-align-center">
                                         <strong>
                                             aBUiadiaU219xSN8hska3j1ii3012i319jijdj1LLasdo
-                                        </strong>
+                                        </strong> 
                                     </h5>
                                 </div>
                                 <div className="v-spacer" />
@@ -54,8 +65,8 @@ export default class Register extends Component {
                                         
                                     </Col>
                                     <Col xs={6}>
-                                        <Link to="/overview">
-                                            <Button className="lightGreenButton__fullMono mx-auto" onClick={this.props.register} text="Access a wallet" />
+                                        <Link to="/verify">
+                                            <Button className="lightGreenButton__fullMono mx-auto" onClick={this.props.register} text="Continue" />
                                         </Link>
                                     </Col>
                                 </Row>
