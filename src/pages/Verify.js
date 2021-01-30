@@ -1,6 +1,6 @@
 import React from 'react'
 import Hoc from "../components/Hoc";
-import Logo from "../Logo.svg";
+import Logo from "../assets/Logo.svg";
 import { Row, Col } from "react-bootstrap";
 import Button from '../components/Button'
 import Authorization from '../tools/auth'
@@ -16,7 +16,7 @@ export default function Verify() {
   }
 
   return (
-    <Hoc className="mx-auto">
+    <Hoc className="main-container">
       <div className="block-container real-full-page-container">
         <div className="vertical-center">
           <Row>

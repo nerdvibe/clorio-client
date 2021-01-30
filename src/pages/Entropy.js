@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ProgressBar from "../components/ProgressBar";
 import Hoc from "../components/Hoc";
-import Logo from "../Logo.svg";
+import Logo from "../assets/Logo.svg";
 import { Row, Col } from "react-bootstrap";
 import Button from "../components/Button";
 
@@ -13,7 +13,7 @@ export default function Entropy() {
       .join("");
 
   return (
-    <Hoc className="mx-auto">
+    <Hoc className="main-container">
       <div className="block-container real-full-page-container">
         <div className="vertical-center">
           <Row>

@@ -17,7 +17,7 @@ export default function Login(props) {
                             
                             <h4 className="full-width-align-center">Insert your mnemonic</h4>
                             <div className="v-spacer" />
-                            <div class="wrap-input1 validate-input" data-validate="Name is required">
+                            <div className="wrap-input1 validate-input" data-validate="Name is required">
                                 <span className="icon" />
                                 <input className="input1" type="text" name="name" placeholder="Enter here" />
                                 <span className="shadow-input1"></span>

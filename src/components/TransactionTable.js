@@ -66,9 +66,9 @@ export default function TransactionTable() {
                 </thead>
                 <tbody>
                     {mockData.map(
-                        row => {
+                        (row,index) => {
                             return (
-                                <tr>
+                                <tr key={index}>
                                     <td><a href="#" target="_blank">{row.id}</a></td>
                                     <td>{row.date}</td>
                                     <td>{row.sender}</td>

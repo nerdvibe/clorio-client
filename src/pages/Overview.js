@@ -6,7 +6,7 @@ import Hoc from '../components/Hoc'
 
 function Overview() {
   return (
-    <Hoc className="mx-auto Home">
+    <Hoc className="main-container">
         <Wallet />
         <Banner />
         <TransactionTable />

@@ -10,10 +10,10 @@ export default function Homepage(props) {
             <div className="block-container real-full-page-container">
                 <div className="vertical-center">
                 <Row>
-                <Col md={4} xl={3} className="offset-md-4 offset-xl-4" >
+                    <Col xs={10} className="offset-md-1 full-width-align-center">
                     <div className="mx-auto fit-content"><strong><h1>🔥 Crypto</h1></strong></div>
                     <div className="v-spacer" />
-                            <h4 className="text-center">The blockchain power at your fingertips</h4>
+                            <h4 className="full-width-align-center ">The blockchain power at your fingertips</h4>
                             <div className="v-spacer" />
                             <Link to="/login">
                                 <Button className="lightGreenButton__fullMono mx-auto" onClick={props.login} text="Access a wallet" />

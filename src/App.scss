@@ -1,7 +1,8 @@
-@import './__vars';
-@import './__typo';
-@import './__buttons';
-@import './__misc';
+@import './styles/__vars';
+@import './styles/__typo';
+@import './styles/__buttons';
+@import './styles/__misc';
+@import './styles/Core';
 
 .App {
   background: $white;

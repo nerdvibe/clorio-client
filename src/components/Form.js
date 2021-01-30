@@ -11,18 +11,18 @@ export default function Form(props) {
                     <Row>
                         <Col md={8} className="offset-md-2" >
                             <h3>Recipient</h3>
-                            <div class="wrap-input1 validate-input" data-validate="Name is required">
+                            <div className="wrap-input1 validate-input" data-validate="Name is required">
                                 <span className="icon" />
-                                <input class="input1" type="text" name="name" placeholder="Recipient address ... " />
-                                <span class="shadow-input1"></span>
+                                <input className="input1" type="text" name="name" placeholder="Recipient address ... " />
+                                <span className="shadow-input1"></span>
                             </div>
                             <Row> 
                                 <Col md={6}>
                                     <h3>Amount</h3>
-                                    <div class="wrap-input1 validate-input" data-validate="Name is required">
+                                    <div className="wrap-input1 validate-input" data-validate="Name is required">
                                         <span className="icon" />
-                                        <input class="input1" type="text" name="name" placeholder="Enter an amount " />
-                                        <span class="shadow-input1"></span>
+                                        <input className="input1" type="text" name="name" placeholder="Enter an amount " />
+                                        <span className="shadow-input1"></span>
                                     </div>
                                 </Col>
                                 <Col md={6}>
@@ -34,10 +34,10 @@ export default function Form(props) {
                                             <span className="align-end">Use recommended</span>
                                         </Col>
                                     </Row>
-                                    <div class="wrap-input1 validate-input" data-validate="Name is required">
+                                    <div className="wrap-input1 validate-input" data-validate="Name is required">
                                         <span className="icon" />
-                                        <input class="input1" type="text" name="name" placeholder="Enter a fee" />
-                                        <span class="shadow-input1"></span>
+                                        <input className="input1" type="text" name="name" placeholder="Enter a fee" />
+                                        <span className="shadow-input1"></span>
                                     </div>
                                 </Col>
                             </Row>

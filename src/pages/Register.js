@@ -17,7 +17,7 @@ export default class Register extends Component {
     };
     render() {
         return (
-            <Hoc className="mx-auto">
+            <Hoc className="main-container">
                 <div className="block-container real-full-page-container">
                     <div className="vertical-center">
                         <Row>
@@ -27,7 +27,7 @@ export default class Register extends Component {
                                 <div className="v-spacer" />
                                 
                                 <h4 className="full-width-align-center">This is your address</h4>
-                                <div class="wrap-input1 validate-input" data-validate="Name is required">
+                                <div className="wrap-input1 validate-input" data-validate="Name is required">
                                     <h5 className="full-width-align-center">
                                         <strong>
                                             nNdajndANoandaNOnna9210j21nsKANo
@@ -37,7 +37,7 @@ export default class Register extends Component {
                                 <div className="v-spacer" />
 
                                 <h4 className="full-width-align-center">This is your passphrase</h4>
-                                <div class="wrap-input1 validate-input" data-validate="Name is required">
+                                <div className="wrap-input1 validate-input" data-validate="Name is required">
                                     <h5 className="full-width-align-center">
                                         <strong>
                                             witch collapse practice feed shame open despair creek road again ice least &nbsp;
@@ -49,7 +49,7 @@ export default class Register extends Component {
                                 <div className="v-spacer" />
 
                                 <h4 className="full-width-align-center">This is your private key</h4>
-                                <div class="wrap-input1 validate-input" data-validate="Name is required">
+                                <div className="wrap-input1 validate-input" data-validate="Name is required">
                                     <h5 className="full-width-align-center">
                                         <strong>
                                             aBUiadiaU219xSN8hska3j1ii3012i319jijdj1LLasdo

@@ -38,8 +38,8 @@
 }
 
 .walletImageContainer {
-    padding-left: 4%;
-    padding-top: 0.5%;
+    margin-left: 4%;
+    margin-right: 2%;
 }
 
 .small-image {
@@ -261,6 +261,24 @@ a:hover{
     color:black !important;
 }
 
+.sidebar-item-container{
+    margin:10px;
+    text-align: left;
+    width: 100%;
+    color:black !important;
+}
+
+.sidebar-item-container-active::before{
+    width:5px;
+    background: $orange;
+    height: 30px;
+    left: -2.5px;
+    content: "";
+    display: block;
+    position: absolute;
+    transition: 0.25s;
+}
+
 .big-logo{
     width: 300px;
 }
@@ -275,4 +293,15 @@ a:hover{
     border-radius: 10px;
     padding: 50px;
     border: 2px solid $light-green;
+}
+
+.logo-image{
+    width: 100%;
+    max-width: 200px;
+    padding: 0 10px;
+}
+
+.main-container{
+    overflow-y: auto;
+    max-height:90vh;
 }

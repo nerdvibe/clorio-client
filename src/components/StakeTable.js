@@ -6,8 +6,8 @@ import StakeTableValue from '../components/StakeTableValue'
 export default function StakeTable(props) {
     return (
         <div className="mx-auto  ">
-            <div className="block-container half-page-container">
-                <div className="vertical-center">
+            <div className="block-container full-page-container">
+                <div >
                     <h4>Your status</h4>
                     <h6 className="full-width-align-left">Your are staking for None</h6>
                     <div className="v-spacer" />
@@ -24,7 +24,7 @@ export default function StakeTable(props) {
                         </thead>
                         <tbody>
                             {[1,2,3,4].map((el,index) => (
-                                <tr>
+                                <tr key={index}>
                                     <td>
                                         <StakeTableValue avatar={(
                                             <div md={2} lg={2} xl={1} className="walletImageContainer small-image inline-element">

@@ -8,8 +8,7 @@ export default class SplashScreen extends Component {
     }
     render() {
         return (
-            
-            <Hoc className="mx-auto">
+            <Hoc >
                 <Homepage />
             </Hoc>
         )

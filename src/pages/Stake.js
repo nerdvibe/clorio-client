@@ -15,7 +15,7 @@ export default class Stake extends React.Component {
 
     render(){
         return (
-            <Hoc className="mx-auto">
+            <Hoc className="main-container">
                 <Wallet />
                 <Banner />
                 <StakeTable toggleModal={(delegateName) => this.openModal(delegateName)}/>

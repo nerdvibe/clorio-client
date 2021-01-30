@@ -10,7 +10,7 @@ export default class SendTX extends Component {
     }
     render() {
         return (
-            <Hoc className="mx-auto">
+            <Hoc className="main-container">
                 <Wallet />
                 {
                     this.state.step===0 ? 
