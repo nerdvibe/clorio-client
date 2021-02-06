@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ProgressBar from "../components/ProgressBar";
 import Hoc from "../components/Hoc";
-import Logo from "../assets/Logo.svg";
+import Logo from "../components/Logo";
 import { Row, Col } from "react-bootstrap";
 import Button from "../components/Button";
 
@@ -24,8 +24,7 @@ export default function Entropy() {
                             <input type="number" name="progress" onChange={(e)=> {setprogress(e.currentTarget.value)}}  />
                         </label>*/}
               </div>
-              <img src={Logo} className="big-logo" />
-              <div className="v-spacer" />
+              <Logo big={true} />
               <div className="v-spacer" />
               <h4 className="full-width-align-center strong">
                 Here we go! <br />

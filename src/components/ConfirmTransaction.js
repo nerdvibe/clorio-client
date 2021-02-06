@@ -1,5 +1,6 @@
 import React from 'react'
 import {Row,Col} from 'react-bootstrap'
+import Button from './Button'
 
 export default function Form(props) {
     return (
@@ -10,17 +11,17 @@ export default function Form(props) {
                     <div className="v-spacer" />
                     <Row>
                         <Col md={8} className="offset-md-2" >
-                            You are about to send <strong>500 MINA</strong> <br/>
-                            with a fee of <strong>0.100 MINA</strong> <br/>
-                            to  <strong>1CwYRA3H1HAVXBd7tjgjgmi856jvSGey9K</strong> 
+                            You are about to send <strong>{props.transactionData.amount} MINA</strong> <br/>
+                            with a fee of <strong>{props.transactionData.fee} MINA</strong> <br/>
+                            to  <strong>{props.transactionData.address}</strong> 
                             <div className="v-spacer" />
                             <div className="mx-auto">
                                 <Row>
                                     <Col md={3} className="offset-md-3">
-                                        <div className="link-button inline-element" onClick={props.stepBackward}>Cancel</div>
+                                        <Button className="link-button inline-element" onClick={props.stepBackward} text="Cancel" />
                                     </Col>
                                     <Col md={3}>
-                                        <div className="lightGreenButton__fullMono inline-element" onClick={props.sendTransaction}>Confirm</div>
+                                        <Button className="lightGreenButton__fullMono inline-element" onClick={props.sendTransaction} text="Confirm" />
                                     </Col>
                                 </Row>
                             </div>

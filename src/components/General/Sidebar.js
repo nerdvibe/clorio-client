@@ -4,7 +4,7 @@ import { withRouter } from "react-router";
 import { Link } from 'react-router-dom';
 import {  Cpu,LogIn,TrendingUp } from 'react-feather';
 import { useCookies } from 'react-cookie';
-import Logo from '../../assets/Logo.svg'
+import Logo from '../Logo'
 import { useLocation } from 'react-router-dom'
 
 
@@ -28,7 +28,7 @@ function Sidebar (props) {
                 activeKey="/home"
                 onSelect={selectedKey => alert(`selected ${selectedKey}`)}>
                 <div className="sidebar-sticky" style={{margin:'0 auto'}}> 
-                    <img src={Logo} className="logo-image" />
+                    <Logo />
                     {/* <img src="" alt="logo"/> */}
                 </div>
                 <hr/>

@@ -1,7 +1,37 @@
-import React from 'react'
+import React,{useState} from 'react'
 import {Row,Col,Container} from 'react-bootstrap'
+import Button from './Button'
 
-export default function Form(props) {
+export default function TransactionForm(props) {
+
+    const setDefaultFee = () => {
+        props.setData({
+            ...props.transactionData,
+            fee:0.5
+        })
+    }
+
+    const addressHandler = (address) => {
+        props.setData({
+            ...props.transactionData,
+            address
+        })
+    }
+
+    const amountHandler = (amount) => {
+        props.setData({
+            ...props.transactionData,
+            amount
+        })
+    }
+
+    const feeHandler = (fee) => {
+        props.setData({
+            ...props.transactionData,
+            fee
+        })
+    }
+
     return (
         <div className="mx-auto  ">
             <div className="block-container full-page-container">
@@ -13,7 +43,7 @@ export default function Form(props) {
                             <h3>Recipient</h3>
                             <div className="wrap-input1 validate-input" data-validate="Name is required">
                                 <span className="icon" />
-                                <input className="input1" type="text" name="name" placeholder="Recipient address ... " />
+                                <input className="input1" type="text" name="address" value={props.transactionData.address} placeholder="Recipient address ... " onChange={e => addressHandler(e.currentTarget.value)} />
                                 <span className="shadow-input1"></span>
                             </div>
                             <Row> 
@@ -21,28 +51,28 @@ export default function Form(props) {
                                     <h3>Amount</h3>
                                     <div className="wrap-input1 validate-input" data-validate="Name is required">
                                         <span className="icon" />
-                                        <input className="input1" type="text" name="name" placeholder="Enter an amount " />
+                                        <input className="input1" type="text" name="amount" value={props.transactionData.amount} placeholder="Enter an amount " onChange={e => amountHandler(e.currentTarget.value)} />
                                         <span className="shadow-input1"></span>
                                     </div>
                                 </Col>
                                 <Col md={6}>
                                     <Row> 
-                                        <Col md={6} className="align-initial">
+                                        <Col md={4} className="align-initial">
                                             <h3 className="inline-element ">Fee</h3>
                                         </Col>
-                                        <Col md={6} className="fee-label">
-                                            <span className="align-end">Use recommended</span>
+                                        <Col md={8} className="fee-label">
+                                            <Button className="link-button align-end  no-padding" text="Use recommended" onClick={setDefaultFee} />
                                         </Col>
                                     </Row>
                                     <div className="wrap-input1 validate-input" data-validate="Name is required">
                                         <span className="icon" />
-                                        <input className="input1" type="text" name="name" placeholder="Enter a fee" />
+                                        <input className="input1" type="text" name="name"  value={props.transactionData.fee} onChange={e => feeHandler(e.currentTarget.value)} placeholder="Enter a fee" />
                                         <span className="shadow-input1"></span>
                                     </div>
                                 </Col>
                             </Row>
                             <div className="v-spacer" />
-                            <div className="lightGreenButton__fullMono mx-auto" onClick={props.nextStep}>Preview</div>
+                            <Button className="lightGreenButton__fullMono mx-auto" onClick={props.nextStep} text="Preview" />
                         </Col>
                     </Row>
                 </div>

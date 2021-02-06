@@ -1,37 +1,41 @@
-import React, { Component } from 'react'
+import React, { Component,useState } from 'react'
 import Wallet from '../components/Wallet'
-import Form from '../components/Form'
+import TransactionForm from '../components/TransactionForm'
 import ConfirmTransaction from '../components/ConfirmTransaction'
 import Hoc from '../components/Hoc'
 
-export default class SendTX extends Component {
-    state={
-        step:0
-    }
-    render() {
-        return (
-            <Hoc className="main-container">
-                <Wallet />
-                {
-                    this.state.step===0 ? 
-                    <Form nextStep={this.nextStep}/>:
-                    <ConfirmTransaction 
-                        stepBackward={this.stepBackward} 
-                        sendTransaction={this.sendTransaction} />
-                }
-            </Hoc>
-        )
+export default function SendTX (props) {
+    const [transactionData, settransactionData] = useState({
+        amount:0,
+        address:"",
+        fee:0.1
+    })
+    const [step, setStep] = useState(0)
+    const nextStep = () => {
+        setStep(1)
     }
 
-    nextStep = () => {
-        this.setState({step:1})
+    const stepBackwards = () => {
+        setStep(0)
     }
 
-    stepBackwards = () => {
-        this.setState({step:0})
-    }
-
-    sendTransaction = () => {
+    const sendTransaction = () => {
         console.log("Transaction sent")
     }
+    return (
+        <Hoc className="main-container">
+            <Wallet />
+            {
+                step===0 ? 
+                <TransactionForm 
+                    nextStep={nextStep} 
+                    transactionData={transactionData} 
+                    setData={settransactionData}/>:
+                <ConfirmTransaction 
+                    transactionData={transactionData}
+                    stepBackward={stepBackwards} 
+                    sendTransaction={sendTransaction} />
+            }
+        </Hoc>
+    )
 }

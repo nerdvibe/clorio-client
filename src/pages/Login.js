@@ -3,6 +3,7 @@ import {Row,Col,Container} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
 import Button from '../components/Button'
 import Hoc from '../components/Hoc'
+import Logo from "../components/Logo";
 
 export default function Login(props) {
     return (
@@ -10,8 +11,8 @@ export default function Login(props) {
             <div className="block-container real-full-page-container">
                 <div className="vertical-center">
                     <Row>
-                        <Col md={4} xl={5} className="offset-md-3 offset-xl-3 text-center" >
-                            <div className="mx-auto fit-content"><strong><h1>🔥 Crypto</h1></strong></div>
+                        <Col md={4} xl={6} className="offset-md-3 offset-xl-3 text-center" >
+                            <div className="mx-auto fit-content"><Logo big="true" /></div>
                             <div className="v-spacer" />
                             <div className="v-spacer" />
                             

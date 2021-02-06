@@ -196,7 +196,7 @@ textarea:-ms-input-placeholder {
 
 .v-spacer{
     width: 100%;
-    height: 50px;
+    height: 30px;
 }
 
 .full-page-container{
@@ -304,4 +304,24 @@ a:hover{
 .main-container{
     overflow-y: auto;
     max-height:90vh;
+}
+
+.stake-row-value{
+    height: 0px;
+}
+
+.footer-text{
+    padding: 10px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.validation-input{
+    border-bottom: 1px solid black;
+    width: 72%;
+}
+
+.no-padding{
+    padding: 0px !important;
 }
