@@ -4,12 +4,13 @@ import {Link} from 'react-router-dom'
 import Button from '../components/Button'
 import Hoc from '../components/Hoc'
 import Logo from "../components/Logo";
+import Footer from '../components/General/Footer'
 
 export default function Login(props) {
     return (
-        <Hoc className="mx-auto">
-            <div className="block-container real-full-page-container">
-                <div className="vertical-center">
+        <Hoc>
+            <div className="block-container real-full-page-container center">
+                <div className="full-width">
                     <Row>
                         <Col md={4} xl={6} className="offset-md-3 offset-xl-3 text-center" >
                             <div className="mx-auto fit-content"><Logo big="true" /></div>
@@ -39,8 +40,9 @@ export default function Login(props) {
                             </Row>
                         </Col>
                     </Row>
-                </div>
+                </div> 
             </div>
+            <Footer />
         </Hoc>
     )
 }

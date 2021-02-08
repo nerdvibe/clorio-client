@@ -62,7 +62,7 @@
 .block-container {
     padding: 20px;
     border-radius: 10px;
-    background: white;
+    // background: white;
     margin: 10px;
 }
 
@@ -214,6 +214,7 @@ textarea:-ms-input-placeholder {
 
 .real-full-page-container{
     height: 90vh;
+    width: 100%;
 }
 
 a:hover{
@@ -302,8 +303,8 @@ a:hover{
 }
 
 .main-container{
-    overflow-y: auto;
-    max-height:90vh;
+    overflow-y: hidden;
+    max-height:98vh;
 }
 
 .stake-row-value{
@@ -319,9 +320,26 @@ a:hover{
 
 .validation-input{
     border-bottom: 1px solid black;
+    background: none;
     width: 72%;
 }
 
 .no-padding{
     padding: 0px !important;
+}
+
+.margin-auto{
+    margin: 0 auto;
+}
+
+.center{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    // height:100%;
+    width: 100%;
+}
+
+.full-width{
+    width: 100%;
 }

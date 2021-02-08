@@ -6,11 +6,12 @@ import Button from '../components/Button'
 import Authorization from '../tools/auth'
 import { useCookies } from 'react-cookie';
 import { Link } from 'react-router-dom';
+import Footer from '../components/General/Footer';
 
 export default function Verify() {
   const passphrase = "witch collapse practice feed shame open despair creek road again ice least";
   const [cookies, setCookie] = useCookies(['isAuthenticated']);
-  const removedIndex = [2,4,6,10]
+  const removedIndex = [4,9,11]
   const [disableButton, setDisableButton] = useState(true)
   const [wordsFoundArray, setWordsFoundArray] = useState([])
 
@@ -56,10 +57,10 @@ export default function Verify() {
 
   return (
     <Hoc className="main-container">
-      <div className="block-container real-full-page-container">
-        <div className="vertical-center">
+      <div className="block-container real-full-page-container center">
+        <div className="">
           <Row>
-            <Col xs={6} className="offset-md-3 full-width-align-center">
+            <Col xs={8} className="offset-md-2 full-width-align-center">
               <div>
                 {/*<label>
                             Name:
@@ -90,25 +91,24 @@ export default function Verify() {
               </div>
               <div className="v-spacer" />
               <Row>
-                <Col>
+                <Col xs={6}>
                   <Button className="link-button" text="Go back" link={"/register-2"} />
                 </Col>
                 <Col>
-                <Link to="/overview">
-                  <Button
-                    className={"lightGreenButton__fullMono"}
-                    text="Next step"
-                    link={"/overview"}
-                    onClick={setAuthorization}
-                    disabled={disableButton}
-                  />
-                </Link>
+                <Button
+                  className={"lightGreenButton__fullMono margin-auto"}
+                  text="Next step"
+                  link={"/overview"}
+                  onClick={setAuthorization}
+                  disabled={disableButton}
+                />
                 </Col>
               </Row>
             </Col>
           </Row>
         </div>
       </div>
+      <Footer />
     </Hoc>
   )
 }

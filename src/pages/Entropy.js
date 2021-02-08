@@ -4,6 +4,7 @@ import Hoc from "../components/Hoc";
 import Logo from "../components/Logo";
 import { Row, Col } from "react-bootstrap";
 import Button from "../components/Button";
+import Footer from '../components/General/Footer'
 
 export default function Entropy() {
   const [progress, setprogress] = useState(20);
@@ -13,7 +14,7 @@ export default function Entropy() {
       .join("");
 
   return (
-    <Hoc className="main-container">
+    <Hoc className="main-container center">
       <div className="block-container real-full-page-container">
         <div className="vertical-center">
           <Row>
@@ -38,7 +39,7 @@ export default function Entropy() {
                 </Col>
                 <Col>
                   <Button
-                    className="lightGreenButton__fullMono"
+                    className="lightGreenButton__fullMono margin-auto"
                     text="Next step"
                     link={"/register-2"}
                   />
@@ -48,6 +49,7 @@ export default function Entropy() {
           </Row>
         </div>
       </div>
+      <Footer />
     </Hoc>
   );
 }
