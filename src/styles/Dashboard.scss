@@ -3,7 +3,7 @@
     top: 0;
     bottom: 0;
     left: 0;
-    min-height: 100vh !important;
+    min-height: 95vh !important;
     z-index: 100;
     padding: 48px 0 0;
     box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
@@ -31,3 +31,6 @@
     width: 100%;
 }
 
+.container-fluid{
+    height: 98vh;
+}

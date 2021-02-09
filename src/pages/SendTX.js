@@ -2,9 +2,11 @@ import React, { Component,useState } from 'react'
 import Wallet from '../components/Wallet'
 import TransactionForm from '../components/TransactionForm'
 import ConfirmTransaction from '../components/ConfirmTransaction'
+import ConfirmLedgerTransaction from '../components/ConfirmLedgerTransaction'
 import Hoc from '../components/Hoc'
 
 export default function SendTX (props) {
+    const isLedgerEnabled = true;
     const [transactionData, settransactionData] = useState({
         amount:0,
         address:"",
@@ -31,10 +33,18 @@ export default function SendTX (props) {
                     nextStep={nextStep} 
                     transactionData={transactionData} 
                     setData={settransactionData}/>:
-                <ConfirmTransaction 
-                    transactionData={transactionData}
-                    stepBackward={stepBackwards} 
-                    sendTransaction={sendTransaction} />
+                    (
+                        isLedgerEnabled ? 
+                        <ConfirmLedgerTransaction 
+                            transactionData={transactionData}
+                            stepBackward={stepBackwards} 
+                            sendTransaction={sendTransaction} /> 
+                        :
+                        <ConfirmTransaction 
+                            transactionData={transactionData}
+                            stepBackward={stepBackwards} 
+                            sendTransaction={sendTransaction} />
+                    )
             }
         </Hoc>
     )

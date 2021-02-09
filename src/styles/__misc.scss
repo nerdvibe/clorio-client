@@ -38,7 +38,7 @@
 }
 
 .walletImageContainer {
-    margin-left: 4%;
+    margin-left: 2%;
     margin-right: 2%;
 }
 
@@ -62,8 +62,15 @@
 .block-container {
     padding: 20px;
     border-radius: 10px;
-    // background: white;
+    background: white;
     margin: 10px;
+}
+
+.block-container-last{
+    padding: 20px;
+    border-radius: 10px;
+    background: white;
+    margin: 10px 10px 50px 10px;
 }
 
 input {
@@ -251,7 +258,7 @@ a:hover{
     background-color: #FAFAFA;
     z-index: 5;
     position: fixed;
-    top: 40%;;
+    top: 35%;
 }
 
 .level-zero{
@@ -303,18 +310,19 @@ a:hover{
 }
 
 .main-container{
-    overflow-y: hidden;
+    overflow-y: auto;
     max-height:98vh;
 }
 
 .stake-row-value{
     height: 0px;
+    margin: 0 auto !important;
 }
 
 .footer-text{
     padding: 10px;
     position: absolute;
-    bottom: 0;
+    bottom: 20px;
     left: 0;
 }
 
@@ -342,4 +350,31 @@ a:hover{
 
 .full-width{
     width: 100%;
+}
+
+tbody{
+    .button{
+        margin: 0 auto;
+    }
+}
+
+.validation-word{
+    min-width: 72%;
+}
+
+.validation-index{
+    text-align: center;
+    width: 15%;
+    display: inline-block;
+}
+
+.validation-word-box{
+    text-align: left;
+}
+
+.sidebar-footer{
+    position: fixed;
+    bottom: 40px;
+    width: 16.666667%;
+    margin: 0 4vw;
 }

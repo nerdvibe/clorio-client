@@ -53,7 +53,7 @@ const mockData = [{
 
 export default function TransactionTable() {
     return (
-        <div className="block-container">
+        <div className="block-container-last">
             <Table>
                 <thead>
                     <tr>

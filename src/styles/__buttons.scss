@@ -21,7 +21,7 @@
 }
 
 .disabledButton{
-    @include fullMonoButton($red);
+    @include fullMonoButton(#8ab3ae);
     cursor: not-allowed;
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */

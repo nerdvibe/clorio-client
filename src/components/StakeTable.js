@@ -1,12 +1,18 @@
-import React from 'react'
+import React,{useState} from 'react'
 import  Button  from '../components/Button'
 import { Table } from 'react-bootstrap'
 import StakeTableValue from '../components/StakeTableValue'
 
 export default function StakeTable(props) {
+    const [searchbox, setSearchbox] = useState("")
+
+    const searchboxHandler = (search) => {
+        setSearchbox(search)
+    }
+
     return (
         <div className="mx-auto  ">
-            <div className="block-container full-page-container">
+            <div className="block-container-last full-page-container">
                 <div> 
                     <h4>Your status</h4>
                     <h6 className="full-width-align-left">Your are staking for None</h6>
@@ -18,12 +24,14 @@ export default function StakeTable(props) {
                                 <th>Stake</th>
                                 <th></th>
                                 <th></th>
-                                <th>Search</th>
                                 <th></th>
+                                <th>
+                                    <input placeholder={"Filter..."} value={searchbox} onChange={(e) => searchboxHandler(e.currentTarget.value)} />
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
-                            {[1,2,3,4].map((el,index) => renderRow(el,index))}
+                            {["Prova","Test","asdasd","xdxd"].filter(el=>el.includes(searchbox)).map((el,index) => renderRow(el,index))}
                         </tbody>
                     </Table>
                 </div>

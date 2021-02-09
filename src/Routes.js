@@ -10,6 +10,7 @@ import Verify from "./pages/Verify";
 import { Route, Redirect, Switch } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import Authentication from "./tools";
+import Ledger from "./pages/Ledger";
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
   const [cookies, setCookie] = useCookies(["isAuthenticated"]);
@@ -54,6 +55,9 @@ function Routes() {
       </Route>
       <Route path="/verify">
         <Verify />
+      </Route>
+      <Route path="/ledger">
+        <Ledger />
       </Route>
       <Route path="/">
         <SplashScreen />

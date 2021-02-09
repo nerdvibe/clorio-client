@@ -10,7 +10,7 @@ export default function Banner() {
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
                 </Col>
                 <Col className="align-end ml-auto " style={{paddingTop:'20px'}}>
-                    <div onClick={() => console.log('Test')} className="lightGreenButton__outlineMono"> Learn more </div>
+                    <div onClick={() => console.log('Test')} className="lightGreenButton__outlineMono mx-auto"> Learn more </div>
                 </Col>
             </Row>
         </div>

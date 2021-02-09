@@ -2,7 +2,7 @@ import React from 'react'
 import {Row,Col} from 'react-bootstrap'
 import Button from './Button'
 
-export default function ConfirmTransaction(props) {
+export default function ConfirmLedgerTransaction(props) {
     return (
         <div className="mx-auto  ">
             <div className="block-container full-page-container">
@@ -16,15 +16,9 @@ export default function ConfirmTransaction(props) {
                             to  <strong>{props.transactionData.address}</strong> 
                             <div className="v-spacer" />
                             <div className="mx-auto">
-                                <Row>
-                                    <Col md={3} className="offset-md-3">
-                                        <Button className="link-button inline-element" onClick={props.stepBackward} text="Cancel" />
-                                    </Col>
-                                    <Col md={3}>
-                                        <Button className="lightGreenButton__fullMono inline-element" onClick={props.sendTransaction} text="Confirm" />
-                                    </Col>
-                                </Row>
+                                <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
                             </div>
+                            <strong>Check your hardware wallet to proceed</strong> 
                         </Col>
                     </Row>
                 </div>

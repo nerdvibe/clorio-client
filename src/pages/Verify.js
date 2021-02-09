@@ -78,11 +78,11 @@ export default function Verify() {
               <Row>
               {
                 removeWords().map((el,index) => {
-                  return el!==null ? (<Col xs={3}>
-                      {index+1} . {el}
+                  return el!==null ? (<Col xs={3} className="validation-word-box">
+                      <span className="validation-index">{index+1}.</span> <span className="validation-word">{el}</span>
                     </Col>) : (
-                      <Col xs={3}>
-                      {index+1} . <input className="validation-input" onChange={(e)=>validateWord(index,e.currentTarget.value)}/>
+                      <Col xs={3} className="validation-word-box" >
+                      <span className="validation-index">{index+1}.</span> <input className="validation-input" onChange={(e)=>validateWord(index,e.currentTarget.value)}/>
                       </Col>
                     )
                 })

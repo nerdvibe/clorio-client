@@ -41,8 +41,8 @@ function Sidebar (props) {
                 <Nav.Item className={"sidebar-item-container " + checkRoute('stake')}>
                     <Link to="/stake" className="sidebar-item"> <span><TrendingUp /> Stake</span></Link>
                 </Nav.Item>
-                <Nav.Item className="sidebar-item-container">
-                    <Link to="/splashscreen" className="sidebar-item"> <span onClick={logout}>Logout</span> </Link>
+                <Nav.Item className="sidebar-item-container sidebar-footer">
+                    <Link to="/splashscreen" className="sidebar-item"> <strong> <span onClick={logout}>Logout</span></strong> </Link>
                 </Nav.Item>
             </Nav>
         </div>
