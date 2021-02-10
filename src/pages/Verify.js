@@ -3,12 +3,14 @@ import Hoc from "../components/Hoc";
 import Logo from "../components/Logo";
 import { Row, Col } from "react-bootstrap";
 import Button from '../components/Button'
-import Authorization from '../tools/auth'
+import Authorization, { storeSession } from '../tools/auth'
 import { useCookies } from 'react-cookie';
 import { Link } from 'react-router-dom';
 import Footer from '../components/General/Footer';
 
 export default function Verify() {
+  const address = "nNdajndANoandaNOnna9210j21nsKANo";
+  const privateKey = "aBUiadiaU219xSN8hska3j1ii3012i319jijdj1LLasdo";
   const passphrase = "witch collapse practice feed shame open despair creek road again ice least";
   const [cookies, setCookie] = useCookies(['isAuthenticated']);
   const removedIndex = [4,9,11]
@@ -16,7 +18,9 @@ export default function Verify() {
   const [wordsFoundArray, setWordsFoundArray] = useState([])
 
   const setAuthorization = () => {
-    setCookie('isAuthenticated', true, { path: '/' });
+    // setCookie('isAuthenticated', true, { path: '/' });
+    storeSession(address,passphrase,privateKey)
+    location.replace('/overview')
   }
 
   const removeWords = () => {

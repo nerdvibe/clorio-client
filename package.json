@@ -5,12 +5,16 @@
   "homepage": "./",
   "main": "src/start.js",
   "dependencies": {
+    "@ledgerhq/hw-app-btc": "^4.38.6",
+    "@ledgerhq/hw-transport-node-hid": "^4.38.6",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "bootstrap": "^4.6.0",
+    "dotenv": "^8.2.0",
     "electron": "^11.2.0",
     "electron-builder": "^22.9.1",
+    "nedb": "^1.8.0",
     "node-sass": "4.14.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.3",
@@ -18,9 +22,7 @@
     "react-dom": "^17.0.1",
     "react-feather": "^2.0.9",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "4.0.1",
-    "@ledgerhq/hw-app-btc": "^4.38.6",
-    "@ledgerhq/hw-transport-node-hid": "^4.38.6"
+    "react-scripts": "4.0.1"
   },
   "scripts": {
     "start": "nf start -p 3000",

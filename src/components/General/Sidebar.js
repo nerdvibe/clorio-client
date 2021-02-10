@@ -6,13 +6,14 @@ import {  Cpu,LogIn,TrendingUp } from 'react-feather';
 import { useCookies } from 'react-cookie';
 import Logo from '../Logo'
 import { useLocation } from 'react-router-dom'
+import { clearSession } from "../../tools";
 
 
 function Sidebar (props) {
     const [cookies, setCookie, removeCookie] = useCookies(['isAuthenticated']);
 
     const logout = () => {
-        removeCookie('isAuthenticated');
+        clearSession()
         location.replace('/overview')
     }
 

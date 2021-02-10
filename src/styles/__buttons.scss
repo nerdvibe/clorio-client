@@ -7,6 +7,10 @@
     width: fit-content;
     font-weight: 700;
     font-size: 0.95rem;
+    &:active {
+        color:$white;
+        background: $color;
+    }
 }
 
 @mixin fullMonoButton($background) {

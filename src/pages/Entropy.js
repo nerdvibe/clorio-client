@@ -16,8 +16,8 @@ export default function Entropy() {
   return (
     <Hoc className="main-container center">
       <div className="block-container real-full-page-container">
-        <div className="vertical-center">
-          <Row>
+        <div className="vertical-center" style={{height:"50vh"}}>
+          <Row className="vertical-center">
             <Col xs={6} className="offset-md-3 full-width-align-center">
               <div>
                 {/*<label>

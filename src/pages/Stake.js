@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState} from 'react'
 import Banner from '../components/Banner'
 import StakeTable from '../components/StakeTable'
 import Wallet from '../components/Wallet'
@@ -7,62 +7,54 @@ import Hoc from '../components/Hoc'
 import Modal from '../components/Modal'
 import {Row,Col} from 'react-bootstrap'
 
-export default class Stake extends React.Component {
-    state={
-        delegateName:'',
-        showModal:false 
+export default () => {
+    const [delegateName, setdelegateName] = useState("");
+    const [showModal, setshowModal] = useState(false)
+
+    const openModal = (delegateName) => {
+        console.log("🚀 ~ file: Stake.js ~ line 15 ~ openModal ~ delegateName", delegateName)
+        setdelegateName(delegateName)
+        setshowModal(true)
     }
 
-    render(){
-        return (
-            <Hoc className="main-container">
-                <Wallet />
-                <Banner />
-                <StakeTable toggleModal={(delegateName) => this.openModal(delegateName)}/>
-                <Modal show={this.state.showModal} close={() => this.toggleModal}>
-                    {this.renderModal()}
-                </Modal>
-            </Hoc>
-        )
+    const toggleModal = () => {
+        console.log("🚀 ~ file: Stake.js ~ line 23 ~ toggleModal ~ toggleModal")
+        setshowModal(!showModal)
     }
 
-    openModal = (delegateName) => {
-        this.setState({
-            delegateName,
-            showModal:!this.state.showModal
-        })
-    }
-
-    toggleModal = () => {
-        this.setState({
-            showModal:!this.state.showModal
-        })
-    }
-
-    confirmDelegate = () => {
+    const confirmDelegate = () => {
         console.log("Delegate confirmed")
-        this.setState({
-            showModal:!this.state.showModal
-        })
+        setshowModal(!showModal)
     }
 
-    renderModal = () => {
+    const renderModal = () => {
         return(
             <div className="mx-auto">
                 <h2>Confirm Delegation</h2>
                 <div className="v-spacer"/>
-                <h4>Are you sure you want to <br/> 
-                delegate this stake to {this.state.delegateName}</h4>
+                <h5 className="align-center mx-auto">Are you sure you want to <br/> 
+                delegate this stake to <strong>{delegateName}</strong></h5>
                 <div className="v-spacer"/>
                 <Row>
                     <Col xs={6} >
-                        <Button onClick={() => this.toggleModal()} className="link-button" text="Cancel"/>
+                        <Button onClick={toggleModal} className="link-button" text="Cancel"/>
                     </Col>
                     <Col xs={6} >
-                        <Button onClick={() => this.confirmDelegate()} className="lightGreenButton__fullMono" text="Confirm" />
+                        <Button onClick={confirmDelegate} className="lightGreenButton__fullMono" text="Confirm" />
                     </Col>
                 </Row>
             </div>
         )
     }
+
+    return (
+        <Hoc className="main-container">
+            <Wallet />
+            <Banner />
+            <StakeTable toggleModal={openModal}/>
+            <Modal show={showModal} close={toggleModal}>
+                {renderModal()}
+            </Modal>
+        </Hoc>
+    )
 }

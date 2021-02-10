@@ -34,8 +34,8 @@ export default function TransactionForm(props) {
 
     return (
         <div className="mx-auto  ">
-            <div className="block-container full-page-container">
-                <div className="vertical-center">
+            <div className="block-container fit-content-container">
+                <div className="transaction-form">
                     <div className="mx-auto fit-content"><strong><h2>Create new transaction</h2></strong></div>
                     <div className="v-spacer" />
                     <Row>

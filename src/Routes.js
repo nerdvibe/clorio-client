@@ -1,25 +1,21 @@
-import React from "react";
+import React,{useState} from "react";
 import Overview from "./pages/Overview";
 import SendTX from "./pages/SendTX";
 import Stake from "./pages/Stake";
-import SplashScreen from "./pages/SplashScreen";
+import {SplashScreen} from "./pages/SplashScreen";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Entropy from "./pages/Entropy";
 import Verify from "./pages/Verify";
 import { Route, Redirect, Switch } from "react-router-dom";
-import { useCookies } from "react-cookie";
-import Authentication from "./tools";
 import Ledger from "./pages/Ledger";
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
-  const [cookies, setCookie] = useCookies(["isAuthenticated"]);
-
   return (
     <Route
-      {...rest}
-      render={(props) => {
-        if (cookies.isAuthenticated) {
+    {...rest}
+    render={(props) => {
+        if (rest.sessionData.enckey) {
           return <Component {...props} />;
         } else {
           return (
@@ -38,12 +34,13 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
   );
 };
 
-function Routes() {
+function Routes(props) {
+  const {sessionData} = props
   return (
     <Switch>
-      <ProtectedRoute exact path="/overview" component={Overview} />
-      <ProtectedRoute exact path="/send-tx" component={SendTX} />
-      <ProtectedRoute exact path="/stake" component={Stake} />
+      <ProtectedRoute exact path="/overview" component={Overview} sessionData={sessionData} />
+      <ProtectedRoute exact path="/send-tx" component={SendTX} sessionData={sessionData} />
+      <ProtectedRoute exact path="/stake" component={Stake} sessionData={sessionData} />
       <Route path="/login">
         <Login />
       </Route>

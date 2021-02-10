@@ -1,9 +1,21 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import {Row,Col} from 'react-bootstrap'
 import Button from '../components/Button'
 import {Copy} from 'react-feather'
+import { getAddress } from '../tools'
 
 export default function Wallet() {
+
+    const [address, setaddress] = useState("")
+
+    useEffect(() => {
+        if (!address) {
+            getAddress((data)=>{
+                setaddress(data)
+            });
+        }
+    }, [])
+    
     function copyToClipboard (content) {
         const el = document.createElement('textarea');
         el.value = content;
@@ -14,43 +26,41 @@ export default function Wallet() {
     };
     return (
         <div className="block-container">
-            <Row>
-                <div className="inline-element walletImageContainer">
+            <div className="align-left">
+                <div className="inline-block-element walletImageContainer">
                     <div className="walletImageOutline"> 
                         <img className="walletImage" src="https://via.placeholder.com/100.png"/>
                     </div>
                 </div>
-                <div className="inline-element">
+                <div className="inline-block-element wallet-data">
                     <Row>
                         <Col xs={12}>
                             <h6 className="secondaryText">This is your address</h6>
                             <h4>
-                                1CwYRA3H1HAVXBd7tjgjgmi856jvSGey9K &nbsp;
-                                <Button className="inline-element" icon={<Copy />}  onClick={() => copyToClipboard("1CwYRA3H1HAVXBd7tjgjgmi856jvSGey9K")}/>
+                                {address} &nbsp;
+                                <Button className="inline-element" icon={<Copy />}  onClick={() => copyToClipboard(address)}/>
                             </h4>
                         </Col>
                     </Row>
                     <Row>
-                        <Col lg={5}>
-                            <h6 className="secondaryText">Your balance</h6> 
-                            <h5>1.2313219 ETH</h5>
-                        </Col>
-                        <Col >
-                            <Row>
-                                <Col sm={1} xl={1}>
-                                    <div className="v-div"/>
-                                </Col>
-                                <Col>
-                                    <span>
-                                        <h6 className="secondaryText">Apx balance</h6>
-                                        <h5>1.2313219 BTC</h5>
-                                    </span>
-                                </Col>
-                            </Row>
+                        <Col>
+                            <div className="inline-block-element" >
+                                <h6 className="secondaryText">Your balance</h6> 
+                                <h5>1.2313219 MINA</h5>
+                            </div>
+                            <div className="inline-block-element" >
+                                <div className="v-div"/>
+                            </div>
+                            <div className="inline-block-element" >
+                                <span>
+                                    <h6 className="secondaryText">Apx balance</h6>
+                                    <h5>1.2313219 BTC</h5>
+                                </span>
+                            </div>
                         </Col>
                     </Row>
                 </div>
-            </Row>
+            </div>
         </div>
     )
 }

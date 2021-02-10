@@ -5,8 +5,15 @@ import Button from '../components/Button'
 import Hoc from '../components/Hoc'
 import Logo from "../components/Logo";
 import Footer from '../components/General/Footer'
+import { useState } from 'react'
+import { storeSession } from '../tools'
 
 export default function Login(props) {
+    const [passphrase, setpassphrase] = useState("")
+    const checkCredentials = () => {
+        storeSession("this is a custom address",passphrase)
+    }
+    
     return (
         <Hoc>
             <div className="block-container real-full-page-container center">
@@ -22,7 +29,7 @@ export default function Login(props) {
                             <div className="v-spacer" />
                             <div className="wrap-input1 validate-input" data-validate="Name is required">
                                 <span className="icon" />
-                                <input className="input1" type="text" name="name" placeholder="Enter here" />
+                                <input className="input1" type="text" name="name" onChange={(e)=>setpassphrase(e.currentTarget.value)} placeholder="Enter here" />
                                 <span className="shadow-input1"></span>
                             </div>
                             <div className="v-spacer" />
@@ -35,7 +42,7 @@ export default function Login(props) {
                                 </Col>
                                 <Col xs={6}>
                                     <Link to="/overview">
-                                        <Button className="lightGreenButton__fullMono mx-auto" onClick={props.register} text="Access a wallet" />
+                                        <Button className="lightGreenButton__fullMono mx-auto" onClick={checkCredentials} text="Access a wallet" />
                                     </Link>
                                 </Col>
                             </Row>

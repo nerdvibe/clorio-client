@@ -7,7 +7,7 @@ export default function StakeTable(props) {
     const [searchbox, setSearchbox] = useState("")
 
     const searchboxHandler = (search) => {
-        setSearchbox(search)
+        setSearchbox(search.toLowerCase())
     }
 
     return (
@@ -31,7 +31,7 @@ export default function StakeTable(props) {
                             </tr>
                         </thead>
                         <tbody>
-                            {["Prova","Test","asdasd","xdxd"].filter(el=>el.includes(searchbox)).map((el,index) => renderRow(el,index))}
+                            {["Prova","Test","asdasd","xdxd"].filter(el=>el.toLowerCase().includes(searchbox)).map((el,index) => renderRow(el,index))}
                         </tbody>
                     </Table>
                 </div>
@@ -47,12 +47,12 @@ export default function StakeTable(props) {
                         <div className=""> 
                             <img className="small-walletImage" src="https://via.placeholder.com/100.png"/>
                         </div>
-                    </div>)} header="Validator" text="test" />
+                    </div>)} header="Validator" text={el} />
                 <StakeTableValue header={"Uptime"} text={"100%"} />
                 <StakeTableValue header={"Commission"} text={"50%"} />
                 <StakeTableValue header={"Staked"} text={"200 MINA"} />
                 <td>
-                    <Button className="yellowButton__fullMono" text="Delegate" onClick={() => props.toggleModal(index)}/>
+                    <Button className="yellowButton__fullMono" text="Delegate" onClick={() => props.toggleModal(el)}/>
                 </td>
             </tr>
         )
