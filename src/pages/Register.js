@@ -20,7 +20,7 @@ export default class Register extends Component {
     render() {
         return (
             <Hoc className="main-container ">
-                <div className="block-container real-full-page-container center">
+                <div className="block-container no-bg real-full-page-container center">
                     <Row>
                         <Col md={10} xl={6} className="offset-md-1 offset-xl-3 text-center" >
                             <div className="mx-auto fit-content"><Logo big={true} /></div>

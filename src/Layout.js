@@ -10,10 +10,8 @@ function Layout () {
   const privateKey = "aBUiadiaU219xSN8hska3j1ii3012i319jijdj1LLasdo";
   const passphrase = "witch collapse practice feed shame open despair creek road again ice least";
   readSession((data) => {
-      console.log("🚀 ~ file: Layout.js ~ line 13 ~ readSession ~ data", data)
       if(sessionData.empty){
           setsessionData(data)
-          console.log("🚀 ~ file: Layout.js ~ line 16 ~ readSession ~ sessionData", sessionData)
       }
   })
   return (

@@ -10,13 +10,34 @@ import { storeSession } from '../tools'
 
 export default function Login(props) {
     const [passphrase, setpassphrase] = useState("")
+
+    const inputHandler = (e) => {
+        console.log("🚀 ~ file: Login.js ~ line 26 ~ inputHandler ~ e.currentTarget.value", e.currentTarget.value)
+        setpassphrase(e.currentTarget.value)
+    }
+
     const checkCredentials = () => {
         storeSession("this is a custom address",passphrase)
     }
+
+    const disableButton = () => {
+        console.log("🚀 ~ file: Login.js ~ line 25 ~ disableButton ~ passphrase", passphrase)
+        if(!passphrase){
+            console.log("🚀 ~ file: Login.js ~ line 24 ~ disableButton ~ passphrase", passphrase)
+            return true;
+        }
+        if(passphrase === ""){
+            console.log("🚀 ~ file: Login.js ~ line 28 ~ disableButton ~ passphrase", passphrase)
+            return true;
+        }
+        console.log("🚀 ~ file: Login.js ~ line 33 ~ disableButton ~ disableButton")
+        return false
+    }
+
     
     return (
         <Hoc>
-            <div className="block-container real-full-page-container center">
+            <div className="block-container no-bg real-full-page-container center">
                 <div className="full-width">
                     <Row>
                         <Col md={4} xl={6} className="offset-md-3 offset-xl-3 text-center" >
@@ -29,7 +50,7 @@ export default function Login(props) {
                             <div className="v-spacer" />
                             <div className="wrap-input1 validate-input" data-validate="Name is required">
                                 <span className="icon" />
-                                <input className="input1" type="text" name="name" onChange={(e)=>setpassphrase(e.currentTarget.value)} placeholder="Enter here" />
+                                <input className="input1" type="text" name="name" onChange={inputHandler} placeholder="Enter here" />
                                 <span className="shadow-input1"></span>
                             </div>
                             <div className="v-spacer" />
@@ -41,15 +62,22 @@ export default function Login(props) {
                                     
                                 </Col>
                                 <Col xs={6}>
-                                    <Link to="/overview">
-                                        <Button className="lightGreenButton__fullMono mx-auto" onClick={checkCredentials} text="Access a wallet" />
-                                    </Link>
+                                    <Button 
+                                        className="lightGreenButton__fullMono mx-auto" 
+                                        onClick={checkCredentials} 
+                                        text="Access a wallet"
+                                        disabled={disableButton()}
+                                        />
                                 </Col>
                             </Row>
                             <div className="v-spacer" />
                             <div className="v-spacer" />
                             <Link to="/ledger">
-                                <Button className="link-button mx-auto" onClick={props.register} text="Login through a hardware wallet" />
+                                <Button 
+                                    className="link-button mx-auto" 
+                                    onClick={props.register} 
+                                    text="Login through a hardware wallet" 
+                                    />
                             </Link>
                         </Col>
                     </Row>

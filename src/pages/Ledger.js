@@ -20,7 +20,7 @@ export default function Ledger(props) {
                         
                         <h4 className="full-width-align-center">Connect now your hardware wallet</h4>
                         <div className="v-spacer" />
-                        <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                        <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
                         <div className="v-spacer" />
                         <h6 className="full-width-align-center">Looking for devices</h6>
                         <div className="v-spacer" />

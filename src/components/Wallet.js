@@ -3,6 +3,7 @@ import {Row,Col} from 'react-bootstrap'
 import Button from '../components/Button'
 import {Copy} from 'react-feather'
 import { getAddress } from '../tools'
+// import Avatar from '../tools/avatar'
 
 export default function Wallet() {
 
@@ -24,12 +25,13 @@ export default function Wallet() {
         document.execCommand('copy');
         document.body.removeChild(el);
     };
+    // <Avatar address={address} size="80" />
     return (
         <div className="block-container">
             <div className="align-left">
                 <div className="inline-block-element walletImageContainer">
                     <div className="walletImageOutline"> 
-                        <img className="walletImage" src="https://via.placeholder.com/100.png"/>
+                        <img className="walletImage" src="https://via.placeholder.com/100.png" />
                     </div>
                 </div>
                 <div className="inline-block-element wallet-data">

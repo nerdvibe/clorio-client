@@ -54,7 +54,6 @@ export const readSession = ( callback) => {
 
 export const clearSession = () => {
     db.remove({}, { multi: true }, function (err, numRemoved) {
-        console.log("🚀 ~ file: auth.js ~ line 48 ~ numRemoved", numRemoved)
     });
 }
 

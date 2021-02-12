@@ -16,7 +16,7 @@ export default function ConfirmLedgerTransaction(props) {
                             to  <strong>{props.transactionData.address}</strong> 
                             <div className="v-spacer" />
                             <div className="mx-auto">
-                                <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                                <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
                             </div>
                             <strong>Check your hardware wallet to proceed</strong> 
                         </Col>

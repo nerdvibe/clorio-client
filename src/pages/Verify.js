@@ -13,15 +13,26 @@ export default function Verify() {
   const privateKey = "aBUiadiaU219xSN8hska3j1ii3012i319jijdj1LLasdo";
   const passphrase = "witch collapse practice feed shame open despair creek road again ice least";
   const [cookies, setCookie] = useCookies(['isAuthenticated']);
-  const removedIndex = [4,9,11]
   const [disableButton, setDisableButton] = useState(true)
   const [wordsFoundArray, setWordsFoundArray] = useState([])
+  const [removedIndex, setremovedIndex] = useState(selectRandomIndexes())
+  function selectRandomIndexes () {
+    const size = Math.floor(3 + Math.random() * (9));
+    const randomIndexes = []
+    while(randomIndexes.length<=size){
+      const tmpIndex = Math.floor(1 + Math.random() * (12))
+      if(!randomIndexes.includes(tmpIndex)){
+        randomIndexes.push(tmpIndex)
+      }
+    }
+    return randomIndexes.sort()
+  }
 
   const setAuthorization = () => {
-    // setCookie('isAuthenticated', true, { path: '/' });
     storeSession(address,passphrase,privateKey)
     location.replace('/overview')
   }
+
 
   const removeWords = () => {
     const newPassphrase = []
@@ -61,7 +72,7 @@ export default function Verify() {
 
   return (
     <Hoc className="main-container">
-      <div className="block-container real-full-page-container center">
+      <div className="block-container no-bg real-full-page-container center">
         <div className="">
           <Row>
             <Col xs={8} className="offset-md-2 full-width-align-center">
@@ -82,11 +93,13 @@ export default function Verify() {
               <Row>
               {
                 removeWords().map((el,index) => {
-                  return el!==null ? (<Col xs={3} className="validation-word-box">
-                      <span className="validation-index">{index+1}.</span> <span className="validation-word">{el}</span>
-                    </Col>) : (
-                      <Col xs={3} className="validation-word-box" >
-                      <span className="validation-index">{index+1}.</span> <input className="validation-input" onChange={(e)=>validateWord(index,e.currentTarget.value)}/>
+                  return el!==null ? (
+                      <Col xs={3} key={index} className="validation-word-box">
+                        <span className="validation-index">{index+1}.</span> <span className="validation-word">{el}</span>
+                      </Col>
+                    ) : (
+                      <Col xs={3} key={index} className="validation-word-box" >
+                        <span className="validation-index">{index+1}.</span> <input className="validation-input" onChange={(e)=>validateWord(index,e.currentTarget.value)}/>
                       </Col>
                     )
                 })

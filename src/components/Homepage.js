@@ -6,7 +6,7 @@ import Logo from './Logo'
 
 export default function Homepage(props) {
     return (
-            <div className="block-container real-full-page-container center">
+            <div className="block-container no-bg real-full-page-container center">
                 <Row>
                     <Col xs={10} className="offset-md-1 full-width-align-center">
                     <div className="mx-auto fit-content">

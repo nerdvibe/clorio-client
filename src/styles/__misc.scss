@@ -413,3 +413,11 @@ tbody{
 .fit-content-container{
     height: fit-content;
 }
+
+.no-bg{
+    background: none !important;
+}
+
+.no-scroll{
+    overflow-y: unset;
+}

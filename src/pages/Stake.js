@@ -12,13 +12,11 @@ export default () => {
     const [showModal, setshowModal] = useState(false)
 
     const openModal = (delegateName) => {
-        console.log("🚀 ~ file: Stake.js ~ line 15 ~ openModal ~ delegateName", delegateName)
         setdelegateName(delegateName)
         setshowModal(true)
     }
 
     const toggleModal = () => {
-        console.log("🚀 ~ file: Stake.js ~ line 23 ~ toggleModal ~ toggleModal")
         setshowModal(!showModal)
     }
 
