@@ -1,17 +1,18 @@
 import React from 'react';
 import { BrowserRouter as Router,} from 'react-router-dom';
 import './App.scss';
-import { CookiesProvider } from 'react-cookie';
 import Layout from './Layout';
-
+import { ApolloProvider } from '@apollo/client';
+import Api from './tools/api'
+  
 function App() {
   return (
     <div className="App">
-      <CookiesProvider>
+      <ApolloProvider client={Api.client}>
         <Router>
           <Layout />
         </Router>
-      </CookiesProvider>
+      </ApolloProvider>
     </div>
   );
 }

@@ -4,9 +4,21 @@ import TransactionForm from '../components/TransactionForm'
 import ConfirmTransaction from '../components/ConfirmTransaction'
 import ConfirmLedgerTransaction from '../components/ConfirmLedgerTransaction'
 import Hoc from '../components/Hoc'
+import Alert from '../components/General/Alert'
 
 export default function SendTX (props) {
-    const isLedgerEnabled = true;
+    const [show, setShow] = useState(false);
+    const [alertText, setAlertText] = useState("");
+    
+    const showToast = () => {
+        setShow(true);
+        setAlertText("This is a test")
+    };
+    
+    const hideToast = () => {
+        setShow(false);
+    };
+    const isLedgerEnabled = false;
     const [transactionData, settransactionData] = useState({
         amount:0,
         address:"",
@@ -14,7 +26,11 @@ export default function SendTX (props) {
     })
     const [step, setStep] = useState(0)
     const nextStep = () => {
-        setStep(1)
+        if(transactionData.address === "" || transactionData.amount === 0){
+            showToast()
+        } else {
+            setStep(1)
+        }
     }
 
     const stepBackwards = () => {
@@ -46,6 +62,10 @@ export default function SendTX (props) {
                             sendTransaction={sendTransaction} />
                     )
             }
+
+            <Alert show={show} hideToast={hideToast} type={"error-toast"}>
+                Please insert a valid address and an amount
+            </Alert>
         </Hoc>
     )
 }

@@ -12,7 +12,6 @@ export default function Login(props) {
     const [passphrase, setpassphrase] = useState("")
 
     const inputHandler = (e) => {
-        console.log("🚀 ~ file: Login.js ~ line 26 ~ inputHandler ~ e.currentTarget.value", e.currentTarget.value)
         setpassphrase(e.currentTarget.value)
     }
 
@@ -21,20 +20,15 @@ export default function Login(props) {
     }
 
     const disableButton = () => {
-        console.log("🚀 ~ file: Login.js ~ line 25 ~ disableButton ~ passphrase", passphrase)
         if(!passphrase){
-            console.log("🚀 ~ file: Login.js ~ line 24 ~ disableButton ~ passphrase", passphrase)
             return true;
         }
         if(passphrase === ""){
-            console.log("🚀 ~ file: Login.js ~ line 28 ~ disableButton ~ passphrase", passphrase)
             return true;
         }
-        console.log("🚀 ~ file: Login.js ~ line 33 ~ disableButton ~ disableButton")
         return false
     }
 
-    
     return (
         <Hoc>
             <div className="block-container no-bg real-full-page-container center">

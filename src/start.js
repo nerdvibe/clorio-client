@@ -13,12 +13,12 @@ function createWindow() {
         width: 1200,
         height: 800,
         webPreferences: {
-            nodeIntegration: true,
+            // 2. Enable Node.js integration
+            nodeIntegration: true
         },
         minWidth:1200,
         minHeight:800
     })
-
     mainWindow.loadURL(
         process.env.ELECTRON_START_URL ||
         url.format({
