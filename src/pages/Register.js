@@ -6,6 +6,8 @@ import Hoc from '../components/Hoc'
 import {Copy} from 'react-feather'
 import Logo from "../components/Logo";
 import Footer from '../components/General/Footer'
+import * as CodaSDK from "@o1labs/client-sdk";
+import { storeSession } from '../tools'
 
 
 export default class Register extends Component {
@@ -17,37 +19,48 @@ export default class Register extends Component {
         document.execCommand('copy');
         document.body.removeChild(el);
     };
+
     render() {
+
+        const keys = CodaSDK.genKeys();
+        const privateKey = keys.privateKey;
+        const publicKey = keys.publicKey;
+        
+
+        const setAuthorization = () => {
+            storeSession(publicKey)
+        }
+        
         return (
             <Hoc className="main-container ">
                 <div className="block-container no-bg real-full-page-container center">
                     <Row>
-                        <Col md={10} xl={6} className="offset-md-1 offset-xl-3 text-center" >
+                        <Col md={10} xl={8} className="offset-md-1 offset-xl-2 text-center" >
                             <div className="mx-auto fit-content"><Logo big={true} /></div>
                             <div className="v-spacer no-print" />
                             
                             <h4 className="full-width-align-center">This is your address</h4>
                             <div className="wrap-input1 validate-input" data-validate="Name is required">
                                 <h5 className="full-width-align-center">
-                                    nNdajndANoandaNOnna9210j21nsKANo
+                                    {publicKey}<Button className="inline-element no-print" icon={<Copy />}  onClick={() => this.copyToClipboard(publicKey)}/>
                                 </h5>
                             </div>
                             <div className="v-spacer" />
 
-                            <h4 className="full-width-align-center">This is your passphrase</h4>
-                            <div className="wrap-input1 validate-input" data-validate="Name is required">
-                                <h5 className="full-width-align-center">
-                                    witch collapse practice feed shame open despair creek road again ice least &nbsp;
-                                    <Button className="inline-element no-print" icon={<Copy />}  onClick={() => this.copyToClipboard("witch collapse practice feed shame open despair creek road again ice least")}/>
-                                </h5>
-                                <input style={{display: "none"}} value="" id="passphrase"/> 
-                            </div>
-                            <div className="v-spacer" />
+                            {/* <h4 className="full-width-align-center">This is your passphrase</h4>
+                                <div className="wrap-input1 validate-input" data-validate="Name is required">
+                                    <h5 className="full-width-align-center">
+                                        witch collapse practice feed shame open despair creek road again ice least &nbsp;
+                                        <Button className="inline-element no-print" icon={<Copy />}  onClick={() => this.copyToClipboard("witch collapse practice feed shame open despair creek road again ice least")}/>
+                                    </h5>
+                                    <input style={{display: "none"}} value="" id="passphrase"/> 
+                                </div>
+                            <div className="v-spacer" /> */}
 
                             <h4 className="full-width-align-center">This is your private key</h4>
                             <div className="wrap-input1 validate-input">
                                 <h5 className="full-width-align-center">
-                                    aBUiadiaU219xSN8hska3j1ii3012i319jijdj1LLasdo
+                                    {privateKey}<Button className="inline-element no-print" icon={<Copy />}  onClick={() => this.copyToClipboard(privateKey)}/>
                                 </h5>
                             </div>
                             <div className="wrap-input1 validate-input no-print" data-validate="Name is required">
@@ -67,8 +80,8 @@ export default class Register extends Component {
                                     
                                 </Col>
                                 <Col xs={6}>
-                                    <Link to="/verify">
-                                        <Button className="lightGreenButton__fullMono mx-auto" onClick={this.props.register} text="Continue" />
+                                    <Link to="/overview">
+                                        <Button className="lightGreenButton__fullMono mx-auto" onClick={setAuthorization} text="Continue" />
                                     </Link>
                                 </Col>
                             </Row>

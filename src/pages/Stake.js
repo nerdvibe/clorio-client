@@ -5,11 +5,26 @@ import Wallet from '../components/Wallet'
 import Button from '../components/Button'
 import Hoc from '../components/Hoc'
 import Modal from '../components/Modal'
+import { useQuery, gql } from '@apollo/client';
 import {Row,Col} from 'react-bootstrap'
+
+const VALIDATORS = gql`
+    query validators {
+        validators(limit: 10) {
+        fee
+        id
+        image
+        name
+        publicKey
+        website
+        }
+    }
+`
 
 export default () => {
     const [delegateName, setdelegateName] = useState("");
     const [showModal, setshowModal] = useState(false)
+    const validators = useQuery(VALIDATORS);
 
     const openModal = (delegateName) => {
         setdelegateName(delegateName)
@@ -49,7 +64,7 @@ export default () => {
         <Hoc className="main-container">
             <Wallet />
             <Banner />
-            <StakeTable toggleModal={openModal}/>
+            <StakeTable toggleModal={openModal} validators={validators} />
             <Modal show={showModal} close={toggleModal}>
                 {renderModal()}
             </Modal>

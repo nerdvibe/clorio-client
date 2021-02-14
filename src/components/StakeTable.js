@@ -2,11 +2,12 @@ import React,{useState} from 'react'
 import  Button  from '../components/Button'
 import { Table } from 'react-bootstrap'
 import StakeTableValue from '../components/StakeTableValue'
+import Spinner from './General/Spinner'
 
 export default function StakeTable(props) {
     const [searchbox, setSearchbox] = useState("")
     const [page, setpage] = useState(1)
-    const [maxPages, setMaxPages] = useState(30)
+    const [maxPages, setMaxPages] = useState(1)
 
     const searchboxHandler = (search) => {
         setSearchbox(search.toLowerCase())
@@ -32,9 +33,7 @@ export default function StakeTable(props) {
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {["Prova","Test","asdasd","xdxd"].filter(el=>el.toLowerCase().includes(searchbox)).map((el,index) => renderRow(el,index))}
-                        </tbody>
+                        {renderTableBody()}
                     </Table>
                     {renderPagination()}
                 </div>
@@ -48,11 +47,11 @@ export default function StakeTable(props) {
                 <StakeTableValue avatar={(
                     <div className="walletImageContainer small-image inline-element">
                         <div className=""> 
-                            <img className="small-walletImage" src="https://via.placeholder.com/100.png"/>
+                            <img className="small-walletImage" src={el.image || "https://via.placeholder.com/100.png"}/>
                         </div>
-                    </div>)} header="Validator" text={el} />
+                    </div>)} header="Validator" text={el.name} />
                 <StakeTableValue header={"Uptime"} text={"100%"} />
-                <StakeTableValue header={"Commission"} text={"50%"} />
+                <StakeTableValue header={"Commission"} text={`${el.fee}%`} />
                 <StakeTableValue header={"Staked"} text={"200 MINA"} />
                 <td>
                     <Button className="yellowButton__fullMono" text="Delegate" onClick={() => props.toggleModal(el)}/>
@@ -69,26 +68,40 @@ export default function StakeTable(props) {
         const indexToRender = () => {
             const indexToReturn = []
             let count = 0;
+            let breakCondition = false
             if(page>2 && page <indexes.length-2){
                 const tmpIndex = page-2
-                while(count<5){
-                    indexToReturn.push(tmpIndex+count)
-                    count++
+                while(count<5 && !breakCondition){
+                    if(tmpIndex+count<=maxPages){
+                        indexToReturn.push(tmpIndex+count)
+                        count++
+                    } else {
+                        breakCondition = true
+                    }
                 }
             } else if(page<=2) {
-                while(count<5){
-                    indexToReturn.push(1+count)
-                    count++
+                while(count<5 && !breakCondition){
+                    if(1+count<=maxPages){
+                        indexToReturn.push(1+count)
+                        count++
+                    } else {
+                        breakCondition = true
+                    }
                 }
             } else {
                 const tmpFirstIndex = indexes.length-4
-                while(count<5){
-                    indexToReturn.push(tmpFirstIndex+count)
-                    count++
+                while(count<5 && !breakCondition){
+                    if(tmpFirstIndex+count<=maxPages){
+                        indexToReturn.push(tmpFirstIndex+count)
+                        count++
+                    } else {
+                        breakCondition = true
+                    }
                 }
             }
             return indexToReturn
         }
+
         const changePage = (index) => {
             const lastIndex = indexes.length-1
             if(index>0 && index<=indexes[lastIndex]){
@@ -109,9 +122,35 @@ export default function StakeTable(props) {
 
     function renderPaginationItem(index,change) {
         return <p 
+            key={index}
             onClick={() => change(index)}
             className={page===index?"active":""}>
             {index}
         </p>
+    }
+
+    function renderTableBody() {
+        console.log("🚀 ~ file: StakeTable.js ~ line 129 ~ renderTableBody ~ props.validators.data", props.validators)
+        if(props.validators.error){
+            return (
+                <div className="block-container-last">
+                    <div className="full-width padding-y-50">
+                        <img src={ErrorImage} className="animate__animated animate__fadeIn"/>
+                    </div>
+                </div>
+            )
+        }
+        if(props.validators.data && props.validators.data.validators){
+            const filteredValidators = props.validators.data.validators.filter(el=>el.name.toLowerCase().includes(searchbox))
+            console.log("🚀 ~ file: StakeTable.js ~ line 131 ~ renderTableBody ~ filteredValidators", filteredValidators)
+            return (<tbody>
+                {filteredValidators.map((el,index) => renderRow(el,index))}
+            </tbody>)
+        }
+        return(
+            <Spinner className={"full-width"} show={props.validators.loading}>
+                <tbody />
+            </Spinner>
+        )
     }
 }

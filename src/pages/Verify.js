@@ -4,15 +4,12 @@ import Logo from "../components/Logo";
 import { Row, Col } from "react-bootstrap";
 import Button from '../components/Button'
 import Authorization, { storeSession } from '../tools/auth'
-import { useCookies } from 'react-cookie';
-import { Link } from 'react-router-dom';
 import Footer from '../components/General/Footer';
 
 export default function Verify() {
   const address = "nNdajndANoandaNOnna9210j21nsKANo";
   const privateKey = "aBUiadiaU219xSN8hska3j1ii3012i319jijdj1LLasdo";
   const passphrase = "witch collapse practice feed shame open despair creek road again ice least";
-  const [cookies, setCookie] = useCookies(['isAuthenticated']);
   const [disableButton, setDisableButton] = useState(true)
   const [wordsFoundArray, setWordsFoundArray] = useState([])
   const [removedIndex, setremovedIndex] = useState(selectRandomIndexes())

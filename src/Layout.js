@@ -7,8 +7,6 @@ import Spinner from "./components/General/Spinner";
 
 function Layout () {
   const [sessionData, setsessionData] = useState({empty:true})
-  const privateKey = "aBUiadiaU219xSN8hska3j1ii3012i319jijdj1LLasdo";
-  const passphrase = "witch collapse practice feed shame open despair creek road again ice least";
   readSession((data) => {
       if(sessionData.empty){
           setsessionData(data)

@@ -30,10 +30,6 @@ th{
     padding-top: 2px;
 }
 
-.wallet-data{
-    width: 50vw;
-}
-
 .small-image-outline{
     border-radius: 50%;
     border: 3px solid $red;
@@ -542,4 +538,9 @@ tbody{
 .error-toast{
     background: $red !important;
     color: $white !important;
+}
+
+.first-place{
+    position: absolute;
+    z-index: 4;
 }

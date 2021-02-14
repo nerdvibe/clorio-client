@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
-const TOAST_TIMEOUT = 5000
+const TOAST_TIMEOUT = 2500
 
 const Alert = props => {
   const [node] = useState(document.createElement('div'));
@@ -27,7 +27,7 @@ const Alert = props => {
     }
 
     return () => removeNode();
-  }, [node, props]);
+  }, [node, props.show, props.type]);
 
   return ReactDOM.createPortal(props.children, node);
 };

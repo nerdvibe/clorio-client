@@ -166,6 +166,7 @@ export default function TransactionTable(props) {
 
     function renderPaginationItem(index,change) {
         return <p 
+            key={index}
             onClick={() => change(index)}
             className={page===index?"active":""}>
             {index}

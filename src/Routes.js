@@ -5,8 +5,8 @@ import Stake from "./pages/Stake";
 import {SplashScreen} from "./pages/SplashScreen";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Entropy from "./pages/Entropy";
-import Verify from "./pages/Verify";
+// import Entropy from "./pages/Entropy";
+// import Verify from "./pages/Verify";
 import { Route, Redirect, Switch } from "react-router-dom";
 import Ledger from "./pages/Ledger";
 
@@ -15,7 +15,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
     <Route
     {...rest}
     render={(props) => {
-        if (rest.sessionData.enckey) {
+        if (rest.sessionData.address) {
           return <Component {...props} />;
         } else {
           return (
@@ -44,15 +44,15 @@ function Routes(props) {
       <Route path="/login">
         <Login />
       </Route>
-      <Route path="/register">
+      {/*<Route path="/register">
         <Entropy />
-      </Route>
-      <Route path="/register-2">
+      </Route>*/}
+      <Route path="/register">
         <Register />
       </Route>
-      <Route path="/verify">
+      {/*<Route path="/verify">
         <Verify />
-      </Route>
+      </Route>*/}
       <Route path="/ledger">
         <Ledger />
       </Route>

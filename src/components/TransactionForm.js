@@ -5,10 +5,12 @@ import Button from './Button'
 export default function TransactionForm(props) {
 
     const setDefaultFee = () => {
-        props.setData({
-            ...props.transactionData,
-            fee:0.5
-        })
+        if(props.defaultFee){
+            props.setData({
+                ...props.transactionData,
+                fee:props.defaultFee.estimatedFee
+            })
+        }
     }
 
     const addressHandler = (address) => {

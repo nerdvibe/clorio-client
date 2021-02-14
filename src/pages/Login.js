@@ -7,6 +7,7 @@ import Logo from "../components/Logo";
 import Footer from '../components/General/Footer'
 import { useState } from 'react'
 import { storeSession } from '../tools'
+import Input from '../components/Input'
 
 export default function Login(props) {
     const [passphrase, setpassphrase] = useState("")
@@ -16,7 +17,7 @@ export default function Login(props) {
     }
 
     const checkCredentials = () => {
-        storeSession("this is a custom address",passphrase)
+        storeSession("this is a custom address")
     }
 
     const disableButton = () => {
@@ -42,11 +43,7 @@ export default function Login(props) {
                             <h6 className="full-width-align-center">Don't have an account? <Link to="/register"><Button className="link-button inline-element" onClick={props.register} text="Sign-in" /></Link></h6>
                             <div className="v-spacer" />
                             <div className="v-spacer" />
-                            <div className="wrap-input1 validate-input" data-validate="Name is required">
-                                <span className="icon" />
-                                <input className="input1" type="text" name="name" onChange={inputHandler} placeholder="Enter here" />
-                                <span className="shadow-input1"></span>
-                            </div>
+                            <Input inputHandler={inputHandler} placeholder="Enter here"/>
                             <div className="v-spacer" />
                             <Row>
                                 <Col xs={6}>

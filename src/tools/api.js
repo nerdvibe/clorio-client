@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 
 const client = new ApolloClient({
   // uri: 'https://48p1r2roz4.sse.codesandbox.io',
-  uri: 'http://78.47.70.237:8080/v1/graphql',
+  uri: 'https://minahub01.carbonara.science/v1/graphql',
   cache: new InMemoryCache()
 });
 

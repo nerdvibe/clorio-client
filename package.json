@@ -8,6 +8,7 @@
     "@apollo/client": "^3.3.9",
     "@ledgerhq/hw-app-btc": "^4.38.6",
     "@ledgerhq/hw-transport-node-hid": "^4.38.6",
+    "@o1labs/client-sdk": "^0.2.3",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",

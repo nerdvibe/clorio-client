@@ -3,7 +3,7 @@ import Hoc from '../components/Hoc'
 
 export default function Modal(props) {
     return props.show ? (
-        <Hoc className="mx-auto">
+        <Hoc className="mx-auto first-place">
             <div className="modal-background " onClick={props.close} />
             <div className="modal-container">
                 {props.children}
