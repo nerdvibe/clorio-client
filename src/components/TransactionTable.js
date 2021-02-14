@@ -59,7 +59,6 @@ export default function TransactionTable(props) {
     const [page, setpage] = useState(1)
     const [maxPages, setMaxPages] = useState(30)
     const { loading, error, data } = props
-    console.log("🚀 ~ file: TransactionTable.js ~ line 62 ~ TransactionTable ~ data", data)
     if(error){
         return (
             <div className="block-container-last">

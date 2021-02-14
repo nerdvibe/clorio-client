@@ -17,10 +17,6 @@ const EXCHANGE_RATES = gql`
 
 function Overview(props) {
   const queryResult = useQuery(EXCHANGE_RATES);
-  // console.log("🚀 ~ file: Overview.js ~ line 20 ~ Overview ~ data", data)
-
-  // if (loading) return <p>Loading...</p>;
-  // if (error) return <p>Error :(</p>;
   return (
     <Hoc className="main-container">
         <Wallet />

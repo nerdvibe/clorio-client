@@ -73,7 +73,6 @@ const computePentagon = props => ({
 })
 
 const getShape = (chunk, size, gradient, sizeScale = 1) => {
-console.log("🚀 ~ file: avatar.js ~ line 64 ~ getShape ~ gradient", gradient)
   const shapeNames = ['circle', 'triangle', 'square']
 
   const sizes = [1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1].map(
@@ -172,7 +171,6 @@ export default class Avatar extends React.Component {
     colors[
       addressHashChunks[0].substr(1, 2) % colors.length
     ]
-    console.log("🚀 ~ file: avatar.js ~ line 163 ~ Avatar ~ render ~ gradientScheme", gradientScheme)
     const primaryGradients = gradientScheme
     const secondaryGradients = gradientScheme2
     const shapes = [
@@ -181,7 +179,6 @@ export default class Avatar extends React.Component {
       getShape(addressHashChunks[2], newSize, secondaryGradients, 0.23),
       getShape(addressHashChunks[3], newSize, secondaryGradients, 0.18)
     ]
-    console.log("🚀 ~ file: avatar.js ~ line 181 ~ Avatar ~ render ~ shapes", shapes)
     return (
       <svg
         height={newSize}
