@@ -17,7 +17,7 @@ export default function Login(props) {
     }
 
     const checkCredentials = () => {
-        storeSession("this is a custom address")
+        storeSession("B62qns2egmDKDeaKvhyZ9rR7h4hdA758UQtuBCmYqek25tj7nMn3nPQ")
     }
 
     const disableButton = () => {

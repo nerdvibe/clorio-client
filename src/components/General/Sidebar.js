@@ -25,7 +25,7 @@ function Sidebar (props) {
     
     return (
         <div style={{padding:'10px'}}>
-            <Nav className="col-md-12 d-none d-md-block bg-light sidebar level-zero"
+            <Nav className="col-md-12 d-none d-md-block sidebar level-zero"
                 activeKey="/home"
                 onSelect={selectedKey => alert(`selected ${selectedKey}`)}>
                 <div className="sidebar-sticky" style={{margin:'0 auto'}}> 
