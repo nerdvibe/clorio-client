@@ -7,6 +7,8 @@ import Hoc from '../components/Hoc'
 import Modal from '../components/Modal'
 import { useQuery, gql } from '@apollo/client';
 import {Row,Col} from 'react-bootstrap'
+import { getAddress } from '../tools'
+import { useEffect } from 'react'
 
 const VALIDATORS = gql`
     query validators {
@@ -21,10 +23,28 @@ const VALIDATORS = gql`
     }
 `
 
-export default () => {
+const DELEGATE = gql`
+    query accountByKey($publicKey: String) {
+        accountByKey(publicKey: $publicKey) {
+            delegate {
+                publicKey
+            }
+        }
+    }
+`
+
+export default (props) => {
     const [delegateName, setdelegateName] = useState("");
+    const [currentDelegate, setCurrentDelegate] = useState("");
     const [showModal, setshowModal] = useState(false)
     const validators = useQuery(VALIDATORS);
+    const delegate = useQuery(DELEGATE,{variables:{publicKey:props.sessionData.address}});
+    
+    useEffect(()=>{
+        if(delegate.data){
+            setCurrentDelegate(delegate.data.accountByKey.delegate.publicKey)
+        }
+    },[delegate.data])
 
     const openModal = (delegateName) => {
         setdelegateName(delegateName)
@@ -64,7 +84,7 @@ export default () => {
         <Hoc className="main-container">
             <Wallet />
             <Banner />
-            <StakeTable toggleModal={openModal} validators={validators} />
+            <StakeTable toggleModal={openModal} validators={validators} currentDelegate={currentDelegate} />
             <Modal show={showModal} close={toggleModal}>
                 {renderModal()}
             </Modal>

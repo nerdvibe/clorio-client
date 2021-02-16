@@ -3,6 +3,13 @@ th{
     border: none !important;
 }
 
+.table-element{
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .walletImage {
     background: $red;
     width: 80px;

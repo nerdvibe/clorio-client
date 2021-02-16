@@ -4,20 +4,23 @@ import Button from '../components/Button'
 import {Copy} from 'react-feather'
 import { getAddress } from '../tools'
 import { useQuery, gql } from '@apollo/client';
-// import Avatar from '../tools/avatar'
+import Avatar from '../tools/avatar'
+import Big from 'big.js';
 
 const TICKER = gql`
     query ticker {
         ticker {
-        BTCMINA
+            BTCMINA
         }
     }
 `;
 
 const BALANCE = gql`
-    query MyQuery ($address: String!){
-        balanceByKey(publicKey: $address) {
-            balance
+    query accountByKey($publicKey: String) {
+        accountByKey(publicKey: $publicKey) {
+            balance {
+                total
+            }
         }
     }
 `
@@ -27,7 +30,7 @@ export default function Wallet() {
     const [address, setaddress] = useState("")
     const ticker = useQuery(TICKER);
     const balance = useQuery(BALANCE, {
-        variables: { address }
+        variables: { publicKey:address }
     });
 
     useEffect(() => {
@@ -46,13 +49,14 @@ export default function Wallet() {
         document.execCommand('copy');
         document.body.removeChild(el);
     };
-    // <Avatar address={address} size="80" />
+    const total =  balance.data && Big(balance.data.accountByKey.balance.total).mul(1e-9).toFixed();
+    // <img className="walletImage" src="https://via.placeholder.com/100.png" />
     return (
         <div className="block-container">
             <div className="align-left">
                 <div className="inline-block-element walletImageContainer">
                     <div className="walletImageOutline"> 
-                        <img className="walletImage" src="https://via.placeholder.com/100.png" />
+                        <Avatar address={address} size="80" />
                     </div>
                 </div>
                 <div className="inline-block-element wallet-data">
@@ -69,7 +73,7 @@ export default function Wallet() {
                         <Col>
                             <div className="inline-block-element" >
                                 <h6 className="secondaryText">Your balance</h6> 
-                                <h5>{balance.data && balance.data.balanceByKey.balance} MINA</h5>
+                                <h5>{total} MINA</h5>
                             </div>
                             <div className="inline-block-element" >
                                 <div className="v-div"/>

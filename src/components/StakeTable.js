@@ -3,6 +3,7 @@ import  Button  from '../components/Button'
 import { Table } from 'react-bootstrap'
 import StakeTableValue from '../components/StakeTableValue'
 import Spinner from './General/Spinner'
+import Avatar from '../tools/avatar'
 
 export default function StakeTable(props) {
     const [searchbox, setSearchbox] = useState("")
@@ -18,7 +19,7 @@ export default function StakeTable(props) {
             <div className="block-container-last  py-50">
                 <div> 
                     <h4>Your status</h4>
-                    <h6 className="full-width-align-left">Your are staking for None</h6>
+                    <h6 className="full-width-align-left">Your are staking for {props.currentDelegate || "None"}</h6>
                     <div className="v-spacer" />
                     
                     <Table>
@@ -47,14 +48,14 @@ export default function StakeTable(props) {
                 <StakeTableValue avatar={(
                     <div className="walletImageContainer small-image inline-element">
                         <div className=""> 
-                            <img className="small-walletImage" src={el.image || "https://via.placeholder.com/100.png"}/>
+                            {el.image ? <img className="small-walletImage" src={el.image}/> : <Avatar address={el.publicKey} size="30" />}
                         </div>
                     </div>)} header="Validator" text={el.name} />
                 <StakeTableValue header={"Uptime"} text={"100%"} />
                 <StakeTableValue header={"Commission"} text={`${el.fee}%`} />
                 <StakeTableValue header={"Staked"} text={"200 MINA"} />
                 <td>
-                    <Button className="yellowButton__fullMono" text="Delegate" onClick={() => props.toggleModal(el)}/>
+                    <Button className="yellowButton__fullMono" text="Delegate" onClick={() => props.toggleModal(el.name)}/>
                 </td>
             </tr>
         )
@@ -130,7 +131,6 @@ export default function StakeTable(props) {
     }
 
     function renderTableBody() {
-        console.log("🚀 ~ file: StakeTable.js ~ line 129 ~ renderTableBody ~ props.validators.data", props.validators)
         if(props.validators.error){
             return (
                 <div className="block-container-last">
@@ -142,7 +142,6 @@ export default function StakeTable(props) {
         }
         if(props.validators.data && props.validators.data.validators){
             const filteredValidators = props.validators.data.validators.filter(el=>el.name.toLowerCase().includes(searchbox))
-            console.log("🚀 ~ file: StakeTable.js ~ line 131 ~ renderTableBody ~ filteredValidators", filteredValidators)
             return (<tbody>
                 {filteredValidators.map((el,index) => renderRow(el,index))}
             </tbody>)

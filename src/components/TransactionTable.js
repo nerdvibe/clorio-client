@@ -4,57 +4,6 @@ import Spinner from './General/Spinner'
 import ErrorImage from '../assets/Error.svg'
 import { useState } from 'react'
 
-
-const mockData = [{
-    id: "170dde7f ... 274d93baaf",
-    date: "03/01/2021 14:49:12",
-    sender: "DdaimCs1298xsaZA012dScaAcals",
-    recipient: "DdaimCs1298xsaZA012dScaAcals",
-    amount: "500",
-}, {
-    id: "170dde7f ... 274d93baaf",
-    date: "03/01/2021 14:49:12",
-    sender: "DdaimCs1298xsaZA012dScaAcals",
-    recipient: "DdaimCs1298xsaZA012dScaAcals",
-    amount: "500",
-}, {
-    id: "170dde7f ... 274d93baaf",
-    date: "03/01/2021 14:49:12",
-    sender: "DdaimCs1298xsaZA012dScaAcals",
-    recipient: "DdaimCs1298xsaZA012dScaAcals",
-    amount: "500",
-}, {
-    id: "170dde7f ... 274d93baaf",
-    date: "03/01/2021 14:49:12",
-    sender: "DdaimCs1298xsaZA012dScaAcals",
-    recipient: "DdaimCs1298xsaZA012dScaAcals",
-    amount: "500",
-}, {
-    id: "170dde7f ... 274d93baaf",
-    date: "03/01/2021 14:49:12",
-    sender: "DdaimCs1298xsaZA012dScaAcals",
-    recipient: "DdaimCs1298xsaZA012dScaAcals",
-    amount: "500",
-}, {
-    id: "170dde7f ... 274d93baaf",
-    date: "03/01/2021 14:49:12",
-    sender: "DdaimCs1298xsaZA012dScaAcals",
-    recipient: "DdaimCs1298xsaZA012dScaAcals",
-    amount: "500",
-}, {
-    id: "170dde7f ... 274d93baaf",
-    date: "03/01/2021 14:49:12",
-    sender: "DdaimCs1298xsaZA012dScaAcals",
-    recipient: "DdaimCs1298xsaZA012dScaAcals",
-    amount: "500",
-}, {
-    id: "170dde7f ... 274d93baaf",
-    date: "03/01/2021 14:49:12",
-    sender: "DdaimCs1298xsaZA012dScaAcals",
-    recipient: "DdaimCs1298xsaZA012dScaAcals",
-    amount: "500",
-}]
-
 export default function TransactionTable(props) {
     const [page, setpage] = useState(1)
     const [maxPages, setMaxPages] = useState(30)
@@ -99,13 +48,14 @@ export default function TransactionTable(props) {
     }
 
     function renderRow(row,index) {
+        const {timestamp,state_hash} = row.blocks_user_commands[0].block
         return (
             <tr key={index}>
-                <td><a href="#" target="_blank">{row.id}</a></td>
-                <td>{row.date}</td>
-                <td>{row.sender}</td>
-                <td>{row.recipient}</td>
-                <td>{row.amount} MINA</td>
+                <td className="table-element"><a href={`https://minaexplorer.com/block/${state_hash}`} target="_blank">{state_hash}</a></td>
+                <td className="table-element">{timestampToDate(timestamp)}</td>
+                <td className="table-element">{row.source_id}</td>
+                <td className="table-element">{row.receiver_id}</td>
+                <td className="table-element">{row.amount} MINA</td>
             </tr>
         )
     }
@@ -113,7 +63,7 @@ export default function TransactionTable(props) {
     function renderTableBody() {
         return(
             <tbody>
-                {data && mockData.map((row,index) => {return renderRow(row,index)})}
+                {data && data.user_commands.map((row,index) => {return renderRow(row,index)})}
             </tbody>
         )
     }
@@ -171,5 +121,17 @@ export default function TransactionTable(props) {
             className={page===index?"active":""}>
             {index}
         </p>
+    }
+
+    function timestampToDate(timestamp) {
+        const date_ob = new Date(timestamp);
+        const date = ("0" + date_ob.getDate()).slice(-2);
+        const month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+        const year = date_ob.getFullYear();
+        const hours = date_ob.getHours();
+        const minutes = date_ob.getMinutes();
+        const seconds = date_ob.getSeconds();
+        const newDate = (year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds);
+        return newDate
     }
 }

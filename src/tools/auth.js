@@ -22,7 +22,7 @@ export const storeSession = (address) => {
     // encrypted += cipher.update(privateKey, 'utf8', 'hex');
     // encrypted += cipher.final('hex');
     const wallet = { name:"Wallet", address: address,  // metadata
-                    id:1, // TODO : TO BE DEFINED
+                    id:3, // TODO : TO BE DEFINED
                     //  enckey: encrypted, pass: hash, // security
                     coins: 0 };         // coins
     db.insert(wallet,(err,data)=>{

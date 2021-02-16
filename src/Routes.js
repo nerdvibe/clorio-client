@@ -16,7 +16,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
     {...rest}
     render={(props) => {
         if (rest.sessionData.address) {
-          return <Component {...props} />;
+          return <Component {...props} sessionData={rest.sessionData} />;
         } else {
           return (
             <Redirect
@@ -35,6 +35,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
 };
 
 function Routes(props) {
+  
   const {sessionData} = props
   return (
     <Switch>
