@@ -13,6 +13,7 @@ function Sidebar (props) {
     const [cookies, setCookie, removeCookie] = useCookies(['isAuthenticated']);
 
     const logout = () => {
+        props.setLoader()
         clearSession()
         location.replace('/overview')
     }

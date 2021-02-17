@@ -73,7 +73,7 @@ export default function Wallet() {
                         <Col>
                             <div className="inline-block-element" >
                                 <h6 className="secondaryText">Your balance</h6> 
-                                <h5>{total} MINA</h5>
+                                <h5>{total || 0} MINA</h5>
                             </div>
                             <div className="inline-block-element" >
                                 <div className="v-div"/>
@@ -81,7 +81,7 @@ export default function Wallet() {
                             <div className="inline-block-element" >
                                 <span>
                                     <h6 className="secondaryText">Apx value</h6>
-                                    <h5>{ticker.data && ticker.data.ticker.BTCMINA} BTC</h5>
+                                    <h5>{(ticker.data && ticker.data.ticker.BTCMINA) || 0} BTC</h5>
                                 </span>
                             </div>
                         </Col>

@@ -43,13 +43,13 @@ function Routes(props) {
       <ProtectedRoute exact path="/send-tx" component={SendTX} sessionData={sessionData} />
       <ProtectedRoute exact path="/stake" component={Stake} sessionData={sessionData} />
       <Route path="/login">
-        <Login />
+        <Login {...props} />
       </Route>
       {/*<Route path="/register">
         <Entropy />
       </Route>*/}
       <Route path="/register">
-        <Register />
+        <Register {...props} />
       </Route>
       {/*<Route path="/verify">
         <Verify />

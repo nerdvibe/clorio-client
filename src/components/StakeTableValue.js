@@ -7,7 +7,7 @@ export default function StakeTableValue(props) {
             <span>
                 <Row className="stake-row-value">
                     {props.avatar && (
-                        <Col xs={2} lg={2} xl={1}>
+                        <Col xs={2} lg={2} xl={2}>
                             {props.avatar}
                         </Col>
                     )}

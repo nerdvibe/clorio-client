@@ -28,6 +28,7 @@ export default class Register extends Component {
         
 
         const setAuthorization = () => {
+            this.props.setLoader()
             storeSession(publicKey)
         }
         

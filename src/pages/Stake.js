@@ -33,15 +33,27 @@ const DELEGATE = gql`
     }
 `
 
+const NEWS = gql`
+    query NewsValidators {
+        news_validators(order_by: {created_at: desc}, limit: 1) {
+            title
+            subtitle
+            link
+            cta
+        }
+    }
+`
+
 export default (props) => {
     const [delegateName, setdelegateName] = useState("");
     const [currentDelegate, setCurrentDelegate] = useState("");
     const [showModal, setshowModal] = useState(false)
     const validators = useQuery(VALIDATORS);
+    const news = useQuery(NEWS);
     const delegate = useQuery(DELEGATE,{variables:{publicKey:props.sessionData.address}});
     
     useEffect(()=>{
-        if(delegate.data){
+        if(delegate.data && delegate.data.accountByKey.delegate){
             setCurrentDelegate(delegate.data.accountByKey.delegate.publicKey)
         }
     },[delegate.data])
@@ -83,7 +95,13 @@ export default (props) => {
     return (
         <Hoc className="main-container">
             <Wallet />
-            <Banner />
+            {news.data && 
+                <Banner 
+                    title={news.data.news_validators[0].title} 
+                    subtitle={news.data.news_validators[0].subtitle} 
+                    link={news.data.news_validators[0].link}
+                    />
+            }
             <StakeTable toggleModal={openModal} validators={validators} currentDelegate={currentDelegate} />
             <Modal show={showModal} close={toggleModal}>
                 {renderModal()}

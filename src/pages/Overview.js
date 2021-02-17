@@ -33,6 +33,16 @@ const TRANSACTIONS = gql`
   }
 `;
 
+const NEWS = gql `
+  query NewsHome {
+    news_home(order_by: {created_at: desc}, limit: 1) {
+      title
+      subtitle
+      link
+      cta
+    }
+  }
+`
 
 function Overview(props) {
   let queryResult;
@@ -42,11 +52,17 @@ function Overview(props) {
       variables: { user }
     });
   }
+  const news = useQuery(NEWS);
   return (
     <Hoc className="main-container">
       <Spinner show={!queryResult || queryResult.loading}>
         <Wallet />
-        <Banner />
+        {news.data && 
+          <Banner 
+            title={news.data.news_home[0].title} 
+            subtitle={news.data.news_home[0].subtitle} 
+            link={news.data.news_home[0].link}
+            />}
         <TransactionTable {...queryResult } />
       </Spinner>
     </Hoc>
