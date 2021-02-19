@@ -1,8 +1,10 @@
 import React from 'react'
 import {Table} from 'react-bootstrap'
 import Spinner from './General/Spinner'
-import ErrorImage from '../assets/Error.svg'
+import ErrorImage from '../assets/Error.png'
+import EmptyImage from '../assets/Empty.png'
 import { useState } from 'react'
+import { timestampToDate } from '../tools/utils';
 
 export default function TransactionTable(props) {
     const [page, setpage] = useState(1)
@@ -13,6 +15,15 @@ export default function TransactionTable(props) {
             <div className="block-container-last">
                 <div className="full-width padding-y-50">
                     <img src={ErrorImage} className="animate__animated animate__fadeIn"/>
+                </div>
+            </div>
+        )
+    }
+    if(!data || data.user_commands.length===0){
+        return (
+            <div className="block-container-last">
+                <div className="full-width padding-y-50">
+                    <img src={EmptyImage} className="animate__animated animate__fadeIn"/>
                 </div>
             </div>
         )
@@ -121,17 +132,5 @@ export default function TransactionTable(props) {
             className={page===index?"active":""}>
             {index}
         </p>
-    }
-
-    function timestampToDate(timestamp) {
-        const date_ob = new Date(timestamp);
-        const date = ("0" + date_ob.getDate()).slice(-2);
-        const month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-        const year = date_ob.getFullYear();
-        const hours = date_ob.getHours();
-        const minutes = date_ob.getMinutes();
-        const seconds = date_ob.getSeconds();
-        const newDate = (year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds);
-        return newDate
     }
 }

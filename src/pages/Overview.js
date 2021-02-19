@@ -62,6 +62,7 @@ function Overview(props) {
             title={news.data.news_home[0].title} 
             subtitle={news.data.news_home[0].subtitle} 
             link={news.data.news_home[0].link}
+            cta={news.data.news_home[0].cta}
             />}
         <TransactionTable {...queryResult } />
       </Spinner>

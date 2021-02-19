@@ -1,6 +1,6 @@
 import React from "react";
 import {Nav} from "react-bootstrap";
-import { withRouter } from "react-router";
+import { useHistory, withRouter } from "react-router";
 import { Link } from 'react-router-dom';
 import {  Cpu,LogIn,TrendingUp } from 'react-feather';
 import { useCookies } from 'react-cookie';
@@ -11,11 +11,12 @@ import { clearSession } from "../../tools";
 
 function Sidebar (props) {
     const [cookies, setCookie, removeCookie] = useCookies(['isAuthenticated']);
+        const history = useHistory();
 
     const logout = () => {
         props.setLoader()
         clearSession()
-        location.replace('/overview')
+        history.push("/overview");
     }
 
     function checkRoute (route)  {

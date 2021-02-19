@@ -68,7 +68,7 @@ export default (props) => {
     }
 
     const confirmDelegate = () => {
-        console.log("Delegate confirmed")
+        // TODO : Delegation logic
         setshowModal(!showModal)
     }
 
@@ -100,6 +100,7 @@ export default (props) => {
                     title={news.data.news_validators[0].title} 
                     subtitle={news.data.news_validators[0].subtitle} 
                     link={news.data.news_validators[0].link}
+                    cta={news.data.news_validators[0].cta}
                     />
             }
             <StakeTable toggleModal={openModal} validators={validators} currentDelegate={currentDelegate} />

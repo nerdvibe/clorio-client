@@ -3,8 +3,9 @@ import Hoc from "../components/Hoc";
 import Logo from "../components/Logo";
 import { Row, Col } from "react-bootstrap";
 import Button from '../components/Button'
-import Authorization, { storeSession } from '../tools/auth'
+import  { storeSession } from '../tools/auth'
 import Footer from '../components/General/Footer';
+import { useHistory } from 'react-router-dom';
 
 export default function Verify() {
   const address = "nNdajndANoandaNOnna9210j21nsKANo";
@@ -13,6 +14,7 @@ export default function Verify() {
   const [disableButton, setDisableButton] = useState(true)
   const [wordsFoundArray, setWordsFoundArray] = useState([])
   const [removedIndex, setremovedIndex] = useState(selectRandomIndexes())
+  const history = useHistory();
   function selectRandomIndexes () {
     const size = Math.floor(3 + Math.random() * (9));
     const randomIndexes = []
@@ -27,7 +29,7 @@ export default function Verify() {
 
   const setAuthorization = () => {
     storeSession(address,passphrase,privateKey)
-    location.replace('/overview')
+    history.push("/overview");
   }
 
 
@@ -75,15 +77,15 @@ export default function Verify() {
             <Col xs={8} className="offset-md-2 full-width-align-center">
               <div>
                 {/*<label>
-                            Name:
-                            <input type="number" name="progress" onChange={(e)=> {setprogress(e.currentTarget.value)}}  />
-                        </label>*/}
+                      Name:
+                      <input type="number" name="progress" onChange={(e)=> {setprogress(e.currentTarget.value)}}  />
+                  </label>*/}
               </div>
               <Logo big="true" />
               <div className="v-spacer" />
               <div className="v-spacer" />
               <h4 className="full-width-align-center strong">
-              Verify your passphrase
+                Verify your passphrase
               </h4>
               <div className="v-spacer" />
               <div className="verification-container">

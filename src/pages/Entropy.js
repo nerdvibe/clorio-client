@@ -19,12 +19,6 @@ export default function Entropy() {
         <div className="vertical-center no-scroll" style={{height:"50vh"}}>
           <Row className="vertical-center">
             <Col xs={6} className="offset-md-3 full-width-align-center">
-              <div>
-                {/*<label>
-                            Name:
-                            <input type="number" name="progress" onChange={(e)=> {setprogress(e.currentTarget.value)}}  />
-                        </label>*/}
-              </div>
               <Logo big={true} />
               <div className="v-spacer" />
               <h4 className="full-width-align-center strong">

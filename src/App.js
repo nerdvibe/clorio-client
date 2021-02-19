@@ -3,12 +3,12 @@ import { BrowserRouter as Router,} from 'react-router-dom';
 import './App.scss';
 import Layout from './Layout';
 import { ApolloProvider } from '@apollo/client';
-import Api from './tools/api'
+import {apolloClient} from './tools/api'
   
 function App() {
   return (
     <div className="App">
-      <ApolloProvider client={Api.client}>
+      <ApolloProvider client={apolloClient}>
         <Router>
           <Layout />
         </Router>

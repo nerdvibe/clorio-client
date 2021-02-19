@@ -12,6 +12,7 @@ import Input from '../components/Input'
 import { Col, Row } from 'react-bootstrap'
 import Button from '../components/Button'
 import { useQuery, gql } from '@apollo/client';
+import { useHistory } from 'react-router-dom'
 
 const FEE = gql`
     query MyQuery {
@@ -37,6 +38,7 @@ export default function SendTX (props) {
         address:"",
         fee:0.1
     })
+    const history = useHistory();
 
     return (
         <Hoc className="main-container">
@@ -159,8 +161,8 @@ export default function SendTX (props) {
                 }, dataToSend);
                 if(signedPayment){
                     setTimeout(()=>{
-                        setshowModal("")
-                        location.replace('/send-tx')
+                        setshowModal("");
+                        history.push("/send-tx");
                     },2500)
                 } 
             } catch (e){

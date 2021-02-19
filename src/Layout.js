@@ -4,15 +4,21 @@ import {Container,Row,Col} from "react-bootstrap";
 import Routes from './Routes';
 import { readSession } from './tools/auth'
 import Spinner from "./components/General/Spinner";
+import { useHistory } from "react-router-dom";
 
 function Layout () {
   const [sessionData, setsessionData] = useState(undefined)
-  console.log("🚀 ~ file: Layout.js ~ line 10 ~ Layout ~ sessionData", sessionData)
+  const history = useHistory();
+
+  const goToHome = () => {
+    history.push("/");
+  }
+  
   readSession((data) => {
       if(!sessionData){
           setsessionData(data)
       }
-  })
+  },goToHome)
 
   const setLoader = () => {
     setsessionData(undefined)

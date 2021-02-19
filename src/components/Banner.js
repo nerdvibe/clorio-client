@@ -14,9 +14,9 @@ export default function Banner(props) {
                 <Col className="align-end ml-auto " style={{paddingTop:'20px'}}>
                     {props.link ?
                         (<a href={props.link} target="_blank">
-                            <Button onClick={() => console.log('Test')} className="lightGreenButton__outlineMono mx-auto" text="Learn more" />
+                            <Button onClick={() => console.log('Test')} className="lightGreenButton__outlineMono mx-auto" text={props.cta ||"Learn more"} />
                         </a>):
-                        <Button onClick={() => console.log('Test')} className="lightGreenButton__outlineMono mx-auto" text="Learn more" />    
+                        <Button onClick={() => console.log('Test')} className="lightGreenButton__outlineMono mx-auto"  text={props.cta ||"Learn more"} />    
                     }
                 </Col>
             </Row>

@@ -4,12 +4,13 @@ import { Table } from 'react-bootstrap'
 import StakeTableValue from '../components/StakeTableValue'
 import Spinner from './General/Spinner'
 import Avatar from '../tools/avatar'
+import ErrorImage from "../assets/Error.svg"
 
 export default function StakeTable(props) {
     const [searchbox, setSearchbox] = useState("")
     const [page, setpage] = useState(1)
-    const [maxPages, setMaxPages] = useState(1)
-
+    const [maxPages, setMaxPages] = useState(1) // TODO : Get pagination from backend
+    
     const searchboxHandler = (search) => {
         setSearchbox(search.toLowerCase())
     }
@@ -18,29 +19,73 @@ export default function StakeTable(props) {
         <div className="mx-auto  ">
             <div className="block-container-last  py-50">
                 <div> 
-                    <h4>Your status</h4>
-                    <h6 className="full-width-align-left">Your are staking for {props.currentDelegate || "None"}</h6>
+                    {renderStatus()}
                     <div className="v-spacer" />
-                    
-                    <Table>
-                        <thead>
-                            <tr className="th-background">
-                                <th className="th-first-item">Stake</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th className="th-last-item">
-                                    <input className="table-searchbar" placeholder={"Filter..."} value={searchbox} onChange={(e) => searchboxHandler(e.currentTarget.value)} />
-                                </th>
-                            </tr>
-                        </thead>
-                        {renderTableBody()}
-                    </Table>
-                    {renderPagination()}
+                    {renderTable()}
                 </div>
             </div>
         </div>
     )
+
+    function renderStatus() {
+        if(!props.currentDelegate){
+            return (
+                <div>
+                    <h4>Your status</h4>
+                    <h6 className="full-width-align-left">Cannot get your current status</h6>
+                </div>
+            )
+        }
+        return (
+            <div>
+                <h4>Your status</h4>
+                <h6 className="full-width-align-left">Your are staking for {props.currentDelegate || "None"}</h6>
+            </div>
+        )
+    }
+
+    function renderTable(){
+        if(props.validators.error){
+            return (
+                <div className="block-container-last">
+                    <div className="full-width padding-y-50">
+                        <img src={ErrorImage} />
+                    </div>
+                </div>
+            )
+        }
+        return(
+            <Spinner className={"full-width"} show={props.validators.loading}>
+                <Table>
+                    <thead>
+                        <tr className="th-background">
+                            <th className="th-first-item">Stake</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th className="th-last-item">
+                                <input className="table-searchbar" placeholder={"Filter..."} value={searchbox} onChange={(e) => searchboxHandler(e.currentTarget.value)} />
+                            </th>
+                        </tr>
+                    </thead>
+                    {renderTableBody()}
+                </Table>
+                {renderPagination()}
+            </Spinner>
+        )
+    }
+
+    function renderTableBody() {
+        if(props.validators.data && props.validators.data.validators){
+            const filteredValidators = props.validators.data.validators.filter(el=>el.name.toLowerCase().includes(searchbox))
+            return (
+                <tbody>
+                    {filteredValidators.map((el,index) => renderRow(el,index))}
+                </tbody>
+            )
+        }
+        return(<tbody />)
+    }
 
     function renderRow(el,index) {
         return(
@@ -128,28 +173,5 @@ export default function StakeTable(props) {
             className={page===index?"active":""}>
             {index}
         </p>
-    }
-
-    function renderTableBody() {
-        if(props.validators.error){
-            return (
-                <div className="block-container-last">
-                    <div className="full-width padding-y-50">
-                        <img src={ErrorImage} className="animate__animated animate__fadeIn"/>
-                    </div>
-                </div>
-            )
-        }
-        if(props.validators.data && props.validators.data.validators){
-            const filteredValidators = props.validators.data.validators.filter(el=>el.name.toLowerCase().includes(searchbox))
-            return (<tbody>
-                {filteredValidators.map((el,index) => renderRow(el,index))}
-            </tbody>)
-        }
-        return(
-            <Spinner className={"full-width"} show={props.validators.loading}>
-                <tbody />
-            </Spinner>
-        )
     }
 }
