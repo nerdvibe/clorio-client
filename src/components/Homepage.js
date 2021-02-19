@@ -8,7 +8,7 @@ export default function Homepage(props) {
     return (
         <div className="block-container no-bg real-full-page-container center">
             <Row>
-                <Col xs={10} className="offset-md-1 full-width-align-center">
+                <Col xs={12} className="full-width-align-center">
                     <div className="mx-auto fit-content">
                         <Logo big={true} />
                     </div>
