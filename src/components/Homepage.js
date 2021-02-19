@@ -13,7 +13,7 @@ export default function Homepage(props) {
                         <Logo big={true} />
                     </div>
                     <div className="v-spacer" />
-                    <h4 className="full-width-align-center ">The blockchain power at your fingertips</h4>
+                    <h4 className="full-width-align-center ">Mina's blockchain wallet</h4>
                     <div className="v-spacer" />
                         <Link to="/login">
                             <Button className="lightGreenButton__fullMono mx-auto" text="Access a wallet" />
