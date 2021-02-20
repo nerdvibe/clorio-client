@@ -62,7 +62,7 @@ export default function TransactionTable(props) {
         const {timestamp,state_hash} = row.blocks_user_commands[0].block
         return (
             <tr key={index}>
-                <td className="table-element"><a href={`https://minaexplorer.com/block/${state_hash}`} target="_blank">{state_hash}</a></td>
+                <td className="table-element"><a href={`https://minaexplorer.com/block/${state_hash}`} target="_blank">{row.id}</a></td>
                 <td className="table-element">{timestampToDate(timestamp)}</td>
                 <td className="table-element">{row.source_id}</td>
                 <td className="table-element">{row.receiver_id}</td>

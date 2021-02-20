@@ -37,7 +37,8 @@ export default function Register (props) {
                         <h4 className="full-width-align-center">This is your address</h4>
                         <div className="wrap-input1 validate-input" data-validate="Name is required">
                             <h5 className="full-width-align-center">
-                                {publicKey}<Button className="inline-element no-print" icon={<Copy />}  onClick={() => copyToClipboard(publicKey)}/>
+                                {publicKey}
+                                <Button className="inline-element no-print"  icon={<Copy />}  onClick={() => copyToClipboard(publicKey)}/>
                             </h5>
                         </div>
                         <div className="v-spacer" />
@@ -55,26 +56,34 @@ export default function Register (props) {
                         <h4 className="full-width-align-center">This is your private key</h4>
                         <div className="wrap-input1 validate-input">
                             <h5 className="full-width-align-center">
-                                {privateKey}<Button className="inline-element no-print" icon={<Copy />}  onClick={() => copyToClipboard(privateKey)}/>
+                                {privateKey}
+                                <Button className="inline-element no-print" icon={<Copy />}  onClick={() => copyToClipboard(privateKey)}/>
                             </h5>
                         </div>
                         <div className="wrap-input1 validate-input no-print" data-validate="Name is required">
                             <p className="full-width-align-center">
                                 This is the only time you will see the passphrase and the private key.
-                                Make sure have made a copy of them. If you loose your mnemonic phrase you will not be able to access your funds anymore! <br />
+                                Make sure have made a copy of them. If you loose your private key you will not be able to access your funds anymore! <br />
                                 <a className="link-button" onClick={()=>window.print()}>
                                     Download a copy here
                                 </a>
                             </p>
                         </div>
+                        <div className="v-spacer" />
                         <Row className="no-print">
-                            <Col xs={6}>
+                            <Col xs={4}>
                                 <Link to="/">
-                                    <Button className="link-button mx-auto" onClick={props.register} text="Cancel" />
+                                    <Button className="link-button mx-auto" text="Cancel" />
                                 </Link>
                                 
                             </Col>
-                            <Col xs={6}>
+                            <Col xs={4}>
+                                <Link to="/register">
+                                    <Button className="link-button mx-auto" text="Generate new key" />
+                                </Link>
+                                
+                            </Col>
+                            <Col xs={4}>
                                 <Link to="/overview">
                                     <Button className="lightGreenButton__fullMono mx-auto" onClick={setAuthorization} text="Continue" />
                                 </Link>

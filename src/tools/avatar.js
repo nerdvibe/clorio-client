@@ -93,7 +93,7 @@ export default class Avatar extends React.Component {
       <svg
         height={newSize}
         width={newSize}
-        className={`accountVisual`}
+        className={`accountVisual + ${this.props.className}`}
         xmlns="http://www.w3.org/2000/svg"
         style={{borderRadius:"50%",marginLeft: "2px"}}
       >

@@ -28,6 +28,11 @@ function createWindow() {
         })
     )
 
+    // Disable inspector
+    mainWindow.webContents.on('devtools-opened',() => { 
+        mainWindow.webContents.closeDevTools(); 
+    });
+
     mainWindow.on('closed', () => {
         mainWindow = null
     })
