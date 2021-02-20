@@ -93,7 +93,7 @@ export default function StakeTable(props) {
                 <StakeTableValue avatar={(
                     <div className="walletImageContainer small-image inline-element">
                         <div className=""> 
-                            {el.image ? <img className="small-walletImage" src={el.image}/> : <Avatar address={el.publicKey} size="30" />}
+                            {el.image ? <img className="small-walletImage" src={el.image} style={{marginLeft:"4px"}} /> : <Avatar className="small-walletImage" address={el.publicKey} size="30" />}
                         </div>
                     </div>)} header="Validator" text={el.name} />
                 <StakeTableValue header={"Uptime"} text={"100%"} />

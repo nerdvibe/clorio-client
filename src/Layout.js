@@ -2,7 +2,7 @@ import React , { useState,useEffect } from "react";
 import Sidebar from './components/General/Sidebar'
 import {Container,Row,Col} from "react-bootstrap";
 import Routes from './Routes';
-import { readSession } from './tools/auth'
+import { clearSession, readSession } from './tools/auth'
 import Spinner from "./components/General/Spinner";
 import { useHistory } from "react-router-dom";
 
@@ -23,6 +23,19 @@ function Layout () {
   const setLoader = () => {
     setsessionData(undefined)
   }
+  useEffect(() => {
+    window.addEventListener("beforeunload", alertUser);
+    return () => {
+      window.removeEventListener("beforeunload", alertUser);
+    };
+  }, []);
+  const alertUser = (e) => {
+    e.preventDefault();
+    e.returnValue = "";
+    setsessionData(undefined)
+    clearSession()
+    history.push("/");
+  };
 
   return (
     <div>
