@@ -60,6 +60,7 @@ function Routes(props) {
       <Route path="/">
         <SplashScreen />
       </Route>
+      <Route component={SplashScreen} />
     </Switch>
   );
 }

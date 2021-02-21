@@ -42,7 +42,7 @@ function Sidebar (props) {
                     <Link to="/send-tx" className="sidebar-item"> <span ><LogIn /> Send TX</span></Link>
                 </Nav.Item>
                 <Nav.Item className={"sidebar-item-container " + checkRoute('stake')}>
-                    <Link to="/stake" className="sidebar-item"> <span><TrendingUp /> Stake</span></Link>
+                    <Link to="/stake" className="sidebar-item"> <span><TrendingUp /> Staking Hub</span></Link>
                 </Nav.Item>
                 <Nav.Item className="sidebar-item-container sidebar-footer">
                     <Link to="/splashscreen" className="sidebar-item"> <strong> <span onClick={logout}>Logout</span></strong> </Link>
