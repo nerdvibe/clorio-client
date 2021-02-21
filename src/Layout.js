@@ -23,19 +23,11 @@ function Layout () {
   const setLoader = () => {
     setsessionData(undefined)
   }
-  useEffect(() => {
-    window.addEventListener("beforeunload", alertUser);
-    return () => {
-      window.removeEventListener("beforeunload", alertUser);
-    };
-  }, []);
-  const alertUser = (e) => {
-    e.preventDefault();
-    e.returnValue = "";
-    setsessionData(undefined)
+  
+  window.onbeforeunload = () => {
     clearSession()
-    history.push("/");
-  };
+    setsessionData(undefined)
+  }
 
   return (
     <div>
