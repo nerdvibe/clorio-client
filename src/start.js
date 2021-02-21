@@ -12,6 +12,7 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         width: 1200,
         height: 800,
+        titleBarStyle: "hidden", // add this line
         webPreferences: {
             // 2. Enable Node.js integration
             nodeIntegration: true
