@@ -2,7 +2,7 @@ import React from "react";
 import {Nav} from "react-bootstrap";
 import { useHistory, withRouter } from "react-router";
 import { Link } from 'react-router-dom';
-import {  Cpu,LogIn,TrendingUp } from 'react-feather';
+import {  Cpu,LogIn,TrendingUp,Edit3 } from 'react-feather';
 import { useCookies } from 'react-cookie';
 import Logo from '../Logo'
 import { useLocation } from 'react-router-dom'
@@ -43,6 +43,9 @@ function Sidebar (props) {
                 </Nav.Item>
                 <Nav.Item className={"sidebar-item-container " + checkRoute('stake')}>
                     <Link to="/stake" className="sidebar-item"> <span><TrendingUp /> Staking Hub</span></Link>
+                </Nav.Item>
+                <Nav.Item className={"sidebar-item-container " + checkRoute('sign-message')}>
+                    <Link to="/sign-message" className="sidebar-item"> <span><Edit3 /> Sign message</span></Link>
                 </Nav.Item>
                 <Nav.Item className="sidebar-item-container sidebar-footer">
                     <Link to="/splashscreen" className="sidebar-item"> <strong> <span onClick={logout}>Logout</span></strong> </Link>

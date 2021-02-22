@@ -9,6 +9,7 @@ import Register from "./pages/Register";
 // import Verify from "./pages/Verify";
 import { Route, Redirect, Switch } from "react-router-dom";
 import Ledger from "./pages/Ledger";
+import SignMessage from "./pages/SignMessage";
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
   return (
@@ -42,6 +43,7 @@ function Routes(props) {
       <ProtectedRoute exact path="/overview" component={Overview} sessionData={sessionData} />
       <ProtectedRoute exact path="/send-tx" component={SendTX} sessionData={sessionData} />
       <ProtectedRoute exact path="/stake" component={Stake} sessionData={sessionData} />
+      <ProtectedRoute exact path="/sign-message" component={SignMessage} sessionData={sessionData} />
       <Route path="/login">
         <Login {...props} />
       </Route>

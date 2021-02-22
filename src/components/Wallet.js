@@ -49,7 +49,12 @@ export default function Wallet() {
         document.execCommand('copy');
         document.body.removeChild(el);
     };
-    const total =  balance.data && Big(balance.data.accountByKey.balance.total).mul(1e-9).toFixed();
+    let total =  0
+    if(balance && balance.data){   
+        if(balance.data.accountByKey){
+            balance.data && Big(balance.data.accountByKey.balance.total).mul(1e-9).toFixed();
+        }
+    }
     // <img className="walletImage" src="https://via.placeholder.com/100.png" />
     return (
         <div className="block-container">
@@ -73,7 +78,7 @@ export default function Wallet() {
                         <Col>
                             <div className="inline-block-element" >
                                 <h6 className="secondaryText">Your balance</h6> 
-                                <h5>{total || 0} MINA</h5>
+                                <h5>{total} MINA</h5>
                             </div>
                             <div className="inline-block-element" >
                                 <div className="v-div"/>
