@@ -8,7 +8,16 @@ export default function TransactionForm(props) {
         if(props.defaultFee){
             props.setData({
                 ...props.transactionData,
-                fee:props.defaultFee.estimatedFee
+                fee:props.defaultFee
+            })
+        }
+    }
+
+    const setFastFee = () => {
+        if(props.fastFee){
+            props.setData({
+                ...props.transactionData,
+                fee:props.fastFee
             })
         }
     }
@@ -62,8 +71,11 @@ export default function TransactionForm(props) {
                                         <Col md={4} className="align-initial">
                                             <h3 className="inline-element ">Fee</h3>
                                         </Col>
-                                        <Col md={8} className="fee-label">
-                                            <Button className="link-button align-end  no-padding" text="Use recommended" onClick={setDefaultFee} />
+                                        <Col className="fee-label">
+                                            <Button className="link-button align-end  no-padding" text="Average" onClick={setDefaultFee} />
+                                        </Col>
+                                        <Col className="fee-label">
+                                            <Button className="link-button align-end  no-padding" text="Fast" onClick={setFastFee} />
                                         </Col>
                                     </Row>
                                     <div className="wrap-input1 validate-input" data-validate="Name is required">

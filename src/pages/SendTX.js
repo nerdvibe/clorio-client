@@ -14,11 +14,24 @@ import Button from '../components/Button'
 import { useQuery, gql } from '@apollo/client';
 import { useHistory } from 'react-router-dom'
 
-const FEE = gql`
-    query MyQuery {
-        estimatedFee
+const GET_FEE = gql`
+    query GetFees {
+        estimatedFee {
+            average
+            fast
+        }
     }
 `
+
+
+const GET_NONCE = gql`
+    query accountByKey($publicKey: String) {
+        accountByKey(publicKey: $publicKey) {
+            nonce
+        }
+    }
+`
+
 
 
 export default function SendTX (props) {
@@ -26,19 +39,26 @@ export default function SendTX (props) {
         "PASSPHRASE" : "passphrase",
         "BROADCASTING" : "broadcasting"
     })
-    const fee = useQuery(FEE);
     const [show, setShow] = useState(false);
     const [alertText, setAlertText] = useState("");
     const [privateKey, setPrivateKey] = useState("");
     const [step, setStep] = useState(0)
     const [showModal, setshowModal] = useState("")
-    const isLedgerEnabled = false;
+    const [address, setAddress] = useState("")
     const [transactionData, settransactionData] = useState({
         amount:0,
         address:"",
-        fee:0.1
+        fee:0.1,
+        nonce:0
     })
+    const isLedgerEnabled = false;
     const history = useHistory();
+    const fee = useQuery(GET_FEE);
+    const nonce = useQuery(GET_NONCE,{variables:{publicKey:address}});
+    
+    getAddress((address)=>{
+        setAddress(address)
+    })
 
     return (
         <Hoc className="main-container">
@@ -46,7 +66,8 @@ export default function SendTX (props) {
             {
                 step===0 ? 
                 <TransactionForm 
-                    defaultFee={fee.data}
+                    defaultFee={fee.data ? fee.data.estimatedFee.average : 0}
+                    fastFee={fee.data ? fee.data.estimatedFee.fast : 0}
                     nextStep={openModal} 
                     transactionData={transactionData} 
                     setData={settransactionData}/>:
@@ -146,7 +167,8 @@ export default function SendTX (props) {
 
     function sendTransaction() {
         setshowModal(ModalStates.BROADCASTING)
-        getAddress((address)=>{
+        if(nonce){
+            const actualNonce = nonce.data.accountByKey.nonce ? parseInt(nonce.data.accountByKey.nonce) + 1 : 0
             try{
                 const dataToSend = {
                     privateKey,
@@ -157,7 +179,7 @@ export default function SendTX (props) {
                     to: transactionData.address,
                     amount: transactionData.amount,
                     fee: transactionData.fee,
-                    nonce: 0
+                    nonce: actualNonce
                 }, dataToSend);
                 if(signedPayment){
                     setTimeout(()=>{
@@ -170,6 +192,6 @@ export default function SendTX (props) {
                 showToast("Check if receiver address and/or private key are right")
                 stepBackwards()
             }
-        })
+        }
     }
 }
