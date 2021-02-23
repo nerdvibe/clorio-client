@@ -9,16 +9,19 @@ import { useQuery, gql } from '@apollo/client';
 import {Row,Col} from 'react-bootstrap'
 import { getAddress } from '../tools'
 import { useEffect } from 'react'
+import * as CodaSDK from "@o1labs/client-sdk";
+import PrivateKeyModal from '../components/PrivateKeyModal'
+import Alert from '../components/General/Alert'
 
 const VALIDATORS = gql`
     query validators {
         validators(limit: 10) {
-        fee
-        id
-        image
-        name
-        publicKey
-        website
+            fee
+            id
+            image
+            name
+            publicKey
+            website
         }
     }
 `
@@ -44,13 +47,37 @@ const NEWS = gql`
     }
 `
 
+const GET_NONCE = gql`
+    query accountByKey($publicKey: String) {
+        accountByKey(publicKey: $publicKey) {
+            nonce
+        }
+    }
+`
+const GET_FEE = gql`
+    query GetFees {
+        estimatedFee {
+            average
+        }
+    }
+`
+
 export default (props) => {
-    const [delegateName, setdelegateName] = useState("");
+    const ModalStates = Object.freeze({
+        "PASSPHRASE" : "passphrase",
+        "CONFIRM_DELEGATION" : "confirm"
+    })
+    const [delegateData, setDelegate] = useState({});
     const [currentDelegate, setCurrentDelegate] = useState("");
-    const [showModal, setshowModal] = useState(false)
+    const [showModal, setshowModal] = useState("")
+    const [address, setAddress] = useState("")
+    const [privateKey, setPrivateKey] = useState("")
+    const [showAlert, setShowAlert] = useState(false);
     const validators = useQuery(VALIDATORS);
+    const fee = useQuery(GET_FEE);
     const news = useQuery(NEWS);
     const delegate = useQuery(DELEGATE,{variables:{publicKey:props.sessionData.address}});
+    const nonce = useQuery(GET_NONCE,{variables:{publicKey:address}});
     
     useEffect(()=>{
         if(delegate.data && delegate.data.accountByKey.delegate){
@@ -58,39 +85,9 @@ export default (props) => {
         }
     },[delegate.data])
 
-    const openModal = (delegateName) => {
-        setdelegateName(delegateName)
-        setshowModal(true)
-    }
-
-    const toggleModal = () => {
-        setshowModal(!showModal)
-    }
-
-    const confirmDelegate = () => {
-        // TODO : Delegation logic
-        setshowModal(!showModal)
-    }
-
-    const renderModal = () => {
-        return(
-            <div className="mx-auto">
-                <h2>Confirm Delegation</h2>
-                <div className="v-spacer"/>
-                <h5 className="align-center mx-auto">Are you sure you want to <br/> 
-                delegate this stake to <strong>{delegateName}</strong></h5>
-                <div className="v-spacer"/>
-                <Row>
-                    <Col xs={6} >
-                        <Button onClick={toggleModal} className="link-button" text="Cancel"/>
-                    </Col>
-                    <Col xs={6} >
-                        <Button onClick={confirmDelegate} className="lightGreenButton__fullMono" text="Confirm" />
-                    </Col>
-                </Row>
-            </div>
-        )
-    }
+    getAddress((address)=>{
+        setAddress(address)
+    })
 
     return (
         <Hoc className="main-container">
@@ -104,9 +101,74 @@ export default (props) => {
                     />
             }
             <StakeTable toggleModal={openModal} validators={validators} currentDelegate={currentDelegate} />
-            <Modal show={showModal} close={toggleModal}>
+            <Modal show={showModal===ModalStates.CONFIRM_DELEGATION} close={closeModal}>
                 {renderModal()}
             </Modal>
+            <Modal show={showModal===ModalStates.PASSPHRASE} close={closeModal}>
+                <PrivateKeyModal
+                    confirmPrivateKey={signStakeDelegate}
+                    closeModal={closeModal}
+                    setPrivateKey={setPrivateKey}
+                />
+            </Modal>
+            <Alert show={showAlert} hideToast={()=>setShowAlert(false)} type={"error-toast"}>
+                There was an error processing your delegation, please try again later.
+            </Alert>
         </Hoc>
-    )
+    ) 
+
+    function signStakeDelegate(){
+        try{
+            const actualNonce = nonce.data.accountByKey.nonce ? parseInt(nonce.data.accountByKey.nonce) + 1 : 0
+            const keypair = {
+                privateKey:privateKey,
+                publicKey:address
+            }
+            const stakeDelegation={
+                to: delegateData.publicKey,
+                from: address, 
+                fee: fee.data.estimatedFee.average,
+                nonce: actualNonce, 
+            }
+            const signStake = CodaSDK.signStakeDelegation(stakeDelegation,keypair)
+            setshowModal("")
+        }catch(e){
+            setShowAlert(true)
+        }
+    }
+
+    function openModal(delegate) {
+        setDelegate(delegate)
+        setshowModal(ModalStates.CONFIRM_DELEGATION)
+    }
+
+    function closeModal(){
+        setshowModal("")
+    }
+
+    function confirmDelegate(){
+        setshowModal(ModalStates.PASSPHRASE)
+    }
+    
+    
+
+    function renderModal(){
+        return(
+            <div className="mx-auto">
+                <h2>Confirm Delegation</h2>
+                <div className="v-spacer"/>
+                <h5 className="align-center mx-auto">Are you sure you want to <br/> 
+                delegate this stake to <strong>{delegateData.name}</strong></h5>
+                <div className="v-spacer"/>
+                <Row>
+                    <Col xs={6} >
+                        <Button onClick={closeModal} className="link-button" text="Cancel"/>
+                    </Col>
+                    <Col xs={6} >
+                        <Button onClick={confirmDelegate} className="lightGreenButton__fullMono" text="Confirm" />
+                    </Col>
+                </Row>
+            </div>
+        )
+    }
 }

@@ -13,6 +13,7 @@ import { Col, Row } from 'react-bootstrap'
 import Button from '../components/Button'
 import { useQuery, gql } from '@apollo/client';
 import { useHistory } from 'react-router-dom'
+import PrivateKeyModal from '../components/PrivateKeyModal'
 
 const GET_FEE = gql`
     query GetFees {
@@ -85,7 +86,11 @@ export default function SendTX (props) {
                     )
             }
             <Modal show={showModal===ModalStates.PASSPHRASE} close={closeModal}>
-                {renderModal()}
+                <PrivateKeyModal 
+                    confirmPrivateKey={confirmPrivateKey}
+                    closeModal={closeModal}
+                    setPrivateKey={setPrivateKey}
+                />
             </Modal>
             <Modal show={showModal===ModalStates.BROADCASTING} close={closeModal}>
                 {renderBroadcastingModal()}

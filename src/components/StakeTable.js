@@ -100,7 +100,7 @@ export default function StakeTable(props) {
                 <StakeTableValue header={"Commission"} text={`${el.fee}%`} />
                 <StakeTableValue header={"Staked"} text={"200 MINA"} />
                 <td>
-                    <Button className="yellowButton__fullMono" text="Delegate" onClick={() => props.toggleModal(el.name)}/>
+                    <Button className="yellowButton__fullMono" text="Delegate" onClick={() => props.toggleModal(el)}/>
                 </td>
             </tr>
         )
