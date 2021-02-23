@@ -49,24 +49,29 @@ export default function SignMessageForm(props) {
                   <div className="mx-auto fit-content"><strong><h2>Your signed message</h2></strong></div>
                   <div className="v-spacer" />
                   <Row>
-                      <Col md={8} className="offset-md-2" >
-                          <h3>Field</h3>
-                          <p>
-                            {props.result.signature.field}
-                          </p>
-                          <div className="v-spacer" />
-                          <h3>Scalar</h3>
-                          <p>
-                          {props.result.signature.scalar}
-                          </p>
+                  <Col md={8} className="offset-md-2" >
+                  <div className="signed-message-container">
+                            <p>----- PUBLIC KEY -----</p>
+                            <p>
+                              {props.result.publicKey}
+                            </p>
+                            <p>----- FIELD -----</p>
+                            <p>
+                              {props.result.signature.field}
+                            </p>
+                            <p>----- MESSAGE -----</p>
+                            <p>
+                            {props.result.payload}
+                            </p>
+                          </div>
                           <div className="v-spacer" />
                           <Button 
                             className="link-button inline-element" 
                             onClick={props.reset} 
                             text="Sign new message" 
                             />
-                      </Col>
-                  </Row>
+                    </Col>
+                </Row>
               </div>
           </div>
       </div>
