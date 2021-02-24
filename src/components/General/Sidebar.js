@@ -48,7 +48,7 @@ function Sidebar (props) {
                     <Link to="/sign-message" className="sidebar-item"> <span><Edit3 /> Sign message</span></Link>
                 </Nav.Item>
                 <Nav.Item className="sidebar-item-container sidebar-footer">
-                    <Link to="/splashscreen" className="sidebar-item"> <strong> <span onClick={logout}>Logout</span></strong> </Link>
+                    <Link to="/" className="sidebar-item"> <strong> <span onClick={logout}>Logout</span></strong> </Link>
                 </Nav.Item>
             </Nav>
         </div>

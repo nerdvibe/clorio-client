@@ -10,6 +10,7 @@ import Register from "./pages/Register";
 import { Route, Redirect, Switch } from "react-router-dom";
 import Ledger from "./pages/Ledger";
 import SignMessage from "./pages/SignMessage";
+import NotFound from "./pages/404";
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
   return (
@@ -59,10 +60,10 @@ function Routes(props) {
       <Route path="/ledger">
         <Ledger />
       </Route>
-      <Route path="/">
+      <Route path="/" exact>
         <SplashScreen />
       </Route>
-      <Route component={SplashScreen} />
+      <Route component={NotFound} />
     </Switch>
   );
 }
