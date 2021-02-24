@@ -41,23 +41,23 @@ function Routes(props) {
   const {sessionData} = props
   return (
     <Switch>
-      <ProtectedRoute exact path="/overview" component={Overview} sessionData={sessionData} />
-      <ProtectedRoute exact path="/send-tx" component={SendTX} sessionData={sessionData} />
-      <ProtectedRoute exact path="/stake" component={Stake} sessionData={sessionData} />
-      <ProtectedRoute exact path="/sign-message" component={SignMessage} sessionData={sessionData} />
-      <Route path="/login">
+      <ProtectedRoute exact path="/overview" exact component={Overview} sessionData={sessionData} />
+      <ProtectedRoute exact path="/send-tx" exact component={SendTX} sessionData={sessionData} />
+      <ProtectedRoute exact path="/stake" exact component={Stake} sessionData={sessionData} />
+      <ProtectedRoute exact path="/sign-message" exact component={SignMessage} sessionData={sessionData} />
+      <Route path="/login" exact>
         <Login {...props} />
       </Route>
       {/*<Route path="/register">
         <Entropy />
       </Route>*/}
-      <Route path="/register">
+      <Route path="/register" exact>
         <Register {...props} />
       </Route>
       {/*<Route path="/verify">
         <Verify />
       </Route>*/}
-      <Route path="/ledger">
+      <Route path="/ledger" exact>
         <Ledger />
       </Route>
       <Route path="/" exact>
