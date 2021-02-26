@@ -338,6 +338,8 @@ a:hover{
 .main-container{
     overflow-y: auto;
     max-height:98vh;
+    overflow: -moz-hidden-unscrollable;
+    overflow: unset;
 }
 
 .stake-row-value{
@@ -559,7 +561,11 @@ tbody{
     p{
         font-size: 100%;
         color:$light-green;
+        overflow-wrap: break-word;
+        width: inherit;
     }
+    height: 30vh;
+    overflow-y: scroll;
 }
 
 #draggable-bar{
@@ -579,4 +585,8 @@ tbody{
 
 .big-text{
     font-size:48px;
+}
+
+.medium-size-box{
+    width: 600px;
 }

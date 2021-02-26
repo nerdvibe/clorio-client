@@ -50,7 +50,12 @@ export default function SignMessage() {
         }
         
         const signedMessage = CodaSDK.signMessage(message, keypair);
-        setResult(signedMessage)
+        const verifiedMessage = CodaSDK.verifyMessage(signedMessage);
+        if(verifiedMessage){
+          setResult(signedMessage)
+        } else { 
+          setShow(true)
+        }
       }
     }
     catch(e){

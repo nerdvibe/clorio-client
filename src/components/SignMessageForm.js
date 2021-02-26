@@ -50,27 +50,27 @@ export default function SignMessageForm(props) {
                   <div className="v-spacer" />
                   <Row>
                   <Col md={8} className="offset-md-2" >
-                  <div className="signed-message-container">
-                            <p>----- PUBLIC KEY -----</p>
-                            <p>
-                              {props.result.publicKey}
-                            </p>
-                            <p>----- FIELD -----</p>
-                            <p>
-                              {props.result.signature.field}
-                            </p>
-                            <p>----- MESSAGE -----</p>
-                            <p>
-                            {props.result.payload}
-                            </p>
-                          </div>
-                          <div className="v-spacer" />
-                          <Button 
-                            className="link-button inline-element" 
-                            onClick={props.reset} 
-                            text="Sign new message" 
-                            />
-                    </Col>
+                    <div className="signed-message-container my-auto">
+                      <p>----- PUBLIC KEY -----</p>
+                      <p>
+                        {props.result.publicKey}
+                      </p>
+                      <p>----- FIELD -----</p>
+                      <p>
+                        {props.result.signature.field}
+                      </p>
+                      <p>----- MESSAGE -----</p>
+                      <p>
+                      {props.result.payload}
+                      </p>
+                    </div>
+                    <div className="v-spacer" />
+                    <Button 
+                      className="link-button inline-element" 
+                      onClick={props.reset} 
+                      text="Sign new message" 
+                      />
+                  </Col>
                 </Row>
               </div>
           </div>
