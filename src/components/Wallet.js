@@ -78,7 +78,7 @@ export default function Wallet() {
                             <div className="inline-block-element" >
                                 <span>
                                     <h6 className="secondaryText">Apx value</h6>
-                                    <h5>{(ticker.data && ticker.data.ticker.BTCMINA) || 0} BTC</h5>
+                                    <h5>{(ticker.data && total * ticker.data.ticker.BTCMINA) || 0} BTC</h5>
                                 </span>
                             </div>
                         </Col>
