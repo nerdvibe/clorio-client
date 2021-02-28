@@ -6,12 +6,6 @@ const TOAST_TIMEOUT = 2500
 const Alert = props => {
   const [node] = useState(document.createElement('div'));
 
-  const removeNode = () => {
-    if (document.querySelector('#toast').children.length) {
-      document.querySelector('#toast').childNodes[0].remove();
-    }
-  };
-
   useEffect(() => {
     if (props.show) {
       const doc = document.querySelector('#toast').appendChild(node)
@@ -30,6 +24,12 @@ const Alert = props => {
   }, [node, props.show, props.type]);
 
   return ReactDOM.createPortal(props.children, node);
+
+  function removeNode() {
+    if (document.querySelector('#toast').children.length) {
+      document.querySelector('#toast').childNodes[0].remove();
+    }
+  };
 };
 
 export default Alert;

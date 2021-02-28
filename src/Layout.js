@@ -5,6 +5,7 @@ import Routes from './Routes';
 import { clearSession, readSession } from './tools/auth'
 import Spinner from "./components/General/Spinner";
 import { useHistory } from "react-router-dom";
+import UpdateUserID from "./components/UpdateUserID";
 
 function Layout () {
   const [sessionData, setsessionData] = useState(undefined)
@@ -46,6 +47,7 @@ function Layout () {
             </Container>
           </Col>
         </Row>
+      <UpdateUserID sessionData={sessionData} />
       </Container>
     </div>
   );

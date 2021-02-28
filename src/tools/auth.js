@@ -11,11 +11,11 @@ export const isAuthenticated = () => {
     return false;
 }
 
-export const storeSession = (address,callback) => {
+export const storeSession = (address,id,callback) => {
     const wallet = { 
         name:"Wallet", 
         address: address,
-        id:3, // TODO : TO BE DEFINED
+        id:id, 
         coins: 0 
     };
     db.insert(wallet,(err,data)=>{
@@ -50,5 +50,30 @@ export const clearSession = () => {
 export const getAddress = (callback) => {
     return db.find({}, function (err, data) {
         return callback(data[0].address)
+    });
+}
+
+export const getId = (callback) => {
+    return db.find({}, function (err, data) {
+        if(data && data.length>0){
+            return callback(data[0].id)
+        }
+        return undefined
+    });
+}
+
+export const updateUser = (address,id,callback) => {
+    db.remove({}, { multi: true }, function (err, numRemoved) {
+        const wallet = { 
+            name:"Wallet", 
+            address: address,
+            id:id, 
+            coins: 0 
+        };
+        db.insert(wallet,(err,data)=>{
+            if(callback){
+                callback()
+            }
+        }); 
     });
 }

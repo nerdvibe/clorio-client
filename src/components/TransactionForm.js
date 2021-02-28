@@ -1,48 +1,8 @@
-import React,{useState} from 'react'
-import {Row,Col,Container} from 'react-bootstrap'
+import React from 'react'
+import {Row,Col} from 'react-bootstrap'
 import Button from './Button'
 
 export default function TransactionForm(props) {
-
-    const setDefaultFee = () => {
-        if(props.defaultFee){
-            props.setData({
-                ...props.transactionData,
-                fee:props.defaultFee
-            })
-        }
-    }
-
-    const setFastFee = () => {
-        if(props.fastFee){
-            props.setData({
-                ...props.transactionData,
-                fee:props.fastFee
-            })
-        }
-    }
-
-    const addressHandler = (address) => {
-        props.setData({
-            ...props.transactionData,
-            address
-        })
-    }
-
-    const amountHandler = (amount) => {
-        props.setData({
-            ...props.transactionData,
-            amount
-        })
-    }
-
-    const feeHandler = (fee) => {
-        props.setData({
-            ...props.transactionData,
-            fee
-        })
-    }
-
     return (
         <div className="mx-auto  ">
             <div className="block-container fit-content-container">
@@ -93,4 +53,43 @@ export default function TransactionForm(props) {
             </div>
         </div>
     )
+
+    function setDefaultFee(){
+        if(props.defaultFee){
+            props.setData({
+                ...props.transactionData,
+                fee:props.defaultFee
+            })
+        }
+    }
+
+    function setFastFee(){
+        if(props.fastFee){
+            props.setData({
+                ...props.transactionData,
+                fee:props.fastFee
+            })
+        }
+    }
+
+    function addressHandler(address){
+        props.setData({
+            ...props.transactionData,
+            address
+        })
+    }
+
+    function amountHandler(amount){
+        props.setData({
+            ...props.transactionData,
+            amount
+        })
+    }
+
+    function feeHandler(fee){
+        props.setData({
+            ...props.transactionData,
+            fee
+        })
+    }
 }

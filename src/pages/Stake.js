@@ -80,7 +80,7 @@ export default (props) => {
     const nonce = useQuery(GET_NONCE,{variables:{publicKey:address}});
     
     useEffect(()=>{
-        if(delegate.data && delegate.data.accountByKey.delegate){
+        if(delegate.data && delegate.data.accountByKey && delegate.data.accountByKey.delegate){
             setCurrentDelegate(delegate.data.accountByKey.delegate.publicKey)
         }
     },[delegate.data])

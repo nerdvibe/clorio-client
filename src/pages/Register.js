@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import {Row,Col,Container} from 'react-bootstrap';
+import {Row,Col} from 'react-bootstrap';
 import {Link, useHistory} from 'react-router-dom';
 import Button from '../components/Button';
 import Hoc from '../components/Hoc';
@@ -163,7 +163,7 @@ export default function Register (props) {
 
     function setAuthorization(){
         props.setLoader()
-        storeSession(publicKey,()=>{
+        storeSession(publicKey,-1,()=>{
             history.push("/overview");
         })
     }
