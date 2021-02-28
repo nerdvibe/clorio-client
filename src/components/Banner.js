@@ -14,12 +14,24 @@ export default function Banner(props) {
                 <Col className="align-end ml-auto " style={{paddingTop:'20px'}}>
                     {props.link ?
                         (<a href={props.link} target="_blank">
-                            <Button onClick={() => console.log('Test')} className="lightGreenButton__outlineMono mx-auto" text={props.cta ||"Learn more"} />
+                            <Button className={`${renderButtonStyle(props.cta_color)} mx-auto`} text={props.cta ||"Learn more"} />
                         </a>):
-                        <Button onClick={() => console.log('Test')} className="lightGreenButton__outlineMono mx-auto"  text={props.cta ||"Learn more"} />    
+                        <Button className={`${renderButtonStyle(props.cta_color)} mx-auto`}  text={props.cta ||"Learn more"} />    
                     }
                 </Col>
             </Row>
         </div>
     )
+
+    function renderButtonStyle(){
+        switch(props.style){
+            case 'success':
+                return 'lightGreenButton__outlineMono ';
+            case 'warning':
+                return 'yellowButton__outlineMono ';
+            default:
+                return 'lightGreenButton__outlineMono ';
+                break;
+        }
+    }
 }

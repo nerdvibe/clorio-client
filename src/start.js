@@ -14,11 +14,13 @@ function createWindow() {
         height: 800,
         titleBarStyle: "hidden", // add this line
         webPreferences: {
+            // Disable inspector
+            // devTools: false,
             // 2. Enable Node.js integration
             nodeIntegration: true
         },
         minWidth:1200,
-        minHeight:800
+        minHeight:800,
     })
     mainWindow.loadURL(
         process.env.ELECTRON_START_URL ||
@@ -28,11 +30,6 @@ function createWindow() {
             slashes: true,
         })
     )
-
-    // Disable inspector
-    mainWindow.webContents.on('devtools-opened',() => { 
-        mainWindow.webContents.closeDevTools(); 
-    });
 
     mainWindow.on('closed', () => {
         mainWindow = null
@@ -52,3 +49,13 @@ app.on('activate', () => {
         createWindow()
     }
 })
+
+app.on('web-contents-created', (e, contents) => {
+    contents.on('new-window', (e, url) => {
+        e.preventDefault();
+        require('open')(url);
+    });
+    contents.on('will-navigate', (e, url) => {
+        if (url !== contents.getURL()) e.preventDefault(), require('open')(url);
+    });
+});

@@ -170,7 +170,7 @@ a{
   display: none;
 }
 
-@media (max-width: 1200px), (max-height: 800px) {
+@media (max-width: 1199px), (max-height: 799px) {
   .hidden-mob {
     display: none;
   }
@@ -178,4 +178,8 @@ a{
   .show-mob{
     display: inline;
   }
+}
+
+.show-on-load{
+  display: none;
 }

@@ -5,6 +5,7 @@ import TransactionTable from '../components/TransactionTable'
 import Hoc from '../components/Hoc'
 import { useQuery, gql } from '@apollo/client';
 import Spinner from '../components/General/Spinner';
+import { useState } from 'react';
 
 const TRANSACTIONS = gql`
   query GetTransactions  ($user: Int!){
@@ -40,11 +41,13 @@ const NEWS = gql `
       subtitle
       link
       cta
+      cta_color
     }
   }
 `
 
 function Overview(props) {
+  const [balance, setbalance] = useState(0)
   let queryResult;
   if(props.sessionData){
     const user = props.sessionData.id
@@ -56,18 +59,24 @@ function Overview(props) {
   return (
     <Hoc className="main-container">
       <Spinner show={!queryResult || queryResult.loading}>
-        <Wallet />
+        <Wallet 
+        setBalance={setBalance} />
         {news.data && 
           <Banner 
             title={news.data.news_home[0].title} 
             subtitle={news.data.news_home[0].subtitle} 
             link={news.data.news_home[0].link}
             cta={news.data.news_home[0].cta}
+            cta={news.data.news_home[0].cta_color}
             />}
-        <TransactionTable {...queryResult } />
+        <TransactionTable {...queryResult } balance={balance} />
       </Spinner>
     </Hoc>
   )
+
+  function setBalance(total){
+    setbalance(total)
+  }
 }
 
 export default Overview;

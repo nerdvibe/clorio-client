@@ -43,6 +43,7 @@ const NEWS = gql`
             subtitle
             link
             cta
+            cta_color
         }
     }
 `
@@ -98,6 +99,7 @@ export default (props) => {
                     subtitle={news.data.news_validators[0].subtitle} 
                     link={news.data.news_validators[0].link}
                     cta={news.data.news_validators[0].cta}
+                    cta_color={news.data.news_validators[0].cta_color}
                     />
             }
             <StakeTable toggleModal={openModal} validators={validators} currentDelegate={currentDelegate} />
