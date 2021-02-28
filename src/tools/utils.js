@@ -18,3 +18,8 @@ export function copyToClipboard (content) {
     document.execCommand('copy');
     document.body.removeChild(el);
 };
+
+export function loadErrorMessage(){
+    document.getElementsByClassName("show-on-load")[0].style=""
+    document.getElementsByClassName("show-on-load")[0].className="show-mob"
+}

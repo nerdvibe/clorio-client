@@ -1,10 +1,10 @@
 import React from 'react'
-import {Row,Col,Container} from 'react-bootstrap'
+import {Row,Col} from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import Button from '../components/Button'
 import Logo from './Logo'
 
-export default function Homepage(props) {
+export default function Homepage() {
     return (
         <div className="block-container no-bg real-full-page-container center">
             <Row>

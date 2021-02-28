@@ -161,3 +161,21 @@ a{
 .show{
   display: inline;
 }
+
+.hidden-mob {
+  display: inline;
+}
+
+.show-mob{
+  display: none;
+}
+
+@media (max-width: 1200px), (max-height: 800px) {
+  .hidden-mob {
+    display: none;
+  }
+  
+  .show-mob{
+    display: inline;
+  }
+}

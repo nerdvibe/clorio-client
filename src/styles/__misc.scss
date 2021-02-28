@@ -338,6 +338,8 @@ a:hover{
 .main-container{
     overflow-y: auto;
     max-height:98vh;
+    overflow: -moz-hidden-unscrollable;
+    overflow: unset;
 }
 
 .stake-row-value{
@@ -550,4 +552,41 @@ tbody{
 .first-place{
     position: absolute;
     z-index: 4;
+}
+
+.signed-message-container{
+    background: #000000;
+    border-radius: 10px;
+    padding: 20px;
+    p{
+        font-size: 100%;
+        color:$light-green;
+        overflow-wrap: break-word;
+        width: inherit;
+    }
+    height: 30vh;
+    overflow-y: scroll;
+}
+
+#draggable-bar{
+    width: 100vw;
+    height: 3vh;
+    position: fixed;
+    left: 0px;
+    top: 0;
+    -webkit-app-region: drag;
+
+}
+
+.huge-text{
+    font-size: 144px;
+    color:$orange;
+}
+
+.big-text{
+    font-size:48px;
+}
+
+.medium-size-box{
+    width: 600px;
 }

@@ -1,39 +1,8 @@
-import React,{useState} from 'react'
-import {Row,Col,Container} from 'react-bootstrap'
+import React from 'react'
+import {Row,Col} from 'react-bootstrap'
 import Button from './Button'
 
 export default function TransactionForm(props) {
-
-    const setDefaultFee = () => {
-        if(props.defaultFee){
-            props.setData({
-                ...props.transactionData,
-                fee:props.defaultFee.estimatedFee
-            })
-        }
-    }
-
-    const addressHandler = (address) => {
-        props.setData({
-            ...props.transactionData,
-            address
-        })
-    }
-
-    const amountHandler = (amount) => {
-        props.setData({
-            ...props.transactionData,
-            amount
-        })
-    }
-
-    const feeHandler = (fee) => {
-        props.setData({
-            ...props.transactionData,
-            fee
-        })
-    }
-
     return (
         <div className="mx-auto  ">
             <div className="block-container fit-content-container">
@@ -62,8 +31,11 @@ export default function TransactionForm(props) {
                                         <Col md={4} className="align-initial">
                                             <h3 className="inline-element ">Fee</h3>
                                         </Col>
-                                        <Col md={8} className="fee-label">
-                                            <Button className="link-button align-end  no-padding" text="Use recommended" onClick={setDefaultFee} />
+                                        <Col className="fee-label">
+                                            <Button className="link-button align-end  no-padding" text="Average" onClick={setDefaultFee} />
+                                        </Col>
+                                        <Col className="fee-label">
+                                            <Button className="link-button align-end  no-padding" text="Fast" onClick={setFastFee} />
                                         </Col>
                                     </Row>
                                     <div className="wrap-input1 validate-input" data-validate="Name is required">
@@ -81,4 +53,43 @@ export default function TransactionForm(props) {
             </div>
         </div>
     )
+
+    function setDefaultFee(){
+        if(props.defaultFee){
+            props.setData({
+                ...props.transactionData,
+                fee:props.defaultFee
+            })
+        }
+    }
+
+    function setFastFee(){
+        if(props.fastFee){
+            props.setData({
+                ...props.transactionData,
+                fee:props.fastFee
+            })
+        }
+    }
+
+    function addressHandler(address){
+        props.setData({
+            ...props.transactionData,
+            address
+        })
+    }
+
+    function amountHandler(amount){
+        props.setData({
+            ...props.transactionData,
+            amount
+        })
+    }
+
+    function feeHandler(fee){
+        props.setData({
+            ...props.transactionData,
+            fee
+        })
+    }
 }

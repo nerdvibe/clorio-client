@@ -1,38 +1,51 @@
 import React from 'react'
-import {Row,Col,Container, Spinner} from 'react-bootstrap'
+import {Row,Col, Spinner} from 'react-bootstrap'
 import {Link, useHistory} from 'react-router-dom'
 import Button from '../components/Button'
 import Hoc from '../components/Hoc'
 import Logo from "../components/Logo";
 import Footer from '../components/General/Footer'
-import { useState } from 'react'
+import { useState , useEffect } from 'react'
 import { storeSession } from '../tools'
 import Input from '../components/Input'
+import Alert from '../components/General/Alert'
+import * as CodaSDK from "@o1labs/client-sdk";
+import { useQuery, gql } from '@apollo/client';
+
+const GET_ID = gql`
+    query GetIDFromPublicKey($publicKey:String) {
+        public_keys(where: {value: {_eq: $publicKey}}) {
+            id
+        }
+    }
+`
 
 export default function Login(props) {
     const [passphrase, setpassphrase] = useState("")
+    const [publicKey, setPublicKey] = useState("")
+    const [showAlert, setShowAlert] = useState(false)
     const [loader, setLoader] = useState(false)
-    const publicKey = "B62qns2egmDKDeaKvhyZ9rR7h4hdA758UQtuBCmYqek25tj7nMn3nPQ"
     const history = useHistory();
 
-    const inputHandler = (e) => {
-        setpassphrase(e.currentTarget.value)
-    }
+    const userID = useQuery(GET_ID, {
+        variables: { publicKey:publicKey }
+    });
 
-    const checkCredentials = () => {
-        props.setLoader()
-        storeSession(publicKey,()=>{history.push("/overview")})
-    }
-
-    const disableButton = () => {
-        if(!passphrase){
-            return true;
+    
+    useEffect(() => {
+        if(publicKey && publicKey!==""){
+            if(userID.data && userID.data.public_keys.length>0){
+                props.setLoader()
+                const id = userID.data.public_keys[0].id;
+                storeSession(publicKey,id,()=>{history.push("/overview")})
+            } else {
+                props.setLoader()
+                storeSession(publicKey,-1,()=>{
+                    history.push("/overview")
+                })
+            }
         }
-        if(passphrase === ""){
-            return true;
-        }
-        return false
-    }
+    }, [publicKey])
 
     return (
         <Hoc>
@@ -54,7 +67,6 @@ export default function Login(props) {
                                         <Link to="/">
                                             <Button className="link-button mx-auto" onClick={props.register} text="Cancel" />
                                         </Link>
-                                        
                                     </Col>
                                     <Col xs={6}>
                                         <Button 
@@ -71,6 +83,9 @@ export default function Login(props) {
                         </Row>
                     </div> 
                 </div>
+                <Alert show={showAlert} hideToast={() => setShowAlert(false)} type={"error-toast"}>
+                    Private key not valid, please try again.
+                </Alert>
                 <Footer />
             </Spinner>
         </Hoc>
@@ -86,5 +101,29 @@ export default function Login(props) {
                     />
             </Link>
         )
+    }
+
+    function inputHandler (e) {
+        setpassphrase(e.currentTarget.value)
+    }
+
+    function checkCredentials () {
+        try{
+            const publicK = CodaSDK.derivePublicKey(passphrase)
+            setPublicKey(publicK)
+            setLoader(true)
+        }catch(e){
+            setShowAlert(true)
+        }
+    }
+
+    function disableButton () {
+        if(!passphrase){
+            return true;
+        }
+        if(passphrase === ""){
+            return true;
+        }
+        return false
     }
 }

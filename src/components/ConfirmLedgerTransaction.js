@@ -1,6 +1,5 @@
 import React from 'react'
 import {Row,Col} from 'react-bootstrap'
-import Button from './Button'
 
 export default function ConfirmLedgerTransaction(props) {
     return (

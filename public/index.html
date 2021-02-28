@@ -10,11 +10,13 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <title>MINA Wallet</title>
+    <title >MINA Wallet</title>
   </head>
-  <body style="-webkit-app-region: drag">
+  <body >
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="draggable-bar"></div>
+    <div id="root" class="hidden-mob"></div>
     <div id="toast"></div>
+    <div class="show-on-load" style="display: none">Hidden below 1200px width or when height is below 800px</div>
   </body>
 </html>

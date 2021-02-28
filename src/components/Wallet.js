@@ -6,6 +6,7 @@ import { getAddress } from '../tools'
 import { useQuery, gql } from '@apollo/client';
 import Avatar from '../tools/avatar'
 import Big from 'big.js';
+import { copyToClipboard } from '../tools/utils'
 
 const TICKER = gql`
     query ticker {
@@ -29,6 +30,7 @@ const BALANCE = gql`
 export default function Wallet() {
     const [address, setaddress] = useState("")
     const ticker = useQuery(TICKER);
+    let total =  0
     const balance = useQuery(BALANCE, {
         variables: { publicKey:address }
     });
@@ -41,16 +43,11 @@ export default function Wallet() {
         }
     }, [])
     
-    function copyToClipboard (content) {
-        const el = document.createElement('textarea');
-        el.value = content;
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
-    };
-    const total =  balance.data && Big(balance.data.accountByKey.balance.total).mul(1e-9).toFixed();
-    // <img className="walletImage" src="https://via.placeholder.com/100.png" />
+    if(balance && balance.data){   
+        if(balance.data.accountByKey){
+            balance.data && Big(balance.data.accountByKey.balance.total).mul(1e-9).toFixed();
+        }
+    }
     return (
         <div className="block-container">
             <div className="align-left">
@@ -73,7 +70,7 @@ export default function Wallet() {
                         <Col>
                             <div className="inline-block-element" >
                                 <h6 className="secondaryText">Your balance</h6> 
-                                <h5>{total || 0} MINA</h5>
+                                <h5>{total} MINA</h5>
                             </div>
                             <div className="inline-block-element" >
                                 <div className="v-div"/>

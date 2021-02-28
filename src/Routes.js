@@ -9,6 +9,8 @@ import Register from "./pages/Register";
 // import Verify from "./pages/Verify";
 import { Route, Redirect, Switch } from "react-router-dom";
 import Ledger from "./pages/Ledger";
+import SignMessage from "./pages/SignMessage";
+import NotFound from "./pages/404";
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
   return (
@@ -39,28 +41,29 @@ function Routes(props) {
   const {sessionData} = props
   return (
     <Switch>
-      <ProtectedRoute exact path="/overview" component={Overview} sessionData={sessionData} />
-      <ProtectedRoute exact path="/send-tx" component={SendTX} sessionData={sessionData} />
-      <ProtectedRoute exact path="/stake" component={Stake} sessionData={sessionData} />
-      <Route path="/login">
+      <ProtectedRoute exact path="/overview" exact component={Overview} sessionData={sessionData} />
+      <ProtectedRoute exact path="/send-tx" exact component={SendTX} sessionData={sessionData} />
+      <ProtectedRoute exact path="/stake" exact component={Stake} sessionData={sessionData} />
+      <ProtectedRoute exact path="/sign-message" exact component={SignMessage} sessionData={sessionData} />
+      <Route path="/login" exact>
         <Login {...props} />
       </Route>
       {/*<Route path="/register">
         <Entropy />
       </Route>*/}
-      <Route path="/register">
+      <Route path="/register" exact>
         <Register {...props} />
       </Route>
       {/*<Route path="/verify">
         <Verify />
       </Route>*/}
-      <Route path="/ledger">
+      <Route path="/ledger" exact>
         <Ledger />
       </Route>
-      <Route path="/">
+      <Route path="/" exact>
         <SplashScreen />
       </Route>
-      <Route component={SplashScreen} />
+      <Route component={NotFound} />
     </Switch>
   );
 }
