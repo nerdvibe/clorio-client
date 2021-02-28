@@ -27,7 +27,7 @@ const BALANCE = gql`
 `
 
 
-export default function Wallet() {
+export default function Wallet(props) {
     const [address, setaddress] = useState("")
     const ticker = useQuery(TICKER);
     let total =  0
@@ -46,6 +46,9 @@ export default function Wallet() {
     if(balance && balance.data){   
         if(balance.data.accountByKey){
             balance.data && Big(balance.data.accountByKey.balance.total).mul(1e-9).toFixed();
+            if(props.setBalance){
+                props.setBalance(Big(balance.data.accountByKey.balance.total).mul(1e-9).toFixed())
+            }
         }
     }
     return (

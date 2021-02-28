@@ -2,6 +2,8 @@ import React from 'react'
 import {Table} from 'react-bootstrap'
 import Spinner from './General/Spinner'
 import ErrorImage from '../assets/Error.png'
+import NoTransactionsOrNotAvailableImage from '../assets/NoTransactionsOrNotAvailable.svg'
+import TxHistoryNotAvailableImage from '../assets/TxHistoryNotAvailable.svg'
 import EmptyImage from '../assets/Empty.png'
 import { useState } from 'react'
 import { timestampToDate } from '../tools/utils';
@@ -11,22 +13,10 @@ export default function TransactionTable(props) {
     const [maxPages, setMaxPages] = useState(30)
     const { loading, error, data } = props
     if(error){
-        return (
-            <div className="block-container-last">
-                <div className="full-width padding-y-50">
-                    <img src={ErrorImage} className="animate__animated animate__fadeIn"/>
-                </div>
-            </div>
-        )
+        return renderError()
     }
     if(!data || data.user_commands.length===0){
-        return (
-            <div className="block-container-last">
-                <div className="full-width padding-y-50">
-                    <img src={EmptyImage} className="animate__animated animate__fadeIn"/>
-                </div>
-            </div>
-        )
+        return renderEmptyState()
     }
     return (
         <div className="block-container-last">
@@ -132,5 +122,39 @@ export default function TransactionTable(props) {
             className={page===index?"active":""}>
             {index}
         </p>
+    }
+
+    function renderError(){
+        const {balance} = props 
+        let imageToRender = ErrorImage;
+        if(balance === 0 ){ 
+            imageToRender=NoTransactionsOrNotAvailableImage;
+        } else if(balance > 0 ){ 
+            imageToRender=TxHistoryNotAvailableImage;
+        }
+        return (
+            <div className="block-container-last">
+                <div className="full-width padding-y-50">
+                    <img src={imageToRender} className="animate__animated animate__fadeIn"/>
+                </div>
+            </div>
+        )
+    }
+
+    function renderEmptyState(){
+        const {balance} = props 
+        let imageToRender = EmptyImage;
+        if(balance === 0 ){ 
+            imageToRender=NoTransactionsOrNotAvailableImage;
+        } else if(balance > 0 ){ 
+            imageToRender=TxHistoryNotAvailableImage;
+        }
+        return (
+            <div className="block-container-last">
+                <div className="full-width padding-y-50">
+                    <img src={imageToRender} className="animate__animated animate__fadeIn"/>
+                </div>
+            </div>
+        )
     }
 }
