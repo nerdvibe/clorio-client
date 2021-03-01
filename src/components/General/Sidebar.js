@@ -2,7 +2,7 @@ import React from "react";
 import {Nav} from "react-bootstrap";
 import { useHistory } from "react-router";
 import { Link } from 'react-router-dom';
-import {  Cpu,LogIn,TrendingUp,Edit3 } from 'react-feather';
+import {  Cpu,LogIn,TrendingUp,Edit3,Check } from 'react-feather';
 import Logo from '../Logo'
 import { useLocation } from 'react-router-dom'
 import { clearSession } from "../../tools";
@@ -17,7 +17,6 @@ function Sidebar (props) {
                 onSelect={selectedKey => alert(`selected ${selectedKey}`)}>
                 <div className="sidebar-sticky" style={{margin:'0 auto'}}> 
                     <Logo />
-                    {/* <img src="" alt="logo"/> */}
                 </div>
                 <hr/>
                 <Nav.Item className={"sidebar-item-container " + checkRoute('overview')}>
@@ -31,6 +30,9 @@ function Sidebar (props) {
                 </Nav.Item>
                 <Nav.Item className={"sidebar-item-container " + checkRoute('sign-message')}>
                     <Link to="/sign-message" className="sidebar-item"> <span><Edit3 /> Sign message</span></Link>
+                </Nav.Item>
+                <Nav.Item className={"sidebar-item-container " + checkRoute('verify-message')}>
+                    <Link to="/verify-message" className="sidebar-item"> <span><Check /> Verify message</span></Link>
                 </Nav.Item>
                 <Nav.Item className="sidebar-item-container sidebar-footer">
                     <Link to="/" className="sidebar-item"> <strong> <span onClick={logout}>Logout</span></strong> </Link>

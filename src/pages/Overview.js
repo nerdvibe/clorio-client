@@ -11,14 +11,12 @@ const TRANSACTIONS = gql`
   query GetTransactions  ($user: Int!){
     user_commands(where: {source_id: {_eq: $user}}, limit: 10, offset: 10) {
       amount
-      failure_reason
       fee
       id
       hash
       memo
       receiver_id
       source_id
-      status
       token
       type
       valid_until
@@ -61,14 +59,7 @@ function Overview(props) {
       <Spinner show={!queryResult || queryResult.loading}>
         <Wallet 
         setBalance={setBalance} />
-        {news.data && 
-          <Banner 
-            title={news.data.news_home[0].title} 
-            subtitle={news.data.news_home[0].subtitle} 
-            link={news.data.news_home[0].link}
-            cta={news.data.news_home[0].cta}
-            cta={news.data.news_home[0].cta_color}
-            />}
+        {renderBanner()}
         <TransactionTable {...queryResult } balance={balance} />
       </Spinner>
     </Hoc>
@@ -76,6 +67,21 @@ function Overview(props) {
 
   function setBalance(total){
     setbalance(total)
+  }
+
+  function renderBanner(){
+    if(news.data && news.data.news_home && news.data.news_home.length>0){
+      const latest = news.data.news_home[0]
+      return(
+        <Banner 
+          title={latest.title} 
+          subtitle={latest.subtitle} 
+          link={latest.link}
+          cta={latest.cta}
+          cta={latest.cta_color}
+          />
+      )
+    }
   }
 }
 

@@ -11,6 +11,7 @@ import { Route, Redirect, Switch } from "react-router-dom";
 import Ledger from "./pages/Ledger";
 import SignMessage from "./pages/SignMessage";
 import NotFound from "./pages/404";
+import VerifyMessage from "./pages/VerifyMessage";
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
   return (
@@ -45,6 +46,7 @@ function Routes(props) {
       <ProtectedRoute exact path="/send-tx" exact component={SendTX} sessionData={sessionData} />
       <ProtectedRoute exact path="/stake" exact component={Stake} sessionData={sessionData} />
       <ProtectedRoute exact path="/sign-message" exact component={SignMessage} sessionData={sessionData} />
+      <ProtectedRoute exact path="/verify-message" exact component={VerifyMessage} sessionData={sessionData} />
       <Route path="/login" exact>
         <Login {...props} />
       </Route>

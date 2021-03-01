@@ -4,7 +4,7 @@ import Spinner from './General/Spinner'
 import ErrorImage from '../assets/Error.png'
 import NoTransactionsOrNotAvailableImage from '../assets/NoTransactionsOrNotAvailable.svg'
 import TxHistoryNotAvailableImage from '../assets/TxHistoryNotAvailable.svg'
-import EmptyImage from '../assets/Empty.png'
+import NoTransactions from '../assets/NoTransactions.svg'
 import { useState } from 'react'
 import { timestampToDate } from '../tools/utils';
 
@@ -143,7 +143,7 @@ export default function TransactionTable(props) {
 
     function renderEmptyState(){
         const {balance} = props 
-        let imageToRender = EmptyImage;
+        let imageToRender = NoTransactions;
         if(balance === 0 ){ 
             imageToRender=NoTransactionsOrNotAvailableImage;
         } else if(balance > 0 ){ 

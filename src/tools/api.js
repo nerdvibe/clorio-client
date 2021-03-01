@@ -6,7 +6,7 @@ import { getMainDefinition } from "apollo-utilities";
 import { ApolloClient } from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
 const wsLink = new WebSocketLink({
-  uri: 'wss://minahub01.carbonara.science/v1/graphql',
+  uri: 'wss://minahub02.carbonara.science/v1/graphql',
   options: {
     reconnect: true,
     connectionParams: async () => {
@@ -30,7 +30,7 @@ const httpLink = ApolloLink.from([
     if (networkError) console.log(`[Network error]: ${networkError}`);
   }),
   new HttpLink({
-    uri: 'https://minahub01.carbonara.science/v1/graphql',
+    uri: 'https://minahub02.carbonara.science/v1/graphql',
     credentials: "same-origin",
   }),
 ]);
