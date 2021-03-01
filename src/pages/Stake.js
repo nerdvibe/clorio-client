@@ -28,7 +28,7 @@ const VALIDATORS = gql`
 `
 
 const DELEGATE = gql`
-    query accountByKey($publicKey: String) {
+    query accountByKey($publicKey: String!) {
         accountByKey(publicKey: $publicKey) {
             delegate {
                 publicKey
@@ -50,7 +50,7 @@ const NEWS = gql`
 `
 
 const GET_NONCE = gql`
-    query accountByKey($publicKey: String) {
+    query accountByKey($publicKey: String!) {
         accountByKey(publicKey: $publicKey) {
             nonce
         }

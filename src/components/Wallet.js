@@ -17,7 +17,7 @@ const TICKER = gql`
 `;
 
 const BALANCE = gql`
-    query accountByKey($publicKey: String) {
+    query accountByKey($publicKey: String!) {
         accountByKey(publicKey: $publicKey) {
             balance {
                 total

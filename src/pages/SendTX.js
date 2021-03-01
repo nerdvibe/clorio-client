@@ -26,7 +26,7 @@ const GET_FEE = gql`
 
 
 const GET_NONCE = gql`
-    query accountByKey($publicKey: String) {
+    query accountByKey($publicKey: String!) {
         accountByKey(publicKey: $publicKey) {
             nonce
         }
