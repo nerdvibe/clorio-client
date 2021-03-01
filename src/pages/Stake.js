@@ -12,6 +12,7 @@ import { useEffect } from 'react'
 import * as CodaSDK from "@o1labs/client-sdk";
 import PrivateKeyModal from '../components/PrivateKeyModal'
 import Alert from '../components/General/Alert'
+import Input from '../components/Input'
 
 const VALIDATORS = gql`
     query validators {
@@ -66,13 +67,15 @@ const GET_FEE = gql`
 export default (props) => {
     const ModalStates = Object.freeze({
         "PASSPHRASE" : "passphrase",
-        "CONFIRM_DELEGATION" : "confirm"
+        "CONFIRM_DELEGATION" : "confirm",
+        "CUSTOM_DELEGATION" : "custom",
     })
     const [delegateData, setDelegate] = useState({});
     const [currentDelegate, setCurrentDelegate] = useState("");
     const [showModal, setshowModal] = useState("")
     const [address, setAddress] = useState("")
     const [privateKey, setPrivateKey] = useState("")
+    const [customDelegate, setCustomDelegate] = useState("")
     const [showAlert, setShowAlert] = useState(false);
     const validators = useQuery(VALIDATORS);
     const fee = useQuery(GET_FEE);
@@ -93,16 +96,13 @@ export default (props) => {
     return (
         <Hoc className="main-container">
             <Wallet />
-            {news.data && 
-                <Banner 
-                    title={news.data.news_validators[0].title} 
-                    subtitle={news.data.news_validators[0].subtitle} 
-                    link={news.data.news_validators[0].link}
-                    cta={news.data.news_validators[0].cta}
-                    cta_color={news.data.news_validators[0].cta_color}
-                    />
-            }
-            <StakeTable toggleModal={openModal} validators={validators} currentDelegate={currentDelegate} />
+            {renderBanner()}
+            <StakeTable 
+                toggleModal={openModal} 
+                validators={validators} 
+                currentDelegate={currentDelegate} 
+                openCustomDelegateModal={openCustomDelegateModal}
+                />
             <Modal show={showModal===ModalStates.CONFIRM_DELEGATION} close={closeModal}>
                 {renderModal()}
             </Modal>
@@ -113,6 +113,9 @@ export default (props) => {
                     setPrivateKey={setPrivateKey}
                 />
             </Modal>
+            <Modal show={showModal===ModalStates.CUSTOM_DELEGATION} close={closeModal}>
+                {renderCustomDelegationForm()}
+            </Modal>
             <Alert show={showAlert} hideToast={()=>setShowAlert(false)} type={"error-toast"}>
                 There was an error processing your delegation, please try again later.
             </Alert>
@@ -121,7 +124,7 @@ export default (props) => {
 
     function signStakeDelegate(){
         try{
-            const actualNonce = nonce.data.accountByKey.nonce ? parseInt(nonce.data.accountByKey.nonce) + 1 : 0
+            const actualNonce = nonce.data.accountByKey ? parseInt(nonce.data.accountByKey.nonce) + 1 : 0
             const keypair = {
                 privateKey:privateKey,
                 publicKey:address
@@ -144,12 +147,21 @@ export default (props) => {
         setshowModal(ModalStates.CONFIRM_DELEGATION)
     }
 
+    function openCustomDelegateModal() {
+        setshowModal(ModalStates.CUSTOM_DELEGATION)
+    }
+
     function closeModal(){
         setshowModal("")
     }
 
     function confirmDelegate(){
         setshowModal(ModalStates.PASSPHRASE)
+    }
+
+    function confirmCustomDelegate(){
+        setshowModal(ModalStates.PASSPHRASE)
+        setDelegate({publicKey:customDelegate})
     }
     
     
@@ -168,6 +180,42 @@ export default (props) => {
                     </Col>
                     <Col xs={6} >
                         <Button onClick={confirmDelegate} className="lightGreenButton__fullMono" text="Confirm" />
+                    </Col>
+                </Row>
+            </div>
+        )
+    }
+
+    function renderBanner(){
+        if(news.data && news.data.news_validators && news.data.news_validators.length > 0){
+            const latest = news.data.news_validators[0]
+            return( 
+                <Banner 
+                    title={latest.title} 
+                    subtitle={latest.subtitle} 
+                    link={latest.link}
+                    cta={latest.cta}
+                    cta_color={latest.cta_color}
+                    />
+            )
+        }
+    }
+
+    function renderCustomDelegationForm(){
+        return(
+            <div className="mx-auto">
+                <h2>Custom delegation</h2>
+                <div className="v-spacer"/>
+                <h6>Public key</h6>
+                <div className="v-spacer"/>
+                <Input inputHandler={(e)=>{setCustomDelegate(e.currentTarget.value)}} placeholder="Insert public key"/>
+                <div className="v-spacer"/>
+                <Row>
+                    <Col xs={6} >
+                        <Button onClick={closeModal} className="link-button" text="Cancel"/>
+                    </Col>
+                    <Col xs={6} >
+                        <Button onClick={confirmCustomDelegate} className="lightGreenButton__fullMono" text="Confirm" />
                     </Col>
                 </Row>
             </div>

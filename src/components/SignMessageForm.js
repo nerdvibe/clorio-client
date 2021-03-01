@@ -1,5 +1,5 @@
 import React from 'react'
-import {Row,Col,Container} from 'react-bootstrap'
+import {Row,Col} from 'react-bootstrap'
 import Button from './Button'
 
 export default function SignMessageForm(props) {
@@ -58,6 +58,10 @@ export default function SignMessageForm(props) {
                       <p>----- FIELD -----</p>
                       <p>
                         {props.result.signature.field}
+                      </p>
+                      <p>----- SCALAR -----</p>
+                      <p>
+                        {props.result.signature.scalar}
                       </p>
                       <p>----- MESSAGE -----</p>
                       <p>

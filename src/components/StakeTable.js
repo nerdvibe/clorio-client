@@ -5,6 +5,7 @@ import StakeTableValue from '../components/StakeTableValue'
 import Spinner from './General/Spinner'
 import Avatar from '../tools/avatar'
 import ErrorImage from "../assets/Error.svg"
+import {Row,Col} from 'react-bootstrap'
 
 export default function StakeTable(props) {
     const [searchbox, setSearchbox] = useState("")
@@ -19,7 +20,14 @@ export default function StakeTable(props) {
         <div className="mx-auto  ">
             <div className="block-container-last  py-50">
                 <div> 
-                    {renderStatus()}
+                    <Row>
+                        <Col>
+                            {renderStatus()}
+                        </Col>
+                        <Col className="align-end">
+                            {renderAddDelegate()}
+                        </Col>
+                    </Row>
                     <div className="v-spacer" />
                     {renderTable()}
                 </div>
@@ -173,5 +181,14 @@ export default function StakeTable(props) {
             className={page===index?"active":""}>
             {index}
         </p>
+    }
+
+    function renderAddDelegate(){
+        return(
+            <Button 
+                className="link-button" 
+                text="Custom delegation" 
+                onClick={props.openCustomDelegateModal}/>
+        )
     }
 }
