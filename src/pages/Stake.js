@@ -27,16 +27,6 @@ const VALIDATORS = gql`
     }
 `
 
-const DELEGATE = gql`
-    query accountByKey($publicKey: String!) {
-        accountByKey(publicKey: $publicKey) {
-            delegate {
-                publicKey
-            }
-        }
-    }
-`
-
 const NEWS = gql`
     query NewsValidators {
         news_validators(order_by: {created_at: desc}, limit: 1) {
@@ -49,13 +39,17 @@ const NEWS = gql`
     }
 `
 
-const GET_NONCE = gql`
+const GET_NONCE_AND_DELEGATE = gql`
     query accountByKey($publicKey: String!) {
         accountByKey(publicKey: $publicKey) {
-            nonce
+            delegate{
+                publicKey
+            }
+            usableNonce
         }
     }
 `
+
 const GET_FEE = gql`
     query GetFees {
         estimatedFee {
@@ -80,14 +74,16 @@ export default (props) => {
     const validators = useQuery(VALIDATORS);
     const fee = useQuery(GET_FEE);
     const news = useQuery(NEWS);
-    const delegate = useQuery(DELEGATE,{variables:{publicKey:props.sessionData.address}});
-    const nonce = useQuery(GET_NONCE,{variables:{publicKey:address}});
+    const nonceAndDelegate = useQuery(GET_NONCE_AND_DELEGATE,{
+        variables:{publicKey:props.sessionData.address},
+        skip: props.sessionData.address===""
+    });
     
     useEffect(()=>{
-        if(delegate.data && delegate.data.accountByKey && delegate.data.accountByKey.delegate){
-            setCurrentDelegate(delegate.data.accountByKey.delegate.publicKey)
+        if(nonceAndDelegate.data && nonceAndDelegate.data.accountByKey && nonceAndDelegate.data.accountByKey.delegate){
+            setCurrentDelegate(nonceAndDelegate.data.accountByKey.delegate.publicKey)
         }
-    },[delegate.data])
+    },[nonceAndDelegate.data])
 
     getAddress((address)=>{
         setAddress(address)
@@ -111,6 +107,7 @@ export default (props) => {
                     confirmPrivateKey={signStakeDelegate}
                     closeModal={closeModal}
                     setPrivateKey={setPrivateKey}
+                    subtitle={customDelegate && `You are going to delegate ${customDelegate}`}
                 />
             </Modal>
             <Modal show={showModal===ModalStates.CUSTOM_DELEGATION} close={closeModal}>
@@ -124,15 +121,16 @@ export default (props) => {
 
     function signStakeDelegate(){
         try{
-            const actualNonce = nonce.data.accountByKey ? parseInt(nonce.data.accountByKey.nonce) + 1 : 0
+            const actualNonce = nonceAndDelegate.data ? parseInt(nonceAndDelegate.data.accountByKey.usableNonce) : 0
+            const publicKey = CodaSDK.derivePublicKey(privateKey)
             const keypair = {
                 privateKey:privateKey,
-                publicKey:address
+                publicKey:publicKey
             }
             const stakeDelegation={
                 to: delegateData.publicKey,
                 from: address, 
-                fee: fee.data.estimatedFee.average,
+                fee:(+fee.data.estimatedFee.average)*1000000000,
                 nonce: actualNonce, 
             }
             const signStake = CodaSDK.signStakeDelegation(stakeDelegation,keypair)
@@ -179,7 +177,7 @@ export default (props) => {
                         <Button onClick={closeModal} className="link-button" text="Cancel"/>
                     </Col>
                     <Col xs={6} >
-                        <Button onClick={confirmDelegate} className="lightGreenButton__fullMono" text="Confirm" />
+                        <Button onClick={confirmDelegate} className="lightGreenButton__fullMono mx-auto" text="Confirm" />
                     </Col>
                 </Row>
             </div>
@@ -206,7 +204,7 @@ export default (props) => {
             <div className="mx-auto">
                 <h2>Custom delegation</h2>
                 <div className="v-spacer"/>
-                <h6>Public key</h6>
+                <h6 className="full-width">Insert Public key</h6>
                 <div className="v-spacer"/>
                 <Input inputHandler={(e)=>{setCustomDelegate(e.currentTarget.value)}} placeholder="Insert public key"/>
                 <div className="v-spacer"/>
@@ -215,7 +213,12 @@ export default (props) => {
                         <Button onClick={closeModal} className="link-button" text="Cancel"/>
                     </Col>
                     <Col xs={6} >
-                        <Button onClick={confirmCustomDelegate} className="lightGreenButton__fullMono" text="Confirm" />
+                        <Button 
+                            onClick={confirmCustomDelegate} 
+                            className="lightGreenButton__fullMono mx-auto" 
+                            text="Confirm"
+                            disabled={customDelegate===""}
+                            />
                     </Col>
                 </Row>
             </div>

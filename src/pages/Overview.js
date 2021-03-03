@@ -9,7 +9,7 @@ import { useState } from 'react';
 
 const TRANSACTIONS = gql`
   query GetTransactions  ($user: Int!){
-    user_commands(where: {source_id: {_eq: $user}}, limit: 10, offset: 10) {
+    user_commands(where: {_or: {receiver_id: {_eq: $user}, source_id: {_eq: $user}}}, limit: 10, offset: 10) {
       amount
       fee
       id
@@ -60,13 +60,20 @@ function Overview(props) {
         <Wallet 
         setBalance={setBalance} />
         {renderBanner()}
-        <TransactionTable {...queryResult } balance={balance} />
+        <TransactionTable {...queryResult } balance={balance.total} />
       </Spinner>
     </Hoc>
   )
 
-  function setBalance(total){
-    setbalance(total)
+  function setBalance(data){
+      if(!balance ){
+          setbalance(data)
+      } else {
+          const difference = data.total !== balance.total || data.liquid !== balance.liquid
+          if(difference){
+              setbalance(data)
+          }
+      }
   }
 
   function renderBanner(){

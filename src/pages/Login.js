@@ -28,7 +28,8 @@ export default function Login(props) {
     const history = useHistory();
 
     const userID = useQuery(GET_ID, {
-        variables: { publicKey:publicKey }
+        variables: { publicKey:publicKey },
+        skip: publicKey===""
     });
 
     

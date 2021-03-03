@@ -14,6 +14,7 @@ export default function ConfirmTransaction(props) {
                             You are about to send <strong>{props.transactionData.amount} MINA</strong> <br/>
                             with a fee of <strong>{props.transactionData.fee} MINA</strong> <br/>
                             to  <strong>{props.transactionData.address}</strong> 
+                            with memo  <strong>{props.transactionData.memo}</strong> 
                             <div className="v-spacer" />
                             <div className="mx-auto">
                                 <Row>
@@ -21,7 +22,7 @@ export default function ConfirmTransaction(props) {
                                         <Button className="link-button inline-element" onClick={props.stepBackward} text="Cancel" />
                                     </Col>
                                     <Col md={3}>
-                                        <Button className="lightGreenButton__fullMono inline-element" onClick={props.sendTransaction} text="Confirm" />
+                                        <Button className="lightGreenButton__fullMono inline-element mx-auto" onClick={props.sendTransaction} text="Confirm" />
                                     </Col>
                                 </Row>
                             </div>

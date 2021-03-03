@@ -10,8 +10,12 @@ import { clearSession } from "../../tools";
 
 function Sidebar (props) {
     const history = useHistory();
+    let networkData;
+    if(props.network && props.network.nodeInfo){
+        networkData = props.network.nodeInfo.name
+    }
     return (
-        <div style={{padding:'10px'}}>
+        <div style={{padding:'5px'}}>
             <Nav className="col-md-12 d-none d-md-block sidebar level-zero"
                 activeKey="/home"
                 onSelect={selectedKey => alert(`selected ${selectedKey}`)}>
@@ -37,6 +41,7 @@ function Sidebar (props) {
                 <Nav.Item className="sidebar-item-container sidebar-footer">
                     <Link to="/" className="sidebar-item"> <strong> <span onClick={logout}>Logout</span></strong> </Link>
                 </Nav.Item>
+                <div className="sidebar-footer-network">Node : {networkData} {renderStatusDot()}</div>
             </Nav>
         </div>
     );
@@ -53,6 +58,17 @@ function Sidebar (props) {
         return currentRoute.includes(route) ? " sidebar-item-container-active" : " ";
     }
     
+    function renderStatusDot(){
+        if(networkData){
+            return (
+                <span className="green-dot" />
+            )
+        } else {
+            return (
+                <span className="red-dot" />
+            )
+        }
+    }
 };
 
 export default Sidebar;

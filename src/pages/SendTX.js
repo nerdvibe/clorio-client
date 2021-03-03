@@ -1,4 +1,4 @@
-import React, { Component,useState } from 'react'
+import React, { useState } from 'react'
 import Wallet from '../components/Wallet'
 import TransactionForm from '../components/TransactionForm'
 import ConfirmTransaction from '../components/ConfirmTransaction'
@@ -11,9 +11,9 @@ import Modal from '../components/Modal'
 import Input from '../components/Input'
 import { Col, Row } from 'react-bootstrap'
 import Button from '../components/Button'
-import { useQuery, gql } from '@apollo/client';
+import { useQuery, gql, useMutation } from '@apollo/client';
+import PrivateKeyModal from '../components/PrivateKeyModal';
 import { useHistory } from 'react-router-dom'
-import PrivateKeyModal from '../components/PrivateKeyModal'
 
 const GET_FEE = gql`
     query GetFees {
@@ -24,46 +24,67 @@ const GET_FEE = gql`
     }
 `
 
-
 const GET_NONCE = gql`
     query accountByKey($publicKey: String!) {
         accountByKey(publicKey: $publicKey) {
-            nonce
+            usableNonce
         }
     }
 `
+const BROADCAST_TRANSACTION = gql`
+    mutation broadcastTransaction($input: SendPaymentInput!,$signature: SignatureInput!) {
+        broadcastTransaction(input: $input, signature: $signature) {
+            id
+        }
+    }
+`;
 
+const initialTransactionData = {
+    amount:0,
+    address:"",
+    fee:0.1,
+    nonce:0,
+    memo:""
+}
 
-
-export default function SendTX (props) {
+export default function SendTX () {
     const ModalStates = Object.freeze({
         "PASSPHRASE" : "passphrase",
         "BROADCASTING" : "broadcasting"
     })
+    const isLedgerEnabled = false;
     const [show, setShow] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
     const [alertText, setAlertText] = useState("");
     const [privateKey, setPrivateKey] = useState("");
     const [step, setStep] = useState(0)
     const [showModal, setshowModal] = useState("")
+    const [balance, setbalance] = useState(0)
     const [address, setAddress] = useState("")
-    const [transactionData, settransactionData] = useState({
-        amount:0,
-        address:"",
-        fee:0.1,
-        nonce:0
-    })
-    const isLedgerEnabled = false;
-    const history = useHistory();
+    const [transactionData, settransactionData] = useState(initialTransactionData)
+    const nonce = useQuery(GET_NONCE,{
+        variables:{publicKey:address},
+        skip: address===""}
+        );
     const fee = useQuery(GET_FEE);
-    const nonce = useQuery(GET_NONCE,{variables:{publicKey:address}});
+    const [broadcastTransaction, broadcastResult] = useMutation(BROADCAST_TRANSACTION);
+    const history = useHistory();
     
+    if(showModal && broadcastResult && broadcastResult.data){
+        clearState()
+        setShowSuccess(true)
+        history.push("/send-tx");
+    }
+
     getAddress((address)=>{
         setAddress(address)
     })
 
     return (
         <Hoc className="main-container">
-            <Wallet />
+            <Wallet 
+                setBalance={setBalance}
+                />
             {
                 step===0 ? 
                 <TransactionForm 
@@ -98,6 +119,9 @@ export default function SendTX (props) {
             <Alert show={show} hideToast={hideToast} type={"error-toast"}>
                 {alertText}
             </Alert>
+            <Alert show={showSuccess} hideToast={() => setShowSuccess(false)} type={"success-toast"}>
+                Transaction successfully broadcasted
+            </Alert>
         </Hoc>
     )
     
@@ -106,8 +130,10 @@ export default function SendTX (props) {
             <div className="mx-auto">
                 <h2>Insert Private Key</h2>
                 <div className="v-spacer"/>
-                <h5 className="align-center mx-auto">In order to continue <br/> 
-                please insert your private key</h5>
+                <h5 className="align-center mx-auto">
+                    In order to continue <br/> 
+                    please insert your private key
+                </h5>
                 <div className="v-spacer"/>
                 <Input inputHandler={(e)=>{setPrivateKey(e.currentTarget.value)}} placeholder="Insert your private key"/>
                 <div className="v-spacer"/>
@@ -116,11 +142,22 @@ export default function SendTX (props) {
                         <Button onClick={closeModal} className="link-button" text="Cancel"/>
                     </Col>
                     <Col xs={6} >
-                        <Button onClick={confirmPrivateKey} className="lightGreenButton__fullMono" text="Confirm" />
+                        <Button onClick={confirmPrivateKey} className="lightGreenButton__fullMono mx-auto" text="Confirm" />
                     </Col>
                 </Row>
             </div>
         )
+    }
+
+    function setBalance(data){
+        if(!balance ){
+            setbalance(data)
+        } else {
+            const difference = data.total !== balance.total || data.liquid !== balance.liquid
+            if(difference){
+                setbalance(data)
+            }
+        }
     }
 
     function renderBroadcastingModal () {
@@ -137,11 +174,16 @@ export default function SendTX (props) {
     }
 
     function openModal() {
-        if(transactionData.address === "" || transactionData.amount === 0){
-            showToast("Please insert an address and an amount")
-        } else {
-            setshowModal(ModalStates.PASSPHRASE)
+        const available = (+balance.liquid)*1000000000
+        const fee = (+transactionData.fee)*1000000000
+        const amount = (+transactionData.amount)*1000000000
+        if(available<(fee+amount)){
+            return showToast("Please check your balance")
         }
+        if(transactionData.address === "" || transactionData.amount === 0){
+            return showToast("Please insert an address and an amount")
+        } 
+        return setshowModal(ModalStates.PASSPHRASE)
     }
 
     function closeModal() {
@@ -173,24 +215,38 @@ export default function SendTX (props) {
     function sendTransaction() {
         setshowModal(ModalStates.BROADCASTING)
         if(nonce){
-            const actualNonce = nonce.data.accountByKey.nonce ? parseInt(nonce.data.accountByKey.nonce) + 1 : 0
+            const actualNonce = (nonce.data && nonce.data.accountByKey.usableNonce) ? parseInt(nonce.data.accountByKey.usableNonce) : 0
             try{
+                const publicKey = CodaSDK.derivePublicKey(privateKey)
                 const dataToSend = {
                     privateKey,
-                    publicKey:address
+                    publicKey
                 }
+                const fee = (+transactionData.fee)*1000000000
+                const amount = (+transactionData.amount)*1000000000
                 const signedPayment = CodaSDK.signPayment({
                     from: address,
                     to: transactionData.address,
-                    amount: transactionData.amount,
-                    fee: transactionData.fee,
-                    nonce: actualNonce
+                    amount,
+                    fee,
+                    nonce: actualNonce,
+                    memo: transactionData.memo
                 }, dataToSend);
                 if(signedPayment){
-                    setTimeout(()=>{
-                        setshowModal("");
-                        history.push("/send-tx");
-                    },2500)
+                    const SignatureInput = {
+                        scalar: signedPayment.signature.scalar,
+                        field: signedPayment.signature.field
+                    }
+                    const SendPaymentInput = {
+                        nonce: signedPayment.payload.nonce,
+                        memo: signedPayment.payload.memo,
+                        fee: signedPayment.payload.fee,
+                        validUntil: signedPayment.payload.validUntil,
+                        amount: signedPayment.payload.amount,
+                        to: signedPayment.payload.to,
+                        from: signedPayment.payload.from,
+                    }
+                    broadcastTransaction({ variables: { input:SendPaymentInput, signature:SignatureInput } });
                 } 
             } catch (e){
                 setshowModal("")
@@ -198,5 +254,13 @@ export default function SendTX (props) {
                 stepBackwards()
             }
         }
+    }
+
+    function clearState(){
+        setShow(false);
+        setAlertText("");
+        setStep(0)
+        setshowModal("")
+        settransactionData(initialTransactionData)
     }
 }

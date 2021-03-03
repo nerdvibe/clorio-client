@@ -276,15 +276,21 @@ a:hover{
 }
 
 .modal-container{
-    width: fit-content;
+    width: 800px;
     padding: 50px 100px;
     opacity: 1;
     border-radius: 10px;
-    left: 40%;
+    left: 25%;
     background-color: #FAFAFA;
     z-index: 5;
     position: fixed;
     top: 35%;
+    div{
+        h2,h5,h6{
+            width: 100%;
+            text-align: center;
+        }
+    }
 }
 
 .level-zero{
@@ -300,6 +306,7 @@ a:hover{
     text-align: left;
     width: 100%;
     color:black !important;
+    font-size: 0.94rem;
 }
 
 .sidebar-item-container-active::before{
@@ -402,11 +409,18 @@ tbody{
     text-align: left;
 }
 
-.sidebar-footer{
+.sidebar-footer,.sidebar-footer-network{
     position: fixed;
-    bottom: 40px;
+    bottom: 5vh;
     width: 16.666667%;
-    margin: 0 4vw;
+    margin: 0 -2vw;
+    text-align: center;
+}
+
+
+.sidebar-footer-network{
+    bottom: 3vh;
+    font-size: 0.80rem;
 }
 
 .spinner-container{
@@ -549,6 +563,11 @@ tbody{
     color: $white !important;
 }
 
+.success-toast{
+    background: $light-green !important;
+    color: $white !important;
+}
+
 .first-place{
     position: absolute;
     z-index: 4;
@@ -593,4 +612,23 @@ tbody{
 
 .scrollable{
     overflow-y: scroll !important;
+}
+
+.green-dot,.red-dot{
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    display: inline-block;
+    background-color: $light-green;
+}
+
+.red-dot{
+    background-color: $red;
+}
+
+.small-screen-text{
+    text-align: center;
+    width: 100vw;
+    color: white;
+    font-size: 2rem;
 }

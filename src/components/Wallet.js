@@ -21,6 +21,7 @@ const BALANCE = gql`
         accountByKey(publicKey: $publicKey) {
             balance {
                 total
+                liquid
             }
         }
     }
@@ -28,28 +29,35 @@ const BALANCE = gql`
 
 
 export default function Wallet(props) {
-    const [address, setaddress] = useState("")
+    let userBalance = 0;
+    const [address, setaddress] = useState(undefined)
     const ticker = useQuery(TICKER);
-    let total =  0
-    const balance = useQuery(BALANCE, {
-        variables: { publicKey:address }
-    });
+    const balance = useQuery(BALANCE, {variables: { publicKey:address }, skip:!address});
 
+    
     useEffect(() => {
         if (!address) {
             getAddress((data)=>{
                 setaddress(data)
             });
         }
-    }, [])
+    }, [address])
     
     if(balance && balance.data){   
         if(balance.data.accountByKey){
-            balance.data && Big(balance.data.accountByKey.balance.total).mul(1e-9).toFixed();
+            userBalance = Big(balance.data.accountByKey.balance.total).mul(1e-9).toFixed();
+            const total = Big(balance.data.accountByKey.balance.total).mul(1e-9).toFixed();
+            const liquid = Big(balance.data.accountByKey.balance.liquid).mul(1e-9).toFixed();
             if(props.setBalance){
-                props.setBalance(Big(balance.data.accountByKey.balance.total).mul(1e-9).toFixed())
+                props.setBalance({
+                    total,
+                    liquid
+                })
             }
         }
+    }
+    if(address===undefined){
+        return <div />
     }
     return (
         <div className="block-container">
@@ -73,7 +81,7 @@ export default function Wallet(props) {
                         <Col>
                             <div className="inline-block-element" >
                                 <h6 className="secondaryText">Your balance</h6> 
-                                <h5>{total} MINA</h5>
+                                <h5>{userBalance} MINA</h5>
                             </div>
                             <div className="inline-block-element" >
                                 <div className="v-div"/>
@@ -81,7 +89,7 @@ export default function Wallet(props) {
                             <div className="inline-block-element" >
                                 <span>
                                     <h6 className="secondaryText">Apx value</h6>
-                                    <h5>{(ticker.data && total * ticker.data.ticker.BTCMINA) || 0} BTC</h5>
+                                    <h5>{(ticker.data && userBalance * ticker.data.ticker.BTCMINA) || 0} BTC</h5>
                                 </span>
                             </div>
                         </Col>

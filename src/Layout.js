@@ -1,4 +1,4 @@
-import React , { useState,useEffect } from "react";
+import React , { useState } from "react";
 import Sidebar from './components/General/Sidebar'
 import {Container,Row,Col} from "react-bootstrap";
 import Routes from './Routes';
@@ -6,10 +6,23 @@ import { clearSession, readSession } from './tools/auth'
 import Spinner from "./components/General/Spinner";
 import { useHistory } from "react-router-dom";
 import UpdateUserID from "./components/UpdateUserID";
+import { gql, useQuery } from "@apollo/client";
+
+const GET_NETWORK = gql`
+  query NodeInfo {
+    nodeInfo {
+      height
+      name
+      network
+      version
+    }
+  }
+`
 
 function Layout () {
   const [sessionData, setsessionData] = useState(undefined)
   const history = useHistory();
+  const network = useQuery(GET_NETWORK);
 
   const goToHome = () => {
     history.push("/");
@@ -36,7 +49,7 @@ function Layout () {
         <Row>
           {!!sessionData && sessionData.address && (
             <Col md={3} lg={2} xl={2} id="sidebar-wrapper">
-              <Sidebar setLoader={setLoader} />
+              <Sidebar setLoader={setLoader} network={network.data}/>
             </Col>
           )}
           <Col id="page-content-wrapper">

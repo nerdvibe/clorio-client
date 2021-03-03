@@ -17,6 +17,12 @@ export default function TransactionForm(props) {
                                 <input className="input1" type="text" name="address" value={props.transactionData.address} placeholder="Recipient address ... " onChange={e => addressHandler(e.currentTarget.value)} />
                                 <span className="shadow-input1"></span>
                             </div>
+                            <h3>Memo</h3>
+                            <div className="wrap-input1 validate-input" data-validate="Name is required">
+                                <span className="icon" />
+                                <input className="input1" type="text" name="address" value={props.transactionData.memo} placeholder="Memo" onChange={e => memoHandler(e.currentTarget.value)} />
+                                <span className="shadow-input1"></span>
+                            </div>
                             <Row> 
                                 <Col md={6}>
                                     <h3>Amount</h3>
@@ -90,6 +96,13 @@ export default function TransactionForm(props) {
         props.setData({
             ...props.transactionData,
             fee
+        })
+    }
+
+    function memoHandler(memo){
+        props.setData({
+            ...props.transactionData,
+            memo
         })
     }
 }
