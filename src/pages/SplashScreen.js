@@ -4,12 +4,12 @@ import Hoc from '../components/Hoc'
 import Homepage from '../components/Homepage'
 import { clearSession } from '../tools'
 
-export const SplashScreen = () => {
+export const SplashScreen = (props) => {
     clearSession()
     return (
         <Hoc >
             <Homepage />
-            <Footer />
+            <Footer network={props.network}/>
         </Hoc>
     )
 }

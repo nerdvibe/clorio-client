@@ -31,7 +31,7 @@ export default function Ledger(props) {
                     </Row>
                 </div> 
             </div>
-            <Footer />
+            <Footer network={props.network}/>
         </Hoc>
     )
 }

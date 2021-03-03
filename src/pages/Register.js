@@ -36,7 +36,7 @@ export default function Register (props) {
                     renderValidationStep():
                     renderRegisterStep()
                 }
-                <Footer />
+                <Footer network={props.network}/>
             </div>
         </Hoc>
     )

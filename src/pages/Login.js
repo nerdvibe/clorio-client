@@ -90,7 +90,7 @@ export default function Login(props) {
                 <Alert show={showAlert} hideToast={() => setShowAlert(false)} type={"error-toast"}>
                     Private key not valid, please try again.
                 </Alert>
-                <Footer />
+                <Footer network={props.network}/>
             </Spinner>
         </Hoc>
     )

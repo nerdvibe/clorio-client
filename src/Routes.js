@@ -48,22 +48,22 @@ function Routes(props) {
       <ProtectedRoute exact path="/sign-message" exact component={SignMessage} sessionData={sessionData} />
       <ProtectedRoute exact path="/verify-message" exact component={VerifyMessage} sessionData={sessionData} />
       <Route path="/login" exact>
-        <Login {...props} />
+        <Login {...props}  network={props.network}/>
       </Route>
       {/*<Route path="/register">
         <Entropy />
       </Route>*/}
       <Route path="/register" exact>
-        <Register {...props} />
+        <Register {...props}  network={props.network}/>
       </Route>
       {/*<Route path="/verify">
         <Verify />
       </Route>*/}
       <Route path="/ledger" exact>
-        <Ledger />
+        <Ledger  network={props.network}/>
       </Route>
       <Route path="/" exact>
-        <SplashScreen />
+        <SplashScreen network={props.network}/>
       </Route>
       <Route component={NotFound} />
     </Switch>

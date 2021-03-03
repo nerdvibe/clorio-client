@@ -55,7 +55,7 @@ function Layout () {
           <Col id="page-content-wrapper">
             <Container className="contentWrapper animate__animated animate__fadeIn">
               <Spinner show={!sessionData}>
-                <Routes sessionData={sessionData} setLoader={setLoader}/>
+                <Routes sessionData={sessionData} setLoader={setLoader} network={network.data}/>
               </Spinner>
             </Container>
           </Col>
