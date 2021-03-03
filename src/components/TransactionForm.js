@@ -1,6 +1,7 @@
 import React from 'react'
 import {Row,Col} from 'react-bootstrap'
 import Button from './Button'
+import Input from './Input'
 
 export default function TransactionForm(props) {
     return (
@@ -12,25 +13,13 @@ export default function TransactionForm(props) {
                     <Row>
                         <Col md={8} className="offset-md-2" >
                             <h3>Recipient</h3>
-                            <div className="wrap-input1 validate-input" data-validate="Name is required">
-                                <span className="icon" />
-                                <input className="input1" type="text" name="address" value={props.transactionData.address} placeholder="Recipient address ... " onChange={e => addressHandler(e.currentTarget.value)} />
-                                <span className="shadow-input1"></span>
-                            </div>
+                            <Input value={props.transactionData.address} placeholder="Enter an amount " inputHandler={e => addressHandler(e.currentTarget.value)} />
                             <h3>Memo</h3>
-                            <div className="wrap-input1 validate-input" data-validate="Name is required">
-                                <span className="icon" />
-                                <input className="input1" type="text" name="address" value={props.transactionData.memo} placeholder="Memo" onChange={e => memoHandler(e.currentTarget.value)} />
-                                <span className="shadow-input1"></span>
-                            </div>
+                            <Input value={props.transactionData.memo} placeholder="Enter an amount " inputHandler={e => memoHandler(e.currentTarget.value)} />
                             <Row> 
                                 <Col md={6}>
                                     <h3>Amount</h3>
-                                    <div className="wrap-input1 validate-input" data-validate="Name is required">
-                                        <span className="icon" />
-                                        <input className="input1" type="text" name="amount" value={props.transactionData.amount} placeholder="Enter an amount " onChange={e => amountHandler(e.currentTarget.value)} />
-                                        <span className="shadow-input1"></span>
-                                    </div>
+                                    <Input value={props.transactionData.amount} placeholder="Enter an amount " inputHandler={e => amountHandler(e.currentTarget.value)} type="number" />
                                 </Col>
                                 <Col md={6}>
                                     <Row> 
@@ -44,11 +33,7 @@ export default function TransactionForm(props) {
                                             <Button className="link-button align-end  no-padding" text="Fast" onClick={setFastFee} />
                                         </Col>
                                     </Row>
-                                    <div className="wrap-input1 validate-input" data-validate="Name is required">
-                                        <span className="icon" />
-                                        <input className="input1" type="text" name="name"  value={props.transactionData.fee} onChange={e => feeHandler(e.currentTarget.value)} placeholder="Enter a fee" />
-                                        <span className="shadow-input1"></span>
-                                    </div>
+                                    <Input value={props.transactionData.fee} placeholder="Enter a fee " inputHandler={e => feeHandler(e.currentTarget.value)} type="number" />
                                 </Col>
                             </Row>
                             <div className="v-spacer" />
@@ -66,7 +51,13 @@ export default function TransactionForm(props) {
                 ...props.transactionData,
                 fee:props.defaultFee
             })
+        } else {
+            props.setData({
+                ...props.transactionData,
+                fee:0.1
+            })
         }
+        
     }
 
     function setFastFee(){
@@ -74,6 +65,11 @@ export default function TransactionForm(props) {
             props.setData({
                 ...props.transactionData,
                 fee:props.fastFee
+            })
+        } else {
+            props.setData({
+                ...props.transactionData,
+                fee:0.1
             })
         }
     }
@@ -86,17 +82,25 @@ export default function TransactionForm(props) {
     }
 
     function amountHandler(amount){
-        props.setData({
-            ...props.transactionData,
-            amount
-        })
+        if(amount<0.0000001 && amount!==0){ // TODO : Put big.js
+            props.showToast(`Amount ${amount} is less than the minimum amount (0.00000001)`)
+        }else {
+            props.setData({
+                ...props.transactionData,
+                amount
+            })
+        }
     }
 
     function feeHandler(fee){
-        props.setData({
-            ...props.transactionData,
-            fee
-        })
+        if(fee<0.001){ // TODO : Put big.js
+            props.showToast(`Fee ${fee} is less than the minimum fee (0.001)`)
+        }else {
+            props.setData({
+                ...props.transactionData,
+                fee
+            })
+        }
     }
 
     function memoHandler(memo){

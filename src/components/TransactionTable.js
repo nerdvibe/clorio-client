@@ -7,6 +7,7 @@ import TxHistoryNotAvailableImage from '../assets/TxHistoryNotAvailable.svg'
 import NoTransactions from '../assets/NoTransactions.svg'
 import { useState } from 'react'
 import { timestampToDate } from '../tools/utils';
+import Big from 'big.js';
 
 export default function TransactionTable(props) {
     const [page, setpage] = useState(1)
@@ -50,13 +51,14 @@ export default function TransactionTable(props) {
 
     function renderRow(row,index) {
         const {timestamp,state_hash} = row.blocks_user_commands[0].block
+        const amount = row.amount ? Big(row.amount).mul(1e-9).toFixed(3) : 0
         return (
             <tr key={index}>
                 <td className="table-element"><a href={`https://minaexplorer.com/block/${state_hash}`} target="_blank">{row.id}</a></td>
                 <td className="table-element">{timestampToDate(timestamp)}</td>
-                <td className="table-element">{row.source_id}</td>
-                <td className="table-element">{row.receiver_id}</td>
-                <td className="table-element">{row.amount} MINA</td>
+                <td className="table-element">{row.publicKeyBySourceId.value}</td>
+                <td className="table-element">{row.publicKeyByReceiverId.value}</td>
+                <td className="table-element">{amount} MINA</td>
             </tr>
         )
     }

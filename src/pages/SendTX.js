@@ -31,6 +31,7 @@ const GET_NONCE = gql`
         }
     }
 `
+
 const BROADCAST_TRANSACTION = gql`
     mutation broadcastTransaction($input: SendPaymentInput!,$signature: SignatureInput!) {
         broadcastTransaction(input: $input, signature: $signature) {
@@ -92,6 +93,7 @@ export default function SendTX () {
                     fastFee={fee.data ? fee.data.estimatedFee.fast : 0}
                     nextStep={openModal} 
                     transactionData={transactionData} 
+                    showToast={showToast}
                     setData={settransactionData}/>:
                     (
                         isLedgerEnabled ? 
@@ -153,7 +155,7 @@ export default function SendTX () {
         if(!balance ){
             setbalance(data)
         } else {
-            const difference = data.total !== balance.total || data.liquid !== balance.liquid
+            const difference = data.total !== balance.total || data.liquid !== balance.liquid || data.liquidUnconfirmed !== balance.liquidUnconfirmed
             if(difference){
                 setbalance(data)
             }
@@ -174,7 +176,7 @@ export default function SendTX () {
     }
 
     function openModal() {
-        const available = (+balance.liquid)*1000000000
+        const available = (+balance.liquidUnconfirmed)*1000000000
         const fee = (+transactionData.fee)*1000000000
         const amount = (+transactionData.amount)*1000000000
         if(available<(fee+amount)){
@@ -183,6 +185,7 @@ export default function SendTX () {
         if(transactionData.address === "" || transactionData.amount === 0){
             return showToast("Please insert an address and an amount")
         } 
+        nonce.refetch({publicKey:address});
         return setshowModal(ModalStates.PASSPHRASE)
     }
 

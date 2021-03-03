@@ -28,25 +28,28 @@ export default function Login(props) {
     const history = useHistory();
 
     const userID = useQuery(GET_ID, {
-        variables: { publicKey:publicKey },
+        variables: { publicKey },
         skip: publicKey===""
     });
 
     
     useEffect(() => {
-        if(publicKey && publicKey!==""){
-            if(userID.data && userID.data.public_keys.length>0){
+        if(publicKey && publicKey!==""){   
+            userID.refetch({publicKey});
+            if(userID.data){
+                if(userID.data.public_keys.length>0){
                 props.setLoader()
                 const id = userID.data.public_keys[0].id;
                 storeSession(publicKey,id,()=>{history.push("/overview")})
-            } else {
-                props.setLoader()
-                storeSession(publicKey,-1,()=>{
-                    history.push("/overview")
-                })
-            }
+                } else {
+                    props.setLoader()
+                    storeSession(publicKey,-1,()=>{
+                        history.push("/overview")
+                    })
+                }
+            } 
         }
-    }, [publicKey])
+    }, [userID])
 
     return (
         <Hoc>

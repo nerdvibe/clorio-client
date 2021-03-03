@@ -22,6 +22,7 @@ const BALANCE = gql`
             balance {
                 total
                 liquid
+                liquidUnconfirmed
             }
         }
     }
@@ -48,10 +49,12 @@ export default function Wallet(props) {
             userBalance = Big(balance.data.accountByKey.balance.total).mul(1e-9).toFixed();
             const total = Big(balance.data.accountByKey.balance.total).mul(1e-9).toFixed();
             const liquid = Big(balance.data.accountByKey.balance.liquid).mul(1e-9).toFixed();
+            const liquidUnconfirmed = Big(balance.data.accountByKey.balance.liquidUnconfirmed).mul(1e-9).toFixed();
             if(props.setBalance){
                 props.setBalance({
                     total,
-                    liquid
+                    liquid,
+                    liquidUnconfirmed
                 })
             }
         }

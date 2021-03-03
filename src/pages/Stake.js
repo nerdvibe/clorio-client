@@ -5,7 +5,7 @@ import Wallet from '../components/Wallet'
 import Button from '../components/Button'
 import Hoc from '../components/Hoc'
 import Modal from '../components/Modal'
-import { useQuery, gql } from '@apollo/client';
+import { useQuery, gql, useMutation } from '@apollo/client';
 import {Row,Col} from 'react-bootstrap'
 import { getAddress } from '../tools'
 import { useEffect } from 'react'
@@ -13,6 +13,7 @@ import * as CodaSDK from "@o1labs/client-sdk";
 import PrivateKeyModal from '../components/PrivateKeyModal'
 import Alert from '../components/General/Alert'
 import Input from '../components/Input'
+import { useHistory } from 'react-router-dom'
 
 const VALIDATORS = gql`
     query validators {
@@ -58,6 +59,14 @@ const GET_FEE = gql`
     }
 `
 
+const BROADCAST_DELEGATION = gql`
+    mutation broadcastDelegation($input: SendDelegationInput!,$signature: SignatureInput) {
+        broadcastDelegation(input: $input, signature: $signature) {
+            id
+        }
+    }
+`;
+
 export default (props) => {
     const ModalStates = Object.freeze({
         "PASSPHRASE" : "passphrase",
@@ -71,6 +80,7 @@ export default (props) => {
     const [privateKey, setPrivateKey] = useState("")
     const [customDelegate, setCustomDelegate] = useState("")
     const [showAlert, setShowAlert] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
     const validators = useQuery(VALIDATORS);
     const fee = useQuery(GET_FEE);
     const news = useQuery(NEWS);
@@ -78,6 +88,8 @@ export default (props) => {
         variables:{publicKey:props.sessionData.address},
         skip: props.sessionData.address===""
     });
+    const [broadcastDelegation, broadcastResult] = useMutation(BROADCAST_DELEGATION);
+    const history = useHistory();
     
     useEffect(()=>{
         if(nonceAndDelegate.data && nonceAndDelegate.data.accountByKey && nonceAndDelegate.data.accountByKey.delegate){
@@ -88,6 +100,12 @@ export default (props) => {
     getAddress((address)=>{
         setAddress(address)
     })
+
+    if(!showSuccess && broadcastResult && broadcastResult.data){
+        clearState()
+        setShowSuccess(true)
+        history.push("/stake");
+    }
 
     return (
         <Hoc className="main-container">
@@ -116,6 +134,9 @@ export default (props) => {
             <Alert show={showAlert} hideToast={()=>setShowAlert(false)} type={"error-toast"}>
                 There was an error processing your delegation, please try again later.
             </Alert>
+            <Alert show={showSuccess} hideToast={() => setShowSuccess(false)} type={"success-toast"}>
+                Delegation successfully broadcasted
+            </Alert>
         </Hoc>
     ) 
 
@@ -134,7 +155,24 @@ export default (props) => {
                 nonce: actualNonce, 
             }
             const signStake = CodaSDK.signStakeDelegation(stakeDelegation,keypair)
-            setshowModal("")
+            if(signStake){
+                const SignatureInput = {
+                    scalar: signStake.signature.scalar,
+                    field: signStake.signature.field
+                }
+                const SendPaymentInput = {
+                    nonce: signStake.payload.nonce,
+                    fee: signStake.payload.fee,
+                    validUntil: signStake.payload.validUntil,
+                    to: signStake.payload.to,
+                    from: signStake.payload.from,
+                }
+                broadcastDelegation({variables:{
+                    input:SendPaymentInput, 
+                    signature:SignatureInput 
+                }})
+                setshowModal("")
+            }
         }catch(e){
             setShowAlert(true)
         }
@@ -154,16 +192,16 @@ export default (props) => {
     }
 
     function confirmDelegate(){
+        nonce.refetch({publicKey:props.sessionData.address});
         setshowModal(ModalStates.PASSPHRASE)
     }
 
     function confirmCustomDelegate(){
+        nonce.refetch({publicKey:props.sessionData.address});
         setshowModal(ModalStates.PASSPHRASE)
         setDelegate({publicKey:customDelegate})
     }
     
-    
-
     function renderModal(){
         return(
             <div className="mx-auto">
@@ -223,5 +261,11 @@ export default (props) => {
                 </Row>
             </div>
         )
+    }
+
+    function clearState(){
+        setshowModal("")
+        setDelegate({})
+        setCustomDelegate("")
     }
 }

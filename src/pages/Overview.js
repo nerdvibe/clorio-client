@@ -9,14 +9,18 @@ import { useState } from 'react';
 
 const TRANSACTIONS = gql`
   query GetTransactions  ($user: Int!){
-    user_commands(where: {_or: {receiver_id: {_eq: $user}, source_id: {_eq: $user}}}, limit: 10, offset: 10) {
+    user_commands(where: {_or: [{receiver_id: {_eq: $user}}, {source_id: {_eq: $user}}]}, order_by: {id: desc}) {
       amount
       fee
       id
       hash
       memo
-      receiver_id
-      source_id
+      publicKeyBySourceId {
+        value
+      }
+      publicKeyByReceiverId {
+        value
+      }
       token
       type
       valid_until
