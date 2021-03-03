@@ -192,12 +192,12 @@ export default (props) => {
     }
 
     function confirmDelegate(){
-        nonce.refetch({publicKey:props.sessionData.address});
+        nonceAndDelegate.refetch({publicKey:props.sessionData.address});
         setshowModal(ModalStates.PASSPHRASE)
     }
 
     function confirmCustomDelegate(){
-        nonce.refetch({publicKey:props.sessionData.address});
+        nonceAndDelegate.refetch({publicKey:props.sessionData.address});
         setshowModal(ModalStates.PASSPHRASE)
         setDelegate({publicKey:customDelegate})
     }
