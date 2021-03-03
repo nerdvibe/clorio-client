@@ -36,6 +36,22 @@ const TRANSACTIONS = gql`
   }
 `;
 
+const GET_MEMPOOL = gql`
+  query GetMempool ($publicKey:String!){
+    mempool(publicKey: $publicKey) {
+      id
+      fee
+      feeToken
+      kind
+      amount
+      nonce
+      source {publicKey}
+      receiver {publicKey}
+    }
+  }
+`
+
+
 const NEWS = gql `
   query NewsHome {
     news_home(order_by: {created_at: desc}, limit: 1) {
@@ -51,10 +67,15 @@ const NEWS = gql `
 function Overview(props) {
   const [balance, setbalance] = useState(0)
   let queryResult;
+  let mempool;
   if(props.sessionData){
     const user = props.sessionData.id
     queryResult = useQuery(TRANSACTIONS,{
       variables: { user }
+    });
+    mempool = useQuery(GET_MEMPOOL,{
+      variables: { publicKey: props.sessionData.address},
+      skip:!props.sessionData.address
     });
   }
   const news = useQuery(NEWS);
@@ -64,7 +85,7 @@ function Overview(props) {
         <Wallet 
         setBalance={setBalance} />
         {renderBanner()}
-        <TransactionTable {...queryResult } balance={balance.total} />
+        <TransactionTable {...queryResult } mempool={mempool} balance={balance.total} />
       </Spinner>
     </Hoc>
   )

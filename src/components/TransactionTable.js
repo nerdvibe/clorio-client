@@ -13,7 +13,8 @@ export default function TransactionTable(props) {
     const [page, setpage] = useState(1)
     const [maxPages, setMaxPages] = useState(30)
     const { loading, error, data } = props
-    if(error){
+    const mempool = props.mempool
+    if(error || mempool.error){
         return renderError()
     }
     if(!data || data.user_commands.length===0){
@@ -54,7 +55,7 @@ export default function TransactionTable(props) {
         const amount = row.amount ? Big(row.amount).mul(1e-9).toFixed(3) : 0
         return (
             <tr key={index}>
-                <td className="table-element"><a href={`https://minaexplorer.com/block/${state_hash}`} target="_blank">{row.id}</a></td>
+                <td className="table-element"><a href={`https://minaexplorer.com/block/${state_hash}`} target="_blank">{row.hash}</a></td>
                 <td className="table-element">{timestampToDate(timestamp)}</td>
                 <td className="table-element">{row.publicKeyBySourceId.value}</td>
                 <td className="table-element">{row.publicKeyByReceiverId.value}</td>
@@ -63,9 +64,24 @@ export default function TransactionTable(props) {
         )
     }
 
+    function renderMempoolRow(row,index) {
+        const state_hash = row.blocks_user_commands ? row.blocks_user_commands[0].block.state_hash : ""
+        const amount = row.amount ? Big(row.amount).mul(1e-9).toFixed(3) : 0
+        return (
+            <tr key={index}>
+                <td className="table-element"><a href={`https://minaexplorer.com/payment/${row.id}`} target="_blank">{row.id}</a></td>
+                <td className="table-element">Waiting for confirmation</td>
+                <td className="table-element">{row.source && row.source.publicKey}</td>
+                <td className="table-element">{row.receiver && row.receiver.publicKey}</td>
+                <td className="table-element">{amount} MINA</td>
+            </tr>
+        )
+    }
+
     function renderTableBody() {
         return(
             <tbody>
+                {mempool.data && mempool.data.mempool.map((row,index) => {return renderMempoolRow(row,index)})}
                 {data && data.user_commands.map((row,index) => {return renderRow(row,index)})}
             </tbody>
         )
