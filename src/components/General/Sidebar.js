@@ -12,7 +12,7 @@ function Sidebar (props) {
     const history = useHistory();
     let networkData;
     if(props.network && props.network.nodeInfo){
-        networkData = props.network.nodeInfo.name
+        networkData = props.network.nodeInfo
     }
     return (
         <div style={{padding:'5px'}}>
@@ -41,7 +41,7 @@ function Sidebar (props) {
                 <Nav.Item className="sidebar-item-container sidebar-footer">
                     <Link to="/" className="sidebar-item"> <strong> <span onClick={logout}>Logout</span></strong> </Link>
                 </Nav.Item>
-                <div className="sidebar-footer-network">Node : {networkData} {renderStatusDot()}</div>
+                <div className="sidebar-footer-network">{renderNetwork()} {renderStatusDot()}</div>
             </Nav>
         </div>
     );
@@ -56,6 +56,13 @@ function Sidebar (props) {
         const location = useLocation();
         const currentRoute = location.pathname.toLowerCase();
         return currentRoute.includes(route) ? " sidebar-item-container-active" : " ";
+    }
+
+    function renderNetwork(){
+        if(networkData){
+            return (<div>{networkData.name } | {networkData.network}</div>)
+        }
+        return "Network unavailable"
     }
     
     function renderStatusDot(){

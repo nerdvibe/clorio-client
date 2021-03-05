@@ -13,7 +13,7 @@ export default function VerifyMessage() {
   const [scalar, setScalar] = useState("")
   const [show, setShow] = useState(undefined)
   return (
-    <Hoc className="scrollable" >
+    <Hoc>
       <Wallet />
       <VerifyForm 
         address={address}

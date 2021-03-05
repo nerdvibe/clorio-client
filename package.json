@@ -2,10 +2,10 @@
   "name": "mina-hub-client",
   "version": "0.1.0",
   "private": true,
-  "homepage": "./",
-  "main": "src/start.js",
+  "homepage": "./splashscreen",
+  "main": "public/electron.js",
   "dependencies": {
-    "@apollo/client": "3.3.9",
+    "@apollo/client": "^3.3.11",
     "@o1labs/client-sdk": "0.2.3",
     "@testing-library/jest-dom": "4.2.4",
     "@testing-library/react": "9.3.2",
@@ -19,8 +19,6 @@
     "big.js": "6.0.3",
     "bignumber.js": "9.0.1",
     "bootstrap": "4.6.0",
-    "electron": "11.2.0",
-    "electron-builder": "22.9.1",
     "graphql": "15.5.0",
     "js-sha256": "0.9.0",
     "nedb": "1.8.0",
@@ -45,15 +43,22 @@
     "react-start": "BROWSER=none react-scripts start",
     "pack": "build --dir",
     "dist": "npm run build && build",
-    "postinstall": "install-app-deps"
+    "postinstall": "install-app-deps",
+    "package": "electron-builder build --mac --publish never",
+    "electron-pack": "electron-builder -m"
   },
   "build": {
-    "appId": "com.electron.electron-with-create-react-app",
-    "win": {
-      "iconUrl": "https://cdn2.iconfinder.com/data/icons/designer-skills/128/react-256.png"
-    },
+    "appId": "com.minahub",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*",
+      "*.js"
+    ],
     "directories": {
-      "buildResources": "public"
+      "buildResources": "assets"
+    },
+    "win": {
+      "target": "portable"
     }
   },
   "browserslist": {
@@ -69,7 +74,11 @@
     ]
   },
   "devDependencies": {
+    "electron": "11.2.0",
+    "electron-builder": "^22.9.1",
+    "electron-packager": "^15.2.0",
     "eslint": "7.18.0",
+    "electron-is-dev": "^2.0.0",
     "eslint-config-airbnb": "18.2.1",
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-jsx-a11y": "6.4.1",

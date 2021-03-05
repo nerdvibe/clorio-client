@@ -24,6 +24,10 @@ function Layout () {
   const history = useHistory();
   const network = useQuery(GET_NETWORK);
 
+  const isEmptyObject = (objectToCheck) => {
+    return objectToCheck && Object.entries(objectToCheck).length === 0 && objectToCheck.constructor === Object
+  }
+
   const goToHome = () => {
     history.push("/");
   }
@@ -42,7 +46,7 @@ function Layout () {
     clearSession()
     setsessionData(undefined)
   }
-
+  
   return (
     <div>
       <Container fluid>
@@ -52,7 +56,10 @@ function Layout () {
               <Sidebar setLoader={setLoader} network={network.data}/>
             </Col>
           )}
-          <Col id="page-content-wrapper">
+          {
+            
+          }
+          <Col className={isEmptyObject(sessionData) ? "page-content-wrapper" : "page-content-wrapper-scrollable"}>
             <Container className="contentWrapper animate__animated animate__fadeIn">
               <Spinner show={!sessionData}>
                 <Routes sessionData={sessionData} setLoader={setLoader} network={network.data}/>

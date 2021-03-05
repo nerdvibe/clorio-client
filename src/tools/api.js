@@ -32,6 +32,16 @@ const httpLink = ApolloLink.from([
   new HttpLink({
     uri: 'https://minahub02.carbonara.science/v1/graphql',
     credentials: "same-origin",
+    options: {
+      reconnect: true,
+      connectionParams: async () => {
+        return {
+          headers: {
+            "x-hasura-role": "anon",
+          },
+        };
+      }
+    }
   }),
 ]);
 

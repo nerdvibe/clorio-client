@@ -71,7 +71,8 @@ function Overview(props) {
   if(props.sessionData){
     const user = props.sessionData.id
     queryResult = useQuery(TRANSACTIONS,{
-      variables: { user }
+      variables: { user },
+      fetchPolicy:'network-only'
     });
     mempool = useQuery(GET_MEMPOOL,{
       variables: { publicKey: props.sessionData.address},

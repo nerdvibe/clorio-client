@@ -32,7 +32,7 @@ export default function TransactionTable(props) {
                     }
                 </Table>
                 {
-                    renderPagination()
+                    // renderPagination()
                 }
             </Spinner>
         </div>

@@ -22,11 +22,20 @@
     font-size: 1.2rem;
 }
 
-#page-content-wrapper {
+.page-content-wrapper {
     // background: $grey;
     overflow: hidden;
     max-height: 94vh;
-    overflow-y: scroll;
+    // overflow-y: scroll;
+    min-width: 0;
+    width: 100%;
+}
+
+.page-content-wrapper-scrollable {
+    // background: $grey;
+    overflow: hidden;
+    max-height: 94vh;
+    overflow-y: auto;
     min-width: 0;
     width: 100%;
 }

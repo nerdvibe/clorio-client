@@ -78,7 +78,9 @@ export default function StakeTable(props) {
                     </thead>
                     {renderTableBody()}
                 </Table>
-                {renderPagination()}
+                {
+                    // renderPagination()
+                }
             </Spinner>
         )
     }
