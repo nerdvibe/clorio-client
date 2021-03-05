@@ -2,7 +2,7 @@
   "name": "mina-hub-client",
   "version": "0.1.0",
   "private": true,
-  "homepage": "./splashscreen",
+  "homepage": "./",
   "main": "public/electron.js",
   "dependencies": {
     "@apollo/client": "^3.3.11",
@@ -59,6 +59,10 @@
     },
     "win": {
       "target": "portable"
+    },
+    "mac": {
+      "icon": "./public/icons/mac/icon.icns",     
+      "category": "public.app-category.utilities"
     }
   },
   "browserslist": {

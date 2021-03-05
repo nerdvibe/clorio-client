@@ -12,13 +12,14 @@ import Ledger from "./pages/Ledger";
 import SignMessage from "./pages/SignMessage";
 import NotFound from "./pages/404";
 import VerifyMessage from "./pages/VerifyMessage";
+import { isEmptyObject } from './tools/utils'
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
   return (
     <Route
     {...rest}
     render={(props) => {
-        if (rest.sessionData.address) {
+        if (rest.sessionData && !isEmptyObject(rest.sessionData) && rest.sessionData.address) {
           return <Component {...props} sessionData={rest.sessionData} />;
         } else {
           return (

@@ -7,6 +7,7 @@ import Spinner from "./components/General/Spinner";
 import { useHistory } from "react-router-dom";
 import UpdateUserID from "./components/UpdateUserID";
 import { gql, useQuery } from "@apollo/client";
+import { isEmptyObject } from './tools/utils'
 
 const GET_NETWORK = gql`
   query NodeInfo {
@@ -23,10 +24,6 @@ function Layout () {
   const [sessionData, setsessionData] = useState(undefined)
   const history = useHistory();
   const network = useQuery(GET_NETWORK);
-
-  const isEmptyObject = (objectToCheck) => {
-    return objectToCheck && Object.entries(objectToCheck).length === 0 && objectToCheck.constructor === Object
-  }
 
   const goToHome = () => {
     history.push("/");
@@ -51,7 +48,7 @@ function Layout () {
     <div>
       <Container fluid>
         <Row>
-          {!!sessionData && sessionData.address && (
+          {sessionData && !isEmptyObject(sessionData) && sessionData.address && (
             <Col md={3} lg={2} xl={2} id="sidebar-wrapper">
               <Sidebar setLoader={setLoader} network={network.data}/>
             </Col>

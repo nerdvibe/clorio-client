@@ -4,8 +4,11 @@ import './App.scss';
 import Layout from './Layout';
 import { ApolloProvider } from '@apollo/client';
 import {apolloClient} from './tools/api'
+import { clearSession } from './tools';
   
 function App() {
+
+  clearSession()
   return (
     <div className="App">
       <ApolloProvider client={apolloClient}>

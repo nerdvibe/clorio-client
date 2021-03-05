@@ -23,3 +23,7 @@ export function loadErrorMessage(){
     document.getElementsByClassName("show-on-load")[0].style=""
     document.getElementsByClassName("show-on-load")[0].className="show-mob"
 }
+
+export function isEmptyObject(objectToCheck){
+    return objectToCheck && Object.entries(objectToCheck).length === 0 && objectToCheck.constructor === Object
+}
