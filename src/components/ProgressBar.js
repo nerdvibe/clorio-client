@@ -3,14 +3,14 @@ import React from "react";
 const ProgressBar = (props) => {
   const { text, progress } = props;
   const progressColor = () => {
-    if(progress>75){
-      return "#2A9D8F"
+    if (progress > 75) {
+      return "#2A9D8F";
     }
-    if(progress>25){
-      return "#E9C46A"
+    if (progress > 25) {
+      return "#E9C46A";
     }
-    return "#AA0000"
-  }
+    return "#AA0000";
+  };
 
   const containerStyles = {
     height: 50,
@@ -26,9 +26,9 @@ const ProgressBar = (props) => {
     backgroundColor: progressColor(),
     borderRadius: "inherit",
     textAlign: "right",
-    padding:10,
-    transition:"1s",
-    maxWidth: "100%"
+    padding: 10,
+    transition: "1s",
+    maxWidth: "100%",
   };
 
   const labelStyles = {
@@ -37,12 +37,14 @@ const ProgressBar = (props) => {
     fontWeight: "bold",
   };
 
-
   return (
     <div>
       <div style={containerStyles}>
         <div style={fillerStyles}>
-          <span style={labelStyles} className="my-auto"> {text} </span>{" "}
+          <span style={labelStyles} className="my-auto">
+            {" "}
+            {text}{" "}
+          </span>{" "}
         </div>{" "}
       </div>
     </div>

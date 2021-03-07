@@ -1,14 +1,13 @@
-import React from 'react';
-import { BrowserRouter as Router,} from 'react-router-dom';
-import './App.scss';
-import Layout from './Layout';
-import { ApolloProvider } from '@apollo/client';
-import {apolloClient} from './tools/api'
-import { clearSession } from './tools';
-  
-function App() {
+import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
+import "./App.scss";
+import Layout from "./Layout";
+import { ApolloProvider } from "@apollo/client";
+import { apolloClient } from "./tools/api";
+import { clearSession } from "./tools";
 
-  clearSession()
+function App() {
+  clearSession();
   return (
     <div className="App">
       <ApolloProvider client={apolloClient}>

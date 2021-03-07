@@ -1,10 +1,10 @@
-import React from 'react'
-import Logo from "../assets/Logo.svg";
+import React from "react";
+import LogoImage from "../assets/Logo.svg";
 
-export default (props) => {
+export default function Logo(props) {
   return (
     <div>
-      <img src={Logo} className={props.big?"big-logo":"logo-image"}/>
+      <img src={LogoImage} className={props.big ? "big-logo" : "logo-image"} />
     </div>
-  )
+  );
 }

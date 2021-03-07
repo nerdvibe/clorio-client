@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
 
-const TOAST_TIMEOUT = 2500
+const TOAST_TIMEOUT = 2500;
 
-const Alert = props => {
-  const [node] = useState(document.createElement('div'));
+const Alert = (props) => {
+  const [node] = useState(document.createElement("div"));
 
   useEffect(() => {
     if (props.show) {
-      const doc = document.querySelector('#toast').appendChild(node)
-      doc.classList.add('toast')
+      const doc = document.querySelector("#toast").appendChild(node);
+      doc.classList.add("toast");
       doc.classList.add(props.type);
 
       setTimeout(() => {
@@ -26,10 +26,10 @@ const Alert = props => {
   return ReactDOM.createPortal(props.children, node);
 
   function removeNode() {
-    if (document.querySelector('#toast').children.length) {
-      document.querySelector('#toast').childNodes[0].remove();
+    if (document.querySelector("#toast").children.length) {
+      document.querySelector("#toast").childNodes[0].remove();
     }
-  };
+  }
 };
 
 export default Alert;

@@ -232,6 +232,12 @@ textarea:-ms-input-placeholder {
     height: 30px;
 }
 
+.v-spacer-big{
+    width: 100vw;
+    height: 100px;
+    background-color: red;
+}
+
 .full-page-container{
     height: 70vh;
 }
@@ -678,4 +684,8 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
     -moz-appearance: textfield;
+}
+
+.pdf-only{
+    display: none;
 }

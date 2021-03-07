@@ -1,13 +1,13 @@
-import React , { useState } from "react";
-import Sidebar from './components/General/Sidebar'
-import {Container,Row,Col} from "react-bootstrap";
-import Routes from './Routes';
-import { clearSession, readSession } from './tools/auth'
+import React, { useState } from "react";
+import Sidebar from "./components/General/Sidebar";
+import { Container, Row, Col } from "react-bootstrap";
+import Routes from "./Routes";
+import { clearSession, readSession } from "./tools/auth";
 import Spinner from "./components/General/Spinner";
 import { useHistory } from "react-router-dom";
 import UpdateUserID from "./components/UpdateUserID";
 import { gql, useQuery } from "@apollo/client";
-import { isEmptyObject } from './tools/utils'
+import { isEmptyObject } from "./tools/utils";
 
 const GET_NETWORK = gql`
   query NodeInfo {
@@ -18,53 +18,63 @@ const GET_NETWORK = gql`
       version
     }
   }
-`
+`;
 
-function Layout () {
-  const [sessionData, setsessionData] = useState(undefined)
+function Layout() {
+  const [sessionData, setsessionData] = useState(undefined);
+  const [showLoader, setShowLoader] = useState(false);
   const history = useHistory();
   const network = useQuery(GET_NETWORK);
 
   const goToHome = () => {
     history.push("/");
-  }
-  
+  };
+
   readSession((data) => {
-      if(!sessionData){
-          setsessionData(data)
-      }
-  },goToHome)
+    if (!sessionData) {
+      setsessionData(data);
+    }
+  }, goToHome);
 
   const setLoader = () => {
-    setsessionData(undefined)
-  }
-  
+    setsessionData(undefined);
+  };
+
   window.onbeforeunload = () => {
-    clearSession()
-    setsessionData(undefined)
-  }
-  
+    clearSession();
+    setsessionData(undefined);
+  };
+
   return (
     <div>
       <Container fluid>
         <Row>
           {sessionData && !isEmptyObject(sessionData) && sessionData.address && (
             <Col md={3} lg={2} xl={2} id="sidebar-wrapper">
-              <Sidebar setLoader={setLoader} network={network.data}/>
+              <Sidebar setLoader={setLoader} network={network.data} />
             </Col>
           )}
-          {
-            
-          }
-          <Col className={isEmptyObject(sessionData) ? "page-content-wrapper" : "page-content-wrapper-scrollable"}>
+          {}
+          <Col
+            className={
+              isEmptyObject(sessionData)
+                ? "page-content-wrapper"
+                : "page-content-wrapper-scrollable"
+            }
+          >
             <Container className="contentWrapper animate__animated animate__fadeIn">
-              <Spinner show={!sessionData}>
-                <Routes sessionData={sessionData} setLoader={setLoader} network={network.data}/>
+              <Spinner show={!sessionData || showLoader}>
+                <Routes
+                  sessionData={sessionData}
+                  setLoader={setLoader}
+                  network={network.data}
+                  toggleLoader={setShowLoader}
+                />
               </Spinner>
             </Container>
           </Col>
         </Row>
-      <UpdateUserID sessionData={sessionData} />
+        <UpdateUserID sessionData={sessionData} />
       </Container>
     </div>
   );

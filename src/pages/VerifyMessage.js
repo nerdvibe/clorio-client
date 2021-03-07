@@ -1,21 +1,21 @@
-import React from 'react'
-import { useState } from 'react'
-import Alert from '../components/General/Alert'
-import Hoc from '../components/Hoc'
-import VerifyForm from '../components/VerifyForm'
-import Wallet from '../components/Wallet'
+import React from "react";
+import { useState } from "react";
+import Alert from "../components/General/Alert";
+import Hoc from "../components/Hoc";
+import VerifyForm from "../components/VerifyForm";
+import Wallet from "../components/Wallet";
 import * as CodaSDK from "@o1labs/client-sdk";
 
 export default function VerifyMessage() {
-  const [address, setAddress] = useState("")
-  const [message, setMessage] = useState("")
-  const [field, setField] = useState("")
-  const [scalar, setScalar] = useState("")
-  const [show, setShow] = useState(undefined)
+  const [address, setAddress] = useState("");
+  const [message, setMessage] = useState("");
+  const [field, setField] = useState("");
+  const [scalar, setScalar] = useState("");
+  const [show, setShow] = useState(undefined);
   return (
     <Hoc>
       <Wallet />
-      <VerifyForm 
+      <VerifyForm
         address={address}
         setAddress={setAddress}
         message={message}
@@ -27,44 +27,52 @@ export default function VerifyMessage() {
         handleInput={handleInput}
         verifyMessage={verifyMessage}
         disableButton={disableButton}
-        />
-      <Alert show={show==="success"} hideToast={()=>setShow(undefined)} type={"success-toast"}>
+      />
+      <Alert
+        show={show === "success"}
+        hideToast={() => setShow(undefined)}
+        type={"success-toast"}
+      >
         Message is valid
       </Alert>
-      <Alert show={show==="error"} hideToast={()=>setShow(undefined)} type={"error-toast"}>
+      <Alert
+        show={show === "error"}
+        hideToast={() => setShow(undefined)}
+        type={"error-toast"}
+      >
         Message is not valid
       </Alert>
     </Hoc>
-  )
+  );
 
-  function handleInput(text){
-    setMessage(text)
+  function handleInput(text) {
+    setMessage(text);
   }
 
-  function verifyMessage(){
-    try{
-      if(message && message!==""){
-        const signedMessage = { 
-          publicKey:address,
-          payload:message,
-          signature:{
+  function verifyMessage() {
+    try {
+      if (message && message !== "") {
+        const signedMessage = {
+          publicKey: address,
+          payload: message,
+          signature: {
             field,
-            scalar
-          }
-        }
+            scalar,
+          },
+        };
         const verifiedMessage = CodaSDK.verifyMessage(signedMessage);
-        if(verifiedMessage){
-          setShow("success")
-        } else { 
-          setShow("error")
+        if (verifiedMessage) {
+          setShow("success");
+        } else {
+          setShow("error");
         }
       }
-    }catch(e){
-      setShow("error")
+    } catch (e) {
+      setShow("error");
     }
   }
 
-  function disableButton(){
-    return address === "" || message === "" || field === "" || scalar === "" 
+  function disableButton() {
+    return address === "" || message === "" || field === "" || scalar === "";
   }
 }

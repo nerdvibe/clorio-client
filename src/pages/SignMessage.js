@@ -1,26 +1,26 @@
-import React,{useState} from 'react'
-import Hoc from '../components/Hoc'
-import SignMessageForm from '../components/SignMessageForm'
-import Wallet from '../components/Wallet'
-import Alert from '../components/General/Alert'
-import { getAddress } from '../tools'
+import React, { useState } from "react";
+import Hoc from "../components/Hoc";
+import SignMessageForm from "../components/SignMessageForm";
+import Wallet from "../components/Wallet";
+import Alert from "../components/General/Alert";
+import { getAddress } from "../tools";
 import * as CodaSDK from "@o1labs/client-sdk";
 
 export default function SignMessage() {
-  const [message, setMessage] = useState("")
-  const [privateKey, setPrivateKey] = useState("")
-  const [publicKey, setPublicKey] = useState("")
+  const [message, setMessage] = useState("");
+  const [privateKey, setPrivateKey] = useState("");
+  const [publicKey, setPublicKey] = useState("");
   const [show, setShow] = useState(false);
   const [result, setResult] = useState(undefined);
 
-  getAddress((data)=>{
-    setPublicKey(data)
-  })
+  getAddress((data) => {
+    setPublicKey(data);
+  });
 
   return (
     <Hoc>
       <Wallet />
-      <SignMessageForm 
+      <SignMessageForm
         message={message}
         privateKey={privateKey}
         setMessage={setMessage}
@@ -29,38 +29,38 @@ export default function SignMessage() {
         submitHandler={submitHandler}
         result={result}
         reset={resetForm}
-        />
-        <Alert show={show} hideToast={()=>setShow(false)} type={"error-toast"}>
-          Please check private key
-        </Alert>
+      />
+      <Alert show={show} hideToast={() => setShow(false)} type={"error-toast"}>
+        Please check private key
+      </Alert>
     </Hoc>
-  )
+  );
 
-  function signButtonStateHandler(){
-    const checkCondition = message==="" || privateKey==="" || publicKey===""
+  function signButtonStateHandler() {
+    const checkCondition =
+      message === "" || privateKey === "" || publicKey === "";
     return checkCondition;
   }
 
-  function submitHandler(){
-    try{
-      if(!signButtonStateHandler()){
+  function submitHandler() {
+    try {
+      if (!signButtonStateHandler()) {
         const keypair = {
           publicKey,
-          privateKey
-        }
-        
+          privateKey,
+        };
+
         const signedMessage = CodaSDK.signMessage(message, keypair);
-        setResult(signedMessage)
+        setResult(signedMessage);
       }
-    }
-    catch(e){
-      setShow(true)
+    } catch (e) {
+      setShow(true);
     }
   }
 
-  function resetForm(){
-    setPrivateKey("")
-    setResult(undefined)
-    setMessage("")
+  function resetForm() {
+    setPrivateKey("");
+    setResult(undefined);
+    setMessage("");
   }
 }
