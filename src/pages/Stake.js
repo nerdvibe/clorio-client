@@ -15,9 +15,11 @@ import Alert from "../components/General/Alert";
 import Input from "../components/Input";
 import { useHistory } from "react-router-dom";
 
+const ITEMS_PER_PAGE = 10;
+
 const VALIDATORS = gql`
-  query validators {
-    validators(limit: 10) {
+  query validators($offset: Int!) {
+    validators(limit: 10, offset: $offset) {
       fee
       id
       image
@@ -30,7 +32,7 @@ const VALIDATORS = gql`
 
 const NEWS = gql`
   query NewsValidators {
-    news_validators(order_by: { created_at: desc }, limit: 1) {
+    news_validators(order_by: { created_at: desc }, limit: 10) {
       title
       subtitle
       link
@@ -70,6 +72,16 @@ const BROADCAST_DELEGATION = gql`
   }
 `;
 
+const GET_VALIDATORS_TOTAL = gql`
+  query CountValidators {
+    validators_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
 export default (props) => {
   const ModalStates = Object.freeze({
     PASSPHRASE: "passphrase",
@@ -84,7 +96,8 @@ export default (props) => {
   const [customDelegate, setCustomDelegate] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const validators = useQuery(VALIDATORS);
+  const [offset, setOffset] = useState(0);
+  const validators = useQuery(VALIDATORS, { variables: { offset } });
   const fee = useQuery(GET_FEE);
   const news = useQuery(NEWS);
   const nonceAndDelegate = useQuery(GET_NONCE_AND_DELEGATE, {
@@ -94,6 +107,7 @@ export default (props) => {
   const [broadcastDelegation, broadcastResult] = useMutation(
     BROADCAST_DELEGATION
   );
+  const total = useQuery(GET_VALIDATORS_TOTAL);
   const history = useHistory();
 
   useEffect(() => {
@@ -125,6 +139,9 @@ export default (props) => {
         validators={validators}
         currentDelegate={currentDelegate}
         openCustomDelegateModal={openCustomDelegateModal}
+        setOffset={changeOffset}
+        page={offset / ITEMS_PER_PAGE + 1}
+        total={getTotalPages()}
       />
       <Modal
         show={showModal === ModalStates.CONFIRM_DELEGATION}
@@ -319,5 +336,19 @@ export default (props) => {
     setshowModal("");
     setDelegate({});
     setCustomDelegate("");
+  }
+
+  function getTotalPages() {
+    if (total.data && total.data.validators_aggregate) {
+      const totalItems = total.data.validators_aggregate.aggregate.count;
+      const pages = (totalItems / ITEMS_PER_PAGE).toFixed(0);
+      return parseInt(pages) === 0 ? 1 : pages;
+    }
+    return 1;
+  }
+
+  function changeOffset(page) {
+    const data = (page - 1) * ITEMS_PER_PAGE;
+    setOffset(data);
   }
 };

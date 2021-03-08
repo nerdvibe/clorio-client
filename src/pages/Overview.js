@@ -7,13 +7,17 @@ import { useQuery, gql } from "@apollo/client";
 import Spinner from "../components/General/Spinner";
 import { useState } from "react";
 
+const ITEMS_PER_PAGE = 10;
+
 const TRANSACTIONS = gql`
-  query GetTransactions($user: Int!) {
+  query GetTransactions($user: Int!, $offset: Int!) {
     user_commands(
       where: {
         _or: [{ receiver_id: { _eq: $user } }, { source_id: { _eq: $user } }]
       }
       order_by: { id: desc }
+      limit: 10
+      offset: $offset
     ) {
       amount
       fee
@@ -72,31 +76,56 @@ const NEWS = gql`
   }
 `;
 
+const GET_TRANSACTIONS_TOTAL = gql`
+  query TransactionsTotal($user: Int!) {
+    user_commands_aggregate(
+      where: {
+        _or: [{ receiver_id: { _eq: $user } }, { source_id: { _eq: $user } }]
+      }
+    ) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
 function Overview(props) {
   const [balance, setbalance] = useState(0);
+  const [offset, setOffset] = useState(0);
   let queryResult;
   let mempool;
+  let total;
   if (props.sessionData) {
     const user = props.sessionData.id;
     queryResult = useQuery(TRANSACTIONS, {
-      variables: { user },
+      variables: { user, offset },
       fetchPolicy: "network-only",
+      skip: !user,
     });
     mempool = useQuery(GET_MEMPOOL, {
       variables: { publicKey: props.sessionData.address },
       skip: !props.sessionData.address,
     });
+    total = useQuery(GET_TRANSACTIONS_TOTAL, {
+      variables: { user },
+      skip: !user,
+      fetchPolicy: "network-only",
+    });
   }
   const news = useQuery(NEWS);
   return (
     <Hoc className="main-container">
-      <Spinner show={!queryResult || queryResult.loading}>
+      <Spinner show={queryResult.loading}>
         <Wallet setBalance={setBalance} />
         {renderBanner()}
         <TransactionTable
           {...queryResult}
           mempool={mempool}
+          total={getTotalPages()}
           balance={balance.total}
+          setOffset={changeOffset}
+          page={offset / ITEMS_PER_PAGE + 1}
         />
       </Spinner>
     </Hoc>
@@ -123,10 +152,24 @@ function Overview(props) {
           subtitle={latest.subtitle}
           link={latest.link}
           cta={latest.cta}
-          cta={latest.cta_color}
+          cta_color={latest.cta_color}
         />
       );
     }
+  }
+
+  function getTotalPages() {
+    if (total.data && total.data.user_commands_aggregate.aggregate) {
+      const totalItems = total.data.user_commands_aggregate.aggregate.count;
+      const pages = (totalItems / ITEMS_PER_PAGE).toFixed(0);
+      return parseInt(pages) === 0 ? 1 : pages;
+    }
+    return 1;
+  }
+
+  function changeOffset(page) {
+    const data = (page - 1) * ITEMS_PER_PAGE;
+    setOffset(data);
   }
 }
 

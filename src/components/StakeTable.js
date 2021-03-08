@@ -8,9 +8,9 @@ import ErrorImage from "../assets/Error.svg";
 import { Row, Col } from "react-bootstrap";
 
 export default function StakeTable(props) {
+  const [page, setpage] = useState(props.page);
+  const maxPages = props.total;
   const [searchbox, setSearchbox] = useState("");
-  //   const [page, setpage] = useState(1);
-  //   const [maxPages] = useState(1); // TODO : Get pagination from backend
 
   const searchboxHandler = (search) => {
     setSearchbox(search.toLowerCase());
@@ -83,9 +83,7 @@ export default function StakeTable(props) {
           </thead>
           {renderTableBody()}
         </Table>
-        {
-          // renderPagination()
-        }
+        {renderPagination()}
       </Spinner>
     );
   }
@@ -144,77 +142,73 @@ export default function StakeTable(props) {
     );
   }
 
-  //   function renderPagination() {
-  //     const indexes = [];
-  //     for (let i = 1; i <= maxPages; i++) {
-  //       indexes.push(i);
-  //     }
-  //     const indexToRender = () => {
-  //       const indexToReturn = [];
-  //       let count = 0;
-  //       let breakCondition = false;
-  //       if (page > 2 && page < indexes.length - 2) {
-  //         const tmpIndex = page - 2;
-  //         while (count < 5 && !breakCondition) {
-  //           if (tmpIndex + count <= maxPages) {
-  //             indexToReturn.push(tmpIndex + count);
-  //             count++;
-  //           } else {
-  //             breakCondition = true;
-  //           }
-  //         }
-  //       } else if (page <= 2) {
-  //         while (count < 5 && !breakCondition) {
-  //           if (1 + count <= maxPages) {
-  //             indexToReturn.push(1 + count);
-  //             count++;
-  //           } else {
-  //             breakCondition = true;
-  //           }
-  //         }
-  //       } else {
-  //         const tmpFirstIndex = indexes.length - 4;
-  //         while (count < 5 && !breakCondition) {
-  //           if (tmpFirstIndex + count <= maxPages) {
-  //             indexToReturn.push(tmpFirstIndex + count);
-  //             count++;
-  //           } else {
-  //             breakCondition = true;
-  //           }
-  //         }
-  //       }
-  //       return indexToReturn;
-  //     };
+  function renderPagination() {
+    const indexes = [];
+    for (let i = 1; i <= maxPages; i++) {
+      indexes.push(i);
+    }
+    function changePage(index) {
+      const lastIndex = indexes.length - 1;
+      if (index > 0 && index <= indexes[lastIndex]) {
+        setpage(index);
+        props.setOffset(index);
+      }
+    }
+    function indexToRender() {
+      const indexToReturn = [];
+      let count = 0;
+      if (page > 2 && page < indexes.length - 2) {
+        const tmpIndex = page - 2;
+        while (count < 5) {
+          indexToReturn.push(tmpIndex + count);
+          count++;
+        }
+      } else if (page <= 2) {
+        const min = maxPages <= 5 ? maxPages : 5;
+        while (count < min) {
+          indexToReturn.push(1 + count);
+          count++;
+        }
+      } else {
+        if (maxPages <= 5) {
+          const tmpFirstIndex = indexes.length - (maxPages - 1);
+          while (count < maxPages) {
+            indexToReturn.push(tmpFirstIndex + count);
+            count++;
+          }
+        } else {
+          const tmpFirstIndex = indexes.length - 4;
+          while (count < 5) {
+            indexToReturn.push(tmpFirstIndex + count);
+            count++;
+          }
+        }
+      }
+      return indexToReturn;
+    }
+    const elements = indexToRender().map((index) => {
+      return renderPaginationItem(index, changePage);
+    });
+    return (
+      <div className="pagination">
+        <p onClick={() => changePage(page - 1)}>&laquo;</p>
+        {elements}
+        <p onClick={() => changePage(page + 1)}>&raquo;</p>
+      </div>
+    );
+  }
 
-  //     const changePage = (index) => {
-  //       const lastIndex = indexes.length - 1;
-  //       if (index > 0 && index <= indexes[lastIndex]) {
-  //         setpage(index);
-  //       }
-  //     };
-  //     const elements = indexToRender().map((index) => {
-  //       return renderPaginationItem(index, changePage);
-  //     });
-  //     return (
-  //       <div className="pagination">
-  //         <p onClick={() => changePage(page - 1)}>&laquo;</p>
-  //         {elements}
-  //         <p onClick={() => changePage(page + 1)}>&raquo;</p>
-  //       </div>
-  //     );
-  //   }
-
-  //   function renderPaginationItem(index, change) {
-  //     return (
-  //       <p
-  //         key={index}
-  //         onClick={() => change(index)}
-  //         className={page === index ? "active" : ""}
-  //       >
-  //         {index}
-  //       </p>
-  //     );
-  //   }
+  function renderPaginationItem(index, change) {
+    return (
+      <p
+        key={index}
+        onClick={() => change(index)}
+        className={page === index ? "active" : ""}
+      >
+        {index}
+      </p>
+    );
+  }
 
   function renderAddDelegate() {
     return (
