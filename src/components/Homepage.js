@@ -24,6 +24,13 @@ export default function Homepage() {
             />
           </Link>
           <div className="v-spacer" />
+          <Link to="/ledger">
+            <Button
+              className="lightGreenButton__fullMono mx-auto"
+              text="Access with hardware"
+            />
+          </Link>
+          <div className="v-spacer" />
           <Link to="/register">
             <Button
               className="lightGreenButton__fullMono mx-auto"

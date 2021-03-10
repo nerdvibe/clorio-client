@@ -185,7 +185,7 @@ export default function Register(props) {
 
   function setAuthorization() {
     props.setLoader();
-    storeSession(publicKey, -1, () => {
+    storeSession(publicKey, -1, false, () => {
       history.push("/overview");
     });
   }

@@ -11,11 +11,12 @@ export const isAuthenticated = () => {
   return false;
 };
 
-export const storeSession = (address, id, callback) => {
+export const storeSession = (address, id, isLedgerEnabled, callback) => {
   const wallet = {
     name: "Wallet",
     address: address,
     id: id,
+    ledger: isLedgerEnabled,
     coins: 0,
   };
   db.insert(wallet, () => {
@@ -61,12 +62,13 @@ export const getId = (callback) => {
   });
 };
 
-export const updateUser = (address, id, callback) => {
+export const updateUser = (address, id, isLedgerEnabled, callback) => {
   db.remove({}, { multi: true }, function () {
     const wallet = {
       name: "Wallet",
       address: address,
       id: id,
+      ledger: isLedgerEnabled,
       coins: 0,
     };
     db.insert(wallet, () => {

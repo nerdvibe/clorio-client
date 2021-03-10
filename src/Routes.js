@@ -79,18 +79,18 @@ function Routes(props) {
       <Route path="/login" exact>
         <Login {...props} network={props.network} />
       </Route>
-      {/*<Route path="/register">
-        <Entropy />
-      </Route>*/}
       <Route path="/register" exact>
         <Register {...props} network={props.network} />
       </Route>
+      <Route path="/ledger" exact>
+        <Ledger {...props} network={props.network} />
+      </Route>
+      {/*<Route path="/register">
+        <Entropy />
+      </Route>*/}
       {/*<Route path="/verify">
         <Verify />
       </Route>*/}
-      <Route path="/ledger" exact>
-        <Ledger network={props.network} />
-      </Route>
       <Route path="/" exact>
         <SplashScreen network={props.network} />
       </Route>

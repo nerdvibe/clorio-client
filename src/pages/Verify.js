@@ -94,7 +94,7 @@ export default function Verify() {
   }
 
   function setAuthorization() {
-    storeSession(address, passphrase, privateKey);
+    storeSession(address, passphrase, false, privateKey);
     history.push("/overview");
   }
 

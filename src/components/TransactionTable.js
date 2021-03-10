@@ -92,6 +92,7 @@ export default function TransactionTable(props) {
     return (
       <tbody>
         {mempool.data &&
+          mempool.data.mempool &&
           mempool.data.mempool.map((row, index) => {
             return renderMempoolRow(row, index);
           })}
