@@ -70,17 +70,19 @@ function Sidebar(props) {
             </span>
           </Link>
         </Nav.Item>
-        <Nav.Item className="sidebar-item-container sidebar-footer">
-          <Link to="/" className="sidebar-item">
-            {" "}
-            <strong>
+        <div className="sidebar-footer-block">
+          <Nav.Item className=" sidebar-footer">
+            <Link to="/" className="sidebar-item">
               {" "}
-              <span onClick={logout}>Logout</span>
-            </strong>{" "}
-          </Link>
-        </Nav.Item>
-        <div className="sidebar-footer-network">
-          {renderNetwork()} {renderStatusDot()}
+              <strong>
+                {" "}
+                <span onClick={logout}>Logout</span>
+              </strong>{" "}
+            </Link>
+          </Nav.Item>
+          <div className="sidebar-footer-network">
+            {renderNetwork()} {renderStatusDot()}
+          </div>
         </div>
       </Nav>
     </div>

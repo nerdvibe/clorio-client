@@ -110,11 +110,7 @@ export default function StakeTable(props) {
             <div className="walletImageContainer small-image inline-element">
               <div className="">
                 {el.image ? (
-                  <img
-                    className="small-walletImage"
-                    src={el.image}
-                    style={{ marginLeft: "4px" }}
-                  />
+                  <img className="small-walletImage" src={el.image} />
                 ) : (
                   <Avatar
                     className="small-walletImage"

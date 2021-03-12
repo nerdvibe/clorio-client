@@ -34,7 +34,6 @@ export default function Wallet(props) {
   const ticker = useQuery(TICKER);
   const balance = useQuery(BALANCE, {
     variables: { publicKey: address },
-    skip: !address,
   });
 
   useEffect(() => {
@@ -75,10 +74,10 @@ export default function Wallet(props) {
   }
   return (
     <div className="block-container">
-      <div className="align-left">
+      <div className="align-left big-screen">
         <div className="inline-block-element walletImageContainer">
           <div className="walletImageOutline">
-            <Avatar address={address} size="80" />
+            <Avatar address={address} />
           </div>
         </div>
         <div className="inline-block-element wallet-data">
@@ -96,6 +95,57 @@ export default function Wallet(props) {
             </Col>
           </Row>
           <Row>
+            <Col>
+              <div className="inline-block-element">
+                <h6 className="secondaryText">Your balance</h6>
+                <h5>{userBalance} MINA</h5>
+              </div>
+              <div className="inline-block-element">
+                <div className="v-div" />
+              </div>
+              <div className="inline-block-element">
+                <span>
+                  <h6 className="secondaryText">Apx value</h6>
+                  <h5>
+                    {(ticker.data &&
+                      userBalance * ticker.data.ticker.BTCMINA) ||
+                      0}{" "}
+                    BTC
+                  </h5>
+                </span>
+              </div>
+            </Col>
+          </Row>
+        </div>
+      </div>
+      <div className="align-left small-screen">
+        <Row>
+          <Col md={2}>
+            <div className="inline-block-element walletImageContainer">
+              <div className="walletImageOutline">
+                <Avatar address={address} />
+              </div>
+            </div>
+          </Col>
+          <Col md={10}>
+            <Row>
+              <Col xs={12} className="wallet-address">
+                <h6 className="secondaryText">This is your address</h6>
+                <h5>
+                  {address} &nbsp;
+                  <Button
+                    className="inline-element"
+                    icon={<Copy />}
+                    onClick={() => copyToClipboard(address)}
+                  />
+                </h5>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+        <div className="inline-block-element wallet-data full-width">
+          <Row>
+            <Col md={2} />
             <Col>
               <div className="inline-block-element">
                 <h6 className="secondaryText">Your balance</h6>

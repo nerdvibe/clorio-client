@@ -29,7 +29,7 @@ export default function TransactionForm(props) {
                 inputHandler={(e) => memoHandler(e.currentTarget.value)}
               />
               <Row>
-                <Col md={6}>
+                <Col md={12} xl={6}>
                   <h3>Amount</h3>
                   <Input
                     value={props.transactionData.amount}
@@ -38,7 +38,7 @@ export default function TransactionForm(props) {
                     type="number"
                   />
                 </Col>
-                <Col md={6}>
+                <Col md={12} xl={6}>
                   <Row>
                     <Col md={4} className="align-initial">
                       <h3 className="inline-element ">Fee</h3>

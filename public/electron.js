@@ -1,13 +1,11 @@
 const { app, BrowserWindow } = require("electron");
-
 const path = require("path");
 const url = require("url");
-
 let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1200,
+    width: 800,
     height: 800,
     titleBarStyle: "hidden", // add this line
     webPreferences: {
