@@ -42,3 +42,7 @@ export function isEmptyObject(objectToCheck) {
     objectToCheck.constructor === Object
   );
 }
+
+export function formatAmount(amount) {
+  return +amount * 1000000000;
+}

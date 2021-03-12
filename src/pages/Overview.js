@@ -66,7 +66,7 @@ const GET_MEMPOOL = gql`
 
 const NEWS = gql`
   query NewsHome {
-    news_home(order_by: { created_at: desc }, limit: 1) {
+    news_home(limit: 1) {
       title
       subtitle
       link

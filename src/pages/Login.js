@@ -56,7 +56,7 @@ export default function Login(props) {
   return (
     <Hoc>
       <Spinner show={loader}>
-        <div className="block-container no-bg real-full-page-container center">
+        <div className="block-container no-bg real-full-page-container center no-margin">
           <div className="full-width">
             <Row>
               <Col

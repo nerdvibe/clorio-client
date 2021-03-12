@@ -8,6 +8,7 @@ import Footer from "../components/General/Footer";
 import ledger from "../tools/ledger";
 import { useQuery, gql } from "@apollo/client";
 import { storeSession } from "../tools";
+import LedgerLoader from "../components/LedgerLoader";
 
 const GET_ID = gql`
   query GetIDFromPublicKey($publicKey: String) {
@@ -27,7 +28,6 @@ export default function Ledger(props) {
 
   useEffect(() => {
     const deviceListener = getWallet(setDevices);
-    console.log(deviceListener);
 
     return deviceListener.unsubscribe;
   }, []);
@@ -50,12 +50,7 @@ export default function Ledger(props) {
                     Connect now your hardware wallet
                   </h4>
                   <div className="v-spacer" />
-                  <div className="lds-ellipsis">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                  </div>
+                  <LedgerLoader />
                   <div className="v-spacer" />
                   <h6 className="full-width-align-center">
                     Looking for devices

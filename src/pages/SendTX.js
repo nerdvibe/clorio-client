@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Wallet from "../components/Wallet";
 import TransactionForm from "../components/TransactionForm";
 import ConfirmTransaction from "../components/ConfirmTransaction";
@@ -11,9 +11,7 @@ import Modal from "../components/Modal";
 import { useQuery, gql, useMutation } from "@apollo/client";
 import PrivateKeyModal from "../components/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
-// import Input from "../components/Input";
-// import { Col, Row } from "react-bootstrap";
-// import Button from "../components/Button";
+import ledger from "../tools/ledger";
 
 const GET_FEE = gql`
   query GetFees {
@@ -51,12 +49,12 @@ const initialTransactionData = {
   memo: "",
 };
 
-export default function SendTX() {
+export default function SendTX(props) {
   const ModalStates = Object.freeze({
     PASSPHRASE: "passphrase",
     BROADCASTING: "broadcasting",
   });
-  const isLedgerEnabled = false;
+  const isLedgerEnabled = props.sessionData.ledger;
   const [show, setShow] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [alertText, setAlertText] = useState("");
@@ -68,6 +66,7 @@ export default function SendTX() {
   const [transactionData, settransactionData] = useState(
     initialTransactionData
   );
+  const [ledgerTransactionData, setLedgerTransactionData] = useState(undefined);
   const nonce = useQuery(GET_NONCE, {
     variables: { publicKey: address },
     skip: address === "",
@@ -87,6 +86,43 @@ export default function SendTX() {
   getAddress((address) => {
     setAddress(address);
   });
+
+  useEffect(() => {
+    if (isLedgerEnabled && !ledgerTransactionData) {
+      if (step === 1) {
+        const transactionListener = sendLedgerTransaction(
+          setLedgerTransactionData
+        );
+        return transactionListener.unsubscribe;
+      }
+    }
+  }, [isLedgerEnabled, ledgerTransactionData, step]);
+
+  useEffect(() => {
+    try {
+      if (ledgerTransactionData) {
+        const amount = transactionData.amount * 1000000000;
+        const fee = transactionData.fee * 1000000000;
+        const SignatureInput = {
+          rawSignature: ledgerTransactionData,
+        };
+        const SendPaymentInput = {
+          nonce: transactionData.nonce.toString(),
+          memo: transactionData.memo,
+          fee: fee.toString(),
+          amount: amount.toString(),
+          to: transactionData.address,
+          from: address,
+          validUntil: "",
+        };
+        broadcastTransaction({
+          variables: { input: SendPaymentInput, signature: SignatureInput },
+        });
+      }
+    } catch (e) {
+      props.showGlobalAlert("There was an error broadcasting delegation");
+    }
+  }, [ledgerTransactionData]);
 
   return (
     <Hoc className="main-container">
@@ -136,43 +172,6 @@ export default function SendTX() {
     </Hoc>
   );
 
-  //   function renderModal() {
-  //     return (
-  //       <div className="mx-auto">
-  //         <h2>Insert Private Key</h2>
-  //         <div className="v-spacer" />
-  //         <h5 className="align-center mx-auto">
-  //           In order to continue <br />
-  //           please insert your private key
-  //         </h5>
-  //         <div className="v-spacer" />
-  //         <Input
-  //           inputHandler={(e) => {
-  //             setPrivateKey(e.currentTarget.value);
-  //           }}
-  //           placeholder="Insert your private key"
-  //         />
-  //         <div className="v-spacer" />
-  //         <Row>
-  //           <Col xs={6}>
-  //             <Button
-  //               onClick={closeModal}
-  //               className="link-button"
-  //               text="Cancel"
-  //             />
-  //           </Col>
-  //           <Col xs={6}>
-  //             <Button
-  //               onClick={confirmPrivateKey}
-  //               className="lightGreenButton__fullMono mx-auto"
-  //               text="Confirm"
-  //             />
-  //           </Col>
-  //         </Row>
-  //       </div>
-  //     );
-  //   }
-
   function setBalance(data) {
     if (!balance) {
       setbalance(data);
@@ -211,7 +210,11 @@ export default function SendTX() {
       return showToast("Please insert an address and an amount");
     }
     nonce.refetch({ publicKey: address });
-    return setshowModal(ModalStates.PASSPHRASE);
+    if (!isLedgerEnabled) {
+      return setshowModal(ModalStates.PASSPHRASE);
+    } else {
+      setStep(1);
+    }
   }
 
   function closeModal() {
@@ -275,7 +278,6 @@ export default function SendTX() {
             nonce: signedPayment.payload.nonce,
             memo: signedPayment.payload.memo,
             fee: signedPayment.payload.fee,
-            validUntil: signedPayment.payload.validUntil,
             amount: signedPayment.payload.amount,
             to: signedPayment.payload.to,
             from: signedPayment.payload.from,
@@ -298,5 +300,37 @@ export default function SendTX() {
     setStep(0);
     setshowModal("");
     settransactionData(initialTransactionData);
+  }
+
+  async function sendLedgerTransaction(fn) {
+    const updateDevices = async () => {
+      try {
+        const dataToSend = {
+          account: address,
+          sender: address,
+          recipient: transactionData.address,
+          fee: transactionData.fee,
+          amount: transactionData.amount,
+          nonce: transactionData.nonce,
+          txType: 1,
+          networkId: 1,
+          validUntil: "z",
+        };
+        const response = await ledger.signTransaction(dataToSend);
+        fn(response);
+      } catch (e) {
+        props.showGlobalAlert(
+          "An error occurred while loading hardware wallet"
+        );
+        history.push("/");
+      }
+    };
+    // eslint-disable-next-line no-undef
+    try {
+      setImmediate(updateDevices);
+    } catch (e) {
+      props.showGlobalAlert("An error occurred while loading hardware wallet");
+      history.push("/");
+    }
   }
 }

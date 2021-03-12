@@ -24,7 +24,9 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
           !isEmptyObject(rest.sessionData) &&
           rest.sessionData.address
         ) {
-          return <Component {...props} sessionData={rest.sessionData} />;
+          return (
+            <Component {...props} {...rest} sessionData={rest.sessionData} />
+          );
         } else {
           return (
             <Redirect
@@ -57,12 +59,14 @@ function Routes(props) {
         path="/send-tx"
         component={SendTX}
         sessionData={sessionData}
+        {...props}
       />
       <ProtectedRoute
         exact
         path="/stake"
         component={Stake}
         sessionData={sessionData}
+        {...props}
       />
       <ProtectedRoute
         exact

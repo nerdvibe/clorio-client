@@ -14,6 +14,9 @@ import PrivateKeyModal from "../components/PrivateKeyModal";
 import Alert from "../components/General/Alert";
 import Input from "../components/Input";
 import { useHistory } from "react-router-dom";
+import ledger from "../tools/ledger";
+import { formatAmount } from "../tools/utils";
+import LedgerLoader from "../components/LedgerLoader";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -32,7 +35,7 @@ const VALIDATORS = gql`
 
 const NEWS = gql`
   query NewsValidators {
-    news_validators(order_by: { created_at: desc }, limit: 10) {
+    news_validators(limit: 10) {
       title
       subtitle
       link
@@ -88,6 +91,7 @@ export default (props) => {
     CONFIRM_DELEGATION: "confirm",
     CUSTOM_DELEGATION: "custom",
   });
+  const isLedgerEnabled = props.sessionData.ledger;
   const [delegateData, setDelegate] = useState({});
   const [currentDelegate, setCurrentDelegate] = useState("");
   const [showModal, setshowModal] = useState("");
@@ -102,13 +106,13 @@ export default (props) => {
   const news = useQuery(NEWS);
   const nonceAndDelegate = useQuery(GET_NONCE_AND_DELEGATE, {
     variables: { publicKey: props.sessionData.address },
-    skip: props.sessionData.address === "",
   });
   const [broadcastDelegation, broadcastResult] = useMutation(
     BROADCAST_DELEGATION
   );
   const total = useQuery(GET_VALIDATORS_TOTAL);
   const history = useHistory();
+  const [ledgerTransactionData, setLedgerTransactionData] = useState(undefined);
 
   useEffect(() => {
     if (
@@ -130,6 +134,41 @@ export default (props) => {
     history.push("/stake");
   }
 
+  useEffect(() => {
+    if (isLedgerEnabled && !ledgerTransactionData) {
+      if (showModal === ModalStates.PASSPHRASE) {
+        const transactionListener = sendLedgerTransaction(
+          setLedgerTransactionData
+        );
+        return transactionListener.unsubscribe;
+      }
+    }
+  }, [isLedgerEnabled, ledgerTransactionData, showModal]);
+
+  useEffect(() => {
+    if (ledgerTransactionData) {
+      const actualNonce =
+        nonceAndDelegate.data && nonceAndDelegate.data.accountByKey
+          ? parseInt(nonceAndDelegate.data.accountByKey.usableNonce)
+          : 0;
+      const averageFee = formatAmount(fee.data.estimatedFee.average);
+      const SignatureInput = {
+        rawSignature: ledgerTransactionData,
+      };
+      const SendPaymentInput = {
+        nonce: actualNonce.toString(),
+        memo: "",
+        fee: averageFee.toString(),
+        to: delegateData.publicKey,
+        from: address,
+        validUntil: "",
+      };
+      broadcastDelegation({
+        variables: { input: SendPaymentInput, signature: SignatureInput },
+      });
+    }
+  }, [ledgerTransactionData]);
+
   return (
     <Hoc className="main-container">
       <Wallet />
@@ -150,14 +189,32 @@ export default (props) => {
         {renderModal()}
       </Modal>
       <Modal show={showModal === ModalStates.PASSPHRASE} close={closeModal}>
-        <PrivateKeyModal
-          confirmPrivateKey={signStakeDelegate}
-          closeModal={closeModal}
-          setPrivateKey={setPrivateKey}
-          subtitle={
-            customDelegate && `You are going to delegate ${customDelegate}`
-          }
-        />
+        {isLedgerEnabled ? (
+          <div className="mx-auto">
+            <h2>Please confirm transaction </h2>
+            <div className="v-spacer" />
+            <h5 className="align-center mx-auto">
+              Waiting your hardware wallet to confirm transaction
+            </h5>
+            <div className="v-spacer" />
+            <LedgerLoader />
+            <div className="v-spacer" />
+            <Button
+              onClick={closeModal}
+              className="link-button full-width-align-center"
+              text="Cancel"
+            />
+          </div>
+        ) : (
+          <PrivateKeyModal
+            confirmPrivateKey={signStakeDelegate}
+            closeModal={closeModal}
+            setPrivateKey={setPrivateKey}
+            subtitle={
+              customDelegate && `You are going to delegate ${customDelegate}`
+            }
+          />
+        )}
       </Modal>
       <Modal
         show={showModal === ModalStates.CUSTOM_DELEGATION}
@@ -350,5 +407,40 @@ export default (props) => {
   function changeOffset(page) {
     const data = (page - 1) * ITEMS_PER_PAGE;
     setOffset(data);
+  }
+
+  async function sendLedgerTransaction(fn) {
+    const updateDevices = async () => {
+      try {
+        const actualNonce =
+          nonceAndDelegate.data && nonceAndDelegate.data.accountByKey
+            ? parseInt(nonceAndDelegate.data.accountByKey.usableNonce)
+            : 0;
+        const dataToSend = {
+          account: address,
+          sender: address,
+          recipient: delegateData.publicKey,
+          fee: +fee.data.estimatedFee.average * 1000000000,
+          nonce: actualNonce,
+          txType: 2,
+          networkId: 1,
+          validUntil: "z",
+        };
+        const response = await ledger.signDelegation(dataToSend);
+        fn(response);
+      } catch (e) {
+        console.log("🚀 ~ file: Stake.js ~ line 427 ~ updateDevices ~ e", e);
+        props.showGlobalAlert(
+          "An error occurred while loading hardware wallet"
+        );
+        setshowModal(undefined);
+      }
+    };
+    // eslint-disable-next-line no-undef
+    try {
+      setImmediate(updateDevices);
+    } catch (e) {
+      props.showGlobalAlert("An error occurred while loading hardware wallet");
+    }
   }
 };

@@ -15,7 +15,7 @@ export default function Verify() {
 
   return (
     <Hoc className="main-container">
-      <div className="block-container no-bg real-full-page-container center">
+      <div className="block-container no-bg real-full-page-container center ">
         <div className="">
           <Row>
             <Col xs={8} className="offset-md-2 full-width-align-center">

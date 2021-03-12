@@ -84,11 +84,10 @@ export default class Avatar extends React.Component {
     ];
     return (
       <svg
-        height={newSize}
-        width={newSize}
+        viewBox={`0 0 80 80`}
         className={`accountVisual + ${this.props.className}`}
         xmlns="http://www.w3.org/2000/svg"
-        style={{ borderRadius: "50%", marginLeft: "2px" }}
+        style={{ borderRadius: "50%" }}
       >
         <circle cx="40" cy="40" r="40" fill="#F4A261" />
         {shapes.map((shape, i) => (
