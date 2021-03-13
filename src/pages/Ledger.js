@@ -71,11 +71,11 @@ export default function Ledger(props) {
     </Hoc>
   );
 
-  async function getWallet(fn) {
+  async function getWallet(callback) {
     const updateDevices = async () => {
       try {
         const response = await ledger.getAddress(1);
-        fn(response);
+        callback(response);
       } catch (e) {
         props.showGlobalAlert(
           "An error occurred while loading hardware wallet"
@@ -83,9 +83,8 @@ export default function Ledger(props) {
         history.push("/");
       }
     };
-    // eslint-disable-next-line no-undef
     try {
-      setImmediate(updateDevices);
+      updateDevices();
     } catch (e) {
       props.showGlobalAlert("An error occurred while loading hardware wallet");
       history.push("/");

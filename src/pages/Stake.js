@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Banner from "../components/Banner";
 import StakeTable from "../components/StakeTable";
 import Wallet from "../components/Wallet";
 import Button from "../components/Button";
@@ -15,8 +14,10 @@ import Alert from "../components/General/Alert";
 import Input from "../components/Input";
 import { useHistory } from "react-router-dom";
 import ledger from "../tools/ledger";
-import { formatAmount } from "../tools/utils";
+import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
 import LedgerLoader from "../components/LedgerLoader";
+import CustomNonce from "../components/CustomNonce";
+import Banner from "../components/Banner";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -90,17 +91,19 @@ export default (props) => {
     PASSPHRASE: "passphrase",
     CONFIRM_DELEGATION: "confirm",
     CUSTOM_DELEGATION: "custom",
+    NONCE: "nonce",
   });
   const isLedgerEnabled = props.sessionData.ledger;
   const [delegateData, setDelegate] = useState({});
   const [currentDelegate, setCurrentDelegate] = useState("");
-  const [showModal, setshowModal] = useState("");
+  const [showModal, setShowModal] = useState("");
   const [address, setAddress] = useState("");
   const [privateKey, setPrivateKey] = useState("");
   const [customDelegate, setCustomDelegate] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [offset, setOffset] = useState(0);
+  const [customNonce, setCustomNonce] = useState(undefined);
   const validators = useQuery(VALIDATORS, { variables: { offset } });
   const fee = useQuery(GET_FEE);
   const news = useQuery(NEWS);
@@ -108,7 +111,13 @@ export default (props) => {
     variables: { publicKey: props.sessionData.address },
   });
   const [broadcastDelegation, broadcastResult] = useMutation(
-    BROADCAST_DELEGATION
+    BROADCAST_DELEGATION,
+    {
+      onError: (error) => {
+        props.showGlobalAlert(error.message);
+        return clearState();
+      },
+    }
   );
   const total = useQuery(GET_VALIDATORS_TOTAL);
   const history = useHistory();
@@ -147,11 +156,8 @@ export default (props) => {
 
   useEffect(() => {
     if (ledgerTransactionData) {
-      const actualNonce =
-        nonceAndDelegate.data && nonceAndDelegate.data.accountByKey
-          ? parseInt(nonceAndDelegate.data.accountByKey.usableNonce)
-          : 0;
-      const averageFee = formatAmount(fee.data.estimatedFee.average);
+      const actualNonce = getNonce();
+      const averageFee = toNanoMINA(fee.data.estimatedFee.average);
       const SignatureInput = {
         rawSignature: ledgerTransactionData,
       };
@@ -161,7 +167,7 @@ export default (props) => {
         fee: averageFee.toString(),
         to: delegateData.publicKey,
         from: address,
-        validUntil: "",
+        validUntil: getDefaultValidUntilField(),
       };
       broadcastDelegation({
         variables: { input: SendPaymentInput, signature: SignatureInput },
@@ -187,6 +193,12 @@ export default (props) => {
         close={closeModal}
       >
         {renderModal()}
+      </Modal>
+      <Modal show={showModal === ModalStates.NONCE} close={closeNonceModal}>
+        <CustomNonce
+          proceedHandler={confirmDelegate}
+          setCustomNonce={setCustomNonce}
+        />
       </Modal>
       <Modal show={showModal === ModalStates.PASSPHRASE} close={closeModal}>
         {isLedgerEnabled ? (
@@ -241,9 +253,7 @@ export default (props) => {
 
   function signStakeDelegate() {
     try {
-      const actualNonce = nonceAndDelegate.data
-        ? parseInt(nonceAndDelegate.data.accountByKey.usableNonce)
-        : 0;
+      const actualNonce = getNonce();
       const publicKey = CodaSDK.derivePublicKey(privateKey);
       const keypair = {
         privateKey: privateKey,
@@ -252,7 +262,7 @@ export default (props) => {
       const stakeDelegation = {
         to: delegateData.publicKey,
         from: address,
-        fee: +fee.data.estimatedFee.average * 1000000000,
+        fee: toNanoMINA(fee.data.estimatedFee.average),
         nonce: actualNonce,
       };
       const signStake = CodaSDK.signStakeDelegation(stakeDelegation, keypair);
@@ -274,7 +284,7 @@ export default (props) => {
             signature: SignatureInput,
           },
         });
-        setshowModal("");
+        setShowModal("");
       }
     } catch (e) {
       setShowAlert(true);
@@ -283,36 +293,47 @@ export default (props) => {
 
   function openModal(delegate) {
     setDelegate(delegate);
-    setshowModal(ModalStates.CONFIRM_DELEGATION);
+    setShowModal(ModalStates.CONFIRM_DELEGATION);
   }
 
   function openCustomDelegateModal() {
-    setshowModal(ModalStates.CUSTOM_DELEGATION);
+    setShowModal(ModalStates.CUSTOM_DELEGATION);
   }
 
   function closeModal() {
-    setshowModal("");
+    setShowModal("");
+    setCustomNonce(undefined);
+    setCustomDelegate(undefined);
   }
 
   function confirmDelegate() {
-    nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
-    setshowModal(ModalStates.PASSPHRASE);
+    if ((!nonceAndDelegate || !nonceAndDelegate.data) && !customNonce) {
+      return setShowModal(ModalStates.NONCE);
+    }
+    if (customDelegate) {
+      nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
+      setShowModal(ModalStates.PASSPHRASE);
+      setDelegate({ publicKey: customDelegate });
+    } else {
+      nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
+      setShowModal(ModalStates.PASSPHRASE);
+    }
   }
 
-  function confirmCustomDelegate() {
-    nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
-    setshowModal(ModalStates.PASSPHRASE);
-    setDelegate({ publicKey: customDelegate });
+  function closeNonceModal() {
+    setShowModal("");
+    setCustomNonce(undefined);
   }
 
   function renderModal() {
+    const delegateToShow = delegateData ? delegateData.name : customDelegate;
     return (
       <div className="mx-auto">
         <h2>Confirm Delegation</h2>
         <div className="v-spacer" />
         <h5 className="align-center mx-auto">
           Are you sure you want to <br />
-          delegate this stake to <strong>{delegateData.name}</strong>
+          delegate this stake to <strong>{delegateToShow}</strong>
         </h5>
         <div className="v-spacer" />
         <Row>
@@ -378,7 +399,7 @@ export default (props) => {
           </Col>
           <Col xs={6}>
             <Button
-              onClick={confirmCustomDelegate}
+              onClick={confirmDelegate}
               className="lightGreenButton__fullMono mx-auto"
               text="Confirm"
               disabled={customDelegate === ""}
@@ -390,16 +411,21 @@ export default (props) => {
   }
 
   function clearState() {
-    setshowModal("");
+    setShowModal("");
     setDelegate({});
+    setCustomNonce(undefined);
     setCustomDelegate("");
+    setLedgerTransactionData(undefined);
   }
 
   function getTotalPages() {
     if (total.data && total.data.validators_aggregate) {
       const totalItems = total.data.validators_aggregate.aggregate.count;
       const pages = (totalItems / ITEMS_PER_PAGE).toFixed(0);
-      return parseInt(pages) === 0 ? 1 : pages;
+      if (parseInt(pages) === 0) {
+        return 1;
+      }
+      return pages;
     }
     return 1;
   }
@@ -409,38 +435,40 @@ export default (props) => {
     setOffset(data);
   }
 
-  async function sendLedgerTransaction(fn) {
+  async function sendLedgerTransaction(callback) {
     const updateDevices = async () => {
       try {
-        const actualNonce =
-          nonceAndDelegate.data && nonceAndDelegate.data.accountByKey
-            ? parseInt(nonceAndDelegate.data.accountByKey.usableNonce)
-            : 0;
+        const actualNonce = getNonce();
         const dataToSend = {
           account: address,
           sender: address,
           recipient: delegateData.publicKey,
-          fee: +fee.data.estimatedFee.average * 1000000000,
+          fee: toNanoMINA(fee.data.estimatedFee.average),
           nonce: actualNonce,
           txType: 2,
           networkId: 1,
-          validUntil: "z",
+          validUntil: getDefaultValidUntilField(),
         };
         const response = await ledger.signDelegation(dataToSend);
-        fn(response);
+        callback(response);
       } catch (e) {
-        console.log("🚀 ~ file: Stake.js ~ line 427 ~ updateDevices ~ e", e);
         props.showGlobalAlert(
           "An error occurred while loading hardware wallet"
         );
-        setshowModal(undefined);
+        setShowModal(undefined);
       }
     };
-    // eslint-disable-next-line no-undef
     try {
-      setImmediate(updateDevices);
+      updateDevices();
     } catch (e) {
       props.showGlobalAlert("An error occurred while loading hardware wallet");
     }
+  }
+
+  function getNonce() {
+    if (nonceAndDelegate.data && nonceAndDelegate.data.accountByKey) {
+      return parseInt(nonceAndDelegate.data.accountByKey.usableNonce);
+    }
+    return customNonce;
   }
 };

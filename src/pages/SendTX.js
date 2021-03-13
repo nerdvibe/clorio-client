@@ -12,6 +12,9 @@ import { useQuery, gql, useMutation } from "@apollo/client";
 import PrivateKeyModal from "../components/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
 import ledger from "../tools/ledger";
+import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
+import Big from "big.js";
+import CustomNonce from "../components/CustomNonce";
 
 const GET_FEE = gql`
   query GetFees {
@@ -42,9 +45,9 @@ const BROADCAST_TRANSACTION = gql`
 `;
 
 const initialTransactionData = {
-  amount: 0,
+  amount: toNanoMINA(0),
   address: "",
-  fee: 0.1,
+  fee: toNanoMINA(0.001),
   nonce: 0,
   memo: "",
 };
@@ -53,6 +56,7 @@ export default function SendTX(props) {
   const ModalStates = Object.freeze({
     PASSPHRASE: "passphrase",
     BROADCASTING: "broadcasting",
+    NONCE: "nonce",
   });
   const isLedgerEnabled = props.sessionData.ledger;
   const [show, setShow] = useState(false);
@@ -60,9 +64,10 @@ export default function SendTX(props) {
   const [alertText, setAlertText] = useState("");
   const [privateKey, setPrivateKey] = useState("");
   const [step, setStep] = useState(0);
-  const [showModal, setshowModal] = useState("");
+  const [showModal, setShowModal] = useState("");
   const [balance, setbalance] = useState(0);
   const [address, setAddress] = useState("");
+  const [customNonce, setCustomNonce] = useState(undefined);
   const [transactionData, settransactionData] = useState(
     initialTransactionData
   );
@@ -73,7 +78,13 @@ export default function SendTX(props) {
   });
   const fee = useQuery(GET_FEE);
   const [broadcastTransaction, broadcastResult] = useMutation(
-    BROADCAST_TRANSACTION
+    BROADCAST_TRANSACTION,
+    {
+      onError: (error) => {
+        props.showGlobalAlert(error.message);
+        clearState();
+      },
+    }
   );
   const history = useHistory();
 
@@ -100,20 +111,24 @@ export default function SendTX(props) {
 
   useEffect(() => {
     try {
+      const actualNonce =
+        nonce.data && nonce.data.accountByKey.usableNonce
+          ? parseInt(nonce.data.accountByKey.usableNonce)
+          : customNonce;
       if (ledgerTransactionData) {
-        const amount = transactionData.amount * 1000000000;
-        const fee = transactionData.fee * 1000000000;
+        const amount = toNanoMINA(transactionData.amount);
+        const fee = toNanoMINA(transactionData.fee);
         const SignatureInput = {
           rawSignature: ledgerTransactionData,
         };
         const SendPaymentInput = {
-          nonce: transactionData.nonce.toString(),
+          nonce: actualNonce.toString(),
           memo: transactionData.memo,
           fee: fee.toString(),
           amount: amount.toString(),
           to: transactionData.address,
           from: address,
-          validUntil: "",
+          validUntil: getDefaultValidUntilField(),
         };
         broadcastTransaction({
           variables: { input: SendPaymentInput, signature: SignatureInput },
@@ -159,6 +174,9 @@ export default function SendTX(props) {
       <Modal show={showModal === ModalStates.BROADCASTING} close={closeModal}>
         {renderBroadcastingModal()}
       </Modal>
+      <Modal show={showModal === ModalStates.NONCE} close={closeNonceModal}>
+        <CustomNonce openModal={openModal} setCustomNonce={setCustomNonce} />
+      </Modal>
       <Alert show={show} hideToast={hideToast} type={"error-toast"}>
         {alertText}
       </Alert>
@@ -200,32 +218,41 @@ export default function SendTX(props) {
   }
 
   function openModal() {
-    const available = +balance.liquidUnconfirmed * 1000000000;
-    const fee = +transactionData.fee * 1000000000;
-    const amount = +transactionData.amount * 1000000000;
-    if (available < fee + amount) {
-      return showToast("Please check your balance");
+    if ((!nonce || !nonce.data) && !customNonce) {
+      return setShowModal(ModalStates.NONCE);
+    }
+    const available = balance.liquidUnconfirmed;
+    const fee = transactionData.fee;
+    const amount = transactionData.amount;
+    const balanceAfterTransaction = Big(available)
+      .sub(fee)
+      .sub(amount)
+      .toNumber();
+    if (balanceAfterTransaction < 0) {
+      return showToast(
+        "Your are trying to send too many MINA, please check your balance"
+      );
     }
     if (transactionData.address === "" || transactionData.amount === 0) {
       return showToast("Please insert an address and an amount");
     }
     nonce.refetch({ publicKey: address });
     if (!isLedgerEnabled) {
-      return setshowModal(ModalStates.PASSPHRASE);
+      return setShowModal(ModalStates.PASSPHRASE);
     } else {
       setStep(1);
     }
   }
 
   function closeModal() {
-    setshowModal("");
+    setShowModal("");
   }
 
   function confirmPrivateKey() {
     if (privateKey === "") {
       showToast("Please insert a private key");
     } else {
-      setshowModal("");
+      setShowModal("");
       setStep(1);
     }
   }
@@ -244,20 +271,20 @@ export default function SendTX(props) {
   }
 
   function sendTransaction() {
-    setshowModal(ModalStates.BROADCASTING);
+    setShowModal(ModalStates.BROADCASTING);
     if (nonce) {
       const actualNonce =
         nonce.data && nonce.data.accountByKey.usableNonce
           ? parseInt(nonce.data.accountByKey.usableNonce)
-          : 0;
+          : customNonce;
       try {
         const publicKey = CodaSDK.derivePublicKey(privateKey);
         const dataToSend = {
           privateKey,
           publicKey,
         };
-        const fee = +transactionData.fee * 1000000000;
-        const amount = +transactionData.amount * 1000000000;
+        const fee = toNanoMINA(transactionData.fee);
+        const amount = toNanoMINA(transactionData.amount);
         const signedPayment = CodaSDK.signPayment(
           {
             from: address,
@@ -287,7 +314,7 @@ export default function SendTX(props) {
           });
         }
       } catch (e) {
-        setshowModal("");
+        setShowModal("");
         showToast("Check if receiver address and/or private key are right");
         stepBackwards();
       }
@@ -298,11 +325,18 @@ export default function SendTX(props) {
     setShow(false);
     setAlertText("");
     setStep(0);
-    setshowModal("");
+    setShowModal("");
+    setCustomNonce(undefined);
     settransactionData(initialTransactionData);
+    setLedgerTransactionData(undefined);
   }
 
-  async function sendLedgerTransaction(fn) {
+  function closeNonceModal() {
+    setShowModal("");
+    setCustomNonce(undefined);
+  }
+
+  async function sendLedgerTransaction(callback) {
     const updateDevices = async () => {
       try {
         const dataToSend = {
@@ -314,10 +348,10 @@ export default function SendTX(props) {
           nonce: transactionData.nonce,
           txType: 1,
           networkId: 1,
-          validUntil: "z",
+          validUntil: getDefaultValidUntilField(),
         };
         const response = await ledger.signTransaction(dataToSend);
-        fn(response);
+        callback(response);
       } catch (e) {
         props.showGlobalAlert(
           "An error occurred while loading hardware wallet"
@@ -325,9 +359,8 @@ export default function SendTX(props) {
         history.push("/");
       }
     };
-    // eslint-disable-next-line no-undef
     try {
-      setImmediate(updateDevices);
+      updateDevices();
     } catch (e) {
       props.showGlobalAlert("An error occurred while loading hardware wallet");
       history.push("/");

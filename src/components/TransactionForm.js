@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { Row, Col } from "react-bootstrap";
+import { toMINA, toNanoMINA } from "../tools/utils";
 import Button from "./Button";
 import Input from "./Input";
 
+const MINIMUM_AMOUNT = toNanoMINA(0.0000001);
+const MINIMUM_FEE = toNanoMINA(0.001);
+
 export default function TransactionForm(props) {
+  const [amount, setAmount] = useState(toMINA(props.transactionData.amount));
+  const [fee, setFee] = useState(toMINA(props.transactionData.fee));
   return (
     <div className="mx-auto  ">
       <div className="block-container fit-content-container">
@@ -32,9 +38,9 @@ export default function TransactionForm(props) {
                 <Col md={6}>
                   <h3>Amount</h3>
                   <Input
-                    value={props.transactionData.amount}
                     placeholder="Enter an amount "
-                    inputHandler={(e) => amountHandler(e.currentTarget.value)}
+                    value={amount}
+                    inputHandler={(e) => amountHandler(e.target.value)}
                     type="number"
                   />
                 </Col>
@@ -59,9 +65,9 @@ export default function TransactionForm(props) {
                     </Col>
                   </Row>
                   <Input
-                    value={props.transactionData.fee}
                     placeholder="Enter a fee "
-                    inputHandler={(e) => feeHandler(e.currentTarget.value)}
+                    value={fee}
+                    inputHandler={(e) => feeHandler(e.target.value)}
                     type="number"
                   />
                 </Col>
@@ -69,7 +75,7 @@ export default function TransactionForm(props) {
               <div className="v-spacer" />
               <Button
                 className="lightGreenButton__fullMono mx-auto"
-                onClick={props.nextStep}
+                onClick={amountCheck}
                 text="Preview"
               />
             </Col>
@@ -80,29 +86,35 @@ export default function TransactionForm(props) {
   );
 
   function setDefaultFee() {
+    const fee = props.defaultFee;
     if (props.defaultFee) {
+      setFee(fee);
       props.setData({
         ...props.transactionData,
-        fee: props.defaultFee,
+        fee: toNanoMINA(props.defaultFee),
       });
     } else {
+      setFee(0.1);
       props.setData({
         ...props.transactionData,
-        fee: 0.1,
+        fee: toNanoMINA(0.1),
       });
     }
   }
 
   function setFastFee() {
-    if (props.fastFee) {
+    const fee = props.fastFee;
+    if (fee) {
+      setFee(fee);
       props.setData({
         ...props.transactionData,
-        fee: props.fastFee,
+        fee: toNanoMINA(fee),
       });
     } else {
+      setFee(0.1);
       props.setData({
         ...props.transactionData,
-        fee: 0.1,
+        fee: toNanoMINA(0.1),
       });
     }
   }
@@ -115,35 +127,60 @@ export default function TransactionForm(props) {
   }
 
   function amountHandler(amount) {
-    if (amount < 0.0000001 && amount !== 0) {
-      // TODO : Put big.js
-      props.showToast(
-        `Amount ${amount} is less than the minimum amount (0.00000001)`
-      );
-    } else {
-      props.setData({
+    setAmount(amount);
+    if (amount) {
+      return props.setData({
         ...props.transactionData,
-        amount,
+        amount: toNanoMINA(amount),
       });
     }
+    return props.setData({
+      ...props.transactionData,
+      amount: toNanoMINA(0),
+    });
   }
 
   function feeHandler(fee) {
-    if (fee < 0.001) {
-      // TODO : Put big.js
-      props.showToast(`Fee ${fee} is less than the minimum fee (0.001)`);
-    } else {
-      props.setData({
+    setFee(fee);
+    if (fee) {
+      return props.setData({
         ...props.transactionData,
-        fee,
+        fee: toNanoMINA(fee),
+      });
+    }
+    return props.setData({
+      ...props.transactionData,
+      fee: toNanoMINA(0),
+    });
+  }
+
+  function memoHandler(memo) {
+    if (memo.length > 32) {
+      return props.showToast(`Memo is limited to 32 characters`);
+    } else {
+      return props.setData({
+        ...props.transactionData,
+        memo,
       });
     }
   }
 
-  function memoHandler(memo) {
-    props.setData({
-      ...props.transactionData,
-      memo,
-    });
+  function amountCheck() {
+    const { amount, fee } = props.transactionData;
+    if (amount < MINIMUM_AMOUNT || amount === 0) {
+      return props.showToast(
+        `Amount ${toMINA(amount)} is less than the minimum amount (${toMINA(
+          MINIMUM_AMOUNT
+        )})`
+      );
+    }
+    if (fee < MINIMUM_FEE) {
+      return props.showToast(
+        `Fee ${toMINA(fee)} is less than the minimum fee (${toMINA(
+          MINIMUM_FEE
+        )})`
+      );
+    }
+    return props.nextStep();
   }
 }
