@@ -97,7 +97,7 @@ export default function Register(props) {
               key. <br />
               Make sure have made a copy of them. If you loose your private key
               you will not be able to access your funds anymore! <br />
-              <a className="link-button" onClick={printElement}>
+              <a className="link-button" onClick={downloadPDF}>
                 Download a copy here
               </a>
             </p>
@@ -199,7 +199,7 @@ export default function Register(props) {
     setValidation(false);
   }
 
-  function printElement() {
+  function downloadPDF() {
     props.toggleLoader(true);
     const elementsToHide = document.getElementsByClassName("no-print");
     const elementInitalState = [];
@@ -215,6 +215,7 @@ export default function Register(props) {
     html2pdf()
       .set({
         margin: 50,
+        filename: "MinaHub-Paperwallet.pdf",
       })
       .from(element)
       .save();

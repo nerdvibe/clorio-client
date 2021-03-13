@@ -5,7 +5,7 @@ import ErrorImage from "../assets/Error.png";
 import NoTransactionsOrNotAvailableImage from "../assets/NoTransactionsOrNotAvailable.svg";
 import TxHistoryNotAvailableImage from "../assets/TxHistoryNotAvailable.svg";
 import NoTransactions from "../assets/NoTransactions.svg";
-import { timestampToDate } from "../tools/utils";
+import { timestampToDate, toMINA } from "../tools/utils";
 import Big from "big.js";
 
 export default function TransactionTable(props) {
@@ -45,7 +45,7 @@ export default function TransactionTable(props) {
 
   function renderRow(row, index) {
     const { timestamp, state_hash } = row.blocks_user_commands[0].block;
-    const amount = row.amount ? Big(row.amount).mul(1e-9).toFixed(3) : 0;
+    const amount = row.amount ? toMINA(row.amount) : 0;
     return (
       <tr key={index}>
         <td className="table-element">
