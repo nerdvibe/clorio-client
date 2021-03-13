@@ -116,8 +116,8 @@ export default function SendTX(props) {
           ? parseInt(nonce.data.accountByKey.usableNonce)
           : customNonce;
       if (ledgerTransactionData) {
-        const amount = toNanoMINA(transactionData.amount);
-        const fee = toNanoMINA(transactionData.fee);
+        const amount = (transactionData.amount);
+        const fee = (transactionData.fee);
         const SignatureInput = {
           rawSignature: ledgerTransactionData,
         };
@@ -274,17 +274,17 @@ export default function SendTX(props) {
     setShowModal(ModalStates.BROADCASTING);
     if (nonce) {
       const actualNonce =
-        nonce.data && nonce.data.accountByKey.usableNonce
-          ? parseInt(nonce.data.accountByKey.usableNonce)
-          : customNonce;
+        nonce.data && (nonce.data.accountByKey.usableNonce || nonce.data.accountByKey.usableNonce===0)
+        ? parseInt(nonce.data.accountByKey.usableNonce)
+        : customNonce;
       try {
         const publicKey = CodaSDK.derivePublicKey(privateKey);
         const dataToSend = {
           privateKey,
           publicKey,
         };
-        const fee = toNanoMINA(transactionData.fee);
-        const amount = toNanoMINA(transactionData.amount);
+        const fee = (transactionData.fee);
+        const amount = (transactionData.amount);
         const signedPayment = CodaSDK.signPayment(
           {
             from: address,
@@ -314,6 +314,7 @@ export default function SendTX(props) {
           });
         }
       } catch (e) {
+        console.log("🚀 ~ file: SendTX.js ~ line 343 ~ sendTransaction ~ e", e)
         setShowModal("");
         showToast("Check if receiver address and/or private key are right");
         stepBackwards();

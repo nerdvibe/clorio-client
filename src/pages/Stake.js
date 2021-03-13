@@ -468,6 +468,8 @@ export default (props) => {
   function getNonce() {
     if (nonceAndDelegate.data && nonceAndDelegate.data.accountByKey) {
       return parseInt(nonceAndDelegate.data.accountByKey.usableNonce);
+    } else if(nonceAndDelegate.data.accountByKey.usableNonce===0){
+      return 0;
     }
     return customNonce;
   }
