@@ -32,7 +32,7 @@ const VALIDATORS = gql`
 
 const NEWS = gql`
   query NewsValidators {
-    news_validators(order_by: { created_at: desc }, limit: 10) {
+    news_validators(limit: 10) {
       title
       subtitle
       link

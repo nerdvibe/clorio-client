@@ -1,3 +1,5 @@
+import Big from "big.js";
+
 export function timestampToDate(timestamp) {
   const date_ob = new Date(timestamp);
   const date = ("0" + date_ob.getDate()).slice(-2);
@@ -41,4 +43,12 @@ export function isEmptyObject(objectToCheck) {
     Object.entries(objectToCheck).length === 0 &&
     objectToCheck.constructor === Object
   );
+}
+
+export function toNanoMINA(amount) {
+  return Big(amount).mul(1e9).toFixed();
+}
+
+export function toMINA(amount) {
+  return Big(amount).mul(1e-9).toFixed();
 }

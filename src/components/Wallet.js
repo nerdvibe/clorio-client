@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
-import Button from "../components/Button";
+import Button from "./Button";
 import { Copy } from "react-feather";
 import { getAddress } from "../tools";
 import { useQuery, gql } from "@apollo/client";
 import Avatar from "../tools/avatar";
-import Big from "big.js";
-import { copyToClipboard } from "../tools/utils";
+import { copyToClipboard, toMINA } from "../tools/utils";
 
 const TICKER = gql`
   query ticker {
@@ -47,20 +46,11 @@ export default function Wallet(props) {
 
   if (balance && balance.data) {
     if (balance.data.accountByKey) {
-      userBalance = Big(balance.data.accountByKey.balance.total)
-        .mul(1e-9)
-        .toFixed();
-      const total = Big(balance.data.accountByKey.balance.total)
-        .mul(1e-9)
-        .toFixed();
-      const liquid = Big(balance.data.accountByKey.balance.liquid)
-        .mul(1e-9)
-        .toFixed();
-      const liquidUnconfirmed = Big(
-        balance.data.accountByKey.balance.liquidUnconfirmed
-      )
-        .mul(1e-9)
-        .toFixed();
+      userBalance = balance.data.accountByKey.balance.total;
+      const total = balance.data.accountByKey.balance.total;
+      const liquid = balance.data.accountByKey.balance.liquid;
+      const liquidUnconfirmed =
+        balance.data.accountByKey.balance.liquidUnconfirmed;
       if (props.setBalance) {
         props.setBalance({
           total,
@@ -99,7 +89,7 @@ export default function Wallet(props) {
             <Col>
               <div className="inline-block-element">
                 <h6 className="secondaryText">Your balance</h6>
-                <h5>{userBalance} MINA</h5>
+                <h5>{toMINA(userBalance)} MINA</h5>
               </div>
               <div className="inline-block-element">
                 <div className="v-div" />
@@ -107,12 +97,7 @@ export default function Wallet(props) {
               <div className="inline-block-element">
                 <span>
                   <h6 className="secondaryText">Apx value</h6>
-                  <h5>
-                    {(ticker.data &&
-                      userBalance * ticker.data.ticker.BTCMINA) ||
-                      0}{" "}
-                    BTC
-                  </h5>
+                  <h5>{renderAverageValue()} BTC</h5>
                 </span>
               </div>
             </Col>
@@ -121,4 +106,11 @@ export default function Wallet(props) {
       </div>
     </div>
   );
+
+  function renderAverageValue() {
+    if (ticker.data) {
+      return toMINA(userBalance * ticker.data.ticker.BTCMINA);
+    }
+    return 0;
+  }
 }
