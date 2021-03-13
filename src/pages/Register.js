@@ -11,9 +11,11 @@ import { storeSession } from "../tools";
 import { copyToClipboard } from "../tools/utils";
 import Input from "../components/Input";
 import html2pdf from "html2pdf.js";
+import Spinner from "../components/General/Spinner";
 
 export default function Register(props) {
   const [validation, setValidation] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
   const [keys, setKeys] = useState(undefined);
   const [validationText, setValidationText] = useState("");
   const history = useHistory();
@@ -22,10 +24,10 @@ export default function Register(props) {
 
   useEffect(() => {
     if (!keys) {
-      const keys = CodaSDK.genKeys();
-      setKeys(keys);
+      const userKeys = CodaSDK.genKeys();
+      setKeys(userKeys);
     }
-  }, [keys]);
+  }, []);
 
   return (
     <Hoc className="main-container ">
@@ -38,7 +40,8 @@ export default function Register(props) {
 
   function renderRegisterStep() {
     return (
-      <Row className="full-width">
+      <Spinner show={ showLoader}>
+        <Row className="full-width">
         <Col md={10} xl={8} className="offset-md-1 offset-xl-2 text-center">
           <div id="element-to-print">
             <div className="v-spacer-big pdf-only" />
@@ -64,14 +67,14 @@ export default function Register(props) {
             <div className="v-spacer" />
 
             {/* <h4 className="full-width-align-center">This is your passphrase</h4>
-                          <div className="wrap-input1 validate-input" data-validate="Name is required">
-                              <h5 className="full-width-align-center">
-                                  witch collapse practice feed shame open despair creek road again ice least &nbsp;
-                                  <Button className="inline-element no-print" icon={<Copy />}  onClick={() => this.copyToClipboard("witch collapse practice feed shame open despair creek road again ice least")}/>
-                              </h5>
-                              <input style={{display: "none"}} value="" id="passphrase"/> 
-                          </div>
-                      <div className="v-spacer" /> */}
+                <div className="wrap-input1 validate-input" data-validate="Name is required">
+                    <h5 className="full-width-align-center">
+                        witch collapse practice feed shame open despair creek road again ice least &nbsp;
+                        <Button className="inline-element no-print" icon={<Copy />}  onClick={() => this.copyToClipboard("witch collapse practice feed shame open despair creek road again ice least")}/>
+                    </h5>
+                    <input style={{display: "none"}} value="" id="passphrase"/> 
+                </div>
+            <div className="v-spacer" /> */}
 
             <h4 className="full-width-align-center">
               This is your private key
@@ -126,6 +129,7 @@ export default function Register(props) {
           </Row>
         </Col>
       </Row>
+      </Spinner>
     );
   }
 
@@ -191,7 +195,8 @@ export default function Register(props) {
   }
 
   function generateNew() {
-    setKeys(undefined);
+      const userKeys = CodaSDK.genKeys();
+      setKeys(userKeys)
   }
 
   function stepBackwards() {
@@ -200,7 +205,7 @@ export default function Register(props) {
   }
 
   function downloadPDF() {
-    props.toggleLoader(true);
+    setShowLoader(true);
     const elementsToHide = document.getElementsByClassName("no-print");
     const elementInitalState = [];
     for (const el of elementsToHide) {
@@ -214,7 +219,7 @@ export default function Register(props) {
     const element = document.getElementById("element-to-print");
     html2pdf()
       .set({
-        margin: 50,
+        margin: 25,
         filename: "MinaHub-Paperwallet.pdf",
       })
       .from(element)
@@ -227,7 +232,7 @@ export default function Register(props) {
       for (const el of elementsToShow) {
         el.style.display = "none";
       }
-      props.toggleLoader(false);
+      setShowLoader(false);
     }, 250);
   }
 }
