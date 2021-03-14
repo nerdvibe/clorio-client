@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import Button from "./Button";
 import { Copy } from "react-feather";
-import { getAddress } from "../tools";
+import { getAddress } from "../../tools";
 import { useQuery, gql } from "@apollo/client";
-import Avatar from "../tools/avatar";
-import { copyToClipboard, toMINA } from "../tools/utils";
+import Avatar from "../../tools/avatar";
+import { copyToClipboard, toMINA } from "../../tools/utils";
 
 const TICKER = gql`
   query ticker {
@@ -63,6 +63,14 @@ export default function Wallet(props) {
   if (address === undefined) {
     return <div />;
   }
+
+  function renderAverageValue() {
+    if (ticker.data) {
+      return toMINA(userBalance * ticker.data.ticker.BTCMINA);
+    }
+    return 0;
+  }
+  
   return (
     <div className="block-container">
       <div className="align-left">
@@ -106,11 +114,4 @@ export default function Wallet(props) {
       </div>
     </div>
   );
-
-  function renderAverageValue() {
-    if (ticker.data) {
-      return toMINA(userBalance * ticker.data.ticker.BTCMINA);
-    }
-    return 0;
-  }
 }

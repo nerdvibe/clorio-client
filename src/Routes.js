@@ -5,8 +5,6 @@ import Stake from "./pages/Stake";
 import { SplashScreen } from "./pages/SplashScreen";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-// import Entropy from "./pages/Entropy";
-// import Verify from "./pages/Verify";
 import { Route, Redirect, Switch } from "react-router-dom";
 import Ledger from "./pages/Ledger";
 import SignMessage from "./pages/SignMessage";
@@ -86,7 +84,7 @@ function Routes(props) {
         <Register {...props} network={props.network} />
       </Route>
       {/*<Route path="/verify">
-        <Verify />
+        <VerifyMnemonic />
       </Route>*/}
       <Route path="/ledger" exact>
         <Ledger network={props.network} />

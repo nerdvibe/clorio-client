@@ -1,19 +1,17 @@
 import React, { useState } from "react";
-import Wallet from "../components/Wallet";
-import TransactionForm from "../components/TransactionForm";
-import ConfirmTransaction from "../components/ConfirmTransaction";
-import ConfirmLedgerTransaction from "../components/ConfirmLedgerTransaction";
-import Hoc from "../components/Hoc";
+import Wallet from "../components/General/Wallet";
+import TransactionForm from "../components/Transactions/TransactionForm";
+import ConfirmTransaction from "../components/Modals/ConfirmTransaction";
+import ConfirmLedgerTransaction from "../components/Transactions/ConfirmLedgerTransaction";
+import Hoc from "../components/General/Hoc";
 import Alert from "../components/General/Alert";
 import { getAddress } from "../tools";
 import * as CodaSDK from "@o1labs/client-sdk";
-import Modal from "../components/Modal";
+import ModalContainer from "../components/Modals/ModalContainer";
+import BroadcastTransaction from "../components/Modals/BroadcastTransaction";
 import { useQuery, gql, useMutation } from "@apollo/client";
-import PrivateKeyModal from "../components/PrivateKeyModal";
+import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
-// import Input from "../components/Input";
-// import { Col, Row } from "react-bootstrap";
-// import Button from "../components/Button";
 
 const GET_FEE = gql`
   query GetFees {
@@ -88,91 +86,6 @@ export default function SendTX() {
     setAddress(address);
   });
 
-  return (
-    <Hoc className="main-container">
-      <Wallet setBalance={setBalance} />
-      {step === 0 ? (
-        <TransactionForm
-          defaultFee={fee.data ? fee.data.estimatedFee.average : 0}
-          fastFee={fee.data ? fee.data.estimatedFee.fast : 0}
-          nextStep={openModal}
-          transactionData={transactionData}
-          showToast={showToast}
-          setData={settransactionData}
-        />
-      ) : isLedgerEnabled ? (
-        <ConfirmLedgerTransaction
-          transactionData={transactionData}
-          stepBackward={stepBackwards}
-          sendTransaction={openModal}
-        />
-      ) : (
-        <ConfirmTransaction
-          transactionData={transactionData}
-          stepBackward={stepBackwards}
-          sendTransaction={sendTransaction}
-        />
-      )}
-      <Modal show={showModal === ModalStates.PASSPHRASE} close={closeModal}>
-        <PrivateKeyModal
-          confirmPrivateKey={confirmPrivateKey}
-          closeModal={closeModal}
-          setPrivateKey={setPrivateKey}
-        />
-      </Modal>
-      <Modal show={showModal === ModalStates.BROADCASTING} close={closeModal}>
-        {renderBroadcastingModal()}
-      </Modal>
-      <Alert show={show} hideToast={hideToast} type={"error-toast"}>
-        {alertText}
-      </Alert>
-      <Alert
-        show={showSuccess}
-        hideToast={() => setShowSuccess(false)}
-        type={"success-toast"}
-      >
-        Transaction successfully broadcasted
-      </Alert>
-    </Hoc>
-  );
-
-  //   function renderModal() {
-  //     return (
-  //       <div className="mx-auto">
-  //         <h2>Insert Private Key</h2>
-  //         <div className="v-spacer" />
-  //         <h5 className="align-center mx-auto">
-  //           In order to continue <br />
-  //           please insert your private key
-  //         </h5>
-  //         <div className="v-spacer" />
-  //         <Input
-  //           inputHandler={(e) => {
-  //             setPrivateKey(e.currentTarget.value);
-  //           }}
-  //           placeholder="Insert your private key"
-  //         />
-  //         <div className="v-spacer" />
-  //         <Row>
-  //           <Col xs={6}>
-  //             <Button
-  //               onClick={closeModal}
-  //               className="link-button"
-  //               text="Cancel"
-  //             />
-  //           </Col>
-  //           <Col xs={6}>
-  //             <Button
-  //               onClick={confirmPrivateKey}
-  //               className="lightGreenButton__fullMono mx-auto"
-  //               text="Confirm"
-  //             />
-  //           </Col>
-  //         </Row>
-  //       </div>
-  //     );
-  //   }
-
   function setBalance(data) {
     if (!balance) {
       setbalance(data);
@@ -185,19 +98,6 @@ export default function SendTX() {
         setbalance(data);
       }
     }
-  }
-
-  function renderBroadcastingModal() {
-    return (
-      <div className="mx-auto">
-        <h2>Broadcasting your transaction</h2>
-        <div className="v-spacer" />
-        <h5 className="align-center mx-auto">
-          We are broadcasting your transaction to the network
-        </h5>
-        <div className="v-spacer" />
-      </div>
-    );
   }
 
   function openModal() {
@@ -222,7 +122,7 @@ export default function SendTX() {
     if (privateKey === "") {
       showToast("Please insert a private key");
     } else {
-      setshowModal("");
+      closeModal()
       setStep(1);
     }
   }
@@ -299,4 +199,52 @@ export default function SendTX() {
     setshowModal("");
     settransactionData(initialTransactionData);
   }
+
+  return (
+    <Hoc className="main-container">
+      <Wallet setBalance={setBalance} />
+      {step === 0 ? (
+        <TransactionForm
+          defaultFee={fee.data ? fee.data.estimatedFee.average : 0}
+          fastFee={fee.data ? fee.data.estimatedFee.fast : 0}
+          nextStep={openModal}
+          transactionData={transactionData}
+          showToast={showToast}
+          setData={settransactionData}
+        />
+      ) : isLedgerEnabled ? (
+        <ConfirmLedgerTransaction
+          transactionData={transactionData}
+          stepBackward={stepBackwards}
+          sendTransaction={openModal}
+        />
+      ) : (
+        <ConfirmTransaction
+          transactionData={transactionData}
+          stepBackward={stepBackwards}
+          sendTransaction={sendTransaction}
+        />
+      )}
+      <ModalContainer show={showModal === ModalStates.PASSPHRASE} close={closeModal}>
+        <PrivateKeyModal
+          confirmPrivateKey={confirmPrivateKey}
+          closeModal={closeModal}
+          setPrivateKey={setPrivateKey}
+        />
+      </ModalContainer>
+      <ModalContainer show={showModal === ModalStates.BROADCASTING} close={closeModal}>
+        <BroadcastTransaction /> 
+      </ModalContainer>
+      <Alert show={show} hideToast={hideToast} type={"error-toast"}>
+        {alertText}
+      </Alert>
+      <Alert
+        show={showSuccess}
+        hideToast={() => setShowSuccess(false)}
+        type={"success-toast"}
+      >
+        Transaction successfully broadcasted
+      </Alert>
+    </Hoc>
+  );
 }

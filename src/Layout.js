@@ -5,7 +5,7 @@ import Routes from "./Routes";
 import { clearSession, readSession } from "./tools/auth";
 import Spinner from "./components/General/Spinner";
 import { useHistory } from "react-router-dom";
-import UpdateUserID from "./components/UpdateUserID";
+import UpdateUserID from "./components/General/UpdateUserID";
 import { gql, useQuery } from "@apollo/client";
 import { isEmptyObject } from "./tools/utils";
 

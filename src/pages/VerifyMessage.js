@@ -1,9 +1,9 @@
 import React from "react";
 import { useState } from "react";
 import Alert from "../components/General/Alert";
-import Hoc from "../components/Hoc";
-import VerifyForm from "../components/VerifyForm";
-import Wallet from "../components/Wallet";
+import Hoc from "../components/General/Hoc";
+import VerifyForm from "../components/Forms/VerifyMessageForm";
+import Wallet from "../components/General/Wallet";
 import * as CodaSDK from "@o1labs/client-sdk";
 
 export default function VerifyMessage() {
@@ -12,6 +12,38 @@ export default function VerifyMessage() {
   const [field, setField] = useState("");
   const [scalar, setScalar] = useState("");
   const [show, setShow] = useState(undefined);
+
+  function handleInput(text) {
+    setMessage(text);
+  }
+
+  function verifyMessage() {
+    try {
+      if (message && message !== "") {
+        const signedMessage = {
+          publicKey: address,
+          payload: message,
+          signature: {
+            field,
+            scalar,
+          },
+        };
+        const verifiedMessage = CodaSDK.verifyMessage(signedMessage);
+        if (verifiedMessage) {
+          setShow("success");
+        } else {
+          setShow("error");
+        }
+      }
+    } catch (e) {
+      setShow("error");
+    }
+  }
+
+  function disableButton() {
+    return address === "" || message === "" || field === "" || scalar === "";
+  }
+  
   return (
     <Hoc>
       <Wallet />
@@ -44,35 +76,4 @@ export default function VerifyMessage() {
       </Alert>
     </Hoc>
   );
-
-  function handleInput(text) {
-    setMessage(text);
-  }
-
-  function verifyMessage() {
-    try {
-      if (message && message !== "") {
-        const signedMessage = {
-          publicKey: address,
-          payload: message,
-          signature: {
-            field,
-            scalar,
-          },
-        };
-        const verifiedMessage = CodaSDK.verifyMessage(signedMessage);
-        if (verifiedMessage) {
-          setShow("success");
-        } else {
-          setShow("error");
-        }
-      }
-    } catch (e) {
-      setShow("error");
-    }
-  }
-
-  function disableButton() {
-    return address === "" || message === "" || field === "" || scalar === "";
-  }
 }

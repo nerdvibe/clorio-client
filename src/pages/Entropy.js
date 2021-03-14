@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import ProgressBar from "../components/ProgressBar";
-import Hoc from "../components/Hoc";
-import Logo from "../components/Logo";
+import Hoc from "../components/General/Hoc";
+import Logo from "../components/General/Logo";
 import { Row, Col } from "react-bootstrap";
-import Button from "../components/Button";
+import Button from "../components/General/Button";
 import Footer from "../components/General/Footer";
 
 export default function Entropy() {

@@ -1,9 +1,77 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import Button from "./Button";
-import Input from "./Input";
+import Button from "../General/Button";
+import Input from "../General/Input";
 
 export default function TransactionForm(props) {
+
+  function setDefaultFee() {
+    if (props.defaultFee) {
+      props.setData({
+        ...props.transactionData,
+        fee: props.defaultFee,
+      });
+    } else {
+      props.setData({
+        ...props.transactionData,
+        fee: 0.1,
+      });
+    }
+  }
+
+  function setFastFee() {
+    if (props.fastFee) {
+      props.setData({
+        ...props.transactionData,
+        fee: props.fastFee,
+      });
+    } else {
+      props.setData({
+        ...props.transactionData,
+        fee: 0.1,
+      });
+    }
+  }
+
+  function addressHandler(address) {
+    props.setData({
+      ...props.transactionData,
+      address,
+    });
+  }
+
+  function amountHandler(amount) {
+    if (amount < 0.0000001 && amount !== 0) {
+      // TODO : Put big.js
+      props.showToast(
+        `Amount ${amount} is less than the minimum amount (0.00000001)`
+      );
+    } else {
+      props.setData({
+        ...props.transactionData,
+        amount,
+      });
+    }
+  }
+
+  function feeHandler(fee) {
+    if (fee < 0.001) {
+      // TODO : Put big.js
+      props.showToast(`Fee ${fee} is less than the minimum fee (0.001)`);
+    } else {
+      props.setData({
+        ...props.transactionData,
+        fee,
+      });
+    }
+  }
+
+  function memoHandler(memo) {
+    props.setData({
+      ...props.transactionData,
+      memo,
+    });
+  }
   return (
     <div className="mx-auto  ">
       <div className="block-container fit-content-container">
@@ -78,72 +146,4 @@ export default function TransactionForm(props) {
       </div>
     </div>
   );
-
-  function setDefaultFee() {
-    if (props.defaultFee) {
-      props.setData({
-        ...props.transactionData,
-        fee: props.defaultFee,
-      });
-    } else {
-      props.setData({
-        ...props.transactionData,
-        fee: 0.1,
-      });
-    }
-  }
-
-  function setFastFee() {
-    if (props.fastFee) {
-      props.setData({
-        ...props.transactionData,
-        fee: props.fastFee,
-      });
-    } else {
-      props.setData({
-        ...props.transactionData,
-        fee: 0.1,
-      });
-    }
-  }
-
-  function addressHandler(address) {
-    props.setData({
-      ...props.transactionData,
-      address,
-    });
-  }
-
-  function amountHandler(amount) {
-    if (amount < 0.0000001 && amount !== 0) {
-      // TODO : Put big.js
-      props.showToast(
-        `Amount ${amount} is less than the minimum amount (0.00000001)`
-      );
-    } else {
-      props.setData({
-        ...props.transactionData,
-        amount,
-      });
-    }
-  }
-
-  function feeHandler(fee) {
-    if (fee < 0.001) {
-      // TODO : Put big.js
-      props.showToast(`Fee ${fee} is less than the minimum fee (0.001)`);
-    } else {
-      props.setData({
-        ...props.transactionData,
-        fee,
-      });
-    }
-  }
-
-  function memoHandler(memo) {
-    props.setData({
-      ...props.transactionData,
-      memo,
-    });
-  }
 }

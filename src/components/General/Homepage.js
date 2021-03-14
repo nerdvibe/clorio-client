@@ -1,7 +1,7 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Button from "../components/Button";
+import Button from "./Button";
 import Logo from "./Logo";
 
 export default function Homepage() {

@@ -2,13 +2,13 @@
 import React from "react";
 import { Row, Col, Spinner } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
-import Button from "../components/Button";
-import Hoc from "../components/Hoc";
-import Logo from "../components/Logo";
+import Button from "../components/General/Button";
+import Hoc from "../components/General/Hoc";
+import Logo from "../components/General/Logo";
 import Footer from "../components/General/Footer";
 import { useState, useEffect } from "react";
 import { storeSession } from "../tools";
-import Input from "../components/Input";
+import Input from "../components/General/Input";
 import Alert from "../components/General/Alert";
 import * as CodaSDK from "@o1labs/client-sdk";
 import { useQuery, gql } from "@apollo/client";
@@ -52,6 +52,42 @@ export default function Login(props) {
       }
     }
   }, [userID]);
+
+  //   function renderLedgerLogin() {
+  //     return (
+  //       <Link to="/ledger">
+  //         <Button
+  //           className="link-button mx-auto"
+  //           onClick={props.register}
+  //           text="Login through a hardware wallet"
+  //         />
+  //       </Link>
+  //     );
+  //   }
+
+  function inputHandler(e) {
+    setpassphrase(e.currentTarget.value);
+  }
+
+  function checkCredentials() {
+    try {
+      const publicK = CodaSDK.derivePublicKey(passphrase);
+      setPublicKey(publicK);
+      setLoader(true);
+    } catch (e) {
+      setShowAlert(true);
+    }
+  }
+
+  function disableButton() {
+    if (!passphrase) {
+      return true;
+    }
+    if (passphrase === "") {
+      return true;
+    }
+    return false;
+  }
 
   return (
     <Hoc>
@@ -121,40 +157,4 @@ export default function Login(props) {
       </Spinner>
     </Hoc>
   );
-
-  //   function renderLedgerLogin() {
-  //     return (
-  //       <Link to="/ledger">
-  //         <Button
-  //           className="link-button mx-auto"
-  //           onClick={props.register}
-  //           text="Login through a hardware wallet"
-  //         />
-  //       </Link>
-  //     );
-  //   }
-
-  function inputHandler(e) {
-    setpassphrase(e.currentTarget.value);
-  }
-
-  function checkCredentials() {
-    try {
-      const publicK = CodaSDK.derivePublicKey(passphrase);
-      setPublicKey(publicK);
-      setLoader(true);
-    } catch (e) {
-      setShowAlert(true);
-    }
-  }
-
-  function disableButton() {
-    if (!passphrase) {
-      return true;
-    }
-    if (passphrase === "") {
-      return true;
-    }
-    return false;
-  }
 }

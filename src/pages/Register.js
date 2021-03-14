@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
-import Button from "../components/Button";
-import Hoc from "../components/Hoc";
+import Button from "../components/General/Button";
+import Hoc from "../components/General/Hoc";
 import { Copy } from "react-feather";
-import Logo from "../components/Logo";
+import Logo from "../components/General/Logo";
 import Footer from "../components/General/Footer";
 import * as CodaSDK from "@o1labs/client-sdk";
 import { storeSession } from "../tools";
 import { copyToClipboard } from "../tools/utils";
-import Input from "../components/Input";
+import Input from "../components/General/Input";
 import html2pdf from "html2pdf.js";
 import Spinner from "../components/General/Spinner";
 
@@ -28,15 +28,6 @@ export default function Register(props) {
       setKeys(userKeys);
     }
   }, []);
-
-  return (
-    <Hoc className="main-container ">
-      <div className="block-container no-bg real-full-page-container center">
-        {validation ? renderValidationStep() : renderRegisterStep()}
-        <Footer network={props.network} />
-      </div>
-    </Hoc>
-  );
 
   function renderRegisterStep() {
     return (
@@ -65,17 +56,6 @@ export default function Register(props) {
               </h5>
             </div>
             <div className="v-spacer" />
-
-            {/* <h4 className="full-width-align-center">This is your passphrase</h4>
-                <div className="wrap-input1 validate-input" data-validate="Name is required">
-                    <h5 className="full-width-align-center">
-                        witch collapse practice feed shame open despair creek road again ice least &nbsp;
-                        <Button className="inline-element no-print" icon={<Copy />}  onClick={() => this.copyToClipboard("witch collapse practice feed shame open despair creek road again ice least")}/>
-                    </h5>
-                    <input style={{display: "none"}} value="" id="passphrase"/> 
-                </div>
-            <div className="v-spacer" /> */}
-
             <h4 className="full-width-align-center">
               This is your private key
             </h4>
@@ -235,4 +215,13 @@ export default function Register(props) {
       setShowLoader(false);
     }, 250);
   }
+
+  return (
+    <Hoc className="main-container ">
+      <div className="block-container no-bg real-full-page-container center">
+        {validation ? renderValidationStep() : renderRegisterStep()}
+        <Footer network={props.network} />
+      </div>
+    </Hoc>
+  );
 }

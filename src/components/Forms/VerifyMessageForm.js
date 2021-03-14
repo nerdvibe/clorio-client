@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import Button from "./Button";
+import Button from "../General/Button";
 
 export default function VerifyForm(props) {
   return (

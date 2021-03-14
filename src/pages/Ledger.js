@@ -1,9 +1,9 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Button from "../components/Button";
-import Hoc from "../components/Hoc";
-import Logo from "../components/Logo";
+import Button from "../components/General/Button";
+import Hoc from "../components/General/Hoc";
+import Logo from "../components/General/Logo";
 import Footer from "../components/General/Footer";
 
 export default function Ledger(props) {

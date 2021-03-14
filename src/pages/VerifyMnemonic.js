@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Hoc from "../components/Hoc";
-import Logo from "../components/Logo";
+import Hoc from "../components/General/Hoc";
+import Logo from "../components/General/Logo";
 import { Row, Col } from "react-bootstrap";
-import Button from "../components/Button";
+import Button from "../components/General/Button";
 import { storeSession } from "../tools/auth";
 import Footer from "../components/General/Footer";
 import { useHistory } from "react-router-dom";
@@ -12,6 +12,59 @@ export default function Verify() {
   const [wordsFoundArray, setWordsFoundArray] = useState([]);
   const [removedIndex, setremovedIndex] = useState(selectRandomIndexes());
   const history = useHistory();
+
+  function selectRandomIndexes() {
+    const size = Math.floor(3 + Math.random() * 9);
+    const randomIndexes = [];
+    while (randomIndexes.length <= size) {
+      const tmpIndex = Math.floor(1 + Math.random() * 12);
+      if (!randomIndexes.includes(tmpIndex)) {
+        randomIndexes.push(tmpIndex);
+      }
+    }
+    return randomIndexes.sort();
+  }
+
+  function setAuthorization() {
+    storeSession(address, passphrase, privateKey);
+    history.push("/overview");
+  }
+
+  function removeWords() {
+    const newPassphrase = [];
+    const passphraseSplit = passphrase.split(" ");
+    for (const index in passphraseSplit) {
+      if (removedIndex.includes(parseInt(index) + 1)) {
+        newPassphrase.push(null);
+      } else {
+        newPassphrase.push(passphraseSplit[index]);
+      }
+    }
+    return newPassphrase;
+  }
+
+  function validateWord(index, input) {
+    const wordsFound = wordsFoundArray;
+    const splitWords = passphrase.split(" ");
+    if (splitWords[index] === input) {
+      wordsFound.push(input);
+    } else {
+      if (wordsFound.includes(splitWords[index])) {
+        const wordIndex = wordsFound.indexOf(splitWords[index]);
+        wordsFound.splice(wordIndex, 1);
+      }
+    }
+    setWordsFoundArray(wordsFound);
+    if (!disableButton) {
+      if (wordsFound.length !== removedIndex.length) {
+        setDisableButton(true);
+      }
+    } else {
+      if (wordsFound.length === removedIndex.length) {
+        setDisableButton(false);
+      }
+    }
+  }
 
   return (
     <Hoc className="main-container">
@@ -80,57 +133,4 @@ export default function Verify() {
       <Footer />
     </Hoc>
   );
-
-  function selectRandomIndexes() {
-    const size = Math.floor(3 + Math.random() * 9);
-    const randomIndexes = [];
-    while (randomIndexes.length <= size) {
-      const tmpIndex = Math.floor(1 + Math.random() * 12);
-      if (!randomIndexes.includes(tmpIndex)) {
-        randomIndexes.push(tmpIndex);
-      }
-    }
-    return randomIndexes.sort();
-  }
-
-  function setAuthorization() {
-    storeSession(address, passphrase, privateKey);
-    history.push("/overview");
-  }
-
-  function removeWords() {
-    const newPassphrase = [];
-    const passphraseSplit = passphrase.split(" ");
-    for (const index in passphraseSplit) {
-      if (removedIndex.includes(parseInt(index) + 1)) {
-        newPassphrase.push(null);
-      } else {
-        newPassphrase.push(passphraseSplit[index]);
-      }
-    }
-    return newPassphrase;
-  }
-
-  function validateWord(index, input) {
-    const wordsFound = wordsFoundArray;
-    const splitWords = passphrase.split(" ");
-    if (splitWords[index] === input) {
-      wordsFound.push(input);
-    } else {
-      if (wordsFound.includes(splitWords[index])) {
-        const wordIndex = wordsFound.indexOf(splitWords[index]);
-        wordsFound.splice(wordIndex, 1);
-      }
-    }
-    setWordsFoundArray(wordsFound);
-    if (!disableButton) {
-      if (wordsFound.length !== removedIndex.length) {
-        setDisableButton(true);
-      }
-    } else {
-      if (wordsFound.length === removedIndex.length) {
-        setDisableButton(false);
-      }
-    }
-  }
 }

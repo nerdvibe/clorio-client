@@ -1,9 +1,21 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import { Link } from "react-feather";
 import Button from "./Button";
 
 export default function Banner(props) {
+
+  function renderButtonStyle() {
+    switch (props.style) {
+      case "success":
+        return "lightGreenButton__outlineMono ";
+      case "warning":
+        return "yellowButton__outlineMono ";
+      default:
+        return "lightGreenButton__outlineMono ";
+        break;
+    }
+  }
+  
   return (
     <div className="block-container">
       <Row>
@@ -29,16 +41,4 @@ export default function Banner(props) {
       </Row>
     </div>
   );
-
-  function renderButtonStyle() {
-    switch (props.style) {
-      case "success":
-        return "lightGreenButton__outlineMono ";
-      case "warning":
-        return "yellowButton__outlineMono ";
-      default:
-        return "lightGreenButton__outlineMono ";
-        break;
-    }
-  }
 }

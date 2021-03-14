@@ -1,8 +1,8 @@
 import React from "react";
-import Wallet from "../components/Wallet";
-import Banner from "../components/Banner";
-import TransactionTable from "../components/TransactionTable";
-import Hoc from "../components/Hoc";
+import Wallet from "../components/General/Wallet";
+import Banner from "../components/General/Banner";
+import TransactionsTable from "../components/Transactions/TransactionsTable";
+import Hoc from "../components/General/Hoc";
 import { useQuery, gql } from "@apollo/client";
 import Spinner from "../components/General/Spinner";
 import { useState } from "react";
@@ -16,7 +16,7 @@ const TRANSACTIONS = gql`
         _or: [{ receiver_id: { _eq: $user } }, { source_id: { _eq: $user } }]
       }
       order_by: { id: desc }
-      limit: 10
+      limit: ${ITEMS_PER_PAGE}
       offset: $offset
     ) {
       amount
@@ -76,26 +76,11 @@ const NEWS = gql`
   }
 `;
 
-const GET_TRANSACTIONS_TOTAL = gql`
-  query TransactionsTotal($user: Int!) {
-    user_commands_aggregate(
-      where: {
-        _or: [{ receiver_id: { _eq: $user } }, { source_id: { _eq: $user } }]
-      }
-    ) {
-      aggregate {
-        count
-      }
-    }
-  }
-`;
-
-function Overview(props) {
+export default function Overview(props) {
   const [balance, setbalance] = useState(0);
   const [offset, setOffset] = useState(0);
   let queryResult;
   let mempool;
-  let total;
   if (props.sessionData) {
     const user = props.sessionData.id;
     queryResult = useQuery(TRANSACTIONS, {
@@ -107,29 +92,8 @@ function Overview(props) {
       variables: { publicKey: props.sessionData.address },
       skip: !props.sessionData.address,
     });
-    total = useQuery(GET_TRANSACTIONS_TOTAL, {
-      variables: { user },
-      skip: !user,
-      fetchPolicy: "network-only",
-    });
   }
   const news = useQuery(NEWS);
-  return (
-    <Hoc className="main-container">
-      <Spinner show={queryResult.loading}>
-        <Wallet setBalance={setBalance} />
-        {renderBanner()}
-        <TransactionTable
-          {...queryResult}
-          mempool={mempool}
-          total={getTotalPages()}
-          balance={balance.total}
-          setOffset={changeOffset}
-          page={offset / ITEMS_PER_PAGE + 1}
-        />
-      </Spinner>
-    </Hoc>
-  );
 
   function setBalance(data) {
     if (!balance) {
@@ -158,19 +122,24 @@ function Overview(props) {
     }
   }
 
-  function getTotalPages() {
-    if (total.data && total.data.user_commands_aggregate.aggregate) {
-      const totalItems = total.data.user_commands_aggregate.aggregate.count;
-      const pages = (totalItems / ITEMS_PER_PAGE).toFixed(0);
-      return parseInt(pages) === 0 ? 1 : pages;
-    }
-    return 1;
-  }
-
   function changeOffset(page) {
     const data = (page - 1) * ITEMS_PER_PAGE;
     setOffset(data);
   }
+  return (
+    <Hoc className="main-container">
+      <Spinner show={queryResult.loading}>
+        <Wallet setBalance={setBalance} />
+        {renderBanner()}
+        <TransactionsTable
+          {...queryResult}
+          mempool={mempool}
+          balance={balance.total}
+          setOffset={changeOffset}
+          page={offset / ITEMS_PER_PAGE + 1}
+          user={props.sessionData.id}
+        />
+      </Spinner>
+    </Hoc>
+  );
 }
-
-export default Overview;

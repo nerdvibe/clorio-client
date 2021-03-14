@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Hoc from "../components/Hoc";
-import SignMessageForm from "../components/SignMessageForm";
-import Wallet from "../components/Wallet";
+import Hoc from "../components/General/Hoc";
+import SignMessageForm from "../components/Forms/SignMessageForm";
+import Wallet from "../components/General/Wallet";
 import Alert from "../components/General/Alert";
 import { getAddress } from "../tools";
 import * as CodaSDK from "@o1labs/client-sdk";
@@ -16,25 +16,6 @@ export default function SignMessage() {
   getAddress((data) => {
     setPublicKey(data);
   });
-
-  return (
-    <Hoc>
-      <Wallet />
-      <SignMessageForm
-        message={message}
-        privateKey={privateKey}
-        setMessage={setMessage}
-        setPrivateKey={setPrivateKey}
-        disableButton={signButtonStateHandler}
-        submitHandler={submitHandler}
-        result={result}
-        reset={resetForm}
-      />
-      <Alert show={show} hideToast={() => setShow(false)} type={"error-toast"}>
-        Please check private key
-      </Alert>
-    </Hoc>
-  );
 
   function signButtonStateHandler() {
     const checkCondition =
@@ -63,4 +44,23 @@ export default function SignMessage() {
     setResult(undefined);
     setMessage("");
   }
+
+  return (
+    <Hoc>
+      <Wallet />
+      <SignMessageForm
+        message={message}
+        privateKey={privateKey}
+        setMessage={setMessage}
+        setPrivateKey={setPrivateKey}
+        disableButton={signButtonStateHandler}
+        submitHandler={submitHandler}
+        result={result}
+        reset={resetForm}
+      />
+      <Alert show={show} hideToast={() => setShow(false)} type={"error-toast"}>
+        Please check private key
+      </Alert>
+    </Hoc>
+  );
 }
