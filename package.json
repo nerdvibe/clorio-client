@@ -6,6 +6,7 @@
   "main": "public/electron.js",
   "dependencies": {
     "@apollo/client": "^3.3.11",
+    "@ledgerhq/hw-transport-node-hid": "^5.46.0",
     "@o1labs/client-sdk": "0.2.3",
     "apollo-cache-inmemory": "1.6.6",
     "apollo-client": "2.6.10",
