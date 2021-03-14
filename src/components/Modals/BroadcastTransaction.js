@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 export default function BroadcastTransaction() {
   return (
@@ -10,5 +10,5 @@ export default function BroadcastTransaction() {
       </h5>
       <div className="v-spacer" />
     </div>
-  )
+  );
 }

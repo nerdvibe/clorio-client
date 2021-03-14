@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Wallet from "../components/General/Wallet";
 import TransactionForm from "../components/Transactions/TransactionForm";
 import ConfirmTransaction from "../components/Modals/ConfirmTransaction";
@@ -117,8 +117,8 @@ export default function SendTX(props) {
           ? parseInt(nonce.data.accountByKey.usableNonce)
           : customNonce;
       if (ledgerTransactionData) {
-        const amount = (transactionData.amount);
-        const fee = (transactionData.fee);
+        const amount = transactionData.amount;
+        const fee = transactionData.fee;
         const SignatureInput = {
           rawSignature: ledgerTransactionData,
         };
@@ -139,7 +139,6 @@ export default function SendTX(props) {
       props.showGlobalAlert("There was an error broadcasting delegation");
     }
   }, [ledgerTransactionData]);
-
 
   function setBalance(data) {
     if (!balance) {
@@ -190,7 +189,7 @@ export default function SendTX(props) {
     if (privateKey === "") {
       showToast("Please insert a private key");
     } else {
-      closeModal()
+      closeModal();
       setStep(1);
     }
   }
@@ -212,17 +211,19 @@ export default function SendTX(props) {
     setShowModal(ModalStates.BROADCASTING);
     if (nonce) {
       const actualNonce =
-        nonce.data && (nonce.data.accountByKey.usableNonce || nonce.data.accountByKey.usableNonce===0)
-        ? parseInt(nonce.data.accountByKey.usableNonce)
-        : customNonce;
+        nonce.data &&
+        (nonce.data.accountByKey.usableNonce ||
+          nonce.data.accountByKey.usableNonce === 0)
+          ? parseInt(nonce.data.accountByKey.usableNonce)
+          : customNonce;
       try {
         const publicKey = CodaSDK.derivePublicKey(privateKey);
         const dataToSend = {
           privateKey,
           publicKey,
         };
-        const fee = (transactionData.fee);
-        const amount = (transactionData.amount);
+        const fee = transactionData.fee;
+        const amount = transactionData.amount;
         const signedPayment = CodaSDK.signPayment(
           {
             from: address,
@@ -252,7 +253,7 @@ export default function SendTX(props) {
           });
         }
       } catch (e) {
-        console.log("🚀 ~ file: SendTX.js ~ line 343 ~ sendTransaction ~ e", e)
+        console.log("🚀 ~ file: SendTX.js ~ line 343 ~ sendTransaction ~ e", e);
         setShowModal("");
         showToast("Check if receiver address and/or private key are right");
         stepBackwards();
@@ -331,17 +332,26 @@ export default function SendTX(props) {
           sendTransaction={sendTransaction}
         />
       )}
-      <ModalContainer show={showModal === ModalStates.PASSPHRASE} close={closeModal}>
+      <ModalContainer
+        show={showModal === ModalStates.PASSPHRASE}
+        close={closeModal}
+      >
         <PrivateKeyModal
           confirmPrivateKey={confirmPrivateKey}
           closeModal={closeModal}
           setPrivateKey={setPrivateKey}
         />
       </ModalContainer>
-      <ModalContainer show={showModal === ModalStates.BROADCASTING} close={closeModal}>
-        <BroadcastTransaction /> 
+      <ModalContainer
+        show={showModal === ModalStates.BROADCASTING}
+        close={closeModal}
+      >
+        <BroadcastTransaction />
       </ModalContainer>
-      <ModalContainer show={showModal === ModalStates.NONCE} close={closeNonceModal}>
+      <ModalContainer
+        show={showModal === ModalStates.NONCE}
+        close={closeNonceModal}
+      >
         <CustomNonce openModal={openModal} setCustomNonce={setCustomNonce} />
       </ModalContainer>
       <Alert show={show} hideToast={hideToast} type={"error-toast"}>

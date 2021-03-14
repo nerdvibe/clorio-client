@@ -16,7 +16,7 @@ export default function Footer(props) {
     }
     return "Network unavailable";
   }
-  
+
   return (
     <p className="full-width-align-center footer-text">
       MinaHub is a wallet offered by Carbonara from WeStake.Club and is not

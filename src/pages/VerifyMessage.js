@@ -43,7 +43,7 @@ export default function VerifyMessage() {
   function disableButton() {
     return address === "" || message === "" || field === "" || scalar === "";
   }
-  
+
   return (
     <Hoc>
       <Wallet />

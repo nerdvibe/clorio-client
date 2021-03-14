@@ -46,7 +46,7 @@ function Sidebar(props) {
       return <span className="red-dot" />;
     }
   }
-  
+
   return (
     <div style={{ padding: "5px" }}>
       <Nav

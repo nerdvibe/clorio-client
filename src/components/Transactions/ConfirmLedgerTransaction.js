@@ -3,6 +3,7 @@ import { Row, Col } from "react-bootstrap";
 import { toMINA } from "../../tools/utils";
 
 export default function ConfirmLedgerTransaction(props) {
+  const { amount, fee, address } = props;
   return (
     <div className="mx-auto  ">
       <div className="block-container full-page-container">
@@ -15,12 +16,10 @@ export default function ConfirmLedgerTransaction(props) {
           <div className="v-spacer" />
           <Row>
             <Col md={8} className="offset-md-2">
-              You are about to send{" "}
-              <strong>{toMINA(props.transactionData.amount)} MINA</strong>{" "}
+              You are about to send <strong>{toMINA(amount)} MINA</strong>{" "}
               <br />
-              with a fee of{" "}
-              <strong>{toMINA(props.transactionData.fee)} MINA</strong> <br />
-              to <strong>{props.transactionData.address}</strong>
+              with a fee of <strong>{toMINA(fee)} MINA</strong> <br />
+              to <strong>{address}</strong>
               <div className="v-spacer" />
               <div className="mx-auto">
                 <div className="lds-ellipsis">

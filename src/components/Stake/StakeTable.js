@@ -61,7 +61,7 @@ export default function StakeTable(props) {
           </thead>
           {renderTableBody()}
         </Table>
-        <Pagination 
+        <Pagination
           page={props.page}
           total={getTotalPages()}
           setOffset={props.setOffset}
@@ -77,7 +77,7 @@ export default function StakeTable(props) {
       );
       return (
         <tbody>
-          {filteredValidators.map((el, index) => renderRow(el,index))}
+          {filteredValidators.map((el, index) => renderRow(el, index))}
         </tbody>
       );
     }

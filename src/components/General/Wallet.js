@@ -70,7 +70,6 @@ export default function Wallet(props) {
     }
     return 0;
   }
-  
   return (
     <div className="block-container">
       <div className="align-left">
@@ -114,11 +113,4 @@ export default function Wallet(props) {
       </div>
     </div>
   );
-
-  function renderAverageValue() {
-    if (ticker.data) {
-      return toMINA(userBalance * ticker.data.ticker.BTCMINA);
-    }
-    return 0;
-  }
 }

@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import { Row, Col } from "react-bootstrap";
-import Button from '../General/Button';
-import Input from '../General/Input';
+import Button from "../General/Button";
+import Input from "../General/Input";
 
 export default function ConfirmDelegation(props) {
-  const {closeModal,confirmCustomDelegate,} = props
-  const [customDelegate,setCustomDelegate] = useState("")
+  const { closeModal, confirmCustomDelegate } = props;
+  const [customDelegate, setCustomDelegate] = useState("");
   return (
     <div className="mx-auto">
       <h2>Custom delegation</h2>
@@ -21,15 +21,11 @@ export default function ConfirmDelegation(props) {
       <div className="v-spacer" />
       <Row>
         <Col xs={6}>
-          <Button
-            onClick={closeModal}
-            className="link-button"
-            text="Cancel"
-          />
+          <Button onClick={closeModal} className="link-button" text="Cancel" />
         </Col>
         <Col xs={6}>
           <Button
-            onClick={()=>confirmCustomDelegate(customDelegate)}
+            onClick={() => confirmCustomDelegate(customDelegate)}
             className="lightGreenButton__fullMono mx-auto"
             text="Confirm"
             disabled={customDelegate === ""}
@@ -37,5 +33,5 @@ export default function ConfirmDelegation(props) {
         </Col>
       </Row>
     </div>
-  )
+  );
 }

@@ -1,9 +1,9 @@
-import React from 'react'
+import React from "react";
 import { Row, Col } from "react-bootstrap";
-import Button from '../General/Button';
+import Button from "../General/Button";
 
 export default function ConfirmDelegation(props) {
-  const {name,closeModal,confirmDelegate} = props
+  const { name, closeModal, confirmDelegate } = props;
   return (
     <div className="mx-auto">
       <h2>Confirm Delegation</h2>
@@ -15,11 +15,7 @@ export default function ConfirmDelegation(props) {
       <div className="v-spacer" />
       <Row>
         <Col xs={6}>
-          <Button
-            onClick={closeModal}
-            className="link-button"
-            text="Cancel"
-          />
+          <Button onClick={closeModal} className="link-button" text="Cancel" />
         </Col>
         <Col xs={6}>
           <Button
@@ -30,5 +26,5 @@ export default function ConfirmDelegation(props) {
         </Col>
       </Row>
     </div>
-  )
+  );
 }

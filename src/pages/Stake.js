@@ -136,7 +136,6 @@ export default (props) => {
     }
   }, [isLedgerEnabled, ledgerTransactionData, showModal]);
 
-
   useEffect(() => {
     if (ledgerTransactionData) {
       const actualNonce = getNonce();
@@ -308,7 +307,7 @@ export default (props) => {
   function getNonce() {
     if (nonceAndDelegate.data && nonceAndDelegate.data.accountByKey) {
       return parseInt(nonceAndDelegate.data.accountByKey.usableNonce);
-    } else if(nonceAndDelegate.data.accountByKey.usableNonce===0){
+    } else if (nonceAndDelegate.data.accountByKey.usableNonce === 0) {
       return 0;
     }
     return customNonce;
@@ -330,43 +329,49 @@ export default (props) => {
         show={showModal === ModalStates.CONFIRM_DELEGATION}
         close={closeModal}
       >
-        <ConfirmDelegation 
+        <ConfirmDelegation
           name={delegateData.name}
           closeModal={closeModal}
           confirmDelegate={confirmDelegate}
         />
       </ModalContainer>
-      <ModalContainer show={showModal === ModalStates.NONCE} close={closeNonceModal}>
+      <ModalContainer
+        show={showModal === ModalStates.NONCE}
+        close={closeNonceModal}
+      >
         <CustomNonce
           proceedHandler={confirmDelegate}
           setCustomNonce={setCustomNonce}
         />
       </ModalContainer>
-      <ModalContainer show={showModal === ModalStates.PASSPHRASE} close={closeModal}>
-      {isLedgerEnabled ? (
-        <div className="mx-auto">
-          <h2>Please confirm transaction </h2>
-          <div className="v-spacer" />
-          <h5 className="align-center mx-auto">
-            Waiting your hardware wallet to confirm transaction
-          </h5>
-          <div className="v-spacer" />
-          <LedgerLoader />
-          <div className="v-spacer" />
-          <Button
-            onClick={closeModal}
-            className="link-button full-width-align-center"
-            text="Cancel"
-          />
-        </div>
-      ) : (
-        <PrivateKeyModal
-          confirmPrivateKey={signStakeDelegate}
-          closeModal={closeModal}
-          setPrivateKey={setPrivateKey}
-          subtitle={
-            customDelegate && `You are going to delegate ${customDelegate}`
-          }
+      <ModalContainer
+        show={showModal === ModalStates.PASSPHRASE}
+        close={closeModal}
+      >
+        {isLedgerEnabled ? (
+          <div className="mx-auto">
+            <h2>Please confirm transaction </h2>
+            <div className="v-spacer" />
+            <h5 className="align-center mx-auto">
+              Waiting your hardware wallet to confirm transaction
+            </h5>
+            <div className="v-spacer" />
+            <LedgerLoader />
+            <div className="v-spacer" />
+            <Button
+              onClick={closeModal}
+              className="link-button full-width-align-center"
+              text="Cancel"
+            />
+          </div>
+        ) : (
+          <PrivateKeyModal
+            confirmPrivateKey={signStakeDelegate}
+            closeModal={closeModal}
+            setPrivateKey={setPrivateKey}
+            subtitle={
+              customDelegate && `You are going to delegate ${customDelegate}`
+            }
           />
         )}
       </ModalContainer>
@@ -374,10 +379,10 @@ export default (props) => {
         show={showModal === ModalStates.CUSTOM_DELEGATION}
         close={closeModal}
       >
-          <CustomDelegation
-            closeModal={closeModal} 
-            confirmCustomDelegate={confirmCustomDelegate}
-          />
+        <CustomDelegation
+          closeModal={closeModal}
+          confirmCustomDelegate={confirmCustomDelegate}
+        />
       </ModalContainer>
       <Alert
         show={showAlert}

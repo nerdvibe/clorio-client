@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Table } from "react-bootstrap";
 import Spinner from "../General/Spinner";
 import ErrorImage from "../../assets/Error.png";
@@ -25,9 +25,8 @@ const GET_TRANSACTIONS_TOTAL = gql`
   }
 `;
 
-
 export default function TransactionsTable(props) {
-  const { loading, error, data,mempool,user } = props;
+  const { loading, error, data, mempool, user } = props;
   const total = useQuery(GET_TRANSACTIONS_TOTAL, {
     variables: { user },
     skip: !user,
@@ -169,7 +168,7 @@ export default function TransactionsTable(props) {
           <thead>{renderTableHeader()}</thead>
           {renderTableBody()}
         </Table>
-        <Pagination 
+        <Pagination
           page={props.page}
           setOffset={props.setOffset}
           user={props.user}
