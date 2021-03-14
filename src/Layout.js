@@ -26,6 +26,7 @@ function Layout() {
   const [showLoader, setShowLoader] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertText, setAlertText] = useState("");
+  const [alertStyle, setAlertStyle] = useState("error-toast");
   const history = useHistory();
   const network = useQuery(GET_NETWORK);
 
@@ -47,6 +48,12 @@ function Layout() {
     clearSession();
     setsessionData(undefined);
   };
+
+  function showGlobalAlert(text, style) {
+    setAlertText(text);
+    setAlertStyle(style);
+    setShowAlert(true);
+  }
 
   return (
     <div>
@@ -81,7 +88,7 @@ function Layout() {
         <Alert
           show={showAlert}
           hideToast={() => setShowAlert(false)}
-          type={"error-toast"}
+          type={alertStyle}
         >
           {alertText}
         </Alert>
@@ -89,11 +96,6 @@ function Layout() {
       </Container>
     </div>
   );
-
-  function showGlobalAlert(text) {
-    setAlertText(text);
-    setShowAlert(true);
-  }
 }
 
 export default Layout;

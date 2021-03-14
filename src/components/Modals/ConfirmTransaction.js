@@ -1,6 +1,5 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import { toMINA } from "../../tools/utils";
 import Button from "../General/Button";
 
 export default function ConfirmTransaction(props) {
@@ -18,9 +17,8 @@ export default function ConfirmTransaction(props) {
           <div className="v-spacer" />
           <Row>
             <Col md={8} className="offset-md-2">
-              You are about to send <strong>{toMINA(amount)} MINA</strong>{" "}
-              <br />
-              with a fee of <strong>{toMINA(fee)} MINA</strong> <br />
+              You are about to send <strong>{amount} MINA</strong> <br />
+              with a fee of <strong>{fee} MINA</strong> <br />
               to <strong>{address}</strong> <br />
               with memo <strong>{memo}</strong>
               <div className="v-spacer" />

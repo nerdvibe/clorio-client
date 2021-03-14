@@ -9,7 +9,6 @@ import Footer from "../components/General/Footer";
 import { useState, useEffect } from "react";
 import { storeSession } from "../tools";
 import Input from "../components/General/Input";
-import Alert from "../components/General/Alert";
 import * as CodaSDK from "@o1labs/client-sdk";
 import { useQuery, gql } from "@apollo/client";
 
@@ -24,7 +23,6 @@ const GET_ID = gql`
 export default function Login(props) {
   const [passphrase, setpassphrase] = useState("");
   const [publicKey, setPublicKey] = useState("");
-  const [showAlert, setShowAlert] = useState(false);
   const [loader, setLoader] = useState(false);
   const history = useHistory();
 
@@ -75,7 +73,10 @@ export default function Login(props) {
       setPublicKey(publicK);
       setLoader(true);
     } catch (e) {
-      setShowAlert(true);
+      props.showGlobalAlert(
+        "Private key not valid, please try again.",
+        "error-toast"
+      );
     }
   }
 
@@ -146,13 +147,6 @@ export default function Login(props) {
             </Row>
           </div>
         </div>
-        <Alert
-          show={showAlert}
-          hideToast={() => setShowAlert(false)}
-          type={"error-toast"}
-        >
-          Private key not valid, please try again.
-        </Alert>
         <Footer network={props.network} />
       </Spinner>
     </Hoc>

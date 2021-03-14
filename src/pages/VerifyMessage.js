@@ -1,17 +1,15 @@
 import React from "react";
 import { useState } from "react";
-import Alert from "../components/General/Alert";
 import Hoc from "../components/General/Hoc";
 import VerifyForm from "../components/Forms/VerifyMessageForm";
 import Wallet from "../components/General/Wallet";
 import * as CodaSDK from "@o1labs/client-sdk";
 
-export default function VerifyMessage() {
+export default function VerifyMessage(props) {
   const [address, setAddress] = useState("");
   const [message, setMessage] = useState("");
   const [field, setField] = useState("");
   const [scalar, setScalar] = useState("");
-  const [show, setShow] = useState(undefined);
 
   function handleInput(text) {
     setMessage(text);
@@ -30,13 +28,13 @@ export default function VerifyMessage() {
         };
         const verifiedMessage = CodaSDK.verifyMessage(signedMessage);
         if (verifiedMessage) {
-          setShow("success");
+          props.showGlobalAlert("Message is valid", "success-toast");
         } else {
-          setShow("error");
+          props.showGlobalAlert("Message is not valid", "error-toast");
         }
       }
     } catch (e) {
-      setShow("error");
+      props.showGlobalAlert("Message is not valid", "error-toast");
     }
   }
 
@@ -60,20 +58,6 @@ export default function VerifyMessage() {
         verifyMessage={verifyMessage}
         disableButton={disableButton}
       />
-      <Alert
-        show={show === "success"}
-        hideToast={() => setShow(undefined)}
-        type={"success-toast"}
-      >
-        Message is valid
-      </Alert>
-      <Alert
-        show={show === "error"}
-        hideToast={() => setShow(undefined)}
-        type={"error-toast"}
-      >
-        Message is not valid
-      </Alert>
     </Hoc>
   );
 }

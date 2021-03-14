@@ -51,6 +51,7 @@ function Routes(props) {
         path="/overview"
         component={Overview}
         sessionData={sessionData}
+        {...props}
       />
       <ProtectedRoute
         exact
@@ -71,12 +72,14 @@ function Routes(props) {
         path="/sign-message"
         component={SignMessage}
         sessionData={sessionData}
+        {...props}
       />
       <ProtectedRoute
         exact
         path="/verify-message"
         component={VerifyMessage}
         sessionData={sessionData}
+        {...props}
       />
       <Route path="/login" exact>
         <Login {...props} network={props.network} />

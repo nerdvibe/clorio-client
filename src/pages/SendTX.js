@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import Wallet from "../components/General/Wallet";
 import TransactionForm from "../components/Transactions/TransactionForm";
 import ConfirmTransaction from "../components/Modals/ConfirmTransaction";
-import ConfirmLedgerTransaction from "../components/Transactions/ConfirmLedgerTransaction";
+import ConfirmLedgerTransaction from "../components/Modals/ConfirmLedgerTransaction";
 import Hoc from "../components/General/Hoc";
-import Alert from "../components/General/Alert";
 import { getAddress } from "../tools";
 import * as CodaSDK from "@o1labs/client-sdk";
 import ModalContainer from "../components/Modals/ModalContainer";
@@ -60,9 +59,6 @@ export default function SendTX(props) {
     NONCE: "nonce",
   });
   const isLedgerEnabled = props.sessionData.ledger;
-  const [show, setShow] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [alertText, setAlertText] = useState("");
   const [privateKey, setPrivateKey] = useState("");
   const [step, setStep] = useState(0);
   const [showModal, setShowModal] = useState("");
@@ -82,7 +78,7 @@ export default function SendTX(props) {
     BROADCAST_TRANSACTION,
     {
       onError: (error) => {
-        props.showGlobalAlert(error.message);
+        props.showGlobalAlert(error.message, "error-toast");
         clearState();
       },
     }
@@ -91,7 +87,10 @@ export default function SendTX(props) {
 
   if (showModal && broadcastResult && broadcastResult.data) {
     clearState();
-    setShowSuccess(true);
+    props.showGlobalAlert(
+      "Transaction successfully broadcasted",
+      "success-toast"
+    );
     history.push("/send-tx");
   }
 
@@ -112,10 +111,6 @@ export default function SendTX(props) {
 
   useEffect(() => {
     try {
-      const actualNonce =
-        nonce.data && nonce.data.accountByKey.usableNonce
-          ? parseInt(nonce.data.accountByKey.usableNonce)
-          : customNonce;
       if (ledgerTransactionData) {
         const amount = transactionData.amount;
         const fee = transactionData.fee;
@@ -123,7 +118,7 @@ export default function SendTX(props) {
           rawSignature: ledgerTransactionData,
         };
         const SendPaymentInput = {
-          nonce: actualNonce.toString(),
+          nonce: transactionData.nonce,
           memo: transactionData.memo,
           fee: fee.toString(),
           amount: amount.toString(),
@@ -136,7 +131,10 @@ export default function SendTX(props) {
         });
       }
     } catch (e) {
-      props.showGlobalAlert("There was an error broadcasting delegation");
+      props.showGlobalAlert(
+        "There was an error broadcasting delegation",
+        "error-toast"
+      );
     }
   }, [ledgerTransactionData]);
 
@@ -166,12 +164,16 @@ export default function SendTX(props) {
       .sub(amount)
       .toNumber();
     if (balanceAfterTransaction < 0) {
-      return showToast(
-        "Your are trying to send too many MINA, please check your balance"
+      props.showGlobalAlert(
+        "Your are trying to send too many MINA, please check your balance",
+        "error-toast"
       );
     }
     if (transactionData.address === "" || transactionData.amount === 0) {
-      return showToast("Please insert an address and an amount");
+      props.showGlobalAlert(
+        "Please insert an address and an amount",
+        "error-toast"
+      );
     }
     nonce.refetch({ publicKey: address });
     if (!isLedgerEnabled) {
@@ -187,35 +189,28 @@ export default function SendTX(props) {
 
   function confirmPrivateKey() {
     if (privateKey === "") {
-      showToast("Please insert a private key");
+      props.showGlobalAlert("Please insert a private key", "error-toast");
     } else {
       closeModal();
       setStep(1);
     }
   }
 
-  function showToast(message) {
-    setShow(true);
-    setAlertText(message);
-  }
-
-  function hideToast() {
-    setShow(false);
-  }
-
   function stepBackwards() {
     setStep(0);
+  }
+
+  function checkNonce() {
+    return (
+      nonce.data &&
+      (nonce.data.accountByKey.usableNonce ||
+        nonce.data.accountByKey.usableNonce === 0)
+    );
   }
 
   function sendTransaction() {
     setShowModal(ModalStates.BROADCASTING);
     if (nonce) {
-      const actualNonce =
-        nonce.data &&
-        (nonce.data.accountByKey.usableNonce ||
-          nonce.data.accountByKey.usableNonce === 0)
-          ? parseInt(nonce.data.accountByKey.usableNonce)
-          : customNonce;
       try {
         const publicKey = CodaSDK.derivePublicKey(privateKey);
         const dataToSend = {
@@ -230,7 +225,7 @@ export default function SendTX(props) {
             to: transactionData.address,
             amount,
             fee,
-            nonce: actualNonce,
+            nonce: transactionData.nonce,
             memo: transactionData.memo,
           },
           dataToSend
@@ -253,17 +248,17 @@ export default function SendTX(props) {
           });
         }
       } catch (e) {
-        console.log("🚀 ~ file: SendTX.js ~ line 343 ~ sendTransaction ~ e", e);
         setShowModal("");
-        showToast("Check if receiver address and/or private key are right");
+        props.showGlobalAlert(
+          "Check if receiver address and/or private key are right",
+          "error-toast"
+        );
         stepBackwards();
       }
     }
   }
 
   function clearState() {
-    setShow(false);
-    setAlertText("");
     setStep(0);
     setShowModal("");
     setCustomNonce(undefined);
@@ -279,13 +274,20 @@ export default function SendTX(props) {
   async function sendLedgerTransaction(callback) {
     const updateDevices = async () => {
       try {
+        const actualNonce = checkNonce()
+          ? parseInt(nonce.data.accountByKey.usableNonce)
+          : customNonce;
+        settransactionData({
+          ...transactionData,
+          nonce: actualNonce.toString(),
+        });
         const dataToSend = {
           account: address,
           sender: address,
           recipient: transactionData.address,
           fee: transactionData.fee,
           amount: transactionData.amount,
-          nonce: transactionData.nonce,
+          nonce: actualNonce,
           txType: 1,
           networkId: 1,
           validUntil: getDefaultValidUntilField(),
@@ -294,16 +296,20 @@ export default function SendTX(props) {
         callback(response);
       } catch (e) {
         props.showGlobalAlert(
-          "An error occurred while loading hardware wallet"
+          "An error occurred while loading hardware wallet",
+          "error-toast"
         );
-        history.push("/");
+        clearState();
       }
     };
     try {
       updateDevices();
     } catch (e) {
-      props.showGlobalAlert("An error occurred while loading hardware wallet");
-      history.push("/");
+      props.showGlobalAlert(
+        "An error occurred while loading hardware wallet",
+        "error-toast"
+      );
+      clearState();
     }
   }
 
@@ -316,7 +322,7 @@ export default function SendTX(props) {
           fastFee={fee.data ? fee.data.estimatedFee.fast : 0}
           nextStep={openModal}
           transactionData={transactionData}
-          showToast={showToast}
+          showGlobalAlert={props.showGlobalAlert}
           setData={settransactionData}
         />
       ) : isLedgerEnabled ? (
@@ -354,16 +360,6 @@ export default function SendTX(props) {
       >
         <CustomNonce openModal={openModal} setCustomNonce={setCustomNonce} />
       </ModalContainer>
-      <Alert show={show} hideToast={hideToast} type={"error-toast"}>
-        {alertText}
-      </Alert>
-      <Alert
-        show={showSuccess}
-        hideToast={() => setShowSuccess(false)}
-        type={"success-toast"}
-      >
-        Transaction successfully broadcasted
-      </Alert>
     </Hoc>
   );
 }

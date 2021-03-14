@@ -9,7 +9,6 @@ import { getAddress } from "../tools";
 import { useEffect } from "react";
 import * as CodaSDK from "@o1labs/client-sdk";
 import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
-import Alert from "../components/General/Alert";
 import { useHistory } from "react-router-dom";
 import ConfirmDelegation from "../components/Modals/ConfirmDelegation";
 import CustomDelegation from "../components/Modals/CustomDelegation";
@@ -90,7 +89,6 @@ export default (props) => {
   const [address, setAddress] = useState("");
   const [privateKey, setPrivateKey] = useState("");
   const [customDelegate, setCustomDelegate] = useState("");
-  const [showAlert, setShowAlert] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [offset, setOffset] = useState(0);
   const [customNonce, setCustomNonce] = useState(undefined);
@@ -106,7 +104,7 @@ export default (props) => {
     BROADCAST_DELEGATION,
     {
       onError: (error) => {
-        props.showGlobalAlert(error.message);
+        props.showGlobalAlert(error.message, "error-toast");
         return clearState();
       },
     }
@@ -160,6 +158,10 @@ export default (props) => {
   if (!showSuccess && broadcastResult && broadcastResult.data) {
     clearState();
     setShowSuccess(true);
+    props.showGlobalAlert(
+      "Delegation successfully broadcasted",
+      "success-toast"
+    );
     history.push("/stake");
   }
 
@@ -199,7 +201,10 @@ export default (props) => {
         setShowModal("");
       }
     } catch (e) {
-      setShowAlert(true);
+      return props.showGlobalAlert(
+        "There was an error processing your delegation, please try again later.",
+        "error-toast"
+      );
     }
   }
 
@@ -292,7 +297,8 @@ export default (props) => {
         callback(response);
       } catch (e) {
         props.showGlobalAlert(
-          "An error occurred while loading hardware wallet"
+          "An error occurred while loading hardware wallet",
+          "error-toast"
         );
         setShowModal(undefined);
       }
@@ -300,7 +306,10 @@ export default (props) => {
     try {
       updateDevices();
     } catch (e) {
-      props.showGlobalAlert("An error occurred while loading hardware wallet");
+      props.showGlobalAlert(
+        "An error occurred while loading hardware wallet",
+        "error-toast"
+      );
     }
   }
 
@@ -384,20 +393,6 @@ export default (props) => {
           confirmCustomDelegate={confirmCustomDelegate}
         />
       </ModalContainer>
-      <Alert
-        show={showAlert}
-        hideToast={() => setShowAlert(false)}
-        type={"error-toast"}
-      >
-        There was an error processing your delegation, please try again later.
-      </Alert>
-      <Alert
-        show={showSuccess}
-        hideToast={() => setShowSuccess(false)}
-        type={"success-toast"}
-      >
-        Delegation successfully broadcasted
-      </Alert>
     </Hoc>
   );
 };

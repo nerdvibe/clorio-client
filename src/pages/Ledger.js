@@ -39,7 +39,8 @@ export default function Ledger(props) {
         callback(response);
       } catch (e) {
         props.showGlobalAlert(
-          "An error occurred while loading hardware wallet"
+          "An error occurred while loading hardware wallet",
+          "error-toast"
         );
         history.push("/");
       }
@@ -47,7 +48,10 @@ export default function Ledger(props) {
     try {
       updateDevices();
     } catch (e) {
-      props.showGlobalAlert("An error occurred while loading hardware wallet");
+      props.showGlobalAlert(
+        "An error occurred while loading hardware wallet",
+        "error-toast"
+      );
       history.push("/");
     }
   }

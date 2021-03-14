@@ -2,15 +2,13 @@ import React, { useState } from "react";
 import Hoc from "../components/General/Hoc";
 import SignMessageForm from "../components/Forms/SignMessageForm";
 import Wallet from "../components/General/Wallet";
-import Alert from "../components/General/Alert";
 import { getAddress } from "../tools";
 import * as CodaSDK from "@o1labs/client-sdk";
 
-export default function SignMessage() {
+export default function SignMessage(props) {
   const [message, setMessage] = useState("");
   const [privateKey, setPrivateKey] = useState("");
   const [publicKey, setPublicKey] = useState("");
-  const [show, setShow] = useState(false);
   const [result, setResult] = useState(undefined);
 
   getAddress((data) => {
@@ -35,7 +33,7 @@ export default function SignMessage() {
         setResult(signedMessage);
       }
     } catch (e) {
-      setShow(true);
+      return props.showGlobalAlert("Please check private key", "error-toast");
     }
   }
 
@@ -58,9 +56,6 @@ export default function SignMessage() {
         result={result}
         reset={resetForm}
       />
-      <Alert show={show} hideToast={() => setShow(false)} type={"error-toast"}>
-        Please check private key
-      </Alert>
     </Hoc>
   );
 }

@@ -43,7 +43,7 @@ export default function VerifyForm(props) {
                   type="text"
                   name="message"
                   value={props.address}
-                  placeholder="Private key "
+                  placeholder="Public key "
                   onChange={(e) => props.setAddress(e.currentTarget.value)}
                 />
                 <span className="shadow-input1"></span>

@@ -9,6 +9,7 @@ const Alert = (props) => {
   useEffect(() => {
     if (props.show) {
       const doc = document.querySelector("#toast").appendChild(node);
+      doc.classList.remove(["success-toast"]);
       doc.classList.add("toast");
       doc.classList.add(props.type);
 

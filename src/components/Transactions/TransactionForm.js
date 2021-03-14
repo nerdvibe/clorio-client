@@ -82,7 +82,10 @@ export default function TransactionForm(props) {
 
   function memoHandler(memo) {
     if (memo.length > 32) {
-      return props.showToast(`Memo is limited to 32 characters`);
+      return props.showGlobalAlert(
+        "Memo is limited to 32 characters",
+        "error-toast"
+      );
     } else {
       return props.setData({
         ...props.transactionData,
@@ -91,21 +94,22 @@ export default function TransactionForm(props) {
     }
   }
 
-  function amountCheck() {
-    const { amount, fee } = props.transactionData;
+  function checkFieldsAndProceed() {
+    const { amount, fee, address } = props.transactionData;
     if (amount < MINIMUM_AMOUNT || amount === 0) {
-      return props.showToast(
-        `Amount ${toMINA(amount)} is less than the minimum amount (${toMINA(
-          MINIMUM_AMOUNT
-        )})`
-      );
+      const message = `Amount ${toMINA(
+        amount
+      )} is less than the minimum amount (${toMINA(MINIMUM_AMOUNT)})`;
+      return props.showGlobalAlert(message, "error-toast");
     }
     if (fee < MINIMUM_FEE) {
-      return props.showToast(
-        `Fee ${toMINA(fee)} is less than the minimum fee (${toMINA(
-          MINIMUM_FEE
-        )})`
-      );
+      const message = `Fee ${toMINA(
+        fee
+      )} is less than the minimum fee (${toMINA(MINIMUM_FEE)})`;
+      return props.showGlobalAlert(message, "error-toast");
+    }
+    if (address === "") {
+      return props.showGlobalAlert("Please insert a recipient", "error-toast");
     }
     return props.nextStep();
   }
@@ -125,13 +129,13 @@ export default function TransactionForm(props) {
               <h3>Recipient</h3>
               <Input
                 value={props.transactionData.address}
-                placeholder="Enter an amount "
+                placeholder="Enter address "
                 inputHandler={(e) => addressHandler(e.currentTarget.value)}
               />
               <h3>Memo</h3>
               <Input
                 value={props.transactionData.memo}
-                placeholder="Enter an amount "
+                placeholder="Enter memo "
                 inputHandler={(e) => memoHandler(e.currentTarget.value)}
               />
               <Row>
@@ -175,7 +179,7 @@ export default function TransactionForm(props) {
               <div className="v-spacer" />
               <Button
                 className="lightGreenButton__fullMono mx-auto"
-                onClick={amountCheck}
+                onClick={checkFieldsAndProceed}
                 text="Preview"
               />
             </Col>
