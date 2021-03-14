@@ -51,26 +51,21 @@ export default function Login(props) {
     }
   }, [userID]);
 
-  //   function renderLedgerLogin() {
-  //     return (
-  //       <Link to="/ledger">
-  //         <Button
-  //           className="link-button mx-auto"
-  //           onClick={props.register}
-  //           text="Login through a hardware wallet"
-  //         />
-  //       </Link>
-  //     );
-  //   }
-
+  /**
+   * Set text from input inside component state
+   * @param {event} e Input text
+   */
   function inputHandler(e) {
     setpassphrase(e.currentTarget.value);
   }
 
+  /**
+   * Uses CodaSDK to check if private key from input is valid
+   */
   function checkCredentials() {
     try {
-      const publicK = CodaSDK.derivePublicKey(passphrase);
-      setPublicKey(publicK);
+      const derivedPublicKey = CodaSDK.derivePublicKey(passphrase);
+      setPublicKey(derivedPublicKey);
       setLoader(true);
     } catch (e) {
       props.showGlobalAlert(
@@ -80,6 +75,10 @@ export default function Login(props) {
     }
   }
 
+  /**
+   * If private key is not set or empty, disable button
+   * @returns boolean
+   */
   function disableButton() {
     if (!passphrase) {
       return true;

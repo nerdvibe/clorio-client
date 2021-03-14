@@ -95,6 +95,10 @@ export default function Overview(props) {
   }
   const news = useQuery(NEWS);
 
+  /**
+   * Set wallet balance inside component state
+   * @param {object} data Wallet balance data
+   */
   function setBalance(data) {
     if (!balance) {
       setbalance(data);
@@ -107,6 +111,10 @@ export default function Overview(props) {
     }
   }
 
+  /**
+   * If news are available, render banner
+   * @returns HTMLElement
+   */
   function renderBanner() {
     if (news.data && news.data.news_home && news.data.news_home.length > 0) {
       const latest = news.data.news_home[0];
@@ -122,10 +130,15 @@ export default function Overview(props) {
     }
   }
 
+  /**
+   * Set query offset param based on selected table page
+   * @param {number} page Page number
+   */
   function changeOffset(page) {
     const data = (page - 1) * ITEMS_PER_PAGE;
     setOffset(data);
   }
+
   return (
     <Hoc className="main-container">
       <Spinner show={queryResult.loading}>

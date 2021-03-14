@@ -32,6 +32,10 @@ export default function Ledger(props) {
     return deviceListener.unsubscribe;
   }, []);
 
+  /**
+   * Listen for ledger action
+   * @param {function} callback Function to call after ledger confirmation
+   */
   async function getWallet(callback) {
     const updateDevices = async () => {
       try {
@@ -56,6 +60,10 @@ export default function Ledger(props) {
     }
   }
 
+  /**
+   * Render Ledger confirmation screen
+   * @returns HTMLElement
+   */
   function renderAddressConfirm() {
     if (devices) {
       return (
@@ -87,6 +95,9 @@ export default function Ledger(props) {
     }
   }
 
+  /**
+   * Set public key that arrived from Ledger inside the storage
+   */
   function setSession() {
     if (userID.data) {
       if (userID.data.public_keys.length > 0) {

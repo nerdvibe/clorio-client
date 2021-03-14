@@ -29,6 +29,90 @@ export default function Register(props) {
     }
   }, []);
 
+  /**
+   * Set input text inside component state
+   * @param {string} text Input text
+   */
+  function inputHandler(text) {
+    setValidationText(text);
+  }
+
+  /**
+   * If input text is equal to given private key in the previous state, unlock the Button
+   * @returns boolean
+   */
+  function checkButtonState() {
+    if (validationText === keys.privateKey) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Save public key, wallet id inside the storage
+   */
+  function setAuthorization() {
+    props.setLoader();
+    storeSession(publicKey, -1, false, () => {
+      history.push("/overview");
+    });
+  }
+
+  /**
+   * Generate new key pair
+   */
+  function generateNew() {
+    const userKeys = CodaSDK.genKeys();
+    setKeys(userKeys);
+  }
+
+  /**
+   * Go back to data screen
+   */
+  function stepBackwards() {
+    setValidationText(undefined);
+    setValidation(false);
+  }
+
+  /**
+   * Download PDF with sensible data
+   */
+  function downloadPDF() {
+    setShowLoader(true);
+    const elementsToHide = document.getElementsByClassName("no-print");
+    const elementInitalState = [];
+    for (const el of elementsToHide) {
+      elementInitalState.push(el.style.display);
+      el.style.display = "none";
+    }
+    const elementsToShow = document.getElementsByClassName("pdf-only");
+    for (const el of elementsToShow) {
+      el.style.display = "inline";
+    }
+    const element = document.getElementById("element-to-print");
+    html2pdf()
+      .set({
+        margin: 25,
+        filename: "MinaHub-Paperwallet.pdf",
+      })
+      .from(element)
+      .save();
+    setTimeout(() => {
+      for (const el of elementsToHide) {
+        const tmpStyle = elementInitalState.pop();
+        el.style.display = tmpStyle;
+      }
+      for (const el of elementsToShow) {
+        el.style.display = "none";
+      }
+      setShowLoader(false);
+    }, 250);
+  }
+
+  /**
+   * Render wallet data screen
+   * @returns HTMLElement
+   */
   function renderRegisterStep() {
     return (
       <Spinner show={showLoader}>
@@ -113,6 +197,10 @@ export default function Register(props) {
     );
   }
 
+  /**
+   * Render private key validation screen
+   * @returns HTMLElement
+   */
   function renderValidationStep() {
     return (
       <div className="full-width">
@@ -154,66 +242,6 @@ export default function Register(props) {
         </div>
       </div>
     );
-  }
-
-  function inputHandler(text) {
-    setValidationText(text);
-  }
-
-  function checkButtonState() {
-    if (validationText === keys.privateKey) {
-      return false;
-    }
-    return true;
-  }
-
-  function setAuthorization() {
-    props.setLoader();
-    storeSession(publicKey, -1, false, () => {
-      history.push("/overview");
-    });
-  }
-
-  function generateNew() {
-    const userKeys = CodaSDK.genKeys();
-    setKeys(userKeys);
-  }
-
-  function stepBackwards() {
-    setValidationText(undefined);
-    setValidation(false);
-  }
-
-  function downloadPDF() {
-    setShowLoader(true);
-    const elementsToHide = document.getElementsByClassName("no-print");
-    const elementInitalState = [];
-    for (const el of elementsToHide) {
-      elementInitalState.push(el.style.display);
-      el.style.display = "none";
-    }
-    const elementsToShow = document.getElementsByClassName("pdf-only");
-    for (const el of elementsToShow) {
-      el.style.display = "inline";
-    }
-    const element = document.getElementById("element-to-print");
-    html2pdf()
-      .set({
-        margin: 25,
-        filename: "MinaHub-Paperwallet.pdf",
-      })
-      .from(element)
-      .save();
-    setTimeout(() => {
-      for (const el of elementsToHide) {
-        const tmpStyle = elementInitalState.pop();
-        el.style.display = tmpStyle;
-      }
-      for (const el of elementsToShow) {
-        el.style.display = "none";
-      }
-      setShowLoader(false);
-    }, 250);
   }
 
   return (

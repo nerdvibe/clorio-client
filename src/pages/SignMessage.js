@@ -15,12 +15,19 @@ export default function SignMessage(props) {
     setPublicKey(data);
   });
 
+  /**
+   * Check if message, private key and public key are not empty
+   * @returns boolean
+   */
   function signButtonStateHandler() {
     const checkCondition =
       message === "" || privateKey === "" || publicKey === "";
     return checkCondition;
   }
 
+  /**
+   * If fields are not empty, sign message and set result to component state
+   */
   function submitHandler() {
     try {
       if (!signButtonStateHandler()) {
@@ -28,15 +35,17 @@ export default function SignMessage(props) {
           publicKey,
           privateKey,
         };
-
         const signedMessage = CodaSDK.signMessage(message, keypair);
         setResult(signedMessage);
       }
     } catch (e) {
-      return props.showGlobalAlert("Please check private key", "error-toast");
+      props.showGlobalAlert("Please check private key", "error-toast");
     }
   }
 
+  /**
+   * Clear form data from state
+   */
   function resetForm() {
     setPrivateKey("");
     setResult(undefined);

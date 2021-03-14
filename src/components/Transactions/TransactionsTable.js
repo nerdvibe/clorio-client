@@ -51,7 +51,7 @@ export default function TransactionsTable(props) {
     );
   }
 
-  function renderRow(row, index) {
+  function renderTransactionRow(row, index) {
     const { timestamp, state_hash } = row.blocks_user_commands[0].block;
     const amount = row.amount ? toMINA(row.amount) : 0;
     return (
@@ -106,7 +106,7 @@ export default function TransactionsTable(props) {
           })}
         {data &&
           data.user_commands.map((row, index) => {
-            return renderRow(row, index);
+            return renderTransactionRow(row, index);
           })}
       </tbody>
     );

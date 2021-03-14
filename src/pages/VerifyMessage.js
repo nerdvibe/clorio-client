@@ -11,10 +11,17 @@ export default function VerifyMessage(props) {
   const [field, setField] = useState("");
   const [scalar, setScalar] = useState("");
 
+  /**
+   * Set input text inside me
+   * @param {string} text Message to verify
+   */
   function handleInput(text) {
     setMessage(text);
   }
 
+  /**
+   * Using CodaSDK check if input message is valid
+   */
   function verifyMessage() {
     try {
       if (message && message !== "") {
@@ -38,6 +45,10 @@ export default function VerifyMessage(props) {
     }
   }
 
+  /**
+   * If one between address,message,field or scalar is empty button is disabled
+   * @returns boolean
+   */
   function disableButton() {
     return address === "" || message === "" || field === "" || scalar === "";
   }

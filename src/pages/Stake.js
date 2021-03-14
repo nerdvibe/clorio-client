@@ -126,7 +126,7 @@ export default (props) => {
   useEffect(() => {
     if (isLedgerEnabled && !ledgerTransactionData) {
       if (showModal === ModalStates.PASSPHRASE) {
-        const transactionListener = sendLedgerTransaction(
+        const transactionListener = signLedgerTransaction(
           setLedgerTransactionData
         );
         return transactionListener.unsubscribe;
@@ -165,6 +165,9 @@ export default (props) => {
     history.push("/stake");
   }
 
+  /**
+   * Sign stake delegation using Coda SDK through private key
+   */
   function signStakeDelegate() {
     try {
       const actualNonce = getNonce();
@@ -201,33 +204,45 @@ export default (props) => {
         setShowModal("");
       }
     } catch (e) {
-      return props.showGlobalAlert(
+      props.showGlobalAlert(
         "There was an error processing your delegation, please try again later.",
         "error-toast"
       );
     }
   }
 
+  /**
+   * Set delegate private key on component state, open confirmation modal
+   * @param {string} delegate Delegate private key
+   */
   function openModal(delegate) {
     setDelegate(delegate);
     setShowModal(ModalStates.CONFIRM_DELEGATION);
   }
 
+  /**
+   * Open modal for custom private key insertion
+   */
   function openCustomDelegateModal() {
     setShowModal(ModalStates.CUSTOM_DELEGATION);
   }
 
+  /**
+   * Close every modal and clear component custom nonce and custom delegate
+   */
   function closeModal() {
     setShowModal("");
     setCustomNonce(undefined);
     setCustomDelegate(undefined);
   }
 
+  /**
+   * If nonce is not available and no custom nonce has already been asked, ask user for a custom nonce. Otherwise proceeds to private key insertion modal
+   */
   function confirmDelegate() {
     if ((!nonceAndDelegate || !nonceAndDelegate.data) && !customNonce) {
-      return setShowModal(ModalStates.NONCE);
-    }
-    if (customDelegate) {
+      setShowModal(ModalStates.NONCE);
+    } else if (customDelegate) {
       nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
       setShowModal(ModalStates.PASSPHRASE);
       setDelegate({ publicKey: customDelegate });
@@ -237,17 +252,28 @@ export default (props) => {
     }
   }
 
+  /**
+   * User confirmed delegate public key, proceeds to private key insertion
+   * @param {string} delegate Delegate private key
+   */
   function confirmCustomDelegate(delegate) {
     nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
     setShowModal(ModalStates.PASSPHRASE);
     setDelegate({ publicKey: delegate });
   }
 
+  /**
+   * Close all modals, clears custom nonce state
+   */
   function closeNonceModal() {
     setShowModal("");
     setCustomNonce(undefined);
   }
 
+  /**
+   * If news are available, render news banner
+   * @returns HTMLElement
+   */
   function renderBanner() {
     if (
       news.data &&
@@ -267,6 +293,9 @@ export default (props) => {
     }
   }
 
+  /**
+   * Clear component state
+   */
   function clearState() {
     setShowModal("");
     setDelegate({});
@@ -275,11 +304,20 @@ export default (props) => {
     setLedgerTransactionData(undefined);
   }
 
+  /**
+   * Set query offset based on selected page
+   * @param {number} page Page number
+   */
   function changeOffset(page) {
     const data = (page - 1) * ITEMS_PER_PAGE;
     setOffset(data);
   }
-  async function sendLedgerTransaction(callback) {
+
+  /**
+   * Sign delegation through ledger and
+   * @param {function} callback Callback function called after ledger signed Delegation
+   */
+  async function signLedgerTransaction(callback) {
     const updateDevices = async () => {
       try {
         const actualNonce = getNonce();
@@ -313,6 +351,10 @@ export default (props) => {
     }
   }
 
+  /**
+   * If nonce is available from query, returns it, otherwise custom nonce is returned
+   * @returns number Nonce number
+   */
   function getNonce() {
     if (nonceAndDelegate.data && nonceAndDelegate.data.accountByKey) {
       return parseInt(nonceAndDelegate.data.accountByKey.usableNonce);

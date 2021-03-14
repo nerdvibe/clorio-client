@@ -142,7 +142,10 @@ export default function SendTX(props) {
     }
   }, [ledgerTransactionData]);
 
-  // Set wallet balance data from child wallet component
+  /**
+   * Set wallet balance data from child wallet component
+   * @param {Object} data Wallet balance query result
+   */
   function setBalance(data) {
     if (!balance) {
       setBalanceData(data);
@@ -157,7 +160,9 @@ export default function SendTX(props) {
     }
   }
 
-  // Check if nonce is available, if not asks user for custom nonce. After is set proceeds data verification and to private key verification
+  /**
+   * Check if nonce is available, if not asks user for custom nonce. After is set proceeds data verification and to private key verification
+   */
   function openConfirmationModal() {
     if ((!nonce || !nonce.data) && !customNonce) {
       return setShowModal(ModalStates.NONCE);
@@ -183,7 +188,7 @@ export default function SendTX(props) {
     }
     nonce.refetch({ publicKey: address });
     if (!isLedgerEnabled) {
-      return setShowModal(ModalStates.PASSPHRASE);
+      setShowModal(ModalStates.PASSPHRASE);
     } else {
       setStep(1);
     }
@@ -193,7 +198,9 @@ export default function SendTX(props) {
     setShowModal("");
   }
 
-  // Check if private key is not empty
+  /**
+   *  Check if private key is not empty
+   */
   function confirmPrivateKey() {
     if (privateKey === "") {
       props.showGlobalAlert("Please insert a private key", "error-toast");
@@ -203,12 +210,17 @@ export default function SendTX(props) {
     }
   }
 
-  // Get back to form
+  /**
+   * Get back to form
+   */
   function stepBackwards() {
     setStep(0);
   }
 
-  // Check if nonce is not empty
+  /**
+   * Check if nonce is not empty
+   * @returns number Wallet usable nonce
+   */
   function checkNonce() {
     return (
       nonce.data &&
@@ -217,7 +229,9 @@ export default function SendTX(props) {
     );
   }
 
-  // Broadcast transaction for non ledger wallet
+  /**
+   * Broadcast transaction for non ledger wallet
+   */
   function sendTransaction() {
     setShowModal(ModalStates.BROADCASTING);
     if (nonce) {
@@ -268,6 +282,9 @@ export default function SendTX(props) {
     }
   }
 
+  /**
+   * Clear component state
+   */
   function clearState() {
     setStep(0);
     setShowModal("");
@@ -276,12 +293,18 @@ export default function SendTX(props) {
     setLedgerTransactionData(undefined);
   }
 
+  /**
+   * Close nonce modal
+   */
   function closeNonceModal() {
     setShowModal("");
     setCustomNonce(undefined);
   }
 
-  // Broadcast Ledger transaction
+  /**
+   * Broadcast Ledger transaction
+   * @param {function} callback Callback that loads on ledger sign process end
+   */
   async function sendLedgerTransaction(callback) {
     const updateDevices = async () => {
       try {
