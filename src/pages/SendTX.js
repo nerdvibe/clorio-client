@@ -15,7 +15,7 @@ import { useHistory } from "react-router-dom";
 import ledger from "../tools/ledger";
 import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
 import Big from "big.js";
-import CustomNonce from "../components/CustomNonce";
+import CustomNonce from "../components/Modals/CustomNonce";
 
 const GET_FEE = gql`
   query GetFees {

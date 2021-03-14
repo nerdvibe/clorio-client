@@ -15,8 +15,8 @@ import ConfirmDelegation from "../components/Modals/ConfirmDelegation";
 import CustomDelegation from "../components/Modals/CustomDelegation";
 import ledger from "../tools/ledger";
 import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
-import LedgerLoader from "../components/LedgerLoader";
-import CustomNonce from "../components/CustomNonce";
+import LedgerLoader from "../components/General/LedgerLoader";
+import CustomNonce from "../components/Modals/CustomNonce";
 import Button from "../components/General/Button";
 
 const ITEMS_PER_PAGE = 10;
