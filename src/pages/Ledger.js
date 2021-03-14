@@ -5,10 +5,10 @@ import Button from "../components/General/Button";
 import Hoc from "../components/General/Hoc";
 import Logo from "../components/General/Logo";
 import Footer from "../components/General/Footer";
-import ledger from "../tools/ledger";
 import { useQuery, gql } from "@apollo/client";
 import { storeSession } from "../tools";
 import LedgerLoader from "../components/General/LedgerLoader";
+const { ipcRenderer } = window.require("electron");
 
 const GET_ID = gql`
   query GetIDFromPublicKey($publicKey: String) {
@@ -39,9 +39,16 @@ export default function Ledger(props) {
   async function getWallet(callback) {
     const updateDevices = async () => {
       try {
-        const response = await ledger.getAddress(1);
-        callback(response);
+        const response = await ipcRenderer.invoke(
+          "ledger-get-address",
+          0
+        );
+        if(response.returnCode !== '9000' || !response.publicKey) {
+          throw `Ledger error: ${response.message}`
+        }
+        callback(response.publicKey);
       } catch (e) {
+        console.log(e);
         props.showGlobalAlert(
           "An error occurred while loading hardware wallet",
           "error-toast"
