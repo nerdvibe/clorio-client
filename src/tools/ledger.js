@@ -1,80 +1,87 @@
-const delay = 1000; // 30 sec
+const { ipcRenderer } = window.require("electron");
+export const TX_TYPE = {
+  PAYMENT: 0x00,
+  DELEGATION: 0x04,
+}
+export const NETWORK = {
+  MAINNET: 0x01,
+  DEVNET: 0x00,
+}
 
-const setDelay = (retVal) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const isSuccess = Math.random() < 0.7;
-      if (isSuccess) {
-        resolve(retVal);
-      } else {
-        reject(-1);
-      }
-    }, delay);
+/**
+ * Checks if the Mina Ledger app is open on the device. If not open, throw an error
+ * @returns {Promise<void>}
+ */
+export const isMinaAppOpen = async() => {
+  const ledgerNameVersion = await ipcRenderer.invoke(
+    "ledger-get-name-version",
+  );
+  if(ledgerNameVersion.returnCode !== '9000') {
+    throw new Error("MinaHub couldn't communicate with the Ledger device")
+  }
+  if(ledgerNameVersion.name !== 'Mina') {
+    throw new Error("Please make sure that you have the Mina app open on the Ledger device")
+  }
+}
+
+/**
+ * Returns the publicKey from the Ledger device on the given account number
+ * @param {number} account
+ * @returns {Promise<{publicKey}|any>}
+ */
+export const getPublicKey = async(account) => {
+  const ledgerPublicKey = await ipcRenderer.invoke(
+    "ledger-get-address",
+    account
+  );
+  // In case the user doesn't accept the address on the device
+  if(ledgerPublicKey.returnCode === '27013') {
+    throw new Error(`Ledger error: couldn't verify the address`);
+  }
+  if(ledgerPublicKey.returnCode !== '9000' || !ledgerPublicKey.publicKey) {
+    throw new Error(`Ledger error: ${ledgerPublicKey.message}`);
+  }
+
+  return ledgerPublicKey
+}
+
+/**
+ * Signs a transaction on the Ledger device
+ * @param transaction
+ * @returns {Promise<{signature}|any>}
+ */
+export const signTransaction = async(transaction) => {
+  const ledgerTransaction = await ipcRenderer.invoke(
+    "ledger-sign-transaction",
+    transaction
+  );
+  // In case the user doesn't accept the transaction on the device
+  if(ledgerTransaction.returnCode === '27013') {
+    throw new Error(`Ledger error: couldn't generate the signature`);
+  }
+  if(ledgerTransaction.returnCode !== '9000' || !ledgerTransaction.signature) {
+    throw new Error(`Ledger error: ${ledgerTransaction.message}`);
+  }
+
+  return ledgerTransaction
+}
+
+/**
+ * converts emoji to unicode
+ * @param str
+ * @returns str {*}
+ */
+export const emojiToUnicode = (str) => {
+  return str.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, function(e) {
+    return "\\u" + e.charCodeAt(0).toString(16) + "\\u" + e.charCodeAt(1).toString(16);
   });
-};
+}
 
-const ledger = {
-  getAddress: async (account) => {
-    const address =
-      account == 1
-        ? "B62qoBEWahYw3CzeFLBkekmT8B7Z1YsfhNcP32cantDgApQ97RNUMhT"
-        : "B62qoqqJds3GA9tFsS5DwSdFGsegFM1fnfpdoRkHfAhAY9Tpy9Uvb8N";
-    const retVal = await setDelay(address);
-
-    return retVal;
-  },
-  signTransaction: async ({
-    account,
-    sender,
-    recipient,
-    fee,
-    amount,
-    nonce,
-    memo,
-    txType,
-    networkId,
-    validUntil,
-  }) => {
-    if (
-      !account ||
-      !sender ||
-      !recipient ||
-      !fee ||
-      !amount ||
-      !txType ||
-      !networkId ||
-      !validUntil
-    ) {
-      console.log("🚀 ~ file: ledger.js ~ line 38 ~ memo", memo);
-      console.log("🚀 ~ file: ledger.js ~ line 38 ~ nonce", nonce);
-      throw new Error("Missing data");
-    }
-    const signature =
-      "119558c6c24bbe32d0660bb5ce2a6896277e8a6351fed883549bfdae78e32f93126bcb5bd977a38673fd3dc5b8d7987bb86d194f7b5ae66531c63b6ab81de2489000";
-    const retVal = await setDelay(signature);
-
-    return retVal;
-  },
-  signDelegation: async ({
-    account,
-    sender,
-    recipient,
-    fee,
-    nonce,
-    txType,
-    networkId,
-  }) => {
-    console.log("🚀 ~ file: ledger.js ~ line 65 ~ nonce", nonce);
-    if (!account || !sender || !recipient || !txType || !networkId) {
-      console.log("🚀 ~ file: ledger.js ~ line 67 ~ fee", fee);
-      throw new Error("Missing data");
-    }
-    const signature =
-      "119558c6c24bbe32d0660bb5ce2a6896277e8a6351fed883549bfdae78e32f93126bcb5bd977a38673fd3dc5b8d7987bb86d194f7b5ae66531c63b6ab81de2489000";
-    const retVal = await setDelay(signature);
-
-    return retVal;
-  },
-};
-
-export default ledger;
+/**
+ * escapes invalid unicode chars
+ * @param str
+ * @returns {string}
+ */
+export const escapeUnicode = (str) => {
+  return [...str].map(c => /^[\x00-\x7F]$/.test(c) ? c : c.split("").map(a => "\\u" + a.charCodeAt().toString(16).padStart(4, "0")).join("")).join("");
+}

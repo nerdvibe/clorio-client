@@ -12,11 +12,12 @@ import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
 import ConfirmDelegation from "../components/Modals/ConfirmDelegation";
 import CustomDelegation from "../components/Modals/CustomDelegation";
-import ledger from "../tools/ledger";
+import {isMinaAppOpen, NETWORK, signTransaction, TX_TYPE} from "../tools/ledger";
 import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
 import LedgerLoader from "../components/General/LedgerLoader";
 import CustomNonce from "../components/Modals/CustomNonce";
 import Button from "../components/General/Button";
+import {feeOrDefault} from "../tools/fees";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -318,36 +319,33 @@ export default (props) => {
    * @param {function} callback Callback function called after ledger signed Delegation
    */
   async function signLedgerTransaction(callback) {
-    const updateDevices = async () => {
-      try {
-        const actualNonce = getNonce();
-        const dataToSend = {
-          account: address,
-          sender: address,
-          recipient: delegateData.publicKey,
-          fee: toNanoMINA(fee.data.estimatedFee.average),
-          nonce: actualNonce,
-          txType: 2,
-          networkId: 1,
-          validUntil: getDefaultValidUntilField(),
-        };
-        const response = await ledger.signDelegation(dataToSend);
-        callback(response);
-      } catch (e) {
-        props.showGlobalAlert(
-          "An error occurred while loading hardware wallet",
-          "error-toast"
-        );
-        setShowModal(undefined);
-      }
-    };
     try {
-      updateDevices();
+      await isMinaAppOpen();
+      const actualNonce = getNonce();
+      const transactionToSend = {
+        // TODO: FIX WITH STATE ACCOUNT
+        senderAccount: 0,
+        senderAddress: address,
+        receiverAddress: delegateData.publicKey,
+        fee: +toNanoMINA(feeOrDefault(fee?.data?.estimatedFee?.average || '0')),
+        amount: 0,
+        nonce: actualNonce,
+        // TODO: FIX HARDCODING!
+        txType: TX_TYPE.DELEGATION,
+        // TODO: FIX HARDCODING!
+        networkId: NETWORK.DEVNET,
+        validUntil: +getDefaultValidUntilField(),
+      };
+
+      const signature = await signTransaction(transactionToSend);
+      setShowModal(ModalStates.BROADCASTING);
+      callback(signature.signature);
     } catch (e) {
       props.showGlobalAlert(
-        "An error occurred while loading hardware wallet",
+        e.message || "An error occurred while loading hardware wallet",
         "error-toast"
       );
+      setShowModal(undefined);
     }
   }
 

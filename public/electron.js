@@ -1,6 +1,6 @@
 const { app, BrowserWindow ,ipcMain } = require("electron");
 const { MinaLedgerJS } = require("mina-ledger-js");
-const TransportNodeHid = require("@ledgerhq/hw-transport-node-hid");
+const TransportNodeHid = require("@ledgerhq/hw-transport-node-hid-singleton");
 
 const path = require("path");
 const url = require("url");
@@ -56,9 +56,19 @@ app.on("web-contents-created", (e, contents) => {
   });
 });
 
+ipcMain.handle("ledger-get-name-version", async () => {
+  const transport = await TransportNodeHid.default.open();
+  const instance = new MinaLedgerJS(transport);
+  return await instance.getAppName();
+});
 ipcMain.handle("ledger-get-address", async (event, accountNumber) => {
-  const transport = await TransportNodeHid.default.create();
+  const transport = await TransportNodeHid.default.open();
   const instance = new MinaLedgerJS(transport);
   return await instance.getAddress(accountNumber);
+});
+ipcMain.handle("ledger-sign-transaction", async (event, transaction) => {
+  const transport = await TransportNodeHid.default.open();
+  const instance = new MinaLedgerJS(transport);
+  return await instance.signTransaction(transaction);
 });
 

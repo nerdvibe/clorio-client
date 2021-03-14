@@ -11,7 +11,7 @@ import BroadcastTransaction from "../components/Modals/BroadcastTransaction";
 import { useQuery, gql, useMutation } from "@apollo/client";
 import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
-import ledger from "../tools/ledger";
+import ledger, {emojiToUnicode, escapeUnicode, isMinaAppOpen, NETWORK, signTransaction, TX_TYPE} from "../tools/ledger";
 import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
 import Big from "big.js";
 import CustomNonce from "../components/Modals/CustomNonce";
@@ -306,8 +306,8 @@ export default function SendTX(props) {
    * @param {function} callback Callback that loads on ledger sign process end
    */
   async function sendLedgerTransaction(callback) {
-    const updateDevices = async () => {
       try {
+        await isMinaAppOpen();
         const actualNonce = checkNonce()
           ? parseInt(nonce.data.accountByKey.usableNonce)
           : customNonce;
@@ -315,36 +315,36 @@ export default function SendTX(props) {
           ...transactionData,
           nonce: actualNonce.toString(),
         });
-        const dataToSend = {
-          account: address,
-          sender: address,
-          recipient: transactionData.address,
-          fee: transactionData.fee,
-          amount: transactionData.amount,
+        // For now mina-ledger-js doesn't support emojis
+        const memo = escapeUnicode(emojiToUnicode(transactionData.memo));
+        if(memo.length > 32) {
+          throw new Error('Memo field too long')
+        }
+        const transactionToSend = {
+          // TODO: FIX WITH STATE ACCOUNT
+          senderAccount: 0,
+          senderAddress: address,
+          receiverAddress: transactionData.address,
+          fee: +transactionData.fee,
+          amount: +transactionData.amount,
+          memo,
           nonce: actualNonce,
-          txType: 1,
-          networkId: 1,
-          validUntil: getDefaultValidUntilField(),
+          // TODO: FIX HARDCODING!
+          txType: TX_TYPE.PAYMENT,
+          // TODO: FIX HARDCODING!
+          networkId: NETWORK.DEVNET,
+          validUntil: +getDefaultValidUntilField(),
         };
-        const response = await ledger.signTransaction(dataToSend);
-        callback(response);
+        const signature = await signTransaction(transactionToSend);
+        setShowModal(ModalStates.BROADCASTING);
+        callback(signature.signature);
       } catch (e) {
         props.showGlobalAlert(
-          "An error occurred while loading hardware wallet",
+          e.message || "An error occurred while loading hardware wallet",
           "error-toast"
         );
-        clearState();
+        stepBackwards()
       }
-    };
-    try {
-      updateDevices();
-    } catch (e) {
-      props.showGlobalAlert(
-        "An error occurred while loading hardware wallet",
-        "error-toast"
-      );
-      clearState();
-    }
   }
 
   return (
