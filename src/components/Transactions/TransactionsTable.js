@@ -59,7 +59,7 @@ export default function TransactionsTable(props) {
       <tr key={index}>
         <td className="table-element">
           <a
-            href={`https://minaexplorer.com/block/${state_hash}`}
+            href={`https://devnet.minaexplorer.com/block/${state_hash}`}
             target="_blank"
             rel="noreferrer"
           >
@@ -80,7 +80,7 @@ export default function TransactionsTable(props) {
       <tr key={index}>
         <td className="table-element">
           <a
-            href={`https://minaexplorer.com/payment/${row.id}`}
+            href={`https://devnet.minaexplorer.com/payment/${row.id}`}
             target="_blank"
             rel="noreferrer"
           >

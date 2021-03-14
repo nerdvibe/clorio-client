@@ -1,5 +1,6 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
+import { toMINA } from "../../tools/utils";
 
 export default function ConfirmLedgerTransaction(props) {
   return (
@@ -15,11 +16,10 @@ export default function ConfirmLedgerTransaction(props) {
           <Row>
             <Col md={8} className="offset-md-2">
               You are about to send{" "}
-              <strong>{props.transactionData.amount} MINA</strong> <br />
-              with a fee of <strong>
-                {props.transactionData.fee} MINA
-              </strong>{" "}
+              <strong>{toMINA(props.transactionData.amount)} MINA</strong>{" "}
               <br />
+              with a fee of{" "}
+              <strong>{toMINA(props.transactionData.fee)} MINA</strong> <br />
               to <strong>{props.transactionData.address}</strong>
               <div className="v-spacer" />
               <div className="mx-auto">

@@ -8,6 +8,7 @@ import { useHistory } from "react-router-dom";
 import UpdateUserID from "./components/General/UpdateUserID";
 import { gql, useQuery } from "@apollo/client";
 import { isEmptyObject } from "./tools/utils";
+import Alert from "./components/General/Alert";
 
 const GET_NETWORK = gql`
   query NodeInfo {
@@ -23,6 +24,8 @@ const GET_NETWORK = gql`
 function Layout() {
   const [sessionData, setsessionData] = useState(undefined);
   const [showLoader, setShowLoader] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertText, setAlertText] = useState("");
   const history = useHistory();
   const network = useQuery(GET_NETWORK);
 
@@ -50,7 +53,7 @@ function Layout() {
       <Container fluid>
         <Row>
           {sessionData && !isEmptyObject(sessionData) && sessionData.address && (
-            <Col md={3} lg={2} xl={2} id="sidebar-wrapper">
+            <Col md={3} lg={3} xl={2} id="sidebar-wrapper">
               <Sidebar setLoader={setLoader} network={network.data} />
             </Col>
           )}
@@ -69,15 +72,28 @@ function Layout() {
                   setLoader={setLoader}
                   network={network.data}
                   toggleLoader={setShowLoader}
+                  showGlobalAlert={showGlobalAlert}
                 />
               </Spinner>
             </Container>
           </Col>
         </Row>
+        <Alert
+          show={showAlert}
+          hideToast={() => setShowAlert(false)}
+          type={"error-toast"}
+        >
+          {alertText}
+        </Alert>
         <UpdateUserID sessionData={sessionData} />
       </Container>
     </div>
   );
+
+  function showGlobalAlert(text) {
+    setAlertText(text);
+    setShowAlert(true);
+  }
 }
 
 export default Layout;

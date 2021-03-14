@@ -40,12 +40,12 @@ export default function Login(props) {
         if (userID.data.public_keys.length > 0) {
           props.setLoader();
           const id = userID.data.public_keys[0].id;
-          storeSession(publicKey, id, () => {
+          storeSession(publicKey, id, false, () => {
             history.push("/overview");
           });
         } else {
           props.setLoader();
-          storeSession(publicKey, -1, () => {
+          storeSession(publicKey, -1, false, () => {
             history.push("/overview");
           });
         }
@@ -92,11 +92,11 @@ export default function Login(props) {
   return (
     <Hoc>
       <Spinner show={loader}>
-        <div className="block-container no-bg real-full-page-container center">
+        <div className="block-container no-bg real-full-page-container center no-margin">
           <div className="full-width">
             <Row>
               <Col
-                md={4}
+                md={6}
                 xl={6}
                 className="offset-md-3 offset-xl-3 text-center"
               >

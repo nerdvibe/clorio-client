@@ -6,7 +6,7 @@ import Logo from "./Logo";
 
 export default function Homepage() {
   return (
-    <div className="block-container no-bg real-full-page-container center">
+    <div className="block-container no-bg real-full-page-container center no-margin">
       <Row>
         <Col xs={12} className="full-width-align-center">
           <div className="mx-auto fit-content">
@@ -21,6 +21,13 @@ export default function Homepage() {
             <Button
               className="lightGreenButton__fullMono mx-auto"
               text="Access a wallet"
+            />
+          </Link>
+          <div className="v-spacer" />
+          <Link to="/ledger">
+            <Button
+              className="lightGreenButton__fullMono mx-auto"
+              text="Access with hardware"
             />
           </Link>
           <div className="v-spacer" />
