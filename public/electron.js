@@ -1,4 +1,6 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow ,ipcMain } = require("electron");
+const { MinaLedgerJS } = require("mina-ledger-js");
+const TransportNodeHid = require("@ledgerhq/hw-transport-node-hid-singleton");
 
 const path = require("path");
 const url = require("url");
@@ -9,11 +11,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
-    titleBarStyle: "hidden", // add this line
+    titleBarStyle: "hidden",
     webPreferences: {
-      // Disable inspector
-      // devTools: false,
-      // 2. Enable Node.js integration
       nodeIntegration: true,
     },
     minWidth: 1200,
@@ -56,3 +55,20 @@ app.on("web-contents-created", (e, contents) => {
     if (url !== contents.getURL()) e.preventDefault(), require("open")(url);
   });
 });
+
+ipcMain.handle("ledger-get-name-version", async () => {
+  const transport = await TransportNodeHid.default.open();
+  const instance = new MinaLedgerJS(transport);
+  return await instance.getAppName();
+});
+ipcMain.handle("ledger-get-address", async (event, accountNumber) => {
+  const transport = await TransportNodeHid.default.open();
+  const instance = new MinaLedgerJS(transport);
+  return await instance.getAddress(accountNumber);
+});
+ipcMain.handle("ledger-sign-transaction", async (event, transaction) => {
+  const transport = await TransportNodeHid.default.open();
+  const instance = new MinaLedgerJS(transport);
+  return await instance.signTransaction(transaction);
+});
+

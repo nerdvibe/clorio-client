@@ -1,8 +1,8 @@
 import React from "react";
-import Hoc from "../components/Hoc";
-import Logo from "../components/Logo";
+import Hoc from "../components/General/Hoc";
+import Logo from "../components/General/Logo";
 import { Row, Col } from "react-bootstrap";
-import Button from "../components/Button";
+import Button from "../components/General/Button";
 
 export default function NotFound() {
   return (

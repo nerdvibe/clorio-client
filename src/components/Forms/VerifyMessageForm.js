@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import Button from "./Button";
+import Button from "../General/Button";
 
 export default function VerifyForm(props) {
   return (
@@ -43,7 +43,7 @@ export default function VerifyForm(props) {
                   type="text"
                   name="message"
                   value={props.address}
-                  placeholder="Private key "
+                  placeholder="Public key "
                   onChange={(e) => props.setAddress(e.currentTarget.value)}
                 />
                 <span className="shadow-input1"></span>
