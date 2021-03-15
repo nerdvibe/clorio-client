@@ -85,6 +85,7 @@ export default function TransactionsTable(props) {
     const amount = row.amount ? toMINA(row.amount) : 0;
     const sender = row.publicKeyBySourceId.value;
     const receiver = row.publicKeyByReceiverId.value;
+    const fee = "Fee : " +(row.fee ? toMINA(row.fee) : 0) + " Mina";
     const type = row.type;
     const timeDistance = formatDistance(timestamp, new Date(), {includeSeconds: true, addSuffix: true});
     const timeISOString = new Date(timestamp).toISOString();
@@ -107,7 +108,7 @@ export default function TransactionsTable(props) {
         <td className="table-element" data-tip={timeISOString}>{timeDistance}</td>
         <td className="table-element">{sender === userAddress ? 'you' : sender}</td>
         <td className="table-element">{receiver === userAddress ? 'you' : receiver}</td>
-        <td className="table-element" style={{color:amountColor}}>{humanAmount} Mina</td>
+        <td className="table-element" style={{color:amountColor}} data-tip={fee}>{humanAmount} Mina</td>
       </tr>
     );
   }
@@ -126,7 +127,8 @@ export default function TransactionsTable(props) {
     const isSelf =  receiver === sender
     const humanAmount = isOutgoing ? isSelf ? amount : `-${amount}` : `+${amount}`
     const amountColor = isOutgoing ? isSelf ? '' : 'red' : 'green';
-     return (
+    const fee = "Fee : " +(row.fee ? toMINA(row.fee) : 0) + " Mina";
+    return (
       <tr key={index}>
         <td className="table-element"> {renderTransactionOrDelegationIcon(row.amount,sender,receiver)} </td>
         <td className="table-element">
@@ -141,7 +143,7 @@ export default function TransactionsTable(props) {
         <td className="table-element">Waiting for confirmation</td>
         <td className="table-element">{sender === userAddress ? 'you' : sender}</td>
         <td className="table-element">{receiver === userAddress ? 'you' : receiver}</td>
-        <td className="table-element" style={{color:amountColor}}>{humanAmount} Mina</td>
+        <td className="table-element" style={{color:amountColor}} data-tip={fee}>{humanAmount} Mina</td>
       </tr>
     );
   }
@@ -222,7 +224,7 @@ export default function TransactionsTable(props) {
     if (total.data && total.data.user_commands_aggregate.aggregate) {
       let totalItems = total.data.user_commands_aggregate.aggregate.count;
       const pages = (totalItems / ITEMS_PER_PAGE).toFixed(0);
-      if(totalItems%ITEMS_PER_PAGE > 0){
+      if(totalItems%ITEMS_PER_PAGE < 5 && totalItems%ITEMS_PER_PAGE!==0){
         return parseInt(pages) === 0 ? 1 : parseInt(pages)+1;
       }
       return parseInt(pages) === 0 ? 1 : pages;

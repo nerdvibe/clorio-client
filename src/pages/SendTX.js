@@ -60,6 +60,7 @@ export default function SendTX(props) {
   });
   const isLedgerEnabled = props.sessionData.ledger;
   const [privateKey, setPrivateKey] = useState("");
+  const [sendTransactionFlag, setSendTransactionFlag] = useState(false);
   const [step, setStep] = useState(0);
   const [showModal, setShowModal] = useState("");
   const [balance, setBalance] = useState({
@@ -91,13 +92,13 @@ export default function SendTX(props) {
   const history = useHistory();
 
   // If broadcasted successfully return to initial page state
-  if (showModal && broadcastResult && broadcastResult.data) {
+  if (showModal && broadcastResult && broadcastResult.data && sendTransactionFlag) {
     clearState();
     props.showGlobalAlert(
       "Transaction successfully broadcasted",
       "success-toast"
     );
-    history.push("/send-tx");
+    history.replace("/send-tx");
   }
 
   // Get sender public key
@@ -138,6 +139,7 @@ export default function SendTX(props) {
         broadcastTransaction({
           variables: { input: SendPaymentInput, signature: SignatureInput },
         });
+        setSendTransactionFlag(true);
       }
     } catch (e) {
       props.showGlobalAlert(
@@ -163,12 +165,6 @@ export default function SendTX(props) {
         setBalance(data);
       }
     }
-  }
-
-  function initFee(){
-    if(fee.data && fee.data.estimatedFee && fee.data.estimatedFee.average)[
-      
-    ]
   }
 
   /**
@@ -286,6 +282,7 @@ export default function SendTX(props) {
           broadcastTransaction({
             variables: { input: SendPaymentInput, signature: SignatureInput },
           });
+          setSendTransactionFlag(true);
         }
       } catch (e) {
         setShowModal("");
@@ -307,6 +304,7 @@ export default function SendTX(props) {
     setCustomNonce(undefined);
     setTransactionData(initialTransactionData);
     setLedgerTransactionData(undefined);
+    setSendTransactionFlag(false);
   }
 
   /**

@@ -1,5 +1,5 @@
 import Transporter from '@ledgerhq/hw-transport-webhid';
-const { MinaLedgerJS } = require("mina-ledger-js");
+import { MinaLedgerJS } from "mina-ledger-js";
 import isElectron from 'is-electron';
 
 // Wrapped Browser API for Ledger Devices
