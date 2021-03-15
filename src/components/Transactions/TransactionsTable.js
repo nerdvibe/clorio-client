@@ -220,8 +220,11 @@ export default function TransactionsTable(props) {
    */
   function getTotalPages() {
     if (total.data && total.data.user_commands_aggregate.aggregate) {
-      const totalItems = total.data.user_commands_aggregate.aggregate.count;
+      let totalItems = total.data.user_commands_aggregate.aggregate.count;
       const pages = (totalItems / ITEMS_PER_PAGE).toFixed(0);
+      if(totalItems%ITEMS_PER_PAGE > 0){
+        return parseInt(pages) === 0 ? 1 : parseInt(pages)+1;
+      }
       return parseInt(pages) === 0 ? 1 : pages;
     }
     return 1;
