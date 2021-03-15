@@ -30,7 +30,7 @@ const GET_TRANSACTIONS_TOTAL = gql`
 export default function TransactionsTable(props) {
   const { loading, error, data, mempool, userId, userAddress } = props;
   const total = useQuery(GET_TRANSACTIONS_TOTAL, {
-    variables: { userId },
+    variables: { user: userId },
     skip: !userId,
     fetchPolicy: "network-only",
   });
@@ -141,7 +141,7 @@ export default function TransactionsTable(props) {
         <td className="table-element">Waiting for confirmation</td>
         <td className="table-element">{sender === userAddress ? 'you' : sender}</td>
         <td className="table-element">{receiver === userAddress ? 'you' : receiver}</td>
-        <td className="table-element"><p color={amountColor}>{humanAmount} MINA</p></td>
+        <td className="table-element" style={{color:amountColor}}>{humanAmount} Mina</td>
       </tr>
     );
   }

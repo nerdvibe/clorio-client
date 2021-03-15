@@ -37,6 +37,11 @@ export default function Wallet(props) {
   const balance = useQuery(BALANCE, {
     variables: { publicKey: address },
     skip: !address || address==="",
+    onCompleted: (data) => {
+      if(props.setBalanceContext) {
+        props.setBalanceContext(data?.accountByKey?.balance || {})
+      }
+    }
   });
 
   useEffect(() => {

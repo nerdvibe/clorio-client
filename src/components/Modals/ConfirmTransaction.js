@@ -18,8 +18,8 @@ export default function ConfirmTransaction(props) {
           <div className="v-spacer" />
           <Row>
             <Col md={8} className="offset-md-2">
-              You are about to send <strong>{toMINA(amount)} MINA</strong> <br />
-              with a fee of <strong>{toMINA(fee)} MINA</strong> <br />
+              You are about to send <strong>{toMINA(amount)} Mina</strong> <br />
+              with a fee of <strong>{toMINA(fee)} Mina</strong> <br />
               to <strong>{address}</strong> <br />
               {memo ? <>with memo <strong>{memo}</strong></> : null}
               <div className="v-spacer" />

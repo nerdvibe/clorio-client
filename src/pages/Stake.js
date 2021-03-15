@@ -12,7 +12,7 @@ import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
 import ConfirmDelegation from "../components/Modals/ConfirmDelegation";
 import CustomDelegation from "../components/Modals/CustomDelegation";
-import {isMinaAppOpen, NETWORK, signTransaction, TX_TYPE} from "../tools/ledger";
+import {isMinaAppOpen, NETWORK, signTransaction, TX_TYPE} from "../tools/ledger/ledger";
 import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
 import LedgerLoader from "../components/General/LedgerLoader";
 import CustomNonce from "../components/Modals/CustomNonce";

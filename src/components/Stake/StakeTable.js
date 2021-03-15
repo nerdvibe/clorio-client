@@ -112,7 +112,7 @@ export default function StakeTable(props) {
         />
         <StakeTableValue header={"Uptime"} text={"100%"} />
         <StakeTableValue header={"Commission"} text={`${el.fee}%`} />
-        <StakeTableValue header={"Staked"} text={"200 MINA"} />
+        <StakeTableValue header={"Staked"} text={"200 Mina"} />
         <td>
           <Button
             className="yellowButton__fullMono"

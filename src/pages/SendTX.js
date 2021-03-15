@@ -11,9 +11,9 @@ import BroadcastTransaction from "../components/Modals/BroadcastTransaction";
 import { useQuery, gql, useMutation } from "@apollo/client";
 import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
-import ledger, {emojiToUnicode, escapeUnicode, isMinaAppOpen, NETWORK, signTransaction, TX_TYPE} from "../tools/ledger";
+import {emojiToUnicode, escapeUnicode, isMinaAppOpen, NETWORK, signTransaction, TX_TYPE} from "../tools/ledger/ledger";
 import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
-import Big from "big.js";
+import {Big} from "big.js";
 import CustomNonce from "../components/Modals/CustomNonce";
 
 const GET_FEE = gql`
@@ -62,7 +62,12 @@ export default function SendTX(props) {
   const [privateKey, setPrivateKey] = useState("");
   const [step, setStep] = useState(0);
   const [showModal, setShowModal] = useState("");
-  const [balance, setBalanceData] = useState(0);
+  const [balance, setBalance] = useState({
+    liquid: "0",
+    liquidUnconfirmed: "0",
+    locked: "0",
+    total: "0",
+  });
   const [address, setAddress] = useState("");
   const [customNonce, setCustomNonce] = useState(undefined);
   const [ledgerTransactionData, setLedgerTransactionData] = useState(undefined);
@@ -146,16 +151,16 @@ export default function SendTX(props) {
    * Set wallet balance data from child wallet component
    * @param {Object} data Wallet balance query result
    */
-  function setBalance(data) {
+  function setBalanceContext(data) {
     if (!balance) {
-      setBalanceData(data);
+      setBalance(data);
     } else {
       const difference =
         data.total !== balance.total ||
         data.liquid !== balance.liquid ||
         data.liquidUnconfirmed !== balance.liquidUnconfirmed;
       if (difference) {
-        setBalanceData(data);
+        setBalance(data);
       }
     }
   }
@@ -177,20 +182,22 @@ export default function SendTX(props) {
     const fee = transactionData.fee;
     const amount = transactionData.amount;
     const balanceAfterTransaction = Big(available)
-      .sub(fee)
-      .sub(amount)
+      .minus(fee)
+      .minus(amount)
       .toNumber();
     if (balanceAfterTransaction < 0) {
       props.showGlobalAlert(
-        "Your are trying to send too many MINA, please check your balance",
+        "Your are trying to send too many Mina, please check your balance",
         "error-toast"
       );
+      return
     }
     if (transactionData.address === "" || transactionData.amount === 0) {
       props.showGlobalAlert(
         "Please insert an address and an amount",
         "error-toast"
       );
+      return
     }
     nonce.refetch({ publicKey: address });
     if (!isLedgerEnabled) {
@@ -358,7 +365,7 @@ export default function SendTX(props) {
 
   return (
     <Hoc className="main-container">
-      <Wallet setBalance={setBalance} />
+      <Wallet setBalanceContext={setBalanceContext} />
       {step === 0 ? (
         <TransactionForm
           defaultFee={fee.data ? fee.data.estimatedFee.average : 0}
