@@ -50,7 +50,7 @@ export function toNanoMINA(amount) {
 }
 
 export function toMINA(amount) {
-  return Big(amount).mul(1e-9).toFixed();
+  return Big(amount).mul(1e-9).toFixed(3);
 }
 
 export function getDefaultValidUntilField() {

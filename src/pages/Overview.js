@@ -151,7 +151,8 @@ export default function Overview(props) {
           balance={balance.total}
           setOffset={changeOffset}
           page={offset / ITEMS_PER_PAGE + 1}
-          user={props.sessionData.id}
+          userId={props.sessionData.id}
+          userAddress={props.sessionData.address}
         />
       </Spinner>
     </Hoc>

@@ -242,6 +242,9 @@ export default function SendTX(props) {
     setShowModal(ModalStates.BROADCASTING);
     if (nonce) {
       try {
+        const actualNonce = checkNonce()
+          ? parseInt(nonce.data.accountByKey.usableNonce)
+          : customNonce;
         const publicKey = CodaSDK.derivePublicKey(privateKey);
         const dataToSend = {
           privateKey,
@@ -255,7 +258,7 @@ export default function SendTX(props) {
             to: transactionData.address,
             amount,
             fee,
-            nonce: transactionData.nonce,
+            nonce: actualNonce,
             memo: transactionData.memo,
           },
           dataToSend
@@ -368,8 +371,6 @@ export default function SendTX(props) {
       ) : isLedgerEnabled ? (
         <ConfirmLedgerTransaction
           transactionData={transactionData}
-          stepBackward={stepBackwards}
-          sendTransaction={openConfirmationModal}
         />
       ) : (
         <ConfirmTransaction

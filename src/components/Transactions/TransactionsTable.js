@@ -9,6 +9,7 @@ import { timestampToDate, toMINA } from "../../tools/utils";
 import Big from "big.js";
 import { useQuery, gql } from "@apollo/client";
 import Pagination from "../General/Pagination";
+import { BookOpen,Send } from "react-feather";
 
 const ITEMS_PER_PAGE = 10;
 const GET_TRANSACTIONS_TOTAL = gql`
@@ -26,10 +27,10 @@ const GET_TRANSACTIONS_TOTAL = gql`
 `;
 
 export default function TransactionsTable(props) {
-  const { loading, error, data, mempool, user } = props;
+  const { loading, error, data, mempool, userId, userAddress } = props;
   const total = useQuery(GET_TRANSACTIONS_TOTAL, {
-    variables: { user },
-    skip: !user,
+    variables: { userId },
+    skip: !userId,
     fetchPolicy: "network-only",
   });
   if (error || mempool.error) {
@@ -46,13 +47,29 @@ export default function TransactionsTable(props) {
   function renderTableHeader() {
     return (
       <tr className="th-background">
-        <th className="th-first-item">ID</th>
+        <th className="th-first-item"></th>
+        <th>ID</th>
         <th>Date</th>
         <th>Sender</th>
         <th>Recipient</th>
         <th className="th-last-item">Amount</th>
       </tr>
     );
+  }
+
+  function renderTransactionOrDelegationIcon(amount,sender,receiver){
+    const delegationTransaction = !amount && amount!==0
+    if(delegationTransaction){
+      return(<BookOpen />)
+    }else{
+      if(userAddress===sender){
+        return(<Send color="red"/>)
+      } else if(userAddress===receiver){
+        return(<Send color="green"/>)
+      } else {
+        return(<Send />)
+      }
+    }
   }
 
   /**
@@ -66,6 +83,7 @@ export default function TransactionsTable(props) {
     const amount = row.amount ? toMINA(row.amount) : 0;
     return (
       <tr key={index}>
+        <td className="table-element"> {renderTransactionOrDelegationIcon(row.amount,row.publicKeyBySourceId.value,row.publicKeyByReceiverId.value)} </td>
         <td className="table-element">
           <a
             href={`https://devnet.minaexplorer.com/block/${state_hash}`}
@@ -90,9 +108,12 @@ export default function TransactionsTable(props) {
    * @returns HTMLElement
    */
   function renderMempoolRow(row, index) {
-    const amount = row.amount ? Big(row.amount).mul(1e-9).toFixed(3) : 0;
+    const amount = row.amount ? toMINA(row.amount) : 0;
+    const sender = row.source && row.source.publicKey
+    const receiver = row.receiver && row.receiver.publicKey
     return (
       <tr key={index}>
+        <td className="table-element"> {renderTransactionOrDelegationIcon(row.amount,sender,receiver)} </td>
         <td className="table-element">
           <a
             href={`https://devnet.minaexplorer.com/payment/${row.id}`}
@@ -103,10 +124,8 @@ export default function TransactionsTable(props) {
           </a>
         </td>
         <td className="table-element">Waiting for confirmation</td>
-        <td className="table-element">{row.source && row.source.publicKey}</td>
-        <td className="table-element">
-          {row.receiver && row.receiver.publicKey}
-        </td>
+        <td className="table-element">{sender}</td>
+        <td className="table-element">{receiver}</td>
         <td className="table-element">{amount} MINA</td>
       </tr>
     );
@@ -203,7 +222,7 @@ export default function TransactionsTable(props) {
         <Pagination
           page={props.page}
           setOffset={props.setOffset}
-          user={props.user}
+          user={props.userId}
           total={getTotalPages()}
         />
       </Spinner>
