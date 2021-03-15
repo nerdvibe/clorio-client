@@ -8,7 +8,7 @@ import Footer from "../General/Footer";
 import { useQuery, gql } from "@apollo/client";
 import { storeSession } from "../../tools";
 import LedgerLoader from "../General/LedgerLoader";
-import {getPublicKey, isMinaAppOpen} from "../../tools/ledger";
+import {getPublicKey} from "../../tools/ledger";
 
 const GET_ID = gql`
   query GetIDFromPublicKey($publicKey: String) {
@@ -19,16 +19,16 @@ const GET_ID = gql`
 `;
 
 export default function LedgerGetAddress(props) {
-  const [devices, setDevices] = useState(undefined);
+  const [publicKey, setPublicKey] = useState(undefined);
   const [ledgerAccount] = useState(props.accountNumber || 0);
   const history = useHistory();
   const userID = useQuery(GET_ID, {
-    variables: { publicKey: devices },
-    skip: !devices,
+    variables: { publicKey: publicKey },
+    skip: !publicKey,
   });
 
   useEffect(() => {
-    const deviceListener = getWallet(setDevices);
+    const deviceListener = getWallet(setPublicKey);
 
     return deviceListener.unsubscribe;
   }, []);
@@ -57,7 +57,7 @@ export default function LedgerGetAddress(props) {
    * @returns HTMLElement
    */
   function renderAddressConfirm() {
-    if (devices) {
+    if (publicKey) {
       return (
         <div>
           <h5 className="full-width-align-center">This is your public key</h5>
@@ -65,7 +65,7 @@ export default function LedgerGetAddress(props) {
             Please confirm your address on ledger{" "}
           </h5>
           <div className="v-spacer" />
-          <h6 className="full-width-align-center">{devices}</h6>
+          <h6 className="full-width-align-center">{publicKey}</h6>
           <div className="v-spacer" />
           <div className="v-spacer" />
           <Row>
@@ -95,12 +95,12 @@ export default function LedgerGetAddress(props) {
       if (userID.data.public_keys.length > 0) {
         props.setLoader();
         const id = userID.data.public_keys[0].id;
-        storeSession(devices, id, true, ledgerAccount, () => {
+        storeSession(publicKey, id, true, ledgerAccount, () => {
           history.push("/overview");
         });
       } else {
         props.setLoader();
-        storeSession(devices, -1, true, ledgerAccount, () => {
+        storeSession(publicKey, -1, true, ledgerAccount, () => {
           history.push("/overview");
         });
       }
@@ -119,7 +119,7 @@ export default function LedgerGetAddress(props) {
               <div className="v-spacer" />
               <div className="v-spacer" />
               <div className="v-spacer" />
-              {!devices ? (
+              {!publicKey ? (
                 <div>
                   <h4 className="full-width-align-center">
                     Connect now your hardware wallet
@@ -128,7 +128,7 @@ export default function LedgerGetAddress(props) {
                   <LedgerLoader />
                   <div className="v-spacer" />
                   <h6 className="full-width-align-center">
-                    Looking for devices
+                    Looking for publicKey
                   </h6>
                   <div className="v-spacer" />
                   <Link to="/">
