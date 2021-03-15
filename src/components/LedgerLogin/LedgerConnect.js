@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Hoc from "../General/Hoc";
 import Input from "../General/Input";
-import {isMinaAppOpen} from "../../tools/ledger";
+import {isMinaAppOpen} from "../../tools/ledger/ledger";
 import { Row, Col } from "react-bootstrap";
 import Logo from "../General/Logo";
 import LedgerLoader from "../General/LedgerLoader";

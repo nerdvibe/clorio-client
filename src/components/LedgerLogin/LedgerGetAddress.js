@@ -8,7 +8,7 @@ import Footer from "../General/Footer";
 import { useQuery, gql } from "@apollo/client";
 import { storeSession } from "../../tools";
 import LedgerLoader from "../General/LedgerLoader";
-import {getPublicKey} from "../../tools/ledger";
+import {getPublicKey} from "../../tools/ledger/ledger";
 
 const GET_ID = gql`
   query GetIDFromPublicKey($publicKey: String) {

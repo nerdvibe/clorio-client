@@ -1,4 +1,15 @@
-const { ipcRenderer } = window.require("electron");
+let ledgerAPI;
+import isElectron from 'is-electron';
+
+// Because of compatibility we need to use 2 transporters, one for Electron, one for the browser.
+// For the Electron, we use node-hid transporter by the ipcRenderer (node). For the browser @ledgerhq/hw-transport-webhid.
+
+if(isElectron()) {
+   ledgerAPI = require("./ledgerElectronAPI");
+} else { // Is browser
+  ledgerAPI = require("./ledgerBrowserAPI")
+}
+
 export const TX_TYPE = {
   PAYMENT: 0x00,
   DELEGATION: 0x04,
@@ -13,9 +24,9 @@ export const NETWORK = {
  * @returns {Promise<boolean>}
  */
 export const isMinaAppOpen = async() => {
-  const ledgerNameVersion = await ipcRenderer.invoke(
-    "ledger-get-name-version",
-  );
+  try {
+
+  const ledgerNameVersion = await ledgerAPI.isMinaAppOpen();
   if(ledgerNameVersion.returnCode !== '9000') {
     throw new Error("MinaHub couldn't communicate with the Ledger device")
   }
@@ -24,6 +35,9 @@ export const isMinaAppOpen = async() => {
   }
 
   return true
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 /**
@@ -32,10 +46,7 @@ export const isMinaAppOpen = async() => {
  * @returns {Promise<{publicKey}|any>}
  */
 export const getPublicKey = async(account) => {
-  const ledgerPublicKey = await ipcRenderer.invoke(
-    "ledger-get-address",
-    account
-  );
+  const ledgerPublicKey = await ledgerAPI.getPublicKey(account);
   // In case the user doesn't accept the address on the device
   if(ledgerPublicKey.returnCode === '27013') {
     throw new Error(`Ledger error: couldn't verify the address`);
@@ -53,8 +64,7 @@ export const getPublicKey = async(account) => {
  * @returns {Promise<{signature}|any>}
  */
 export const signTransaction = async(transaction) => {
-  const ledgerTransaction = await ipcRenderer.invoke(
-    "ledger-sign-transaction",
+  const ledgerTransaction = await ledgerAPI.signTransaction(
     transaction
   );
   // In case the user doesn't accept the transaction on the device
