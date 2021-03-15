@@ -1,19 +1,29 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import { Link } from "react-feather";
 import Button from "./Button";
 
 export default function Banner(props) {
+  function renderButtonStyle() {
+    switch (props.style) {
+      case "success":
+        return "lightGreenButton__outlineMono ";
+      case "warning":
+        return "yellowButton__outlineMono ";
+      default:
+        return "lightGreenButton__outlineMono ";
+    }
+  }
+
   return (
     <div className="block-container">
       <Row>
-        <Col md={8} lg={9} xl={9}>
+        <Col md={8} lg={8} xl={9}>
           <h4>{props.title}</h4>
           <p>{props.subtitle}</p>
         </Col>
         <Col className="align-end ml-auto " style={{ paddingTop: "20px" }}>
           {props.link ? (
-            <a href={props.link} target="_blank">
+            <a href={props.link} target="_blank" rel="noreferrer">
               <Button
                 className={`${renderButtonStyle(props.cta_color)} mx-auto`}
                 text={props.cta || "Learn more"}
@@ -29,16 +39,4 @@ export default function Banner(props) {
       </Row>
     </div>
   );
-
-  function renderButtonStyle() {
-    switch (props.style) {
-      case "success":
-        return "lightGreenButton__outlineMono ";
-      case "warning":
-        return "yellowButton__outlineMono ";
-      default:
-        return "lightGreenButton__outlineMono ";
-        break;
-    }
-  }
 }

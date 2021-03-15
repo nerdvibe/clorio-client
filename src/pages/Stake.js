@@ -1,25 +1,29 @@
 import React, { useState } from "react";
-import Banner from "../components/Banner";
-import StakeTable from "../components/StakeTable";
-import Wallet from "../components/Wallet";
-import Button from "../components/Button";
-import Hoc from "../components/Hoc";
-import Modal from "../components/Modal";
+import Banner from "../components/General/Banner";
+import StakeTable from "../components/Stake/StakeTable";
+import Wallet from "../components/General/Wallet";
+import Hoc from "../components/General/Hoc";
+import ModalContainer from "../components/Modals/ModalContainer";
 import { useQuery, gql, useMutation } from "@apollo/client";
-import { Row, Col } from "react-bootstrap";
 import { getAddress } from "../tools";
 import { useEffect } from "react";
 import * as CodaSDK from "@o1labs/client-sdk";
-import PrivateKeyModal from "../components/PrivateKeyModal";
-import Alert from "../components/General/Alert";
-import Input from "../components/Input";
+import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
+import ConfirmDelegation from "../components/Modals/ConfirmDelegation";
+import CustomDelegation from "../components/Modals/CustomDelegation";
+import {isMinaAppOpen, NETWORK, signTransaction, TX_TYPE} from "../tools/ledger/ledger";
+import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
+import LedgerLoader from "../components/General/LedgerLoader";
+import CustomNonce from "../components/Modals/CustomNonce";
+import Button from "../components/General/Button";
+import {feeOrDefault} from "../tools/fees";
 
 const ITEMS_PER_PAGE = 10;
 
 const VALIDATORS = gql`
   query validators($offset: Int!) {
-    validators(limit: 10, offset: $offset) {
+    validators(limit: ${ITEMS_PER_PAGE}, offset: $offset) {
       fee
       id
       image
@@ -72,43 +76,43 @@ const BROADCAST_DELEGATION = gql`
   }
 `;
 
-const GET_VALIDATORS_TOTAL = gql`
-  query CountValidators {
-    validators_aggregate {
-      aggregate {
-        count
-      }
-    }
-  }
-`;
-
 export default (props) => {
   const ModalStates = Object.freeze({
     PASSPHRASE: "passphrase",
     CONFIRM_DELEGATION: "confirm",
     CUSTOM_DELEGATION: "custom",
+    NONCE: "nonce",
   });
+  const isLedgerEnabled = props.sessionData.ledger;
   const [delegateData, setDelegate] = useState({});
   const [currentDelegate, setCurrentDelegate] = useState("");
-  const [showModal, setshowModal] = useState("");
+  const [showModal, setShowModal] = useState("");
   const [address, setAddress] = useState("");
   const [privateKey, setPrivateKey] = useState("");
   const [customDelegate, setCustomDelegate] = useState("");
-  const [showAlert, setShowAlert] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [offset, setOffset] = useState(0);
+  const [customNonce, setCustomNonce] = useState(undefined);
   const validators = useQuery(VALIDATORS, { variables: { offset } });
   const fee = useQuery(GET_FEE);
   const news = useQuery(NEWS);
   const nonceAndDelegate = useQuery(GET_NONCE_AND_DELEGATE, {
     variables: { publicKey: props.sessionData.address },
-    skip: props.sessionData.address === "",
   });
-  const [broadcastDelegation, broadcastResult] = useMutation(
-    BROADCAST_DELEGATION
-  );
-  const total = useQuery(GET_VALIDATORS_TOTAL);
   const history = useHistory();
+  const [ledgerTransactionData, setLedgerTransactionData] = useState(undefined);
+  const [broadcastDelegation, broadcastResult] = useMutation(
+    BROADCAST_DELEGATION,
+    {
+      onError: (error) => {
+        props.showGlobalAlert(error.message, "error-toast");
+        return clearState();
+      },
+    }
+  );
+  getAddress((address) => {
+    setAddress(address);
+  });
 
   useEffect(() => {
     if (
@@ -120,73 +124,54 @@ export default (props) => {
     }
   }, [nonceAndDelegate.data]);
 
-  getAddress((address) => {
-    setAddress(address);
-  });
+  useEffect(() => {
+    if (isLedgerEnabled && !ledgerTransactionData) {
+      if (showModal === ModalStates.PASSPHRASE) {
+        const transactionListener = signLedgerTransaction(
+          setLedgerTransactionData
+        );
+        return transactionListener.unsubscribe;
+      }
+    }
+  }, [isLedgerEnabled, ledgerTransactionData, showModal]);
+
+  useEffect(() => {
+    if (ledgerTransactionData) {
+      const actualNonce = getNonce();
+      const averageFee = toNanoMINA(fee.data.estimatedFee.average);
+      const SignatureInput = {
+        rawSignature: ledgerTransactionData,
+      };
+      const SendPaymentInput = {
+        nonce: actualNonce.toString(),
+        memo: "",
+        fee: averageFee.toString(),
+        to: delegateData.publicKey,
+        from: address,
+        validUntil: getDefaultValidUntilField(),
+      };
+      broadcastDelegation({
+        variables: { input: SendPaymentInput, signature: SignatureInput },
+      });
+    }
+  }, [ledgerTransactionData]);
 
   if (!showSuccess && broadcastResult && broadcastResult.data) {
     clearState();
     setShowSuccess(true);
+    props.showGlobalAlert(
+      "Delegation successfully broadcasted",
+      "success-toast"
+    );
     history.push("/stake");
   }
 
-  return (
-    <Hoc className="main-container">
-      <Wallet />
-      {renderBanner()}
-      <StakeTable
-        toggleModal={openModal}
-        validators={validators}
-        currentDelegate={currentDelegate}
-        openCustomDelegateModal={openCustomDelegateModal}
-        setOffset={changeOffset}
-        page={offset / ITEMS_PER_PAGE + 1}
-        total={getTotalPages()}
-      />
-      <Modal
-        show={showModal === ModalStates.CONFIRM_DELEGATION}
-        close={closeModal}
-      >
-        {renderModal()}
-      </Modal>
-      <Modal show={showModal === ModalStates.PASSPHRASE} close={closeModal}>
-        <PrivateKeyModal
-          confirmPrivateKey={signStakeDelegate}
-          closeModal={closeModal}
-          setPrivateKey={setPrivateKey}
-          subtitle={
-            customDelegate && `You are going to delegate ${customDelegate}`
-          }
-        />
-      </Modal>
-      <Modal
-        show={showModal === ModalStates.CUSTOM_DELEGATION}
-        close={closeModal}
-      >
-        {renderCustomDelegationForm()}
-      </Modal>
-      <Alert
-        show={showAlert}
-        hideToast={() => setShowAlert(false)}
-        type={"error-toast"}
-      >
-        There was an error processing your delegation, please try again later.
-      </Alert>
-      <Alert
-        show={showSuccess}
-        hideToast={() => setShowSuccess(false)}
-        type={"success-toast"}
-      >
-        Delegation successfully broadcasted
-      </Alert>
-    </Hoc>
-  );
-
+  /**
+   * Sign stake delegation using Coda SDK through private key
+   */
   function signStakeDelegate() {
     try {
-      const actualNonce = nonceAndDelegate.data
-        ? parseInt(nonceAndDelegate.data.accountByKey.usableNonce)
-        : 0;
+      const actualNonce = getNonce();
       const publicKey = CodaSDK.derivePublicKey(privateKey);
       const keypair = {
         privateKey: privateKey,
@@ -195,7 +180,7 @@ export default (props) => {
       const stakeDelegation = {
         to: delegateData.publicKey,
         from: address,
-        fee: +fee.data.estimatedFee.average * 1000000000,
+        fee: toNanoMINA(fee.data.estimatedFee.average),
         nonce: actualNonce,
       };
       const signStake = CodaSDK.signStakeDelegation(stakeDelegation, keypair);
@@ -217,67 +202,79 @@ export default (props) => {
             signature: SignatureInput,
           },
         });
-        setshowModal("");
+        setShowModal("");
       }
     } catch (e) {
-      setShowAlert(true);
+      props.showGlobalAlert(
+        "There was an error processing your delegation, please try again later.",
+        "error-toast"
+      );
     }
   }
 
+  /**
+   * Set delegate private key on component state, open confirmation modal
+   * @param {string} delegate Delegate private key
+   */
   function openModal(delegate) {
     setDelegate(delegate);
-    setshowModal(ModalStates.CONFIRM_DELEGATION);
+    setShowModal(ModalStates.CONFIRM_DELEGATION);
   }
 
+  /**
+   * Open modal for custom private key insertion
+   */
   function openCustomDelegateModal() {
-    setshowModal(ModalStates.CUSTOM_DELEGATION);
+    setShowModal(ModalStates.CUSTOM_DELEGATION);
   }
 
+  /**
+   * Close every modal and clear component custom nonce and custom delegate
+   */
   function closeModal() {
-    setshowModal("");
+    setShowModal("");
+    setCustomNonce(undefined);
+    setCustomDelegate(undefined);
   }
 
+  /**
+   * If nonce is not available and no custom nonce has already been asked, ask user for a custom nonce. Otherwise proceeds to private key insertion modal
+   */
   function confirmDelegate() {
+    if ((!nonceAndDelegate || !nonceAndDelegate.data) && !customNonce) {
+      setShowModal(ModalStates.NONCE);
+    } else if (customDelegate) {
+      nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
+      setShowModal(ModalStates.PASSPHRASE);
+      setDelegate({ publicKey: customDelegate });
+    } else {
+      nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
+      setShowModal(ModalStates.PASSPHRASE);
+    }
+  }
+
+  /**
+   * User confirmed delegate public key, proceeds to private key insertion
+   * @param {string} delegate Delegate private key
+   */
+  function confirmCustomDelegate(delegate) {
     nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
-    setshowModal(ModalStates.PASSPHRASE);
+    setShowModal(ModalStates.PASSPHRASE);
+    setDelegate({ publicKey: delegate });
   }
 
-  function confirmCustomDelegate() {
-    nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
-    setshowModal(ModalStates.PASSPHRASE);
-    setDelegate({ publicKey: customDelegate });
+  /**
+   * Close all modals, clears custom nonce state
+   */
+  function closeNonceModal() {
+    setShowModal("");
+    setCustomNonce(undefined);
   }
 
-  function renderModal() {
-    return (
-      <div className="mx-auto">
-        <h2>Confirm Delegation</h2>
-        <div className="v-spacer" />
-        <h5 className="align-center mx-auto">
-          Are you sure you want to <br />
-          delegate this stake to <strong>{delegateData.name}</strong>
-        </h5>
-        <div className="v-spacer" />
-        <Row>
-          <Col xs={6}>
-            <Button
-              onClick={closeModal}
-              className="link-button"
-              text="Cancel"
-            />
-          </Col>
-          <Col xs={6}>
-            <Button
-              onClick={confirmDelegate}
-              className="lightGreenButton__fullMono mx-auto"
-              text="Confirm"
-            />
-          </Col>
-        </Row>
-      </div>
-    );
-  }
-
+  /**
+   * If news are available, render news banner
+   * @returns HTMLElement
+   */
   function renderBanner() {
     if (
       news.data &&
@@ -297,58 +294,145 @@ export default (props) => {
     }
   }
 
-  function renderCustomDelegationForm() {
-    return (
-      <div className="mx-auto">
-        <h2>Custom delegation</h2>
-        <div className="v-spacer" />
-        <h6 className="full-width">Insert Public key</h6>
-        <div className="v-spacer" />
-        <Input
-          inputHandler={(e) => {
-            setCustomDelegate(e.currentTarget.value);
-          }}
-          placeholder="Insert public key"
-        />
-        <div className="v-spacer" />
-        <Row>
-          <Col xs={6}>
-            <Button
-              onClick={closeModal}
-              className="link-button"
-              text="Cancel"
-            />
-          </Col>
-          <Col xs={6}>
-            <Button
-              onClick={confirmCustomDelegate}
-              className="lightGreenButton__fullMono mx-auto"
-              text="Confirm"
-              disabled={customDelegate === ""}
-            />
-          </Col>
-        </Row>
-      </div>
-    );
-  }
-
+  /**
+   * Clear component state
+   */
   function clearState() {
-    setshowModal("");
+    setShowModal("");
     setDelegate({});
+    setCustomNonce(undefined);
     setCustomDelegate("");
+    setLedgerTransactionData(undefined);
   }
 
-  function getTotalPages() {
-    if (total.data && total.data.validators_aggregate) {
-      const totalItems = total.data.validators_aggregate.aggregate.count;
-      const pages = (totalItems / ITEMS_PER_PAGE).toFixed(0);
-      return parseInt(pages) === 0 ? 1 : pages;
-    }
-    return 1;
-  }
-
+  /**
+   * Set query offset based on selected page
+   * @param {number} page Page number
+   */
   function changeOffset(page) {
     const data = (page - 1) * ITEMS_PER_PAGE;
     setOffset(data);
   }
+
+  /**
+   * Sign delegation through ledger and
+   * @param {function} callback Callback function called after ledger signed Delegation
+   */
+  async function signLedgerTransaction(callback) {
+    try {
+      await isMinaAppOpen();
+      const actualNonce = getNonce();
+      const senderAccount = props.sessionData.ledgerAccount || 0;
+      const transactionToSend = {
+        senderAccount,
+        senderAddress: address,
+        receiverAddress: delegateData.publicKey,
+        fee: +toNanoMINA(feeOrDefault(fee?.data?.estimatedFee?.average || '0')),
+        amount: 0,
+        nonce: actualNonce,
+        // TODO: FIX HARDCODING!
+        txType: TX_TYPE.DELEGATION,
+        // TODO: FIX HARDCODING!
+        networkId: NETWORK.DEVNET,
+        validUntil: +getDefaultValidUntilField(),
+      };
+
+      const signature = await signTransaction(transactionToSend);
+      setShowModal(ModalStates.BROADCASTING);
+      callback(signature.signature);
+    } catch (e) {
+      props.showGlobalAlert(
+        e.message || "An error occurred while loading hardware wallet",
+        "error-toast"
+      );
+      setShowModal(undefined);
+    }
+  }
+
+  /**
+   * If nonce is available from query, returns it, otherwise custom nonce is returned
+   * @returns number Nonce number
+   */
+  function getNonce() {
+    if (nonceAndDelegate.data && nonceAndDelegate.data.accountByKey) {
+      return parseInt(nonceAndDelegate.data.accountByKey.usableNonce);
+    } else if (nonceAndDelegate.data.accountByKey.usableNonce === 0) {
+      return 0;
+    }
+    return customNonce;
+  }
+
+  return (
+    <Hoc className="main-container">
+      <Wallet />
+      {renderBanner()}
+      <StakeTable
+        toggleModal={openModal}
+        validators={validators}
+        currentDelegate={currentDelegate}
+        openCustomDelegateModal={openCustomDelegateModal}
+        setOffset={changeOffset}
+        page={offset / ITEMS_PER_PAGE + 1}
+      />
+      <ModalContainer
+        show={showModal === ModalStates.CONFIRM_DELEGATION}
+        close={closeModal}
+      >
+        <ConfirmDelegation
+          name={delegateData.name}
+          closeModal={closeModal}
+          confirmDelegate={confirmDelegate}
+        />
+      </ModalContainer>
+      <ModalContainer
+        show={showModal === ModalStates.NONCE}
+        close={closeNonceModal}
+      >
+        <CustomNonce
+          proceedHandler={confirmDelegate}
+          setCustomNonce={setCustomNonce}
+        />
+      </ModalContainer>
+      <ModalContainer
+        show={showModal === ModalStates.PASSPHRASE}
+        close={closeModal}
+      >
+        {isLedgerEnabled ? (
+          <div className="mx-auto">
+            <h2>Please confirm transaction </h2>
+            <div className="v-spacer" />
+            <h5 className="align-center mx-auto">
+              Waiting your hardware wallet to confirm transaction
+            </h5>
+            <div className="v-spacer" />
+            <LedgerLoader />
+            <div className="v-spacer" />
+            <Button
+              onClick={closeModal}
+              className="link-button full-width-align-center"
+              text="Cancel"
+            />
+          </div>
+        ) : (
+          <PrivateKeyModal
+            confirmPrivateKey={signStakeDelegate}
+            closeModal={closeModal}
+            setPrivateKey={setPrivateKey}
+            subtitle={
+              customDelegate && `You are going to delegate ${customDelegate}`
+            }
+          />
+        )}
+      </ModalContainer>
+      <ModalContainer
+        show={showModal === ModalStates.CUSTOM_DELEGATION}
+        close={closeModal}
+      >
+        <CustomDelegation
+          closeModal={closeModal}
+          confirmCustomDelegate={confirmCustomDelegate}
+        />
+      </ModalContainer>
+    </Hoc>
+  );
 };

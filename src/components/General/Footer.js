@@ -5,14 +5,6 @@ export default function Footer(props) {
   if (props.network && props.network.nodeInfo) {
     networkData = props.network.nodeInfo;
   }
-  return (
-    <p className="full-width-align-center footer-text">
-      MinaHub is a wallet offered by Carbonara from WeStake.Club and is not
-      developed by O(1)Labs.
-      <br />
-      {renderNetwork()}
-    </p>
-  );
 
   function renderNetwork() {
     if (networkData) {
@@ -24,4 +16,13 @@ export default function Footer(props) {
     }
     return "Network unavailable";
   }
+
+  return (
+    <p className="full-width-align-center footer-text">
+      MinaHub is a wallet offered by Carbonara from WeStake.Club and is not
+      developed by O(1)Labs.
+      <br />
+      {renderNetwork()}
+    </p>
+  );
 }

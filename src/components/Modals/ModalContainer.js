@@ -1,7 +1,7 @@
 import React from "react";
-import Hoc from "../components/Hoc";
+import Hoc from "../General/Hoc";
 
-export default function Modal(props) {
+export default function ModalContainer(props) {
   return props.show ? (
     <Hoc className="mx-auto first-place">
       <div className="modal-background " onClick={props.close} />

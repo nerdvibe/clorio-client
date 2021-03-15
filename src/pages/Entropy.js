@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import ProgressBar from "../components/ProgressBar";
-import Hoc from "../components/Hoc";
-import Logo from "../components/Logo";
+import Hoc from "../components/General/Hoc";
+import Logo from "../components/General/Logo";
 import { Row, Col } from "react-bootstrap";
-import Button from "../components/Button";
+import Button from "../components/General/Button";
 import Footer from "../components/General/Footer";
 
 export default function Entropy() {
@@ -15,7 +15,7 @@ export default function Entropy() {
 
   return (
     <Hoc className="main-container center no-scroll">
-      <div className="block-container no-bg real-full-page-container">
+      <div className="block-container no-bg real-full-page-container no-margin">
         <div className="vertical-center no-scroll" style={{ height: "50vh" }}>
           <Row className="vertical-center">
             <Col xs={6} className="offset-md-3 full-width-align-center">

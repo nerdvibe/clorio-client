@@ -5,10 +5,8 @@ import Stake from "./pages/Stake";
 import { SplashScreen } from "./pages/SplashScreen";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-// import Entropy from "./pages/Entropy";
-// import Verify from "./pages/Verify";
 import { Route, Redirect, Switch } from "react-router-dom";
-import Ledger from "./pages/Ledger";
+import LedgerLogin from "./pages/LedgerLogin";
 import SignMessage from "./pages/SignMessage";
 import NotFound from "./pages/404";
 import VerifyMessage from "./pages/VerifyMessage";
@@ -24,7 +22,9 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
           !isEmptyObject(rest.sessionData) &&
           rest.sessionData.address
         ) {
-          return <Component {...props} sessionData={rest.sessionData} />;
+          return (
+            <Component {...props} {...rest} sessionData={rest.sessionData} />
+          );
         } else {
           return (
             <Redirect
@@ -51,46 +51,51 @@ function Routes(props) {
         path="/overview"
         component={Overview}
         sessionData={sessionData}
+        {...props}
       />
       <ProtectedRoute
         exact
         path="/send-tx"
         component={SendTX}
         sessionData={sessionData}
+        {...props}
       />
       <ProtectedRoute
         exact
         path="/stake"
         component={Stake}
         sessionData={sessionData}
+        {...props}
       />
       <ProtectedRoute
         exact
         path="/sign-message"
         component={SignMessage}
         sessionData={sessionData}
+        {...props}
       />
       <ProtectedRoute
         exact
         path="/verify-message"
         component={VerifyMessage}
         sessionData={sessionData}
+        {...props}
       />
       <Route path="/login" exact>
         <Login {...props} network={props.network} />
       </Route>
-      {/*<Route path="/register">
-        <Entropy />
-      </Route>*/}
       <Route path="/register" exact>
         <Register {...props} network={props.network} />
       </Route>
-      {/*<Route path="/verify">
-        <Verify />
-      </Route>*/}
       <Route path="/ledger" exact>
-        <Ledger network={props.network} />
+        <LedgerLogin {...props} network={props.network} />
       </Route>
+      {/*<Route path="/register">
+        <Entropy />
+      </Route>*/}
+      {/*<Route path="/verify">
+        <VerifyMnemonic />
+      </Route>*/}
       <Route path="/" exact>
         <SplashScreen network={props.network} />
       </Route>

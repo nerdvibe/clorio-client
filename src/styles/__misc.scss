@@ -4,7 +4,7 @@ th{
 }
 
 .table-element{
-    max-width: 200px;
+    max-width: 168px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -34,7 +34,6 @@ th{
     border: 3px solid $red;
     width: 90px;
     height: 90px;
-    padding-top: 2px;
 }
 
 .small-image-outline{
@@ -60,6 +59,9 @@ th{
 .small-image {
     padding-left: 4%;
     padding-top: 0.5%;
+}
+.table td, .table th {
+    padding: 0.65rem !important;
 }
 
 @media (min-width: 1200px) {
@@ -149,6 +151,18 @@ textarea:-ms-input-placeholder {
     width: 100%;
     z-index: 1;
     margin-bottom: 20px;
+}
+
+.small-wrap-input1 {
+    font-family: 'Lato', sans-serif;
+    position: relative;
+    width: 15%;
+    margin: 0 auto;
+    z-index: 1;
+    margin-bottom: 20px;
+    input{
+        text-align: center;
+    }
 }
 
 .input1 {
@@ -538,7 +552,6 @@ tbody{
     position: fixed;
     background: #ccc;
     color: #666;
-    font-size: 200%;
     text-align: center;
     bottom: 30px;
     right: 30px;
