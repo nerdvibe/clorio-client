@@ -1,6 +1,7 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
 import Button from "../General/Button";
+import HelpHint from "../General/HelpHint";
 
 export default function SignMessageForm(props) {
   if (props.result) {
@@ -50,7 +51,7 @@ export default function SignMessageForm(props) {
         <div className="transaction-form animate__animated animate__fadeIn ">
           <div className="mx-auto fit-content">
             <strong>
-              <h2>Sign message</h2>
+              <h2>Sign message <HelpHint hint={"Cryptographically sign a message with your keypair."}/></h2>
             </strong>
           </div>
           <div className="v-spacer" />

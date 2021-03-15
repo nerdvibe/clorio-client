@@ -10,8 +10,7 @@ import Footer from "../General/Footer";
 import Button from "../General/Button";
 import LedgerGetAddress from "./LedgerGetAddress";
 import ReactTooltip from 'react-tooltip';
-import { HelpCircle } from "react-feather";
-
+import HelpHint from "../General/HelpHint";
 
 export default function LedgerConnect(props) {
   const [isAvailable, setIsAvailable] = useState(false);
@@ -82,7 +81,7 @@ export default function LedgerConnect(props) {
   const customAccountInput = (
     <div>
       <h6 className="full-width-align-center">
-      Please select account number <HelpCircle data-tip="Default account number is 0. If you have created your wallet with another account index, change it here.<br/> Only change this number if you know what you are doing."/>
+      Please select account number <HelpHint hint="Default account number is 0. If you have created your wallet with another account index, change it here.<br/> Only change this number if you know what you are doing."/>
       </h6>
       <div className="v-spacer" />
       <Input small={true} type="number" value={accountNumber} inputHandler={accountNumberHandler}/>
