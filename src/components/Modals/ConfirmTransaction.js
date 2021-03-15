@@ -21,7 +21,7 @@ export default function ConfirmTransaction(props) {
               You are about to send <strong>{toMINA(amount)} MINA</strong> <br />
               with a fee of <strong>{toMINA(fee)} MINA</strong> <br />
               to <strong>{address}</strong> <br />
-              with memo <strong>{memo}</strong>
+              {memo ? <>with memo <strong>{memo}</strong></> : null}
               <div className="v-spacer" />
               <div className="mx-auto">
                 <Row>

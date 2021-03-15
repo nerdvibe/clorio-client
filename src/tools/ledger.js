@@ -10,7 +10,7 @@ export const NETWORK = {
 
 /**
  * Checks if the Mina Ledger app is open on the device. If not open, throw an error
- * @returns {Promise<void>}
+ * @returns {Promise<boolean>}
  */
 export const isMinaAppOpen = async() => {
   const ledgerNameVersion = await ipcRenderer.invoke(
@@ -22,6 +22,8 @@ export const isMinaAppOpen = async() => {
   if(ledgerNameVersion.name !== 'Mina') {
     throw new Error("Please make sure that you have the Mina app open on the Ledger device")
   }
+
+  return true
 }
 
 /**

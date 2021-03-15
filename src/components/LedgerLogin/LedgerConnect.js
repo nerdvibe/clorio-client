@@ -9,7 +9,8 @@ import LedgerLoader from "../General/LedgerLoader";
 import Footer from "../General/Footer";
 import Button from "../General/Button";
 import LedgerGetAddress from "./LedgerGetAddress";
-
+import ReactTooltip from 'react-tooltip';
+import { HelpCircle } from "react-feather";
 
 
 export default function LedgerConnect(props) {
@@ -38,22 +39,22 @@ export default function LedgerConnect(props) {
   );
 
   function accountNumberHandler(event){
-    const number = event.target.value || 0 
+    const number = +event.target.value || 0
     setAccountNumber(number);
   }
 
   function verifyAccountNumber(){
-    if(+accountNumber>=0 && +accountNumber<=100){
+    if(+accountNumber>=0 && +accountNumber<=10000){
       setProceedToLedger(true)
     } else {
-      props.showGlobalAlert("Account number should be between 0 and 100", "error-toast");
+      props.showGlobalAlert("Account number should be between 0 and 10000", "error-toast");
     }
   }
   
   const renderLookingForLedger = (
       <div>
         <h4 className="full-width-align-center">
-          Connect now your hardware wallet
+          Connect your Ledger wallet and open the Mina app
         </h4>
         <div className="v-spacer" />
         <LedgerLoader />
@@ -81,17 +82,18 @@ export default function LedgerConnect(props) {
   const customAccountInput = (
     <div>
       <h6 className="full-width-align-center">
-      Please select account number
+      Please select account number <HelpCircle data-tip="Default account number is 0. If you have created your wallet with another account index, change it here.<br/> Only change this number if you know what you are doing."/>
       </h6>
       <div className="v-spacer" />
       <Input small={true} type="number" value={accountNumber} inputHandler={accountNumberHandler}/>
+      <ReactTooltip multiline={true} />
     </div>
   )
 
   const renderAccountNumberSelect = (
       <div>
         <h4 className="full-width-align-center">
-          Connect now your hardware wallet
+          Connect now your Ledger wallet and open the Mina app
         </h4>
         <div className="v-spacer" />
         <h6 className="full-width-align-center">
@@ -114,7 +116,7 @@ export default function LedgerConnect(props) {
             <Button 
               onClick={verifyAccountNumber}
               className="lightGreenButton__fullMono mx-auto" 
-              text="Proceed" />
+              text="Continue" />
           </Col>
         </Row>
       </div>

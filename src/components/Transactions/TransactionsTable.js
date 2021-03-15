@@ -5,11 +5,12 @@ import ErrorImage from "../../assets/Error.png";
 import NoTransactionsOrNotAvailableImage from "../../assets/NoTransactionsOrNotAvailable.svg";
 import TxHistoryNotAvailableImage from "../../assets/TxHistoryNotAvailable.svg";
 import NoTransactions from "../../assets/NoTransactions.svg";
-import { timestampToDate, toMINA } from "../../tools/utils";
-import Big from "big.js";
+import { toMINA } from "../../tools/utils";
 import { useQuery, gql } from "@apollo/client";
 import Pagination from "../General/Pagination";
-import { BookOpen,Send } from "react-feather";
+import { ChevronRight, ChevronsDown, ChevronsUp, Check} from "react-feather";
+import ReactTooltip from "react-tooltip";
+import {formatDistance} from "date-fns";
 
 const ITEMS_PER_PAGE = 10;
 const GET_TRANSACTIONS_TOTAL = gql`
@@ -57,17 +58,18 @@ export default function TransactionsTable(props) {
     );
   }
 
-  function renderTransactionOrDelegationIcon(amount,sender,receiver){
-    const delegationTransaction = !amount && amount!==0
-    if(delegationTransaction){
-      return(<BookOpen />)
+  function renderTransactionOrDelegationIcon(txType,sender,receiver){
+    if(txType === 'delegation'){
+      return(<Check data-tip="Delegation TX" />)
     }else{
-      if(userAddress===sender){
-        return(<Send color="red"/>)
+      if (receiver===sender) {
+        return (<ChevronRight data-tip="Self transaction" />)
+      } else if(userAddress===sender){
+        return(<ChevronsUp data-tip="Outgoing TX" color="red"/>)
       } else if(userAddress===receiver){
-        return(<Send color="green"/>)
+        return(<ChevronsDown data-tip="Incoming TX" color="green"/>)
       } else {
-        return(<Send />)
+        return(<ChevronRight />)
       }
     }
   }
@@ -81,9 +83,18 @@ export default function TransactionsTable(props) {
   function renderTransactionRow(row, index) {
     const { timestamp, state_hash } = row.blocks_user_commands[0].block;
     const amount = row.amount ? toMINA(row.amount) : 0;
+    const sender = row.publicKeyBySourceId.value;
+    const receiver = row.publicKeyByReceiverId.value;
+    const type = row.type;
+    const timeDistance = formatDistance(timestamp, new Date(), {includeSeconds: true, addSuffix: true});
+    const timeISOString = new Date(timestamp).toISOString();
+    const isOutgoing =  userAddress === sender
+    const isSelf =  receiver === sender
+    const humanAmount = isOutgoing ? (isSelf || type === 'delegation') ? amount : `-${amount}` : `+${amount}`
+    const amountColor = isOutgoing ? (isSelf || type === 'delegation') ? '' : 'red' : 'green';
     return (
       <tr key={index}>
-        <td className="table-element"> {renderTransactionOrDelegationIcon(row.amount,row.publicKeyBySourceId.value,row.publicKeyByReceiverId.value)} </td>
+        <td className="table-element"> {renderTransactionOrDelegationIcon(type,sender,receiver)} </td>
         <td className="table-element">
           <a
             href={`https://devnet.minaexplorer.com/block/${state_hash}`}
@@ -93,10 +104,10 @@ export default function TransactionsTable(props) {
             {row.hash}
           </a>
         </td>
-        <td className="table-element">{timestampToDate(timestamp)}</td>
-        <td className="table-element">{row.publicKeyBySourceId.value}</td>
-        <td className="table-element">{row.publicKeyByReceiverId.value}</td>
-        <td className="table-element">{amount} MINA</td>
+        <td className="table-element" data-tip={timeISOString}>{timeDistance}</td>
+        <td className="table-element">{sender === userAddress ? 'you' : sender}</td>
+        <td className="table-element">{receiver === userAddress ? 'you' : receiver}</td>
+        <td className="table-element" style={{color:amountColor}}>{humanAmount} Mina</td>
       </tr>
     );
   }
@@ -111,7 +122,11 @@ export default function TransactionsTable(props) {
     const amount = row.amount ? toMINA(row.amount) : 0;
     const sender = row.source && row.source.publicKey
     const receiver = row.receiver && row.receiver.publicKey
-    return (
+    const isOutgoing =  userAddress === sender
+    const isSelf =  receiver === sender
+    const humanAmount = isOutgoing ? isSelf ? amount : `-${amount}` : `+${amount}`
+    const amountColor = isOutgoing ? isSelf ? '' : 'red' : 'green';
+     return (
       <tr key={index}>
         <td className="table-element"> {renderTransactionOrDelegationIcon(row.amount,sender,receiver)} </td>
         <td className="table-element">
@@ -124,9 +139,9 @@ export default function TransactionsTable(props) {
           </a>
         </td>
         <td className="table-element">Waiting for confirmation</td>
-        <td className="table-element">{sender}</td>
-        <td className="table-element">{receiver}</td>
-        <td className="table-element">{amount} MINA</td>
+        <td className="table-element">{sender === userAddress ? 'you' : sender}</td>
+        <td className="table-element">{receiver === userAddress ? 'you' : receiver}</td>
+        <td className="table-element"><p color={amountColor}>{humanAmount} MINA</p></td>
       </tr>
     );
   }
@@ -215,6 +230,7 @@ export default function TransactionsTable(props) {
   return (
     <div className="block-container-last">
       <Spinner className={"full-width"} show={loading}>
+        <ReactTooltip multiline={true} />
         <Table className="animate__animated animate__fadeIn">
           <thead>{renderTableHeader()}</thead>
           {renderTableBody()}

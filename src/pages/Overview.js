@@ -77,7 +77,12 @@ const NEWS = gql`
 `;
 
 export default function Overview(props) {
-  const [balance, setbalance] = useState(0);
+  const [balance, setBalance] = useState({
+    total: 0,
+    liquid: 0,
+    locked: 0,
+    liquidUnconfirmed: 0,
+  });
   const [offset, setOffset] = useState(0);
   let queryResult;
   let mempool;
@@ -100,14 +105,16 @@ export default function Overview(props) {
    * Set wallet balance inside component state
    * @param {object} data Wallet balance data
    */
-  function setBalance(data) {
+  function setContextBalance(data) {
     if (!balance) {
-      setbalance(data);
+      setBalance(data);
     } else {
       const difference =
-        data.total !== balance.total || data.liquid !== balance.liquid;
+        data.total !== balance.total
+        || data.liquid !== balance.liquid
+        || data.locked !== balance.locked;
       if (difference) {
-        setbalance(data);
+        setBalance(data);
       }
     }
   }
@@ -143,7 +150,7 @@ export default function Overview(props) {
   return (
     <Hoc className="main-container">
       <Spinner show={queryResult.loading}>
-        <Wallet setBalance={setBalance} />
+        <Wallet balance={balance} setContextBalance={setContextBalance} />
         {renderBanner()}
         <TransactionsTable
           {...queryResult}

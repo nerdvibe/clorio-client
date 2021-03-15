@@ -14,13 +14,13 @@ export default function Homepage() {
           </div>
           <div className="v-spacer" />
           <h4 className="full-width-align-center ">
-            Mina&apos;s blockchain wallet
+            Access the power of the Mina Protocol Blockchain.
           </h4>
           <div className="v-spacer" />
           <Link to="/login">
             <Button
               className="lightGreenButton__fullMono mx-auto"
-              text="Access a wallet"
+              text="Access with Private key"
             />
           </Link>
           <div className="v-spacer" />

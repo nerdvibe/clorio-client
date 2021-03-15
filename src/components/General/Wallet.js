@@ -7,6 +7,7 @@ import { useQuery, gql } from "@apollo/client";
 import Avatar from "../../tools/avatar";
 import { copyToClipboard, toMINA } from "../../tools/utils";
 import Countup from "./Countup";
+import ReactTooltip from "react-tooltip";
 
 const TICKER = gql`
   query ticker {
@@ -22,6 +23,7 @@ const BALANCE = gql`
       balance {
         total
         liquid
+        locked
         liquidUnconfirmed
       }
     }
@@ -50,12 +52,14 @@ export default function Wallet(props) {
       userBalance = balance.data.accountByKey.balance.total;
       const total = balance.data.accountByKey.balance.total;
       const liquid = balance.data.accountByKey.balance.liquid;
+      const locked = balance.data.accountByKey.balance.locked;
       const liquidUnconfirmed =
         balance.data.accountByKey.balance.liquidUnconfirmed;
-      if (props.setBalance) {
-        props.setBalance({
+      if (props.setContextBalance) {
+        props.setContextBalance({
           total,
           liquid,
+          locked,
           liquidUnconfirmed,
         });
       }
@@ -73,7 +77,7 @@ export default function Wallet(props) {
       if(!userBalance){
         return "Not available";
       } else {
-        return toMINA(userBalance) + " MINA";
+        return toMINA(userBalance) + " Mina";
       }
     }
     return "Not available";
@@ -119,14 +123,15 @@ export default function Wallet(props) {
             <Col>
               <div className="inline-block-element">
                 <h6 className="secondaryText">Your balance</h6>
-                <h5>{renderBalance()}</h5>
+                <h5 data-tip={+props.balance?.locked ? `Locked: ${toMINA(props.balance.locked)} Mina <br/> Liquid: ${toMINA(props.balance.liquid)} Mina`:``}>{renderBalance()}</h5>
+                <ReactTooltip multiline={true} />
               </div>
               <div className="inline-block-element">
                 <div className="v-div" />
               </div>
               <div className="inline-block-element">
                 <span>
-                  <h6 className="secondaryText">Apx value</h6>
+                  <h6 className="secondaryText">BTC Apx. value</h6>
                   <h5>{renderAverageValue()} </h5>
                 </span>
               </div>

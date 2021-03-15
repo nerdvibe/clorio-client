@@ -122,13 +122,13 @@ export default function LedgerGetAddress(props) {
               {!publicKey ? (
                 <div>
                   <h4 className="full-width-align-center">
-                    Connect now your hardware wallet
+                    Let's verify the your address
                   </h4>
                   <div className="v-spacer" />
                   <LedgerLoader />
                   <div className="v-spacer" />
                   <h6 className="full-width-align-center">
-                    Looking for publicKey
+                    Looking for the publicKey. Please confirm it on your Ledger device
                   </h6>
                   <div className="v-spacer" />
                   <Link to="/">

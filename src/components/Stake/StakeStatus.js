@@ -6,7 +6,7 @@ export default function StakeStatus(props) {
       <div>
         <h4>Your status</h4>
         <h6 className="full-width-align-left">
-          You are not delegating someone
+          You are not delegating to anybody
         </h6>
       </div>
     );
