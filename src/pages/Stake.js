@@ -322,9 +322,9 @@ export default (props) => {
     try {
       await isMinaAppOpen();
       const actualNonce = getNonce();
+      const senderAccount = props.sessionData.ledgerAccount || 0;
       const transactionToSend = {
-        // TODO: FIX WITH STATE ACCOUNT
-        senderAccount: 0,
+        senderAccount,
         senderAddress: address,
         receiverAddress: delegateData.publicKey,
         fee: +toNanoMINA(feeOrDefault(fee?.data?.estimatedFee?.average || '0')),

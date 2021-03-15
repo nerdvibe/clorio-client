@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
-import Button from "../components/General/Button";
-import Hoc from "../components/General/Hoc";
-import Logo from "../components/General/Logo";
-import Footer from "../components/General/Footer";
+import Button from "../General/Button";
+import Hoc from "../General/Hoc";
+import Logo from "../General/Logo";
+import Footer from "../General/Footer";
 import { useQuery, gql } from "@apollo/client";
-import { storeSession } from "../tools";
-import LedgerLoader from "../components/General/LedgerLoader";
-import {getPublicKey, isMinaAppOpen} from "../tools/ledger";
+import { storeSession } from "../../tools";
+import LedgerLoader from "../General/LedgerLoader";
+import {getPublicKey, isMinaAppOpen} from "../../tools/ledger";
 
 const GET_ID = gql`
   query GetIDFromPublicKey($publicKey: String) {
@@ -18,8 +18,9 @@ const GET_ID = gql`
   }
 `;
 
-export default function Ledger(props) {
+export default function LedgerGetAddress(props) {
   const [devices, setDevices] = useState(undefined);
+  const [ledgerAccount] = useState(0);
   const history = useHistory();
   const userID = useQuery(GET_ID, {
     variables: { publicKey: devices },
@@ -38,8 +39,7 @@ export default function Ledger(props) {
    */
   async function getWallet(callback) {
       try {
-        await isMinaAppOpen();
-        const ledgerPublicKey = await getPublicKey(0)
+        const ledgerPublicKey = await getPublicKey(ledgerAccount)
 
         callback(ledgerPublicKey.publicKey);
       } catch (e) {
@@ -95,12 +95,12 @@ export default function Ledger(props) {
       if (userID.data.public_keys.length > 0) {
         props.setLoader();
         const id = userID.data.public_keys[0].id;
-        storeSession(devices, id, true, () => {
+        storeSession(devices, id, true, ledgerAccount, () => {
           history.push("/overview");
         });
       } else {
         props.setLoader();
-        storeSession(devices, -1, true, () => {
+        storeSession(devices, -1, true, ledgerAccount, () => {
           history.push("/overview");
         });
       }

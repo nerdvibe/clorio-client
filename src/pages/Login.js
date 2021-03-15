@@ -38,12 +38,12 @@ export default function Login(props) {
         if (userID.data.public_keys.length > 0) {
           props.setLoader();
           const id = userID.data.public_keys[0].id;
-          storeSession(publicKey, id, false, () => {
+          storeSession(publicKey, id, false, 0 ,() => {
             history.push("/overview");
           });
         } else {
           props.setLoader();
-          storeSession(publicKey, -1, false, () => {
+          storeSession(publicKey, -1, false, 0 ,() => {
             history.push("/overview");
           });
         }

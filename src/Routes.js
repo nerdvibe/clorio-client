@@ -6,7 +6,7 @@ import { SplashScreen } from "./pages/SplashScreen";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { Route, Redirect, Switch } from "react-router-dom";
-import Ledger from "./pages/Ledger";
+import LedgerLogin from "./pages/LedgerLogin";
 import SignMessage from "./pages/SignMessage";
 import NotFound from "./pages/404";
 import VerifyMessage from "./pages/VerifyMessage";
@@ -88,7 +88,7 @@ function Routes(props) {
         <Register {...props} network={props.network} />
       </Route>
       <Route path="/ledger" exact>
-        <Ledger {...props} network={props.network} />
+        <LedgerLogin {...props} network={props.network} />
       </Route>
       {/*<Route path="/register">
         <Entropy />

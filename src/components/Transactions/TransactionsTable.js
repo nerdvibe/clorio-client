@@ -39,6 +39,10 @@ export default function TransactionsTable(props) {
     return renderEmptyState();
   }
 
+  /**
+   * Render table header labels
+   * @returns HTMLElement
+   */
   function renderTableHeader() {
     return (
       <tr className="th-background">
@@ -51,6 +55,12 @@ export default function TransactionsTable(props) {
     );
   }
 
+  /**
+   * Render transaction row
+   * @param {object} row Object containing row data
+   * @param {number} index Index of the row
+   * @returns HTMLElement
+   */
   function renderTransactionRow(row, index) {
     const { timestamp, state_hash } = row.blocks_user_commands[0].block;
     const amount = row.amount ? toMINA(row.amount) : 0;
@@ -73,6 +83,12 @@ export default function TransactionsTable(props) {
     );
   }
 
+  /**
+   * Render mempool transaction row
+   * @param {object} row Object containing row data
+   * @param {*} index Index of the row
+   * @returns HTMLElement
+   */
   function renderMempoolRow(row, index) {
     const amount = row.amount ? Big(row.amount).mul(1e-9).toFixed(3) : 0;
     return (
@@ -96,6 +112,10 @@ export default function TransactionsTable(props) {
     );
   }
 
+  /**
+   * Render table body content
+   * @returns HTMLElement
+   */
   function renderTableBody() {
     return (
       <tbody>
@@ -112,6 +132,10 @@ export default function TransactionsTable(props) {
     );
   }
 
+  /**
+   * If errors occur, render error screen
+   * @returns HTMLElement
+   */
   function renderError() {
     const { balance } = props;
     let imageToRender = ErrorImage;
@@ -132,6 +156,10 @@ export default function TransactionsTable(props) {
     );
   }
 
+  /**
+   * If transactions history is empty, render empty state
+   * @returns HTMLElement
+   */
   function renderEmptyState() {
     const { balance } = props;
     let imageToRender = NoTransactions;
@@ -152,6 +180,10 @@ export default function TransactionsTable(props) {
     );
   }
 
+  /**
+   * Get number of table pages
+   * @returns Number
+   */
   function getTotalPages() {
     if (total.data && total.data.user_commands_aggregate.aggregate) {
       const totalItems = total.data.user_commands_aggregate.aggregate.count;

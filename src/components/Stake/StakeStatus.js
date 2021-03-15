@@ -1,7 +1,16 @@
 import React from "react";
 
 export default function StakeStatus(props) {
-  if (!props.currentDelegate) {
+  if(props.currentDelegate===""){
+    return (
+      <div>
+        <h4>Your status</h4>
+        <h6 className="full-width-align-left">
+          You are not delegating someone
+        </h6>
+      </div>
+    );
+  } else if (!props.currentDelegate) {
     return (
       <div>
         <h4>Your status</h4>

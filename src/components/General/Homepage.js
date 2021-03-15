@@ -27,7 +27,7 @@ export default function Homepage() {
           <Link to="/ledger">
             <Button
               className="lightGreenButton__fullMono mx-auto"
-              text="Access with hardware"
+              text="Access with Ledger"
             />
           </Link>
           <div className="v-spacer" />

@@ -6,6 +6,7 @@ import { getAddress } from "../../tools";
 import { useQuery, gql } from "@apollo/client";
 import Avatar from "../../tools/avatar";
 import { copyToClipboard, toMINA } from "../../tools/utils";
+import Countup from "./Countup";
 
 const TICKER = gql`
   query ticker {
@@ -33,7 +34,7 @@ export default function Wallet(props) {
   const ticker = useQuery(TICKER);
   const balance = useQuery(BALANCE, {
     variables: { publicKey: address },
-    skip: !address,
+    skip: !address || address==="",
   });
 
   useEffect(() => {
@@ -64,12 +65,34 @@ export default function Wallet(props) {
     return <div />;
   }
 
-  function renderAverageValue() {
-    if (ticker.data) {
-      return toMINA(userBalance * ticker.data.ticker.BTCMINA);
+  function renderBalance() {
+    if(balance.loading){
+      return "Loading "
     }
-    return 0;
+    if (balance.data) {
+      if(!userBalance){
+        return "Not available";
+      } else {
+        return toMINA(userBalance) + " MINA";
+      }
+    }
+    return "Not available";
   }
+
+  function renderAverageValue() {
+    if(ticker.loading){
+      return "Loading "
+    }
+    if (ticker.data) {
+      if(ticker.data.ticker.BTCMINA === null){
+        return "Not available";
+      } else {
+        return toMINA(userBalance * ticker.data.ticker.BTCMINA) + " BTC";
+      }
+    }
+    return "Not available";
+  }
+
   return (
     <div className="block-container">
       <div className="align-left">
@@ -96,7 +119,7 @@ export default function Wallet(props) {
             <Col>
               <div className="inline-block-element">
                 <h6 className="secondaryText">Your balance</h6>
-                <h5>{toMINA(userBalance)} MINA</h5>
+                <h5>{renderBalance()}</h5>
               </div>
               <div className="inline-block-element">
                 <div className="v-div" />
@@ -104,7 +127,7 @@ export default function Wallet(props) {
               <div className="inline-block-element">
                 <span>
                   <h6 className="secondaryText">Apx value</h6>
-                  <h5>{renderAverageValue()} BTC</h5>
+                  <h5>{renderAverageValue()} </h5>
                 </span>
               </div>
             </Col>

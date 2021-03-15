@@ -91,6 +91,7 @@ export default function Overview(props) {
     mempool = useQuery(GET_MEMPOOL, {
       variables: { publicKey: props.sessionData.address },
       skip: !props.sessionData.address,
+      fetchPolicy: "network-only",
     });
   }
   const news = useQuery(NEWS);

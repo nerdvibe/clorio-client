@@ -8,7 +8,7 @@ export default function CustomNonce(props) {
       <h2>Insert nonce</h2>
       <div className="v-spacer" />
       <h5 className="align-center mx-auto">
-        We are not able to fetch nonce, please set it manually
+        We are not able to the fetch nonce, please set it manually
       </h5>
       <div className="v-spacer" />
       <Input

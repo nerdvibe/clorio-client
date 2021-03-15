@@ -11,6 +11,9 @@ export default function TransactionForm(props) {
   const [amount, setAmount] = useState(toMINA(props.transactionData.amount));
   const [fee, setFee] = useState(toMINA(props.transactionData.fee));
 
+  /**
+   * If
+   */
   function setDefaultFee() {
     const fee = props.defaultFee;
     if (props.defaultFee) {

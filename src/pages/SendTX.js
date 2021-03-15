@@ -160,6 +160,12 @@ export default function SendTX(props) {
     }
   }
 
+  function initFee(){
+    if(fee.data && fee.data.estimatedFee && fee.data.estimatedFee.average)[
+      
+    ]
+  }
+
   /**
    * Check if nonce is available, if not asks user for custom nonce. After is set proceeds data verification and to private key verification
    */
@@ -274,7 +280,7 @@ export default function SendTX(props) {
       } catch (e) {
         setShowModal("");
         props.showGlobalAlert(
-          "Check if receiver address and/or private key are right",
+          "Check if the receiver address and/or the private key are right",
           "error-toast"
         );
         stepBackwards();
@@ -320,9 +326,9 @@ export default function SendTX(props) {
         if(memo.length > 32) {
           throw new Error('Memo field too long')
         }
+        const senderAccount = props.sessionData.ledgerAccount || 0;
         const transactionToSend = {
-          // TODO: FIX WITH STATE ACCOUNT
-          senderAccount: 0,
+          senderAccount,
           senderAddress: address,
           receiverAddress: transactionData.address,
           fee: +transactionData.fee,

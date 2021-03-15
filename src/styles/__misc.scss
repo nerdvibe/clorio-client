@@ -150,6 +150,18 @@ textarea:-ms-input-placeholder {
     margin-bottom: 20px;
 }
 
+.small-wrap-input1 {
+    font-family: 'Lato', sans-serif;
+    position: relative;
+    width: 15%;
+    margin: 0 auto;
+    z-index: 1;
+    margin-bottom: 20px;
+    input{
+        text-align: center;
+    }
+}
+
 .input1 {
     font-family: 'Lato', sans-serif;
     display: block;
