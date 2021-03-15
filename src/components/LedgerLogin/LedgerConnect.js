@@ -8,7 +8,7 @@ import Logo from "../General/Logo";
 import LedgerLoader from "../General/LedgerLoader";
 import Footer from "../General/Footer";
 import Button from "../General/Button";
-import Ledger from "./LedgerGetAddress";
+import LedgerGetAddress from "./LedgerGetAddress";
 
 
 
@@ -123,7 +123,7 @@ export default function LedgerConnect(props) {
   
 
   if(proceedToLedger){
-    return <Ledger {...props} />
+    return <LedgerGetAddress {...props} accountNumber={accountNumber}/>
   }
 
   return (

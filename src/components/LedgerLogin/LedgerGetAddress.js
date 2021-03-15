@@ -20,7 +20,7 @@ const GET_ID = gql`
 
 export default function LedgerGetAddress(props) {
   const [devices, setDevices] = useState(undefined);
-  const [ledgerAccount] = useState(0);
+  const [ledgerAccount] = useState(props.accountNumber || 0);
   const history = useHistory();
   const userID = useQuery(GET_ID, {
     variables: { publicKey: devices },
