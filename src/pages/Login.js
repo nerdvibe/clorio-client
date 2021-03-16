@@ -92,7 +92,7 @@ export default function Login(props) {
   return (
     <Hoc>
       <Spinner show={loader}>
-        <div className="block-container no-bg real-full-page-container center no-margin">
+        <div className="block-container no-bg real-full-page-container center no-margin animate__animated animate__fadeIn">
           <div className="full-width">
             <Row>
               <Col

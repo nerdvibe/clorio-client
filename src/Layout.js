@@ -9,6 +9,8 @@ import UpdateUserID from "./components/General/UpdateUserID";
 import { gql, useQuery } from "@apollo/client";
 import { isEmptyObject } from "./tools/utils";
 import Alert from "./components/General/Alert";
+import Wallet from "./components/General/Wallet";
+import {BalanceContextProvider} from "./context/BalanceContext";
 
 const GET_NETWORK = gql`
   query NodeInfo {
@@ -73,15 +75,20 @@ function Layout() {
             }
           >
             <Container className="contentWrapper animate__animated animate__fadeIn">
-              <Spinner show={!sessionData || showLoader}>
-                <Routes
-                  sessionData={sessionData}
-                  setLoader={setLoader}
-                  network={network.data}
-                  toggleLoader={setShowLoader}
-                  showGlobalAlert={showGlobalAlert}
-                />
-              </Spinner>
+              <BalanceContextProvider>
+                <Spinner show={!sessionData || showLoader}>
+                  {sessionData && !isEmptyObject(sessionData) && sessionData.address && (
+                    <Wallet />
+                  )}
+                  <Routes
+                    sessionData={sessionData}
+                    setLoader={setLoader}
+                    network={network.data}
+                    toggleLoader={setShowLoader}
+                    showGlobalAlert={showGlobalAlert}
+                  />
+                </Spinner>
+              </BalanceContextProvider>
             </Container>
           </Col>
         </Row>

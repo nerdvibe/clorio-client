@@ -10,8 +10,10 @@ export const SplashScreen = (props) => {
   }, []);
   return (
     <Hoc>
-      <Homepage />
-      <Footer network={props.network} />
+      <div className="animate__animated animate__fadeIn">
+        <Homepage />
+        <Footer network={props.network} />
+      </div>
     </Hoc>
   );
 };

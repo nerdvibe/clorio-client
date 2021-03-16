@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Hoc from "../components/General/Hoc";
 import SignMessageForm from "../components/Forms/SignMessageForm";
-import Wallet from "../components/General/Wallet";
 import { getAddress } from "../tools";
 import * as CodaSDK from "@o1labs/client-sdk";
 
@@ -54,17 +53,18 @@ export default function SignMessage(props) {
 
   return (
     <Hoc>
-      <Wallet />
-      <SignMessageForm
-        message={message}
-        privateKey={privateKey}
-        setMessage={setMessage}
-        setPrivateKey={setPrivateKey}
-        disableButton={signButtonStateHandler}
-        submitHandler={submitHandler}
-        result={result}
-        reset={resetForm}
-      />
+      <div className="animate__animated animate__fadeIn">
+        <SignMessageForm
+          message={message}
+          privateKey={privateKey}
+          setMessage={setMessage}
+          setPrivateKey={setPrivateKey}
+          disableButton={signButtonStateHandler}
+          submitHandler={submitHandler}
+          result={result}
+          reset={resetForm}
+        />
+      </div>
     </Hoc>
   );
 }

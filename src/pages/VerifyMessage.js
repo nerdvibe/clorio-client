@@ -2,7 +2,6 @@ import React from "react";
 import { useState } from "react";
 import Hoc from "../components/General/Hoc";
 import VerifyForm from "../components/Forms/VerifyMessageForm";
-import Wallet from "../components/General/Wallet";
 import * as CodaSDK from "@o1labs/client-sdk";
 
 export default function VerifyMessage(props) {
@@ -55,7 +54,6 @@ export default function VerifyMessage(props) {
 
   return (
     <Hoc>
-      <Wallet />
       <VerifyForm
         address={address}
         setAddress={setAddress}
