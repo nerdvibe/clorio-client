@@ -1,6 +1,7 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
 import Button from "../General/Button";
+import HelpHint from "../General/HelpHint";
 
 export default function VerifyForm(props) {
   return (
@@ -9,7 +10,7 @@ export default function VerifyForm(props) {
         <div className="transaction-form animate__animated animate__fadeIn ">
           <div className="mx-auto fit-content">
             <strong>
-              <h2>Verify message</h2>
+              <h2>Verify message <HelpHint hint={"Paste the signature message in the fields in order to verify the cryptographic authenticity."}/></h2>
             </strong>
           </div>
           <div className="v-spacer" />
