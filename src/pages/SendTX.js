@@ -345,8 +345,8 @@ export default function SendTX(props) {
       <div className="animate__animated animate__fadeIn">
         {step === 0 ? (
           <TransactionForm
-            defaultFee={fee.data ? fee.data.estimatedFee.average : 0}
-            fastFee={fee.data ? fee.data.estimatedFee.fast : 0}
+            defaultFee={fee.data && fee.data.estimatedFee && fee.data.estimatedFee.average || 0}
+            fastFee={fee.data && fee.data.estimatedFee && fee.data.estimatedFee.fast || 0}
             nextStep={openConfirmationModal}
             transactionData={transactionData}
             showGlobalAlert={props.showGlobalAlert}

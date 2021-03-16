@@ -6,7 +6,6 @@ import { getAddress } from "../../tools";
 import { useQuery, gql } from "@apollo/client";
 import Avatar from "../../tools/avatar";
 import { copyToClipboard, toMINA } from "../../tools/utils";
-// import Countup from "./Countup";
 import ReactTooltip from "react-tooltip";
 import {BalanceContext} from "../../context/BalanceContext";
 import { useContext } from "react";
