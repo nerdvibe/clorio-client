@@ -167,7 +167,7 @@ export default function SendTX(props) {
       );
       return
     }
-    if (transactionData.address === "" || transactionData.amount === 0) {
+    if (transactionData.receiverAddress === "" || transactionData.amount === 0) {
       props.showGlobalAlert(
         "Please insert an address and an amount",
         "error-toast"
@@ -237,7 +237,7 @@ export default function SendTX(props) {
         const signedPayment = CodaSDK.signPayment(
           {
             from: address,
-            to: transactionData.address,
+            to: transactionData.receiverAddress,
             amount,
             fee,
             nonce: actualNonce,
@@ -317,7 +317,7 @@ export default function SendTX(props) {
         const transactionToSend = {
           senderAccount,
           senderAddress: address,
-          receiverAddress: transactionData.address,
+          receiverAddress: transactionData.receiverAddress,
           fee: +transactionData.fee,
           amount: +transactionData.amount,
           memo,

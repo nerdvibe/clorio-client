@@ -19,7 +19,7 @@ export default function ConfirmLedgerTransaction(props) {
               You are about to send <strong>{toMINA(amount)} Mina</strong> <br />
               with a fee of <strong>{toMINA(fee)} Mina</strong> <br />
               to <strong>{receiverAddress}</strong>  <br />
-              with memo <strong>{memo}</strong>
+              {memo ? (<>with memo <strong>{memo}</strong></>) : null}
               <div className="v-spacer" />
               <div className="mx-auto">
                 <div className="lds-ellipsis">
