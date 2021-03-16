@@ -11,9 +11,6 @@ export default function TransactionForm(props) {
   const [amount, setAmount] = useState(toMINA(props.transactionData.amount));
   const [fee, setFee] = useState(toMINA(props.transactionData.fee));
 
-  /**
-   * If
-   */
   function setDefaultFee() {
     const fee = props.defaultFee;
     if (props.defaultFee) {
@@ -48,10 +45,10 @@ export default function TransactionForm(props) {
     }
   }
 
-  function addressHandler(address) {
+  function addressHandler(receiverAddress) {
     props.setData({
       ...props.transactionData,
-      address,
+      receiverAddress,
     });
   }
 
@@ -98,7 +95,7 @@ export default function TransactionForm(props) {
   }
 
   function checkFieldsAndProceed() {
-    const { amount, fee, address } = props.transactionData;
+    const { amount, fee, receiverAddress } = props.transactionData;
     if (amount < MINIMUM_AMOUNT || amount === 0) {
       const message = `Amount ${toMINA(
         amount
@@ -111,7 +108,7 @@ export default function TransactionForm(props) {
       )} is less than the minimum fee (${toMINA(MINIMUM_FEE)})`;
       return props.showGlobalAlert(message, "error-toast");
     }
-    if (address === "") {
+    if (receiverAddress === "") {
       return props.showGlobalAlert("Please insert a recipient", "error-toast");
     }
     return props.nextStep();
@@ -131,7 +128,7 @@ export default function TransactionForm(props) {
             <Col md={8} className="offset-md-2">
               <h3>Recipient</h3>
               <Input
-                value={props.transactionData.address}
+                value={props.transactionData.receiverAddress}
                 placeholder="Enter address "
                 inputHandler={(e) => addressHandler(e.currentTarget.value)}
               />
