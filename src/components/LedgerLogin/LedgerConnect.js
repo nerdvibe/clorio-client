@@ -10,8 +10,7 @@ import Footer from "../General/Footer";
 import Button from "../General/Button";
 import LedgerGetAddress from "./LedgerGetAddress";
 import ReactTooltip from 'react-tooltip';
-import { HelpCircle } from "react-feather";
-
+import HelpHint from "../General/HelpHint";
 
 export default function LedgerConnect(props) {
   const [isAvailable, setIsAvailable] = useState(false);

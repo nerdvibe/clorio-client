@@ -33,7 +33,9 @@ export const signTransaction = async(transaction) => {
   }
   const transport = await Transporter.create();
   const instance = new MinaLedgerJS(transport);
-  return await instance.signTransaction(
+  const signature = await instance.signTransaction(
     transaction
-  )
+  );
+  transport.close()
+  return signature;
 }
