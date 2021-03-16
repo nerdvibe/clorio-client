@@ -2,6 +2,7 @@ import React from "react";
 import { Row, Col } from "react-bootstrap";
 import Button from "../General/Button";
 import HelpHint from "../General/HelpHint";
+import Input from "../General/Input";
 
 export default function SignMessageForm(props) {
   if (props.result) {
@@ -63,13 +64,13 @@ export default function SignMessageForm(props) {
                 data-validate="Name is required"
               >
                 <span className="icon" />
-                <input
+                <Input
                   className="input1"
                   type="text"
                   name="message"
                   value={props.message}
                   placeholder="Message "
-                  onChange={(e) => props.setMessage(e.currentTarget.value)}
+                  inputHandler={(e) => props.setMessage(e.currentTarget.value)}
                 />
                 <span className="shadow-input1"></span>
               </div>
@@ -79,13 +80,12 @@ export default function SignMessageForm(props) {
                 data-validate="Name is required"
               >
                 <span className="icon" />
-                <input
-                  className="input1"
+                <Input
                   type="text"
                   name="privateKey"
                   value={props.privateKey}
                   placeholder="Private key"
-                  onChange={(e) => props.setPrivateKey(e.currentTarget.value)}
+                  inputHandler={(e) => props.setPrivateKey(e.currentTarget.value)}
                 />
                 <span className="shadow-input1"></span>
               </div>
