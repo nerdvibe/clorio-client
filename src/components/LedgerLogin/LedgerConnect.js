@@ -81,7 +81,7 @@ export default function LedgerConnect(props) {
   const customAccountInput = (
     <div>
       <h6 className="full-width-align-center">
-      Please select account an number <HelpCircle data-tip="Default account number is 0. If you have created your wallet with another account index, change it here.<br/> Only change this number if you know what you are doing."/>
+      Please select account an number <HelpHint hint="Default account number is 0. If you have created your wallet with another account index, change it here.<br/> Only change this number if you know what you are doing."/>
       </h6>
       <div className="v-spacer" />
       <Input small={true} type="number" value={accountNumber} inputHandler={accountNumberHandler}/>
