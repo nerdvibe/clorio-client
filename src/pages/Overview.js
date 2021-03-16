@@ -1,11 +1,12 @@
 import React from "react";
-import Wallet from "../components/General/Wallet";
 import Banner from "../components/General/Banner";
 import TransactionsTable from "../components/Transactions/TransactionsTable";
 import Hoc from "../components/General/Hoc";
 import { useQuery, gql } from "@apollo/client";
 import Spinner from "../components/General/Spinner";
 import { useState } from "react";
+import { useContext } from "react";
+import { BalanceContext } from "../context/BalanceContext";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -77,12 +78,7 @@ const NEWS = gql`
 `;
 
 export default function Overview(props) {
-  const [balance, setBalance] = useState({
-    total: 0,
-    liquid: 0,
-    locked: 0,
-    liquidUnconfirmed: 0,
-  });
+  const { balance } = useContext(BalanceContext);
   const [offset, setOffset] = useState(0);
   let queryResult;
   let mempool;
@@ -100,24 +96,6 @@ export default function Overview(props) {
     });
   }
   const news = useQuery(NEWS);
-
-  /**
-   * Set wallet balance inside component state
-   * @param {object} data Wallet balance data
-   */
-  function setContextBalance(data) {
-    if (!balance) {
-      setBalance(data);
-    } else {
-      const difference =
-        data.total !== balance.total
-        || data.liquid !== balance.liquid
-        || data.locked !== balance.locked;
-      if (difference) {
-        setBalance(data);
-      }
-    }
-  }
 
   /**
    * If news are available, render banner
@@ -150,7 +128,6 @@ export default function Overview(props) {
   return (
     <Hoc className="main-container">
       <Spinner show={queryResult.loading}>
-        <Wallet balance={balance} setContextBalance={setContextBalance} />
         {renderBanner()}
         <TransactionsTable
           {...queryResult}

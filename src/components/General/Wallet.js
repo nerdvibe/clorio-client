@@ -6,8 +6,10 @@ import { getAddress } from "../../tools";
 import { useQuery, gql } from "@apollo/client";
 import Avatar from "../../tools/avatar";
 import { copyToClipboard, toMINA } from "../../tools/utils";
-import Countup from "./Countup";
+// import Countup from "./Countup";
 import ReactTooltip from "react-tooltip";
+import {BalanceContext} from "../../context/BalanceContext";
+import { useContext } from "react";
 
 const TICKER = gql`
   query ticker {
@@ -33,13 +35,14 @@ const BALANCE = gql`
 export default function Wallet(props) {
   let userBalance = 0;
   const [address, setaddress] = useState(undefined);
+  const { setBalanceContext } = useContext(BalanceContext);
   const ticker = useQuery(TICKER);
   const balance = useQuery(BALANCE, {
     variables: { publicKey: address },
     skip: !address || address==="",
     onCompleted: (data) => {
-      if(props.setBalanceContext) {
-        props.setBalanceContext(data?.accountByKey?.balance || {})
+      if(setBalanceContext) {
+        setBalanceContext(data?.accountByKey?.balance || {})
       }
     }
   });

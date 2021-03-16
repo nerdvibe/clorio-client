@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Wallet from "../components/General/Wallet";
 import TransactionForm from "../components/Transactions/TransactionForm";
 import ConfirmTransaction from "../components/Modals/ConfirmTransaction";
 import ConfirmLedgerTransaction from "../components/Modals/ConfirmLedgerTransaction";
@@ -15,6 +14,8 @@ import {emojiToUnicode, escapeUnicode, isMinaAppOpen, NETWORK, signTransaction, 
 import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
 import {Big} from "big.js";
 import CustomNonce from "../components/Modals/CustomNonce";
+import { useContext } from "react";
+import { BalanceContext } from "../context/BalanceContext";
 
 const GET_FEE = gql`
   query GetFees {
@@ -63,15 +64,10 @@ export default function SendTX(props) {
   const [sendTransactionFlag, setSendTransactionFlag] = useState(false);
   const [step, setStep] = useState(0);
   const [showModal, setShowModal] = useState("");
-  const [balance, setBalance] = useState({
-    liquid: "0",
-    liquidUnconfirmed: "0",
-    locked: "0",
-    total: "0",
-  });
   const [address, setAddress] = useState("");
   const [customNonce, setCustomNonce] = useState(undefined);
   const [ledgerTransactionData, setLedgerTransactionData] = useState(undefined);
+  const { balance } = useContext(BalanceContext);
   const [transactionData, setTransactionData] = useState(
     initialTransactionData
   );
@@ -149,23 +145,6 @@ export default function SendTX(props) {
     }
   }, [ledgerTransactionData]);
 
-  /**
-   * Set wallet balance data from child wallet component
-   * @param {Object} data Wallet balance query result
-   */
-  function setBalanceContext(data) {
-    if (!balance) {
-      setBalance(data);
-    } else {
-      const difference =
-        data.total !== balance.total ||
-        data.liquid !== balance.liquid ||
-        data.liquidUnconfirmed !== balance.liquidUnconfirmed;
-      if (difference) {
-        setBalance(data);
-      }
-    }
-  }
 
   /**
    * Check if nonce is available, if not asks user for custom nonce. After is set proceeds data verification and to private key verification
@@ -363,27 +342,28 @@ export default function SendTX(props) {
 
   return (
     <Hoc className="main-container">
-      <Wallet setBalanceContext={setBalanceContext} />
-      {step === 0 ? (
-        <TransactionForm
-          defaultFee={fee.data ? fee.data.estimatedFee.average : 0}
-          fastFee={fee.data ? fee.data.estimatedFee.fast : 0}
-          nextStep={openConfirmationModal}
-          transactionData={transactionData}
-          showGlobalAlert={props.showGlobalAlert}
-          setData={setTransactionData}
-        />
-      ) : isLedgerEnabled ? (
-        <ConfirmLedgerTransaction
-          transactionData={transactionData}
-        />
-      ) : (
-        <ConfirmTransaction
-          transactionData={transactionData}
-          stepBackward={stepBackwards}
-          sendTransaction={sendTransaction}
-        />
-      )}
+      <div className="animate__animated animate__fadeIn">
+        {step === 0 ? (
+          <TransactionForm
+            defaultFee={fee.data ? fee.data.estimatedFee.average : 0}
+            fastFee={fee.data ? fee.data.estimatedFee.fast : 0}
+            nextStep={openConfirmationModal}
+            transactionData={transactionData}
+            showGlobalAlert={props.showGlobalAlert}
+            setData={setTransactionData}
+          />
+        ) : isLedgerEnabled ? (
+          <ConfirmLedgerTransaction
+            transactionData={transactionData}
+          />
+        ) : (
+          <ConfirmTransaction
+            transactionData={transactionData}
+            stepBackward={stepBackwards}
+            sendTransaction={sendTransaction}
+          />
+        )}
+      </div>
       <ModalContainer
         show={showModal === ModalStates.PASSPHRASE}
         close={closeModal}
