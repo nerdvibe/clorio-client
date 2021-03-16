@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Banner from "../components/General/Banner";
 import StakeTable from "../components/Stake/StakeTable";
-import Wallet from "../components/General/Wallet";
 import Hoc from "../components/General/Hoc";
 import ModalContainer from "../components/Modals/ModalContainer";
 import { useQuery, gql, useMutation } from "@apollo/client";
@@ -364,16 +363,17 @@ export default (props) => {
 
   return (
     <Hoc className="main-container">
-      <Wallet />
-      {renderBanner()}
-      <StakeTable
-        toggleModal={openModal}
-        validators={validators}
-        currentDelegate={currentDelegate}
-        openCustomDelegateModal={openCustomDelegateModal}
-        setOffset={changeOffset}
-        page={offset / ITEMS_PER_PAGE + 1}
-      />
+      <div className="animate__animated animate__fadeIn">
+        {renderBanner()}
+        <StakeTable
+          toggleModal={openModal}
+          validators={validators}
+          currentDelegate={currentDelegate}
+          openCustomDelegateModal={openCustomDelegateModal}
+          setOffset={changeOffset}
+          page={offset / ITEMS_PER_PAGE + 1}
+        />
+      </div>
       <ModalContainer
         show={showModal === ModalStates.CONFIRM_DELEGATION}
         close={closeModal}
