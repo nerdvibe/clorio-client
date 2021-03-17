@@ -1,7 +1,7 @@
 # ~Clorio Client
 <img height="100" src="https://mina.tools/assets/minahub.svg">
 
-⚠️ This is an early private stage of Clorio, is not ready for usage.
+⚠️ This is an early private stage of ~Clorio, is not ready for usage.
 ## Getting started
 
 In the project directory, you can run:
