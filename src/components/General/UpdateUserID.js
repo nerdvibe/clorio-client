@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import React, { useState } from "react";
-import { getId, updateUser } from "../tools";
+import { getId, updateUser } from "../../tools";
 
 const GET_ID = gql`
   query GetIDFromPublicKey($publicKey: String) {

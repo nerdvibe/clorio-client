@@ -1,8 +1,11 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import Button from "./Button";
+import { toMINA } from "../../tools/utils";
+import Button from "../General/Button";
 
 export default function ConfirmTransaction(props) {
+  const { amount, fee, address, memo } = props.transactionData;
+  const { stepBackward, sendTransaction } = props;
   return (
     <div className="mx-auto  ">
       <div className="block-container full-page-container">
@@ -15,28 +18,24 @@ export default function ConfirmTransaction(props) {
           <div className="v-spacer" />
           <Row>
             <Col md={8} className="offset-md-2">
-              You are about to send{" "}
-              <strong>{props.transactionData.amount} MINA</strong> <br />
-              with a fee of <strong>
-                {props.transactionData.fee} MINA
-              </strong>{" "}
-              <br />
-              to <strong>{props.transactionData.address}</strong>
-              with memo <strong>{props.transactionData.memo}</strong>
+              You are about to send <strong>{toMINA(amount)} Mina</strong> <br />
+              with a fee of <strong>{toMINA(fee)} Mina</strong> <br />
+              to <strong>{address}</strong> <br />
+              {memo ? <>with memo <strong>{memo}</strong></> : null}
               <div className="v-spacer" />
               <div className="mx-auto">
                 <Row>
                   <Col md={3} className="offset-md-3">
                     <Button
                       className="link-button inline-element"
-                      onClick={props.stepBackward}
+                      onClick={stepBackward}
                       text="Cancel"
                     />
                   </Col>
                   <Col md={3}>
                     <Button
                       className="lightGreenButton__fullMono inline-element mx-auto"
-                      onClick={props.sendTransaction}
+                      onClick={sendTransaction}
                       text="Confirm"
                     />
                   </Col>

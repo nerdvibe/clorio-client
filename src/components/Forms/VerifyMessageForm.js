@@ -1,6 +1,8 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import Button from "./Button";
+import Button from "../General/Button";
+import HelpHint from "../General/HelpHint";
+import Input from "../General/Input";
 
 export default function VerifyForm(props) {
   return (
@@ -9,7 +11,7 @@ export default function VerifyForm(props) {
         <div className="transaction-form animate__animated animate__fadeIn ">
           <div className="mx-auto fit-content">
             <strong>
-              <h2>Verify message</h2>
+              <h2>Verify message <HelpHint hint={"Paste the signature message in the fields in order to verify the cryptographic authenticity."}/></h2>
             </strong>
           </div>
           <div className="v-spacer" />
@@ -21,13 +23,13 @@ export default function VerifyForm(props) {
                 data-validate="Name is required"
               >
                 <span className="icon" />
-                <input
+                <Input
                   className="input1"
                   type="text"
                   name="message"
                   value={props.message}
                   placeholder="Message "
-                  onChange={(e) => props.setMessage(e.currentTarget.value)}
+                  inputHandler={(e) => props.setMessage(e.currentTarget.value)}
                 />
                 <span className="shadow-input1"></span>
               </div>
@@ -38,13 +40,13 @@ export default function VerifyForm(props) {
                 data-validate="Name is required"
               >
                 <span className="icon" />
-                <input
+                <Input
                   className="input1"
                   type="text"
                   name="message"
                   value={props.address}
-                  placeholder="Private key "
-                  onChange={(e) => props.setAddress(e.currentTarget.value)}
+                  placeholder="Public key "
+                  inputHandler={(e) => props.setAddress(e.currentTarget.value)}
                 />
                 <span className="shadow-input1"></span>
               </div>
@@ -55,13 +57,13 @@ export default function VerifyForm(props) {
                 data-validate="Name is required"
               >
                 <span className="icon" />
-                <input
+                <Input
                   className="input1"
                   type="text"
                   name="message"
                   value={props.field}
                   placeholder="Field "
-                  onChange={(e) => props.setField(e.currentTarget.value)}
+                  inputHandler={(e) => props.setField(e.currentTarget.value)}
                 />
                 <span className="shadow-input1"></span>
               </div>
@@ -72,13 +74,13 @@ export default function VerifyForm(props) {
                 data-validate="Name is required"
               >
                 <span className="icon" />
-                <input
+                <Input
                   className="input1"
                   type="text"
                   name="message"
                   value={props.scalar}
                   placeholder="Scalar "
-                  onChange={(e) => props.setScalar(e.currentTarget.value)}
+                  inputHandler={(e) => props.setScalar(e.currentTarget.value)}
                 />
                 <span className="shadow-input1"></span>
               </div>
