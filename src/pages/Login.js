@@ -2,14 +2,13 @@
 import React from "react";
 import { Row, Col, Spinner } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
-import Button from "../components/Button";
-import Hoc from "../components/Hoc";
-import Logo from "../components/Logo";
+import Button from "../components/General/Button";
+import Hoc from "../components/General/Hoc";
+import Logo from "../components/General/Logo";
 import Footer from "../components/General/Footer";
 import { useState, useEffect } from "react";
 import { storeSession } from "../tools";
-import Input from "../components/Input";
-import Alert from "../components/General/Alert";
+import Input from "../components/General/Input";
 import * as CodaSDK from "@o1labs/client-sdk";
 import { useQuery, gql } from "@apollo/client";
 
@@ -24,7 +23,6 @@ const GET_ID = gql`
 export default function Login(props) {
   const [passphrase, setpassphrase] = useState("");
   const [publicKey, setPublicKey] = useState("");
-  const [showAlert, setShowAlert] = useState(false);
   const [loader, setLoader] = useState(false);
   const history = useHistory();
 
@@ -40,12 +38,12 @@ export default function Login(props) {
         if (userID.data.public_keys.length > 0) {
           props.setLoader();
           const id = userID.data.public_keys[0].id;
-          storeSession(publicKey, id, () => {
+          storeSession(publicKey, id, false, 0 ,() => {
             history.push("/overview");
           });
         } else {
           props.setLoader();
-          storeSession(publicKey, -1, () => {
+          storeSession(publicKey, -1, false, 0 ,() => {
             history.push("/overview");
           });
         }
@@ -53,14 +51,52 @@ export default function Login(props) {
     }
   }, [userID]);
 
+  /**
+   * Set text from input inside component state
+   * @param {event} e Input text
+   */
+  function inputHandler(e) {
+    setpassphrase(e.currentTarget.value);
+  }
+
+  /**
+   * Uses CodaSDK to check if private key from input is valid
+   */
+  function checkCredentials() {
+    try {
+      const derivedPublicKey = CodaSDK.derivePublicKey(passphrase);
+      setPublicKey(derivedPublicKey);
+      setLoader(true);
+    } catch (e) {
+      props.showGlobalAlert(
+        "Private key not valid, please try again.",
+        "error-toast"
+      );
+    }
+  }
+
+  /**
+   * If private key is not set or empty, disable button
+   * @returns boolean
+   */
+  function disableButton() {
+    if (!passphrase) {
+      return true;
+    }
+    if (passphrase === "") {
+      return true;
+    }
+    return false;
+  }
+
   return (
     <Hoc>
       <Spinner show={loader}>
-        <div className="block-container no-bg real-full-page-container center">
+        <div className="block-container no-bg real-full-page-container center no-margin animate__animated animate__fadeIn">
           <div className="full-width">
             <Row>
               <Col
-                md={4}
+                md={6}
                 xl={6}
                 className="offset-md-3 offset-xl-3 text-center"
               >
@@ -110,51 +146,8 @@ export default function Login(props) {
             </Row>
           </div>
         </div>
-        <Alert
-          show={showAlert}
-          hideToast={() => setShowAlert(false)}
-          type={"error-toast"}
-        >
-          Private key not valid, please try again.
-        </Alert>
         <Footer network={props.network} />
       </Spinner>
     </Hoc>
   );
-
-  //   function renderLedgerLogin() {
-  //     return (
-  //       <Link to="/ledger">
-  //         <Button
-  //           className="link-button mx-auto"
-  //           onClick={props.register}
-  //           text="Login through a hardware wallet"
-  //         />
-  //       </Link>
-  //     );
-  //   }
-
-  function inputHandler(e) {
-    setpassphrase(e.currentTarget.value);
-  }
-
-  function checkCredentials() {
-    try {
-      const publicK = CodaSDK.derivePublicKey(passphrase);
-      setPublicKey(publicK);
-      setLoader(true);
-    } catch (e) {
-      setShowAlert(true);
-    }
-  }
-
-  function disableButton() {
-    if (!passphrase) {
-      return true;
-    }
-    if (passphrase === "") {
-      return true;
-    }
-    return false;
-  }
 }

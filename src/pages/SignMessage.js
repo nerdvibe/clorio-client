@@ -1,47 +1,32 @@
 import React, { useState } from "react";
-import Hoc from "../components/Hoc";
-import SignMessageForm from "../components/SignMessageForm";
-import Wallet from "../components/Wallet";
-import Alert from "../components/General/Alert";
+import Hoc from "../components/General/Hoc";
+import SignMessageForm from "../components/Forms/SignMessageForm";
 import { getAddress } from "../tools";
 import * as CodaSDK from "@o1labs/client-sdk";
 
-export default function SignMessage() {
+export default function SignMessage(props) {
   const [message, setMessage] = useState("");
   const [privateKey, setPrivateKey] = useState("");
   const [publicKey, setPublicKey] = useState("");
-  const [show, setShow] = useState(false);
   const [result, setResult] = useState(undefined);
 
   getAddress((data) => {
     setPublicKey(data);
   });
 
-  return (
-    <Hoc>
-      <Wallet />
-      <SignMessageForm
-        message={message}
-        privateKey={privateKey}
-        setMessage={setMessage}
-        setPrivateKey={setPrivateKey}
-        disableButton={signButtonStateHandler}
-        submitHandler={submitHandler}
-        result={result}
-        reset={resetForm}
-      />
-      <Alert show={show} hideToast={() => setShow(false)} type={"error-toast"}>
-        Please check private key
-      </Alert>
-    </Hoc>
-  );
-
+  /**
+   * Check if message, private key and public key are not empty
+   * @returns boolean
+   */
   function signButtonStateHandler() {
     const checkCondition =
       message === "" || privateKey === "" || publicKey === "";
     return checkCondition;
   }
 
+  /**
+   * If fields are not empty, sign message and set result to component state
+   */
   function submitHandler() {
     try {
       if (!signButtonStateHandler()) {
@@ -49,18 +34,37 @@ export default function SignMessage() {
           publicKey,
           privateKey,
         };
-
         const signedMessage = CodaSDK.signMessage(message, keypair);
         setResult(signedMessage);
       }
     } catch (e) {
-      setShow(true);
+      props.showGlobalAlert("Please check private key", "error-toast");
     }
   }
 
+  /**
+   * Clear form data from state
+   */
   function resetForm() {
     setPrivateKey("");
     setResult(undefined);
     setMessage("");
   }
+
+  return (
+    <Hoc>
+      <div className="animate__animated animate__fadeIn">
+        <SignMessageForm
+          message={message}
+          privateKey={privateKey}
+          setMessage={setMessage}
+          setPrivateKey={setPrivateKey}
+          disableButton={signButtonStateHandler}
+          submitHandler={submitHandler}
+          result={result}
+          reset={resetForm}
+        />
+      </div>
+    </Hoc>
+  );
 }

@@ -3,7 +3,7 @@ import { Nav } from "react-bootstrap";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { Cpu, LogIn, TrendingUp, Edit3, Check } from "react-feather";
-import Logo from "../Logo";
+import Logo from "./Logo";
 import { useLocation } from "react-router-dom";
 import { clearSession } from "../../tools";
 
@@ -13,6 +13,40 @@ function Sidebar(props) {
   if (props.network && props.network.nodeInfo) {
     networkData = props.network.nodeInfo;
   }
+
+  function logout() {
+    props.setLoader();
+    clearSession();
+    history.push("/overview");
+  }
+
+  function checkRoute(route) {
+    const location = useLocation();
+    const currentRoute = location.pathname.toLowerCase();
+    return currentRoute.includes(route)
+      ? " sidebar-item-container-active"
+      : " ";
+  }
+
+  function renderNetwork() {
+    if (networkData) {
+      return (
+        <div>
+          {networkData.name} | {networkData.network}
+        </div>
+      );
+    }
+    return "Network unavailable";
+  }
+
+  function renderStatusDot() {
+    if (networkData) {
+      return <span className="green-dot" />;
+    } else {
+      return <span className="red-dot" />;
+    }
+  }
+
   return (
     <div style={{ padding: "5px" }}>
       <Nav
@@ -87,39 +121,6 @@ function Sidebar(props) {
       </Nav>
     </div>
   );
-
-  function logout() {
-    props.setLoader();
-    clearSession();
-    history.push("/overview");
-  }
-
-  function checkRoute(route) {
-    const location = useLocation();
-    const currentRoute = location.pathname.toLowerCase();
-    return currentRoute.includes(route)
-      ? " sidebar-item-container-active"
-      : " ";
-  }
-
-  function renderNetwork() {
-    if (networkData) {
-      return (
-        <div>
-          {networkData.name} | {networkData.network}
-        </div>
-      );
-    }
-    return "Network unavailable";
-  }
-
-  function renderStatusDot() {
-    if (networkData) {
-      return <span className="green-dot" />;
-    } else {
-      return <span className="red-dot" />;
-    }
-  }
 }
 
 export default Sidebar;

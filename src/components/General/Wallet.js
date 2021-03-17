@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
-import Button from "../components/Button";
+import Button from "./Button";
 import { Copy } from "react-feather";
-import { getAddress } from "../tools";
+import { getAddress } from "../../tools";
 import { useQuery, gql } from "@apollo/client";
-import Avatar from "../tools/avatar";
-import Big from "big.js";
-import { copyToClipboard } from "../tools/utils";
+import Avatar from "../../tools/avatar";
+import { copyToClipboard, toMINA } from "../../tools/utils";
+import ReactTooltip from "react-tooltip";
+import {BalanceContext} from "../../context/BalanceContext";
+import { useContext } from "react";
 
 const TICKER = gql`
   query ticker {
@@ -22,6 +24,7 @@ const BALANCE = gql`
       balance {
         total
         liquid
+        locked
         liquidUnconfirmed
       }
     }
@@ -31,9 +34,16 @@ const BALANCE = gql`
 export default function Wallet(props) {
   let userBalance = 0;
   const [address, setaddress] = useState(undefined);
+  const { setBalanceContext } = useContext(BalanceContext);
   const ticker = useQuery(TICKER);
   const balance = useQuery(BALANCE, {
     variables: { publicKey: address },
+    skip: !address || address==="",
+    onCompleted: (data) => {
+      if(setBalanceContext) {
+        setBalanceContext(data?.accountByKey?.balance || {})
+      }
+    }
   });
 
   useEffect(() => {
@@ -46,24 +56,17 @@ export default function Wallet(props) {
 
   if (balance && balance.data) {
     if (balance.data.accountByKey) {
-      userBalance = Big(balance.data.accountByKey.balance.total)
-        .mul(1e-9)
-        .toFixed();
-      const total = Big(balance.data.accountByKey.balance.total)
-        .mul(1e-9)
-        .toFixed();
-      const liquid = Big(balance.data.accountByKey.balance.liquid)
-        .mul(1e-9)
-        .toFixed();
-      const liquidUnconfirmed = Big(
-        balance.data.accountByKey.balance.liquidUnconfirmed
-      )
-        .mul(1e-9)
-        .toFixed();
-      if (props.setBalance) {
-        props.setBalance({
+      userBalance = balance.data.accountByKey.balance.total;
+      const total = balance.data.accountByKey.balance.total;
+      const liquid = balance.data.accountByKey.balance.liquid;
+      const locked = balance.data.accountByKey.balance.locked;
+      const liquidUnconfirmed =
+        balance.data.accountByKey.balance.liquidUnconfirmed;
+      if (props.setContextBalance) {
+        props.setContextBalance({
           total,
           liquid,
+          locked,
           liquidUnconfirmed,
         });
       }
@@ -72,6 +75,35 @@ export default function Wallet(props) {
   if (address === undefined) {
     return <div />;
   }
+
+  function renderBalance() {
+    if(balance.loading){
+      return "Loading "
+    }
+    if (balance.data) {
+      if(!userBalance){
+        return "Not available";
+      } else {
+        return toMINA(userBalance) + " Mina";
+      }
+    }
+    return "Not available";
+  }
+
+  function renderAverageValue() {
+    if(ticker.loading){
+      return "Loading "
+    }
+    if (ticker.data) {
+      if(ticker.data.ticker.BTCMINA === null){
+        return "Not available";
+      } else {
+        return toMINA(userBalance * ticker.data.ticker.BTCMINA) + " BTC";
+      }
+    }
+    return "Not available";
+  }
+
   return (
     <div className="block-container">
       <div className="align-left big-screen">
@@ -98,20 +130,16 @@ export default function Wallet(props) {
             <Col>
               <div className="inline-block-element">
                 <h6 className="secondaryText">Your balance</h6>
-                <h5>{userBalance} MINA</h5>
+                <h5 data-tip={+props.balance?.locked ? `Locked: ${toMINA(props.balance.locked)} Mina <br/> Liquid: ${toMINA(props.balance.liquid)} Mina`:``}>{renderBalance()}</h5>
+                <ReactTooltip multiline={true} />
               </div>
               <div className="inline-block-element">
                 <div className="v-div" />
               </div>
               <div className="inline-block-element">
                 <span>
-                  <h6 className="secondaryText">Apx value</h6>
-                  <h5>
-                    {(ticker.data &&
-                      userBalance * ticker.data.ticker.BTCMINA) ||
-                      0}{" "}
-                    BTC
-                  </h5>
+                  <h6 className="secondaryText">BTC Apx. value</h6>
+                  <h5>{renderAverageValue()} </h5>
                 </span>
               </div>
             </Col>

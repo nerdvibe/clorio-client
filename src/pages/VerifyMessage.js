@@ -1,54 +1,26 @@
 import React from "react";
 import { useState } from "react";
-import Alert from "../components/General/Alert";
-import Hoc from "../components/Hoc";
-import VerifyForm from "../components/VerifyForm";
-import Wallet from "../components/Wallet";
+import Hoc from "../components/General/Hoc";
+import VerifyForm from "../components/Forms/VerifyMessageForm";
 import * as CodaSDK from "@o1labs/client-sdk";
 
-export default function VerifyMessage() {
+export default function VerifyMessage(props) {
   const [address, setAddress] = useState("");
   const [message, setMessage] = useState("");
   const [field, setField] = useState("");
   const [scalar, setScalar] = useState("");
-  const [show, setShow] = useState(undefined);
-  return (
-    <Hoc>
-      <Wallet />
-      <VerifyForm
-        address={address}
-        setAddress={setAddress}
-        message={message}
-        setMessage={setMessage}
-        field={field}
-        setField={setField}
-        scalar={scalar}
-        setScalar={setScalar}
-        handleInput={handleInput}
-        verifyMessage={verifyMessage}
-        disableButton={disableButton}
-      />
-      <Alert
-        show={show === "success"}
-        hideToast={() => setShow(undefined)}
-        type={"success-toast"}
-      >
-        Message is valid
-      </Alert>
-      <Alert
-        show={show === "error"}
-        hideToast={() => setShow(undefined)}
-        type={"error-toast"}
-      >
-        Message is not valid
-      </Alert>
-    </Hoc>
-  );
 
+  /**
+   * Set input text inside me
+   * @param {string} text Message to verify
+   */
   function handleInput(text) {
     setMessage(text);
   }
 
+  /**
+   * Using CodaSDK check if input message is valid
+   */
   function verifyMessage() {
     try {
       if (message && message !== "") {
@@ -62,17 +34,39 @@ export default function VerifyMessage() {
         };
         const verifiedMessage = CodaSDK.verifyMessage(signedMessage);
         if (verifiedMessage) {
-          setShow("success");
+          props.showGlobalAlert("Message is valid", "success-toast");
         } else {
-          setShow("error");
+          props.showGlobalAlert("Message is not valid", "error-toast");
         }
       }
     } catch (e) {
-      setShow("error");
+      props.showGlobalAlert("Message is not valid", "error-toast");
     }
   }
 
+  /**
+   * If one between address,message,field or scalar is empty button is disabled
+   * @returns boolean
+   */
   function disableButton() {
     return address === "" || message === "" || field === "" || scalar === "";
   }
+
+  return (
+    <Hoc>
+      <VerifyForm
+        address={address}
+        setAddress={setAddress}
+        message={message}
+        setMessage={setMessage}
+        field={field}
+        setField={setField}
+        scalar={scalar}
+        setScalar={setScalar}
+        handleInput={handleInput}
+        verifyMessage={verifyMessage}
+        disableButton={disableButton}
+      />
+    </Hoc>
+  );
 }

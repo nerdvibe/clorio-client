@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Footer from "../components/General/Footer";
-import Hoc from "../components/Hoc";
-import Homepage from "../components/Homepage";
+import Hoc from "../components/General/Hoc";
+import Homepage from "../components/General/Homepage";
 import { clearSession } from "../tools";
 
 export const SplashScreen = (props) => {
-  clearSession();
+  useEffect(() => {
+    clearSession();
+  }, []);
   return (
     <Hoc>
-      <Homepage />
-      <Footer network={props.network} />
+      <div className="animate__animated animate__fadeIn">
+        <Homepage />
+        <Footer network={props.network} />
+      </div>
     </Hoc>
   );
 };
