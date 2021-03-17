@@ -16,6 +16,7 @@ import {Big} from "big.js";
 import CustomNonce from "../components/Modals/CustomNonce";
 import { useContext } from "react";
 import { BalanceContext } from "../context/BalanceContext";
+import Spinner from "../components/General/Spinner";
 
 const GET_FEE = gql`
   query GetFees {
@@ -66,16 +67,30 @@ export default function SendTX(props) {
   const [showModal, setShowModal] = useState("");
   const [address, setAddress] = useState("");
   const [customNonce, setCustomNonce] = useState(undefined);
+  const [showLoader, setShowLoader] = useState(true);
   const [ledgerTransactionData, setLedgerTransactionData] = useState(undefined);
   const { balance } = useContext(BalanceContext);
   const [transactionData, setTransactionData] = useState(
     initialTransactionData
-  );
+    );
   const nonce = useQuery(GET_NONCE, {
     variables: { publicKey: address },
     skip: address === "",
   });
-  const fee = useQuery(GET_FEE);
+  const fee = useQuery(GET_FEE,{
+    onCompleted:(data)=>{
+    if(data?.estimatedFee?.average){
+        setTransactionData({
+          ...transactionData,
+          fee:toNanoMINA(data.estimatedFee.average)
+        })
+        setShowLoader(false);
+      }
+    },
+    onError:()=>{
+      setShowLoader(false);
+    }
+  },);
   const [broadcastTransaction, broadcastResult] = useMutation(
     BROADCAST_TRANSACTION,
     {
@@ -342,53 +357,55 @@ export default function SendTX(props) {
 
   return (
     <Hoc className="main-container">
-      <div className="animate__animated animate__fadeIn">
-        {step === 0 ? (
-          <TransactionForm
-            defaultFee={fee?.data?.estimatedFee?.average || 0}
-            fastFee={fee?.data?.estimatedFee?.fast || 0}
-            nextStep={openConfirmationModal}
-            transactionData={transactionData}
-            showGlobalAlert={props.showGlobalAlert}
-            setData={setTransactionData}
+      <Spinner show={showLoader}>
+        <div className="animate__animated animate__fadeIn">
+          {step === 0 ? (
+            <TransactionForm
+              defaultFee={fee?.data?.estimatedFee?.average || 0}
+              fastFee={fee?.data?.estimatedFee?.fast || 0}
+              nextStep={openConfirmationModal}
+              transactionData={transactionData}
+              showGlobalAlert={props.showGlobalAlert}
+              setData={setTransactionData}
+            />
+          ) : isLedgerEnabled ? (
+            <ConfirmLedgerTransaction
+              transactionData={transactionData}
+            />
+          ) : (
+            <ConfirmTransaction
+              transactionData={transactionData}
+              stepBackward={stepBackwards}
+              sendTransaction={sendTransaction}
+            />
+          )}
+        </div>
+        <ModalContainer
+          show={showModal === ModalStates.PASSPHRASE}
+          close={closeModal}
+        >
+          <PrivateKeyModal
+            confirmPrivateKey={confirmPrivateKey}
+            closeModal={closeModal}
+            setPrivateKey={setPrivateKey}
           />
-        ) : isLedgerEnabled ? (
-          <ConfirmLedgerTransaction
-            transactionData={transactionData}
+        </ModalContainer>
+        <ModalContainer
+          show={showModal === ModalStates.BROADCASTING}
+          close={closeModal}
+        >
+          <BroadcastTransaction />
+        </ModalContainer>
+        <ModalContainer
+          show={showModal === ModalStates.NONCE}
+          close={closeNonceModal}
+        >
+          <CustomNonce
+            openModal={openConfirmationModal}
+            setCustomNonce={setCustomNonce}
           />
-        ) : (
-          <ConfirmTransaction
-            transactionData={transactionData}
-            stepBackward={stepBackwards}
-            sendTransaction={sendTransaction}
-          />
-        )}
-      </div>
-      <ModalContainer
-        show={showModal === ModalStates.PASSPHRASE}
-        close={closeModal}
-      >
-        <PrivateKeyModal
-          confirmPrivateKey={confirmPrivateKey}
-          closeModal={closeModal}
-          setPrivateKey={setPrivateKey}
-        />
-      </ModalContainer>
-      <ModalContainer
-        show={showModal === ModalStates.BROADCASTING}
-        close={closeModal}
-      >
-        <BroadcastTransaction />
-      </ModalContainer>
-      <ModalContainer
-        show={showModal === ModalStates.NONCE}
-        close={closeNonceModal}
-      >
-        <CustomNonce
-          openModal={openConfirmationModal}
-          setCustomNonce={setCustomNonce}
-        />
-      </ModalContainer>
+        </ModalContainer>
+      </Spinner>
     </Hoc>
   );
 }
