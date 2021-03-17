@@ -48,7 +48,7 @@ const BROADCAST_TRANSACTION = gql`
 
 const initialTransactionData = {
   amount: toNanoMINA(0),
-  address: "",
+  receiverAddress: "",
   fee: toNanoMINA(0.001),
   nonce: 0,
   memo: "",
@@ -139,13 +139,19 @@ export default function SendTX(props) {
           rawSignature: ledgerTransactionData,
         };
         const SendPaymentInput = {
+          // nonce
+          // memo
+          // fee
+          // amount
+          // to
+          // from
           nonce: transactionData.nonce,
           memo: transactionData.memo,
           fee: fee.toString(),
           amount: amount.toString(),
-          to: transactionData.address,
+          to: transactionData.receiverAddress,
           from: address,
-          validUntil: getDefaultValidUntilField(),
+          // validUntil: getDefaultValidUntilField(),
         };
         broadcastTransaction({
           variables: { input: SendPaymentInput, signature: SignatureInput },

@@ -9029,10 +9029,10 @@ mimic-response@^2.0.0:
   resolved "https://registry.yarnpkg.com/mimic-response/-/mimic-response-2.1.0.tgz#d13763d35f613d09ec37ebb30bac0469c0ee8f43"
   integrity sha512-wXqjST+SLt7R009ySCglWBCFpjUygmCIfD790/kVbiGmUgfYGuB14PiTd5DwVxSV4NcYHjzMkoj5LjQZwTQLEA==
 
-mina-ledger-js@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/mina-ledger-js/-/mina-ledger-js-1.0.3.tgz#5765b7277dddcd79cc04cdd798f4909f6241ed45"
-  integrity sha512-MWPTQqt3ElJDjFzHNadIu/8vnTH5LuQ2PdRQHMNbyU1Mn6dAnhX8/dpT376Y1x6ValMKk+it+gOzMoxxl0M18g==
+mina-ledger-js@1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/mina-ledger-js/-/mina-ledger-js-1.0.4.tgz#a887482f3a9f204d7a74d03cfd0b89abcb4576df"
+  integrity sha512-5i2IlOEWsuCj21v9pMuKR6bZ/67LUhkC9b02YGibyTUt9V+Z5F4Ohm6w2XCx2pA8GXoQm8vycDayE2tGmmpk2w==
   dependencies:
     buffer "6.0.3"
 
