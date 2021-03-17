@@ -1,4 +1,4 @@
-# Clorio Client
+# ~Clorio Client
 <img height="100" src="https://mina.tools/assets/minahub.svg">
 
 ⚠️ This is an early private stage of Clorio, is not ready for usage.
