@@ -79,12 +79,13 @@ export default function SendTX(props) {
   });
   const fee = useQuery(GET_FEE,{
     onCompleted:(data)=>{
-    if(data.estimatedFee && data.estimatedFee.average)
-      setTransactionData({
-        ...transactionData,
-        fee:toNanoMINA(data.estimatedFee.average)
-      })
-      setShowLoader(false);
+    if(data?.estimatedFee?.average){
+        setTransactionData({
+          ...transactionData,
+          fee:toNanoMINA(data.estimatedFee.average)
+        })
+        setShowLoader(false);
+      }
     },
     onError:()=>{
       setShowLoader(false);
