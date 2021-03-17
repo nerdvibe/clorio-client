@@ -1,5 +1,5 @@
 {
-  "name": "mina-hub-client",
+  "name": "clorio-client",
   "version": "0.1.0",
   "private": true,
   "homepage": "./",
@@ -53,7 +53,7 @@
     "electron-pack": "electron-builder -m"
   },
   "build": {
-    "appId": "com.minahub",
+    "appId": "io.clor",
     "files": [
       "build/**/*",
       "node_modules/**/*",

@@ -93,7 +93,7 @@ export default function Register(props) {
     html2pdf()
       .set({
         margin: 25,
-        filename: "MinaHub-Paperwallet.pdf",
+        filename: "Clorio-Paperwallet.pdf",
       })
       .from(element)
       .save();

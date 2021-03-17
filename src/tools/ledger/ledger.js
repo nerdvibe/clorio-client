@@ -28,7 +28,7 @@ export const isMinaAppOpen = async() => {
 
   const ledgerNameVersion = await ledgerAPI.isMinaAppOpen();
   if(ledgerNameVersion.returnCode !== '9000') {
-    throw new Error("MinaHub couldn't communicate with the Ledger device")
+    throw new Error("~Clorio couldn't communicate with the Ledger device")
   }
   if(ledgerNameVersion.name !== 'Mina') {
     throw new Error("Please make sure that you have the Mina app open on the Ledger device")
