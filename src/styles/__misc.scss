@@ -88,6 +88,27 @@ th{
     margin: 10px 10px 50px 10px;
 }
 
+.small-screen-address{
+    font-size: 1.55vw;
+}
+
+.small-screen-wallet-value{
+    padding-top: 10px;
+}
+
+.stake-status-container{
+    height: 80px;
+}
+
+.current-delegate-address{
+    font-weight: 200;
+}
+
+.custom-delegate-button{
+    margin: 0;
+    padding: 10px 0px;
+}
+
 input {
     font-family: 'Lato', sans-serif;
     outline: none;
@@ -733,7 +754,7 @@ input[type=number] {
     }
 
     .walletImageContainer{
-        width: 100%;
+        width: 7%;
         top: 0px;
     }
     
@@ -781,6 +802,10 @@ input[type=number] {
             width: 100%;
             top: -40px; 
         }
+    }
+
+    .small-screen-align-left{
+        text-align: left;
     }
 
 }
