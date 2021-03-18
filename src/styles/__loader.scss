@@ -169,7 +169,7 @@ a{
   display: none;
 }
 
-@media (max-width: 1199px), (max-height: 799px) {
+@media (max-width: 799px), (max-height: 799px) {
   .hidden-mob {
     display: none;
   }
@@ -181,4 +181,9 @@ a{
 
 .show-on-load{
   display: none;
+}
+
+table{
+  table-layout: fixed; 
+  width: 100%;
 }

@@ -4,18 +4,17 @@ const TransportNodeHid = require("@ledgerhq/hw-transport-node-hid-singleton");
 
 const path = require("path");
 const url = require("url");
-
 let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1200,
+    width: 800,
     height: 800,
     titleBarStyle: "hidden",
     webPreferences: {
       nodeIntegration: true,
     },
-    minWidth: 1200,
+    minWidth: 800,
     minHeight: 800,
   });
   mainWindow.loadURL(

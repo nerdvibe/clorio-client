@@ -24,7 +24,8 @@ export default function StakeStatus(props) {
     <div>
       <h4>Your status</h4>
       <h6 className="full-width-align-left">
-        Your are staking for {props.currentDelegate || "None"}
+        Your are staking for :
+        <div className="current-delegate-address">{props.currentDelegate || "None"}</div>
       </h6>
     </div>
   );
