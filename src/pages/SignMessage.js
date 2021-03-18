@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Hoc from "../components/General/Hoc";
 import SignMessageForm from "../components/Forms/SignMessageForm";
 import { getAddress } from "../tools";
+import imageToRender  from "../assets/NotAvailableForLedger.svg";
 import * as CodaSDK from "@o1labs/client-sdk";
 
 export default function SignMessage(props) {
@@ -49,6 +50,23 @@ export default function SignMessage(props) {
     setPrivateKey("");
     setResult(undefined);
     setMessage("");
+  }
+
+  if(props.sessionData.ledger){
+    return (
+      <Hoc>
+        <div className="animate__animated animate__fadeIn">
+          <div className="mx-auto">
+            <div className="block-container">
+              <img
+                src={imageToRender}
+                className="animate__animated animate__fadeIn"
+              />
+            </div>
+          </div>
+        </div>
+      </Hoc>
+    );
   }
 
   return (
