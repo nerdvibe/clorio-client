@@ -47,6 +47,7 @@ th{
 .contentWrapper {
     padding: 20px;
     margin: 0px !important;
+    max-width: 100% !important;
 }
 
 .walletImageContainer {
@@ -62,12 +63,6 @@ th{
 }
 .table td, .table th {
     padding: 0.65rem !important;
-}
-
-@media (min-width: 1200px) {
-    .container {
-        max-width: 100% !important;
-    }
 }
 
 .v-div {
@@ -91,6 +86,27 @@ th{
     border-radius: 10px;
     background: white;
     margin: 10px 10px 50px 10px;
+}
+
+.small-screen-address{
+    font-size: 1.55vw;
+}
+
+.small-screen-wallet-value{
+    padding-top: 10px;
+}
+
+.stake-status-container{
+    height: 80px;
+}
+
+.current-delegate-address{
+    font-weight: 200;
+}
+
+.custom-delegate-button{
+    margin: 0;
+    padding: 10px 0px;
 }
 
 input {
@@ -430,10 +446,6 @@ tbody{
 }
 
 .sidebar-footer,.sidebar-footer-network{
-    position: fixed;
-    bottom: 8vh;
-    width: 16.666667%;
-    margin: 0 -2vw;
     text-align: center;
 }
 
@@ -544,6 +556,10 @@ tbody{
 .table-searchbar{
     border-radius: 10px;
     padding: 2px 10px;
+}
+
+.no-margin{
+    margin: 0;
 }
 
 .toast {
@@ -701,4 +717,95 @@ input[type=number] {
 
 .pdf-only{
     display: none;
+}
+
+.sidebar-footer-block{
+    width: 20%;
+    bottom: 3vh;
+    height: fit-content;
+    text-align: center;
+    position: fixed;
+}
+@media (min-width: 1200px) {
+
+    .small-screen{
+        display: none;
+    }
+
+    .big-screen{
+        display: block;
+    }
+
+    .container {
+        max-width: 100% !important;
+    }
+
+    .sidebar-footer-block{
+        width: 13.5%;
+    }
+}
+
+@media (max-width: 1199px) {
+
+    .wallet-address{
+        h5{
+            font-size: 1.5vw;
+        }
+    }
+
+    .walletImageContainer{
+        width: 7%;
+        top: 0px;
+    }
+    
+    .walletImageOutline {
+        border-radius: 50%;
+        border: 3px solid #E76F51;
+        width: auto;
+        height: auto;
+        padding-top: 0px;
+    }
+
+    .block-container{
+        width: 100%;
+        text-align: center;
+    }
+
+    .modal-container{
+        left: 5%;
+        width: 90%;
+    }
+
+    .small-screen{
+        display: block;
+    }
+
+    .big-screen{
+        display: none;
+    }
+
+    .sidebar-footer-block{
+        width: 20%;
+    }
+
+    table tr {
+        display: block;
+        margin-bottom: .625em;
+    }
+
+    .stake-row-value{
+        div{
+            width: fit-content;
+        }
+        
+        .walletImageContainer {
+            width: 100%;
+            top: -40px; 
+        }
+    }
+
+    .small-screen-align-left{
+        text-align: left;
+    }
+
 }

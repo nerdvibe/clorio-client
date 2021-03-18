@@ -106,10 +106,10 @@ export default function Wallet(props) {
 
   return (
     <div className="block-container">
-      <div className="align-left">
+      <div className="align-left big-screen">
         <div className="inline-block-element walletImageContainer">
           <div className="walletImageOutline">
-            <Avatar address={address} size="80" />
+            <Avatar address={address} />
           </div>
         </div>
         <div className="inline-block-element wallet-data">
@@ -140,6 +140,53 @@ export default function Wallet(props) {
                 <span>
                   <h6 className="secondaryText">BTC Apx. value</h6>
                   <h5>{renderAverageValue()} </h5>
+                </span>
+              </div>
+            </Col>
+          </Row>
+        </div>
+      </div>
+      <div className="align-left small-screen">
+        <Row>
+        <Col md={12}>
+            <div className="inline-block-element walletImageContainer">
+              <div className="walletImageOutline">
+                <Avatar address={address} />
+              </div>
+            </div>
+            <div className="inline-block-element ">
+              <h6 className="secondaryText">This is your address</h6>
+              <h5 className="small-screen-address">
+                {address} &nbsp;
+                <Button
+                  className="inline-element"
+                  icon={<Copy />}
+                  onClick={() => copyToClipboard(address)}
+                />
+              </h5>
+            </div>
+          </Col>
+        </Row>
+        <div className="inline-block-element wallet-data full-width">
+          <Row>
+            <Col md={5} className="full-width-align-center small-screen-wallet-value">
+              <div className="inline-block-element full-width-align-center">
+                <h6 className="secondaryText full-width-align-center">Your balance</h6>
+                <h5 className="full-width-align-center">{renderBalance()}</h5>
+              </div>
+            </Col>
+            <Col md={2} className="full-width-align-center">
+              <div className="inline-block-element">
+                <div className="v-div" />
+              </div>
+            </Col>
+            <Col md={5} className="full-width-align-center ">
+              <div className="inline-block-element full-width-align-center small-screen-wallet-value">
+                <span>
+                  <h6 className="secondaryText full-width-align-center">Apx value</h6>
+                  <h5 className="full-width-align-center">
+                    {renderAverageValue()} 
+                  </h5>
                 </span>
               </div>
             </Col>

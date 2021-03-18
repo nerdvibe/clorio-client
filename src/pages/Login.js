@@ -96,9 +96,10 @@ export default function Login(props) {
           <div className="full-width">
             <Row>
               <Col
-                md={6}
+                md={12}
+                lg={10}
                 xl={6}
-                className="offset-md-3 offset-xl-3 text-center"
+                className="offset-lg-1 offset-xl-3 text-center"
               >
                 <div className="mx-auto fit-content">
                   <Logo big="true" />

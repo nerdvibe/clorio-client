@@ -118,7 +118,7 @@ export default function Register(props) {
       <Spinner show={showLoader}>
         <div className="animate__animated animate__fadeIn full-width">
           <Row className="full-width">
-            <Col md={10} xl={8} className="offset-md-1 offset-xl-2 text-center">
+            <Col md={12} lg={10} xl={8} className="offset-lg-1 offset-xl-2 text-center">
               <div id="element-to-print">
                 <div className="v-spacer-big pdf-only" />
                 <div className="v-spacer-big pdf-only" />
