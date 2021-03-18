@@ -33,7 +33,7 @@ export default function StakeTable(props) {
   function renderTable() {
     if (props.validators.error) {
       return (
-        <div className="block-container-last">
+        <div className="block-container">
           <div className="full-width padding-y-50">
             <img src={ErrorImage} />
           </div>
@@ -42,25 +42,27 @@ export default function StakeTable(props) {
     }
     return (
       <Spinner className={"full-width"} show={props.validators.loading}>
-        <Table>
-          <thead>
-            <tr className="th-background">
-              <th className="th-first-item">Stake</th>
-              <th></th>
-              <th></th>
-              <th></th>
-              <th className="th-last-item">
-                <input
-                  className="table-searchbar"
-                  placeholder={"Filter..."}
-                  value={searchbox}
-                  onChange={(e) => searchboxHandler(e.currentTarget.value)}
-                />
-              </th>
-            </tr>
-          </thead>
-          {renderTableBody()}
-        </Table>
+        <div id="transaction-table">
+          <Table id="rwd-table-large">
+            <thead>
+              <tr className="th-background">
+                <th className="th-first-item">Stake</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th className="th-last-item">
+                  <input
+                    className="table-searchbar"
+                    placeholder={"Filter..."}
+                    value={searchbox}
+                    onChange={(e) => searchboxHandler(e.currentTarget.value)}
+                  />
+                </th>
+              </tr>
+            </thead>
+            {renderTableBody()}
+          </Table>
+        </div>
         <Pagination
           page={props.page}
           total={getTotalPages()}
@@ -86,11 +88,10 @@ export default function StakeTable(props) {
 
   function renderRow(el, index) {
     return (
-      <tr key={index}>
+      <tr key={index} className="stake-table-row">
         <StakeTableValue
           avatar={
             <div className="walletImageContainer small-image inline-element">
-              <div className="">
                 {el.image ? (
                   <img className="small-walletImage" src={el.image} />
                 ) : (
@@ -100,16 +101,16 @@ export default function StakeTable(props) {
                     size="30"
                   />
                 )}
-              </div>
             </div>
           }
           header="Validator"
           text={el.name}
+          className="table-element"
         />
-        <StakeTableValue header={"Uptime"} text={"100%"} />
-        <StakeTableValue header={"Commission"} text={`${el.fee}%`} />
-        <StakeTableValue header={"Staked"} text={"200 Mina"} />
-        <td>
+        <StakeTableValue className="table-element" header={"Uptime"} text={"100%"} />
+        <StakeTableValue className="table-element" header={"Commission"} text={`${el.fee}%`} />
+        <StakeTableValue className="table-element" header={"Staked"} text={"200 Mina"} />
+        <td className="table-element stake-table-button">
           <Button
             className="yellowButton__fullMono"
             text="Delegate"
@@ -135,7 +136,7 @@ export default function StakeTable(props) {
   function renderAddDelegate() {
     return (
       <Button
-        className="link-button"
+        className="link-button custom-delegate-button"
         text="Custom delegation"
         onClick={props.openCustomDelegateModal}
       />
@@ -144,13 +145,15 @@ export default function StakeTable(props) {
 
   return (
     <div className="mx-auto  ">
-      <div className="block-container-last  py-50">
+      <div className="block-container  py-50">
         <div>
           <Row>
-            <Col>
+            <Col md={12} lg={12} xl={8} className="stake-status-container">
               <StakeStatus currentDelegate={props.currentDelegate} />
             </Col>
-            <Col className="align-end">{renderAddDelegate()}</Col>
+            <Col md={5} lg={4} xl={3} className="align-end small-screen-align-left">
+              {renderAddDelegate()}
+            </Col>
           </Row>
           <div className="v-spacer" />
           {renderTable()}

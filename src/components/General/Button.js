@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 export default function Button(props) {
   const button = (
     <div
-      style={{ marginLeft: "5px" }}
       className={props.className + " button"}
       onClick={props.onClick}
     >
