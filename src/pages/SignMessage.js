@@ -4,6 +4,7 @@ import SignMessageForm from "../components/Forms/SignMessageForm";
 import { getAddress } from "../tools";
 import imageToRender  from "../assets/NotAvailableForLedger.svg";
 import * as CodaSDK from "@o1labs/client-sdk";
+import { isLedgerEnabled } from "../tools/utils";
 
 export default function SignMessage(props) {
   const [message, setMessage] = useState("");
@@ -52,7 +53,7 @@ export default function SignMessage(props) {
     setMessage("");
   }
 
-  if(props.sessionData.ledger){
+  if(isLedgerEnabled()){
     return (
       <Hoc>
         <div className="animate__animated animate__fadeIn">
