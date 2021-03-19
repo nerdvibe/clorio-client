@@ -11,7 +11,7 @@ import { useQuery, gql, useMutation } from "@apollo/client";
 import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
 import {emojiToUnicode, escapeUnicode, isMinaAppOpen, NETWORK, signTransaction, TX_TYPE} from "../tools/ledger/ledger";
-import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
+import { getDefaultValidUntilField, isLedgerEnabled, toNanoMINA } from "../tools/utils";
 import {Big} from "big.js";
 import CustomNonce from "../components/Modals/CustomNonce";
 import { useContext } from "react";
@@ -60,7 +60,7 @@ export default function SendTX(props) {
     BROADCASTING: "broadcasting",
     NONCE: "nonce",
   });
-  const isLedgerEnabled = props.sessionData.ledger;
+  const ledgerEnabled = isLedgerEnabled();
   const [privateKey, setPrivateKey] = useState("");
   const [sendTransactionFlag, setSendTransactionFlag] = useState(false);
   const [step, setStep] = useState(0);
@@ -119,7 +119,7 @@ export default function SendTX(props) {
 
   // Listen for ledger action
   useEffect(() => {
-    if (isLedgerEnabled && !ledgerTransactionData) {
+    if (ledgerEnabled && !ledgerTransactionData) {
       if (step === 1) {
         const transactionListener = sendLedgerTransaction(
           setLedgerTransactionData
@@ -127,7 +127,7 @@ export default function SendTX(props) {
         return transactionListener.unsubscribe;
       }
     }
-  }, [isLedgerEnabled, ledgerTransactionData, step]);
+  }, [ledgerEnabled, ledgerTransactionData, step]);
 
   // Ledger data arrived, broadcast transaction
   useEffect(() => {
@@ -196,7 +196,7 @@ export default function SendTX(props) {
       return
     }
     nonce.refetch({ publicKey: address });
-    if (!isLedgerEnabled) {
+    if (!ledgerEnabled) {
       setShowModal(ModalStates.PASSPHRASE);
     } else {
       setStep(1);
@@ -374,7 +374,7 @@ export default function SendTX(props) {
               showGlobalAlert={props.showGlobalAlert}
               setData={setTransactionData}
             />
-          ) : isLedgerEnabled ? (
+          ) : ledgerEnabled ? (
             <ConfirmLedgerTransaction
               transactionData={transactionData}
             />

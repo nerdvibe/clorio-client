@@ -44,6 +44,29 @@ export const readSession = (callback, goToHome) => {
   });
 };
 
+export const getLedgerData = (callback, goToHome) => {
+  db.find({}, (error, data) => {
+    if (data.length > 0) {
+      try {
+        const row = data[0];
+        const dataToReturn = {
+          isLedgerEnabled:row.ledger,
+          ledgerAccountNumber:row.ledgerAccount
+        };
+        return callback({dataToReturn});
+      } catch (error) {
+        clearSession();
+        callback({
+          isLedgerEnabled:false,
+          ledgerAccountNumber:0
+        });
+        return goToHome();
+      }
+    }
+    callback({});
+  });
+};
+
 export const clearSession = () => {
   db.remove({}, { multi: true }, function () {});
 };

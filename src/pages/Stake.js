@@ -12,7 +12,7 @@ import { useHistory } from "react-router-dom";
 import ConfirmDelegation from "../components/Modals/ConfirmDelegation";
 import CustomDelegation from "../components/Modals/CustomDelegation";
 import {isMinaAppOpen, NETWORK, signTransaction, TX_TYPE} from "../tools/ledger/ledger";
-import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
+import { getDefaultValidUntilField, isLedgerEnabled, toNanoMINA } from "../tools/utils";
 import LedgerLoader from "../components/General/LedgerLoader";
 import CustomNonce from "../components/Modals/CustomNonce";
 import Button from "../components/General/Button";
@@ -82,7 +82,7 @@ export default (props) => {
     CUSTOM_DELEGATION: "custom",
     NONCE: "nonce",
   });
-  const isLedgerEnabled = props.sessionData.ledger;
+  const ledgerEnabled = isLedgerEnabled();
   const [delegateData, setDelegate] = useState({});
   const [currentDelegate, setCurrentDelegate] = useState("");
   const [showModal, setShowModal] = useState("");
@@ -124,7 +124,7 @@ export default (props) => {
   }, [nonceAndDelegate.data]);
 
   useEffect(() => {
-    if (isLedgerEnabled && !ledgerTransactionData) {
+    if (ledgerEnabled && !ledgerTransactionData) {
       if (showModal === ModalStates.PASSPHRASE) {
         const transactionListener = signLedgerTransaction(
           setLedgerTransactionData
@@ -132,7 +132,7 @@ export default (props) => {
         return transactionListener.unsubscribe;
       }
     }
-  }, [isLedgerEnabled, ledgerTransactionData, showModal]);
+  }, [ledgerEnabled, ledgerTransactionData, showModal]);
 
   useEffect(() => {
     if (ledgerTransactionData) {
@@ -397,7 +397,7 @@ export default (props) => {
         show={showModal === ModalStates.PASSPHRASE}
         close={closeModal}
       >
-        {isLedgerEnabled ? (
+        {ledgerEnabled ? (
           <div className="mx-auto">
             <h2>Please confirm transaction </h2>
             <div className="v-spacer" />

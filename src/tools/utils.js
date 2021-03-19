@@ -1,4 +1,5 @@
 import Big from "big.js";
+import { getLedgerData } from "./auth";
 
 export function copyToClipboard(content) {
   const el = document.createElement("textarea");
@@ -32,4 +33,12 @@ export function toMINA(amount) {
 
 export function getDefaultValidUntilField() {
   return "4294967295";
+}
+
+export function isLedgerEnabled (){
+  return getLedgerData(
+    (data)=>{
+      return data.isLedgerEnabled 
+    }
+  )
 }
