@@ -80,19 +80,20 @@ const NEWS = gql`
 export default function Overview(props) {
   const { balance } = useContext(BalanceContext);
   const [offset, setOffset] = useState(0);
-  let queryResult;
+  let transactions;
   let mempool;
   if (props.sessionData) {
-    const user = props.sessionData.id;
-    queryResult = useQuery(TRANSACTIONS, {
-      variables: { user, offset },
+    const userId = props.sessionData.id;
+    const userAddress = props.sessionData.address;
+    transactions = useQuery(TRANSACTIONS, {
+      variables: { userId, offset },
       fetchPolicy: "network-only",
-      skip: !user,
+      skip: !userId,
     });
     mempool = useQuery(GET_MEMPOOL, {
-      variables: { publicKey: props.sessionData.address },
-      skip: !props.sessionData.address,
+      variables: { publicKey: userAddress },
       fetchPolicy: "network-only",
+      skip: !userAddress,
     });
   }
   const news = useQuery(NEWS);
@@ -127,10 +128,10 @@ export default function Overview(props) {
 
   return (
     <Hoc className="main-container">
-      <Spinner show={queryResult.loading}>
+      <Spinner show={transactions.loading || mempool.loading}>
         {renderBanner()}
         <TransactionsTable
-          {...queryResult}
+          transactions={transactions}
           mempool={mempool}
           balance={balance.total}
           setOffset={changeOffset}

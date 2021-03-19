@@ -747,6 +747,11 @@ input[type=number] {
 
 @media (max-width: 1199px) {
 
+    .transaction-confirmation-receiver-address{
+        font-size: 0.95rem;
+    }
+    
+
     .wallet-address{
         h5{
             font-size: 1.5vw;

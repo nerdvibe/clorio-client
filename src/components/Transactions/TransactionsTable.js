@@ -28,7 +28,8 @@ const GET_TRANSACTIONS_TOTAL = gql`
 `;
 
 export default function TransactionsTable(props) {
-  const { loading, error, data, mempool, userId, userAddress } = props;
+  const { transactions, mempool, userId, userAddress } = props;
+  const {loading, error, data} = transactions;
   const total = useQuery(GET_TRANSACTIONS_TOTAL, {
     variables: { user: userId },
     skip: !userId,
@@ -37,7 +38,7 @@ export default function TransactionsTable(props) {
   if (error || mempool.error) {
     return renderError();
   }
-  if (!data || data.user_commands.length === 0) {
+  if (!data || data.user_commands?.length === 0) {
     return renderEmptyState();
   }
 
@@ -130,8 +131,8 @@ export default function TransactionsTable(props) {
     const fee = "Fee : " +(row.fee ? toMINA(row.fee) : 0) + " Mina";
     return (
       <tr key={index}>
-        <td className="table-element"> {renderTransactionOrDelegationIcon(row.amount,sender,receiver)} </td>
-        <td className="table-element">
+        <td className="table-element table-icon"> {renderTransactionOrDelegationIcon(row.amount,sender,receiver)}</td>
+        <td className="table-element table-hash">
           <a
             href={`https://devnet.minaexplorer.com/payment/${row.id}`}
             target="_blank"
@@ -140,7 +141,7 @@ export default function TransactionsTable(props) {
             {row.id}
           </a>
         </td>
-        <td className="table-element">Waiting for confirmation</td>
+        <td className="table-element force-right">Waiting for confirmation</td>
         <td className="table-element">{sender === userAddress ? 'you' : sender}</td>
         <td className="table-element">{receiver === userAddress ? 'you' : receiver}</td>
         <td className="table-element" style={{color:amountColor}} data-tip={fee}>{humanAmount} Mina</td>
@@ -222,9 +223,9 @@ export default function TransactionsTable(props) {
    */
   function getTotalPages() {
     if (total.data && total.data.user_commands_aggregate.aggregate) {
-      let totalItems = total.data.user_commands_aggregate.aggregate.count;
-      const pages = (totalItems / ITEMS_PER_PAGE).toFixed(0);
-      if(totalItems%ITEMS_PER_PAGE < 5 && totalItems%ITEMS_PER_PAGE!==0){
+      let transactionsCount = total.data.user_commands_aggregate.aggregate.count;
+      const pages = (transactionsCount / ITEMS_PER_PAGE).toFixed(0);
+      if(transactionsCount%ITEMS_PER_PAGE < 5 && transactionsCount%ITEMS_PER_PAGE!==0){
         return parseInt(pages) === 0 ? 1 : parseInt(pages)+1;
       }
       return parseInt(pages) === 0 ? 1 : pages;
@@ -235,7 +236,6 @@ export default function TransactionsTable(props) {
   return (
     <div className="block-container">
       <Spinner className={"full-width"} show={loading}>
-        <ReactTooltip multiline={true} />
         <div id="transaction-table">
           <Table className="animate__animated animate__fadeIn"  id="rwd-table-large">
             <thead>{renderTableHeader()}</thead>
@@ -248,6 +248,7 @@ export default function TransactionsTable(props) {
           user={props.userId}
           total={getTotalPages()}
         />
+        <ReactTooltip multiline={true} />
       </Spinner>
     </div>
   );

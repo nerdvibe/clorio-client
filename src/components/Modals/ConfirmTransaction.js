@@ -4,7 +4,7 @@ import { toMINA } from "../../tools/utils";
 import Button from "../General/Button";
 
 export default function ConfirmTransaction(props) {
-  const { amount, fee, address, memo } = props.transactionData;
+  const { amount, fee, receiverAddress, memo } = props.transactionData;
   const { stepBackward, sendTransaction } = props;
   return (
     <div className="mx-auto  ">
@@ -17,10 +17,10 @@ export default function ConfirmTransaction(props) {
           </div>
           <div className="v-spacer" />
           <Row>
-            <Col md={8} className="offset-md-2">
+            <Col md={12} lg={8} className="offset-lg-2 full-width-align-center">
               You are about to send <strong>{toMINA(amount)} Mina</strong> <br />
               with a fee of <strong>{toMINA(fee)} Mina</strong> <br />
-              to <strong>{address}</strong> <br />
+              to <strong className="transaction-confirmation-receiver-address">{receiverAddress}</strong> <br />
               {memo ? <>with memo <strong>{memo}</strong></> : null}
               <div className="v-spacer" />
               <div className="mx-auto">

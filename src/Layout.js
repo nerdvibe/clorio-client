@@ -11,6 +11,7 @@ import { isEmptyObject } from "./tools/utils";
 import Alert from "./components/General/Alert";
 import Wallet from "./components/General/Wallet";
 import {BalanceContextProvider} from "./context/BalanceContext";
+import ReactTooltip from "react-tooltip";
 
 const GET_NETWORK = gql`
   query NodeInfo {
@@ -60,6 +61,7 @@ function Layout() {
   return (
     <div>
       <Container fluid>
+        <ReactTooltip />
         <Row>
           {sessionData && !isEmptyObject(sessionData) && sessionData.address && (
             <Col md={3} lg={3} xl={2} id="sidebar-wrapper">
