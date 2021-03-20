@@ -19,6 +19,7 @@ import { ITEMS_PER_PAGE } from "../tools/const";
 import { BROADCAST_DELEGATION,GET_VALIDATORS,GET_AVERAGE_FEE,GET_VALIDATORS_NEWS,GET_NONCE_AND_DELEGATE } from "../tools/query";
 import { createDelegationPaymentInputFromPayload, createSignatureInputFromSignature } from "../tools/transactions";
 import { derivePublicKey, signStakeDelegation } from "@o1labs/client-sdk";
+import { feeOrDefault } from "../tools/fees";
 
 
 export default (props) => {
@@ -78,7 +79,7 @@ export default (props) => {
   useEffect(() => {
     if (ledgerTransactionData) {
       const actualNonce = getNonce();
-      const averageFee = toNanoMINA(fee.data.estimatedFee.average);
+      const averageFee = toNanoMINA(feeOrDefault(fee.data?.estimatedFee?.txFees?.average));
       const SignatureInput = {
         rawSignature: ledgerTransactionData,
       };
@@ -120,7 +121,7 @@ export default (props) => {
       const stakeDelegation = {
         to: delegateData.publicKey,
         from: address,
-        fee: toNanoMINA(fee.data.estimatedFee.average),
+        fee: toNanoMINA(feeOrDefault(fee.data.estimatedFee?.txFees?.average)),
         nonce: actualNonce,
       };
       const signStake = signStakeDelegation(stakeDelegation, keypair);
