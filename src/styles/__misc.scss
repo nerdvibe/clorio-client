@@ -23,7 +23,7 @@ th{
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    top: 22px;
+    top: 30px;
     border: 2px solid #E76F51;
     position: relative;
     left: -10px;
@@ -389,6 +389,7 @@ a:hover{
     height: 0px;
     margin: 0 auto !important;
     width: 100%;
+    text-align: left;
 }
 
 .footer-text{
@@ -556,6 +557,7 @@ tbody{
 .table-searchbar{
     border-radius: 10px;
     padding: 2px 10px;
+    width: -webkit-fill-available;
 }
 
 .no-margin{
