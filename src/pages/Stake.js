@@ -59,7 +59,9 @@ const GET_NONCE_AND_DELEGATE = gql`
 const GET_FEE = gql`
   query GetFees {
     estimatedFee {
-      average
+      txFees{
+        average
+      }
     }
   }
 `;
@@ -137,7 +139,7 @@ export default (props) => {
   useEffect(() => {
     if (ledgerTransactionData) {
       const actualNonce = getNonce();
-      const averageFee = toNanoMINA(fee.data.estimatedFee.average);
+      const averageFee = toNanoMINA(feeOrDefault(fee.data?.estimatedFee?.txFees?.average));
       const SignatureInput = {
         rawSignature: ledgerTransactionData,
       };
@@ -179,7 +181,7 @@ export default (props) => {
       const stakeDelegation = {
         to: delegateData.publicKey,
         from: address,
-        fee: toNanoMINA(fee.data.estimatedFee.average),
+        fee: toNanoMINA(feeOrDefault(fee.data.estimatedFee?.txFees?.average)),
         nonce: actualNonce,
       };
       const signStake = CodaSDK.signStakeDelegation(stakeDelegation, keypair);
@@ -326,7 +328,7 @@ export default (props) => {
         senderAccount,
         senderAddress: address,
         receiverAddress: delegateData.publicKey,
-        fee: +toNanoMINA(feeOrDefault(fee?.data?.estimatedFee?.average || '0')),
+        fee: +toNanoMINA(feeOrDefault(fee?.data?.estimatedFee?.txFees?.average || '0')),
         amount: 0,
         nonce: actualNonce,
         // TODO: FIX HARDCODING!

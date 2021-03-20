@@ -21,8 +21,10 @@ import Spinner from "../components/General/Spinner";
 const GET_FEE = gql`
   query GetFees {
     estimatedFee {
-      average
-      fast
+      txFees{
+        average
+        fast
+      }
     }
   }
 `;
@@ -79,10 +81,10 @@ export default function SendTX(props) {
   });
   const fee = useQuery(GET_FEE,{
     onCompleted:(data)=>{
-    if(data?.estimatedFee?.average){
+    if(data?.estimatedFee?.txFees?.average){
         setTransactionData({
           ...transactionData,
-          fee:toNanoMINA(data.estimatedFee.average)
+          fee:toNanoMINA(data.estimatedFee.txFees.average)
         })
         setShowLoader(false);
       }
@@ -367,8 +369,8 @@ export default function SendTX(props) {
         <div className="animate__animated animate__fadeIn">
           {step === 0 ? (
             <TransactionForm
-              defaultFee={fee?.data?.estimatedFee?.average || 0}
-              fastFee={fee?.data?.estimatedFee?.fast || 0}
+              defaultFee={fee?.data?.estimatedFee?.txFees?.average || 0}
+              fastFee={fee?.data?.estimatedFee?.txFees?.fast || 0}
               nextStep={openConfirmationModal}
               transactionData={transactionData}
               showGlobalAlert={props.showGlobalAlert}
