@@ -36,11 +36,11 @@ export default function StakeTable(props) {
           <Table id="rwd-table-large">
             <thead>
               <tr className="th-background">
-                <th className="th-first-item">Stake</th>
+                <th className="th-first-item stake-th">Stake</th>
                 <th></th>
                 <th></th>
                 <th></th>
-                <th className="th-last-item">
+                <th className="th-last-item" >
                   <input
                     className="table-searchbar"
                     placeholder={"Filter..."}
