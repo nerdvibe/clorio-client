@@ -7,75 +7,9 @@ import Spinner from "../components/General/Spinner";
 import { useState } from "react";
 import { useContext } from "react";
 import { BalanceContext } from "../context/BalanceContext";
-
-const ITEMS_PER_PAGE = 10;
-
-const TRANSACTIONS = gql`
-  query GetTransactions($user: Int!, $offset: Int!) {
-    user_commands(
-      where: {
-        _or: [{ receiver_id: { _eq: $user } }, { source_id: { _eq: $user } }]
-      }
-      order_by: { id: desc }
-      limit: ${ITEMS_PER_PAGE}
-      offset: $offset
-    ) {
-      amount
-      fee
-      id
-      hash
-      memo
-      publicKeyBySourceId {
-        value
-      }
-      publicKeyByReceiverId {
-        value
-      }
-      token
-      type
-      valid_until
-      nonce
-      blocks_user_commands {
-        block {
-          height
-          timestamp
-          state_hash
-        }
-      }
-    }
-  }
-`;
-
-const GET_MEMPOOL = gql`
-  query GetMempool($publicKey: String!) {
-    mempool(publicKey: $publicKey) {
-      id
-      fee
-      feeToken
-      kind
-      amount
-      nonce
-      source {
-        publicKey
-      }
-      receiver {
-        publicKey
-      }
-    }
-  }
-`;
-
-const NEWS = gql`
-  query NewsHome {
-    news_home(limit: 1) {
-      title
-      subtitle
-      link
-      cta
-      cta_color
-    }
-  }
-`;
+import { ITEMS_PER_PAGE } from "../tools/const";
+import { getPageFromOffset } from "../tools/utils";
+import { GET_MEMPOOL, GET_TRANSACTIONS,GET_HOME_NEWS } from "../tools/query";
 
 export default function Overview(props) {
   const { balance } = useContext(BalanceContext);
@@ -84,7 +18,7 @@ export default function Overview(props) {
   let mempool;
   if (props.sessionData) {
     const user = props.sessionData.id;
-    queryResult = useQuery(TRANSACTIONS, {
+    queryResult = useQuery(GET_TRANSACTIONS, {
       variables: { user, offset },
       fetchPolicy: "network-only",
       skip: !user,
@@ -95,13 +29,22 @@ export default function Overview(props) {
       fetchPolicy: "network-only",
     });
   }
-  const news = useQuery(NEWS);
+  const news = useQuery(GET_HOME_NEWS);
+
+  /**
+   * Set query offset param based on selected table page
+   * @param {number} page Page number
+   */
+  function changeOffset(page) {
+    const data = (page - 1) * ITEMS_PER_PAGE;
+    setOffset(data);
+  }
 
   /**
    * If news are available, render banner
    * @returns HTMLElement
    */
-  function renderBanner() {
+  function renderNewsBanner() {
     if (news.data && news.data.news_home && news.data.news_home.length > 0) {
       const latest = news.data.news_home[0];
       return (
@@ -116,25 +59,16 @@ export default function Overview(props) {
     }
   }
 
-  /**
-   * Set query offset param based on selected table page
-   * @param {number} page Page number
-   */
-  function changeOffset(page) {
-    const data = (page - 1) * ITEMS_PER_PAGE;
-    setOffset(data);
-  }
-
   return (
     <Hoc className="main-container">
       <Spinner show={queryResult.loading}>
-        {renderBanner()}
+        {renderNewsBanner()}
         <TransactionsTable
           {...queryResult}
           mempool={mempool}
           balance={balance.total}
           setOffset={changeOffset}
-          page={offset / ITEMS_PER_PAGE + 1}
+          page={getPageFromOffset(offset)}
           userId={props.sessionData.id}
           userAddress={props.sessionData.address}
         />

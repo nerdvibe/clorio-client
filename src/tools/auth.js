@@ -11,18 +11,20 @@ export const isAuthenticated = () => {
   return false;
 };
 
-export const storeSession = (address, id, isLedgerEnabled, ledgerAccount=0 ,callback) => {
-  const wallet = {
-    name: "Wallet",
-    address: address,
-    id: id,
-    ledger: isLedgerEnabled,
-    ledgerAccount,
-    coins: 0,
-  };
-  db.insert(wallet, () => {
-    callback();
-  });
+export function storeSession(address, id, isLedgerEnabled, ledgerAccount=0) {
+  return new Promise(resolve => {
+    const wallet = {
+      name: "Wallet",
+      address: address,
+      id: id,
+      ledger: isLedgerEnabled,
+      ledgerAccount,
+      coins: 0,
+    };
+    db.insert(wallet, () => {
+      resolve(true);
+    });
+  })
 };
 
 export const readSession = (callback, goToHome) => {

@@ -9,45 +9,41 @@ import Footer from "../components/General/Footer";
 import { useState, useEffect } from "react";
 import { storeSession } from "../tools";
 import Input from "../components/General/Input";
-import * as CodaSDK from "@o1labs/client-sdk";
 import { useQuery, gql } from "@apollo/client";
-
-const GET_ID = gql`
-  query GetIDFromPublicKey($publicKey: String) {
-    public_keys(where: { value: { _eq: $publicKey } }) {
-      id
-    }
-  }
-`;
+import { derivePublicKey } from "@o1labs/client-sdk";
+import { GET_ID } from "../tools/query";
 
 export default function Login(props) {
-  const [passphrase, setpassphrase] = useState("");
   const [publicKey, setPublicKey] = useState("");
+  const [privateKey, setPrivatekey] = useState("");
   const [loader, setLoader] = useState(false);
   const history = useHistory();
-
   const userID = useQuery(GET_ID, {
     variables: { publicKey },
     skip: publicKey === "",
   });
 
+  // Clean component state on component dismount
   useEffect(() => {
-    if (publicKey && publicKey !== "") {
-      userID.refetch({ publicKey });
-      if (userID.data) {
-        if (userID.data.public_keys.length > 0) {
-          props.setLoader();
-          const id = userID.data.public_keys[0].id;
-          storeSession(publicKey, id, false, 0 ,() => {
-            history.push("/overview");
-          });
-        } else {
-          props.setLoader();
-          storeSession(publicKey, -1, false, 0 ,() => {
-            history.push("/overview");
-          });
+    return () => {
+      setPrivatekey("")
+      setPublicKey("")
+    }
+  }, [])
+
+  /**
+   * If Public key has been derived, show loader and set session data
+   */
+  useEffect(() => {
+    if (publicKey && publicKey !== "" && !userID.loading) {
+      const id = userID.data?.public_keys?.length>0? userID.data.public_keys[0].id : -1;
+      props.setLoader();
+      storeSession(publicKey, id, false, 0)
+      .then(success=>{
+        if(success){
+          history.push("/overview");
         }
-      }
+      })
     }
   }, [userID]);
 
@@ -56,7 +52,7 @@ export default function Login(props) {
    * @param {event} e Input text
    */
   function inputHandler(e) {
-    setpassphrase(e.currentTarget.value);
+    setPrivatekey(e.currentTarget.value);
   }
 
   /**
@@ -64,8 +60,9 @@ export default function Login(props) {
    */
   function checkCredentials() {
     try {
-      const derivedPublicKey = CodaSDK.derivePublicKey(passphrase);
+      const derivedPublicKey = derivePublicKey(privateKey);
       setPublicKey(derivedPublicKey);
+      userID.refetch({ publicKey:derivedPublicKey });
       setLoader(true);
     } catch (e) {
       props.showGlobalAlert(
@@ -80,13 +77,7 @@ export default function Login(props) {
    * @returns boolean
    */
   function disableButton() {
-    if (!passphrase) {
-      return true;
-    }
-    if (passphrase === "") {
-      return true;
-    }
-    return false;
+    return !privateKey || privateKey === "";
   }
 
   return (
@@ -106,7 +97,7 @@ export default function Login(props) {
                 </div>
                 <div className="v-spacer" />
                 <h4 className="full-width-align-center">
-                  Sign in with your passphrase
+                  Sign in with your Private Key
                 </h4>
                 <h6 className="full-width-align-center">
                   Don&apos;t have an account?{" "}

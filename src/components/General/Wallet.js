@@ -9,34 +9,14 @@ import { copyToClipboard, toMINA } from "../../tools/utils";
 import ReactTooltip from "react-tooltip";
 import {BalanceContext} from "../../context/BalanceContext";
 import { useContext } from "react";
-
-const TICKER = gql`
-  query ticker {
-    ticker {
-      BTCMINA
-    }
-  }
-`;
-
-const BALANCE = gql`
-  query accountByKey($publicKey: String!) {
-    accountByKey(publicKey: $publicKey) {
-      balance {
-        total
-        liquid
-        locked
-        liquidUnconfirmed
-      }
-    }
-  }
-`;
+import { GET_TICKER,GET_BALANCE } from "../../tools/query";
 
 export default function Wallet(props) {
   let userBalance = 0;
   const [address, setaddress] = useState(undefined);
   const { setBalanceContext } = useContext(BalanceContext);
-  const ticker = useQuery(TICKER);
-  const balance = useQuery(BALANCE, {
+  const ticker = useQuery(GET_TICKER);
+  const balance = useQuery(GET_BALANCE, {
     variables: { publicKey: address },
     skip: !address || address==="",
     onCompleted: (data) => {

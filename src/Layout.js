@@ -11,17 +11,8 @@ import { isEmptyObject } from "./tools/utils";
 import Alert from "./components/General/Alert";
 import Wallet from "./components/General/Wallet";
 import {BalanceContextProvider} from "./context/BalanceContext";
+import { GET_NETWORK } from "./tools/query";
 
-const GET_NETWORK = gql`
-  query NodeInfo {
-    nodeInfo {
-      height
-      name
-      network
-      version
-    }
-  }
-`;
 
 function Layout() {
   const [sessionData, setsessionData] = useState(undefined);

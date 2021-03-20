@@ -5,7 +5,7 @@ import HelpHint from "../General/HelpHint";
 import Input from "../General/Input";
 
 export default function SignMessageForm(props) {
-  if (props.result) {
+  if (props.showResult) {
     return renderResult();
   }
 

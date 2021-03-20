@@ -1,14 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
 import React, { useState } from "react";
 import { getId, updateUser } from "../../tools";
+import { GET_ID } from "../../tools/query";
 
-const GET_ID = gql`
-  query GetIDFromPublicKey($publicKey: String) {
-    public_keys(where: { value: { _eq: $publicKey } }) {
-      id
-    }
-  }
-`;
 
 export default function UpdateUserID(props) {
   const [address, setaddress] = useState("");

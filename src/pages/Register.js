@@ -6,26 +6,40 @@ import Hoc from "../components/General/Hoc";
 import { Copy } from "react-feather";
 import Logo from "../components/General/Logo";
 import Footer from "../components/General/Footer";
-import * as CodaSDK from "@o1labs/client-sdk";
 import { storeSession } from "../tools";
-import { copyToClipboard } from "../tools/utils";
+import { copyToClipboard, createAndDownloadPDF } from "../tools/utils";
 import Input from "../components/General/Input";
-import html2pdf from "html2pdf.js";
 import Spinner from "../components/General/Spinner";
+import { genKeys } from "@o1labs/client-sdk";
 
 export default function Register(props) {
   const [validation, setValidation] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
-  const [keys, setKeys] = useState(undefined);
   const [validationText, setValidationText] = useState("");
+  const [keys, setKeys] = useState({
+    privateKey:"",
+    publicKey:""
+  });
   const history = useHistory();
-  const privateKey = keys ? keys.privateKey : "";
-  const publicKey = keys ? keys.publicKey : "";
 
+  /**
+   * Clean component state on dismount
+   */
   useEffect(() => {
-    if (!keys) {
-      const userKeys = CodaSDK.genKeys();
-      setKeys(userKeys);
+    return () => {
+      setKeys({
+        privateKey:"",
+        publicKey:""
+      })
+    }
+  }, [])
+
+  /**
+   * Generate key pair with CodaSDK
+   */
+  useEffect(() => {
+    if (keys.publicKey==="" && keys.privateKey==="" ) {
+      setKeys(genKeys());
     }
   }, []);
 
@@ -42,19 +56,19 @@ export default function Register(props) {
    * @returns boolean
    */
   function checkButtonState() {
-    if (validationText === keys.privateKey) {
-      return false;
-    }
-    return true;
+    return validationText !== keys.privateKey;
   }
 
   /**
-   * Save public key, wallet id inside the storage
+   * Save public key inside the storage
    */
   function setAuthorization() {
     props.setLoader();
-    storeSession(publicKey, -1, false, 0 ,() => {
-      history.push("/overview");
+    storeSession(keys.publicKey, -1, false, 0)
+    .then((success) => {
+      if(success){
+        history.push("/overview");
+      }
     });
   }
 
@@ -62,51 +76,26 @@ export default function Register(props) {
    * Generate new key pair
    */
   function generateNew() {
-    const userKeys = CodaSDK.genKeys();
-    setKeys(userKeys);
+    setKeys(genKeys());
   }
 
   /**
    * Go back to data screen
    */
   function stepBackwards() {
-    setValidationText(undefined);
+    setValidationText("");
     setValidation(false);
   }
 
   /**
    * Download PDF with sensible data
    */
-  function downloadPDF() {
+  function downloadPDFButtonHandler() {
     setShowLoader(true);
-    const elementsToHide = document.getElementsByClassName("no-print");
-    const elementInitalState = [];
-    for (const el of elementsToHide) {
-      elementInitalState.push(el.style.display);
-      el.style.display = "none";
-    }
-    const elementsToShow = document.getElementsByClassName("pdf-only");
-    for (const el of elementsToShow) {
-      el.style.display = "inline";
-    }
-    const element = document.getElementById("element-to-print");
-    html2pdf()
-      .set({
-        margin: 25,
-        filename: "Clorio-Paperwallet.pdf",
-      })
-      .from(element)
-      .save();
-    setTimeout(() => {
-      for (const el of elementsToHide) {
-        const tmpStyle = elementInitalState.pop();
-        el.style.display = tmpStyle;
-      }
-      for (const el of elementsToShow) {
-        el.style.display = "none";
-      }
+    createAndDownloadPDF()
+    .then(()=>{
       setShowLoader(false);
-    }, 250);
+    })
   }
 
   /**
@@ -132,11 +121,11 @@ export default function Register(props) {
                   data-validate="Name is required"
                 >
                   <h5 className="full-width-align-center">
-                    {publicKey}
+                    {keys.publicKey}
                     <Button
                       className="inline-element no-print"
                       icon={<Copy />}
-                      onClick={() => copyToClipboard(publicKey)}
+                      onClick={() => copyToClipboard(keys.publicKey)}
                     />
                   </h5>
                 </div>
@@ -146,11 +135,11 @@ export default function Register(props) {
                 </h4>
                 <div className="wrap-input1 validate-input">
                   <h5 className="full-width-align-center">
-                    {privateKey}
+                    {keys.privateKey}
                     <Button
                       className="inline-element no-print"
                       icon={<Copy />}
-                      onClick={() => copyToClipboard(privateKey)}
+                      onClick={() => copyToClipboard(keys.privateKey)}
                     />
                   </h5>
                 </div>
@@ -165,7 +154,7 @@ export default function Register(props) {
                   private key. <br />
                   Make sure have made a copy of them. If you loose your private
                   key you will not be able to access your funds anymore! <br />
-                  <a className="link-button" onClick={downloadPDF}>
+                  <a className="link-button" onClick={downloadPDFButtonHandler}>
                     Download a copy here
                   </a>
                 </p>
