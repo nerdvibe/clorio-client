@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import Hoc from "../components/General/Hoc";
 import VerifyForm from "../components/Forms/VerifyMessageForm";
-import * as CodaSDK from "@o1labs/client-sdk";
+import { verifyMessage } from "@o1labs/client-sdk";
 
 export default function VerifyMessage(props) {
   const [address, setAddress] = useState("");
@@ -21,7 +21,7 @@ export default function VerifyMessage(props) {
   /**
    * Using CodaSDK check if input message is valid
    */
-  function verifyMessage() {
+  function verifySignedMessage() {
     try {
       if (message && message !== "") {
         const signedMessage = {
@@ -32,8 +32,7 @@ export default function VerifyMessage(props) {
             scalar,
           },
         };
-        const verifiedMessage = CodaSDK.verifyMessage(signedMessage);
-        if (verifiedMessage) {
+        if (verifyMessage(signedMessage)) {
           props.showGlobalAlert("Message is valid", "success-toast");
         } else {
           props.showGlobalAlert("Message is not valid", "error-toast");
@@ -64,7 +63,7 @@ export default function VerifyMessage(props) {
         scalar={scalar}
         setScalar={setScalar}
         handleInput={handleInput}
-        verifyMessage={verifyMessage}
+        verifyMessage={verifySignedMessage}
         disableButton={disableButton}
       />
     </Hoc>

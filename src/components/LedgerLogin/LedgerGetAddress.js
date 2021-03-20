@@ -5,18 +5,12 @@ import Button from "../General/Button";
 import Hoc from "../General/Hoc";
 import Logo from "../General/Logo";
 import Footer from "../General/Footer";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { storeSession } from "../../tools";
 import LedgerLoader from "../General/LedgerLoader";
-import {getPublicKey} from "../../tools/ledger/ledger";
+import { GET_ID } from "../../tools/query";
+import { getPublicKey } from "../../tools/ledger/ledger";
 
-const GET_ID = gql`
-  query GetIDFromPublicKey($publicKey: String) {
-    public_keys(where: { value: { _eq: $publicKey } }) {
-      id
-    }
-  }
-`;
 
 export default function LedgerGetAddress(props) {
   const [publicKey, setPublicKey] = useState(undefined);
@@ -28,28 +22,40 @@ export default function LedgerGetAddress(props) {
   });
 
   useEffect(() => {
-    const deviceListener = getWallet(setPublicKey);
-
+    const deviceListener = getWallet();
     return deviceListener.unsubscribe;
   }, []);
 
   /**
-   * Listen for ledger action
-   * @param {function} callback Function to call after ledger confirmation
+   * Set public key that arrived from Ledger inside the storage
    */
-  async function getWallet(callback) {
-      try {
-        const ledgerPublicKey = await getPublicKey(ledgerAccount)
+  function setSession() {
+    if (userID.data) {
+      props.setLoader();
+      const id = userID.data?.public_keys?.length>0? userID.data.public_keys[0].id : -1;
+      storeSession(publicKey, id, true, ledgerAccount)
+      .then((success) => {
+        if(success){
+          history.push("/overview");
+        }
+      });
+    }
+  }
 
-        callback(ledgerPublicKey.publicKey);
-      } catch (e) {
-        console.log(e);
-        props.showGlobalAlert(
-          e.message || "An error occurred while loading hardware wallet",
-          "error-toast"
-        );
-        history.push("/");
-      }
+  /**
+   * Listen for ledger action
+   */
+  async function getWallet() {
+    try {
+      const ledgerPublicKey = await getPublicKey(ledgerAccount)
+      setPublicKey(ledgerPublicKey.publicKey);
+    } catch (e) {
+      props.showGlobalAlert(
+        e.message || "An error occurred while loading hardware wallet",
+        "error-toast"
+      );
+      history.push("/");
+    }
   }
 
   /**
@@ -84,26 +90,6 @@ export default function LedgerGetAddress(props) {
           </Row>
         </div>
       );
-    }
-  }
-
-  /**
-   * Set public key that arrived from Ledger inside the storage
-   */
-  function setSession() {
-    if (userID.data) {
-      if (userID.data.public_keys.length > 0) {
-        props.setLoader();
-        const id = userID.data.public_keys[0].id;
-        storeSession(publicKey, id, true, ledgerAccount, () => {
-          history.push("/overview");
-        });
-      } else {
-        props.setLoader();
-        storeSession(publicKey, -1, true, ledgerAccount, () => {
-          history.push("/overview");
-        });
-      }
     }
   }
 

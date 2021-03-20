@@ -2,13 +2,21 @@ import React, { useState } from "react";
 import Hoc from "../components/General/Hoc";
 import SignMessageForm from "../components/Forms/SignMessageForm";
 import { getAddress } from "../tools";
-import * as CodaSDK from "@o1labs/client-sdk";
+import { signMessage } from "@o1labs/client-sdk";
 
 export default function SignMessage(props) {
   const [message, setMessage] = useState("");
   const [privateKey, setPrivateKey] = useState("");
   const [publicKey, setPublicKey] = useState("");
-  const [result, setResult] = useState(undefined);
+  const [showResult, setShowResult] = useState(false);
+  const [result, setResult] = useState({
+    payload:"",
+    signature:{
+      scalar:"",
+      field:""
+    },
+    publicKey:""
+  });
 
   getAddress((data) => {
     setPublicKey(data);
@@ -34,8 +42,8 @@ export default function SignMessage(props) {
           publicKey,
           privateKey,
         };
-        const signedMessage = CodaSDK.signMessage(message, keypair);
-        setResult(signedMessage);
+        setResult(signMessage(message, keypair));
+        setShowResult(true);
       }
     } catch (e) {
       props.showGlobalAlert("Please check private key", "error-toast");
@@ -47,7 +55,14 @@ export default function SignMessage(props) {
    */
   function resetForm() {
     setPrivateKey("");
-    setResult(undefined);
+    setResult({
+      payload:"",
+      signature:{
+        scalar:"",
+        field:""
+      },
+      publicKey:""
+    });
     setMessage("");
   }
 
@@ -62,6 +77,7 @@ export default function SignMessage(props) {
           disableButton={signButtonStateHandler}
           submitHandler={submitHandler}
           result={result}
+          showResult={showResult}
           reset={resetForm}
         />
       </div>

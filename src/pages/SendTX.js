@@ -1,50 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext} from "react";
 import TransactionForm from "../components/Transactions/TransactionForm";
 import ConfirmTransaction from "../components/Modals/ConfirmTransaction";
 import ConfirmLedgerTransaction from "../components/Modals/ConfirmLedgerTransaction";
 import Hoc from "../components/General/Hoc";
 import { getAddress } from "../tools";
-import * as CodaSDK from "@o1labs/client-sdk";
 import ModalContainer from "../components/Modals/ModalContainer";
 import BroadcastTransaction from "../components/Modals/BroadcastTransaction";
-import { useQuery, gql, useMutation } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
-import {emojiToUnicode, escapeUnicode, isMinaAppOpen, NETWORK, signTransaction, TX_TYPE} from "../tools/ledger/ledger";
-import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
+import {createAndSignLedgerTransaction} from "../tools/ledger/ledger";
+import {createPaymentInputFromPayload, createSignatureInputFromSignature, signTransaction} from "../tools/transactions"
+import { toNanoMINA } from "../tools/utils";
 import {Big} from "big.js";
 import CustomNonce from "../components/Modals/CustomNonce";
-import { useContext } from "react";
 import { BalanceContext } from "../context/BalanceContext";
 import Spinner from "../components/General/Spinner";
-
-const GET_FEE = gql`
-  query GetFees {
-    estimatedFee {
-      average
-      fast
-    }
-  }
-`;
-
-const GET_NONCE = gql`
-  query accountByKey($publicKey: String!) {
-    accountByKey(publicKey: $publicKey) {
-      usableNonce
-    }
-  }
-`;
-
-const BROADCAST_TRANSACTION = gql`
-  mutation broadcastTransaction(
-    $input: SendPaymentInput!
-    $signature: SignatureInput!
-  ) {
-    broadcastTransaction(input: $input, signature: $signature) {
-      id
-    }
-  }
-`;
+import { derivePublicKey } from "@o1labs/client-sdk";
+import { BROADCAST_TRANSACTION, GET_FEE, GET_NONCE } from "../tools/query";
 
 const initialTransactionData = {
   amount: toNanoMINA(0),
@@ -65,7 +38,7 @@ export default function SendTX(props) {
   const [sendTransactionFlag, setSendTransactionFlag] = useState(false);
   const [step, setStep] = useState(0);
   const [showModal, setShowModal] = useState("");
-  const [address, setAddress] = useState("");
+  const [senderAddress, setSenderAddress] = useState("");
   const [customNonce, setCustomNonce] = useState(undefined);
   const [showLoader, setShowLoader] = useState(true);
   const [ledgerTransactionData, setLedgerTransactionData] = useState(undefined);
@@ -73,11 +46,11 @@ export default function SendTX(props) {
   const [transactionData, setTransactionData] = useState(
     initialTransactionData
     );
-  const nonce = useQuery(GET_NONCE, {
-    variables: { publicKey: address },
-    skip: address === "",
+  const nonceQuery = useQuery(GET_NONCE, {
+    variables: { publicKey: senderAddress },
+    skip: senderAddress === "",
   });
-  const fee = useQuery(GET_FEE,{
+  const feeQuery = useQuery(GET_FEE,{
     onCompleted:(data)=>{
     if(data?.estimatedFee?.average){
         setTransactionData({
@@ -90,7 +63,7 @@ export default function SendTX(props) {
     onError:()=>{
       setShowLoader(false);
     }
-  },);
+  });
   const [broadcastTransaction, broadcastResult] = useMutation(
     BROADCAST_TRANSACTION,
     {
@@ -103,7 +76,7 @@ export default function SendTX(props) {
   const history = useHistory();
 
   // If broadcasted successfully return to initial page state
-  if (showModal && broadcastResult && broadcastResult.data && sendTransactionFlag) {
+  if (showModal && (broadcastResult && broadcastResult.data) && sendTransactionFlag) {
     clearState();
     props.showGlobalAlert(
       "Transaction successfully broadcasted",
@@ -114,44 +87,29 @@ export default function SendTX(props) {
 
   // Get sender public key
   getAddress((publicKey) => {
-    setAddress(publicKey);
+    setSenderAddress(publicKey);
   });
 
   // Listen for ledger action
   useEffect(() => {
     if (isLedgerEnabled && !ledgerTransactionData) {
       if (step === 1) {
-        const transactionListener = sendLedgerTransaction(
-          setLedgerTransactionData
-        );
+        const transactionListener = sendLedgerTransaction();
         return transactionListener.unsubscribe;
       }
     }
   }, [isLedgerEnabled, ledgerTransactionData, step]);
 
-  // Ledger data arrived, broadcast transaction
+  /**
+   * Ledger data arrived, broadcast transaction
+   */
   useEffect(() => {
     try {
       if (ledgerTransactionData) {
-        const amount = transactionData.amount;
-        const fee = transactionData.fee;
+        const {amount,fee} = transactionData;
+        const SendPaymentInput = createLedgerPaymentInputFromPayload(transactionData,fee,amount,senderAddress);
         const SignatureInput = {
           rawSignature: ledgerTransactionData,
-        };
-        const SendPaymentInput = {
-          // nonce
-          // memo
-          // fee
-          // amount
-          // to
-          // from
-          nonce: transactionData.nonce,
-          memo: transactionData.memo,
-          fee: fee.toString(),
-          amount: amount.toString(),
-          to: transactionData.receiverAddress,
-          from: address,
-          // validUntil: getDefaultValidUntilField(),
         };
         broadcastTransaction({
           variables: { input: SendPaymentInput, signature: SignatureInput },
@@ -166,21 +124,29 @@ export default function SendTX(props) {
     }
   }, [ledgerTransactionData]);
 
+  /**
+   * Clean component state on dismount
+   */
+  useEffect(() => {
+    return () => {
+      setPrivateKey("")
+    }
+  }, [])
+
 
   /**
-   * Check if nonce is available, if not asks user for custom nonce. After is set proceeds data verification and to private key verification
+   * Check if nonce is available, if not asks user for custom nonce. After nonce is set proceeds with data verification and private key verification
    */
   function openConfirmationModal() {
-    if ((!nonce || !nonce.data) && !customNonce) {
-      return setShowModal(ModalStates.NONCE);
-    }
+    const {fee,amount}= transactionData;
     const available = balance.liquidUnconfirmed;
-    const fee = transactionData.fee;
-    const amount = transactionData.amount;
     const balanceAfterTransaction = Big(available)
       .minus(fee)
       .minus(amount)
       .toNumber();
+    if ((!nonceQuery || !nonceQuery.data) && !customNonce) {
+      return setShowModal(ModalStates.NONCE);
+    }
     if (balanceAfterTransaction < 0) {
       props.showGlobalAlert(
         "Your are trying to send too many Mina, please check your balance",
@@ -195,7 +161,7 @@ export default function SendTX(props) {
       );
       return
     }
-    nonce.refetch({ publicKey: address });
+    nonceQuery.refetch({ publicKey: senderAddress });
     if (!isLedgerEnabled) {
       setShowModal(ModalStates.PASSPHRASE);
     } else {
@@ -232,10 +198,20 @@ export default function SendTX(props) {
    */
   function checkNonce() {
     return (
-      nonce.data &&
-      (nonce.data.accountByKey.usableNonce ||
-        nonce.data.accountByKey.usableNonce === 0)
+      nonceQuery.data &&
+      (nonceQuery.data.accountByKey.usableNonce ||
+        nonceQuery.data.accountByKey.usableNonce === 0)
     );
+  }
+
+  /**
+   * If nonce is available from back-end return it, otherwise return the custom nonce
+   * @returns number Nonce
+   */
+  function getNonce(){
+    return checkNonce()
+        ? parseInt(nonceQuery.data.accountByKey.usableNonce)
+        : customNonce;
   }
 
   /**
@@ -243,44 +219,20 @@ export default function SendTX(props) {
    */
   function sendTransaction() {
     setShowModal(ModalStates.BROADCASTING);
-    if (nonce) {
+    if (nonceQuery) {
       try {
-        const actualNonce = checkNonce()
-          ? parseInt(nonce.data.accountByKey.usableNonce)
-          : customNonce;
-        const publicKey = CodaSDK.derivePublicKey(privateKey);
-        const dataToSend = {
+        const actualNonce = getNonce()
+        const publicKey = derivePublicKey(privateKey);
+        const keypair = {
           privateKey,
           publicKey,
         };
-        const fee = transactionData.fee;
-        const amount = transactionData.amount;
-        const signedPayment = CodaSDK.signPayment(
-          {
-            from: address,
-            to: transactionData.receiverAddress,
-            amount,
-            fee,
-            nonce: actualNonce,
-            memo: transactionData.memo,
-          },
-          dataToSend
-        );
+        const signedPayment = signTransaction(transactionData,keypair,senderAddress,actualNonce);
         if (signedPayment) {
-          const SignatureInput = {
-            scalar: signedPayment.signature.scalar,
-            field: signedPayment.signature.field,
-          };
-          const SendPaymentInput = {
-            nonce: signedPayment.payload.nonce,
-            memo: signedPayment.payload.memo,
-            fee: signedPayment.payload.fee,
-            amount: signedPayment.payload.amount,
-            to: signedPayment.payload.to,
-            from: signedPayment.payload.from,
-          };
+          const signatureInput = createSignatureInputFromSignature(signedPayment.signature)
+          const paymentInput = createPaymentInputFromPayload(signedPayment.payload);
           broadcastTransaction({
-            variables: { input: SendPaymentInput, signature: SignatureInput },
+            variables: { input: paymentInput, signature: signatureInput },
           });
           setSendTransactionFlag(true);
         }
@@ -316,42 +268,19 @@ export default function SendTX(props) {
   }
 
   /**
-   * Broadcast Ledger transaction
-   * @param {function} callback Callback that loads on ledger sign process end
+   * Sign transaction with Ledger
    */
-  async function sendLedgerTransaction(callback) {
+  async function sendLedgerTransaction() {
       try {
-        await isMinaAppOpen();
-        const actualNonce = checkNonce()
-          ? parseInt(nonce.data.accountByKey.usableNonce)
-          : customNonce;
+        const senderAccount = props.sessionData.ledgerAccount || 0;
+        const actualNonce = getNonce();
         setTransactionData({
           ...transactionData,
           nonce: actualNonce.toString(),
         });
-        // For now mina-ledger-js doesn't support emojis
-        const memo = escapeUnicode(emojiToUnicode(transactionData.memo));
-        if(memo.length > 32) {
-          throw new Error('Memo field too long')
-        }
-        const senderAccount = props.sessionData.ledgerAccount || 0;
-        const transactionToSend = {
-          senderAccount,
-          senderAddress: address,
-          receiverAddress: transactionData.receiverAddress,
-          fee: +transactionData.fee,
-          amount: +transactionData.amount,
-          memo,
-          nonce: actualNonce,
-          // TODO: FIX HARDCODING!
-          txType: TX_TYPE.PAYMENT,
-          // TODO: FIX HARDCODING!
-          networkId: NETWORK.DEVNET,
-          validUntil: +getDefaultValidUntilField(),
-        };
-        const signature = await signTransaction(transactionToSend);
+        const signature = await createAndSignLedgerTransaction(senderAccount,senderAddress,transactionData,actualNonce);
         setShowModal(ModalStates.BROADCASTING);
-        callback(signature.signature);
+        setLedgerTransactionData(signature.signature);
       } catch (e) {
         props.showGlobalAlert(
           e.message || "An error occurred while loading hardware wallet",
@@ -367,8 +296,8 @@ export default function SendTX(props) {
         <div className="animate__animated animate__fadeIn">
           {step === 0 ? (
             <TransactionForm
-              defaultFee={fee?.data?.estimatedFee?.average || 0}
-              fastFee={fee?.data?.estimatedFee?.fast || 0}
+              defaultFee={feeQuery?.data?.estimatedFee?.average || 0}
+              fastFee={feeQuery?.data?.estimatedFee?.fast || 0}
               nextStep={openConfirmationModal}
               transactionData={transactionData}
               showGlobalAlert={props.showGlobalAlert}

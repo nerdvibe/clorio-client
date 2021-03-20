@@ -6,74 +6,20 @@ import ModalContainer from "../components/Modals/ModalContainer";
 import { useQuery, gql, useMutation } from "@apollo/client";
 import { getAddress } from "../tools";
 import { useEffect } from "react";
-import * as CodaSDK from "@o1labs/client-sdk";
 import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
 import ConfirmDelegation from "../components/Modals/ConfirmDelegation";
 import CustomDelegation from "../components/Modals/CustomDelegation";
-import {isMinaAppOpen, NETWORK, signTransaction, TX_TYPE} from "../tools/ledger/ledger";
+import {isMinaAppOpen, signTransaction} from "../tools/ledger/ledger";
 import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
 import LedgerLoader from "../components/General/LedgerLoader";
 import CustomNonce from "../components/Modals/CustomNonce";
 import Button from "../components/General/Button";
-import {feeOrDefault} from "../tools/fees";
+import { ITEMS_PER_PAGE } from "../tools/const";
+import { BROADCAST_DELEGATION,GET_VALIDATORS,GET_AVERAGE_FEE,GET_VALIDATORS_NEWS,GET_NONCE_AND_DELEGATE } from "../tools/query";
+import { createDelegationPaymentInputFromPayload, createSignatureInputFromSignature } from "../tools/transactions";
+import { derivePublicKey, signStakeDelegation } from "@o1labs/client-sdk";
 
-const ITEMS_PER_PAGE = 10;
-
-const VALIDATORS = gql`
-  query validators($offset: Int!) {
-    validators(limit: ${ITEMS_PER_PAGE}, offset: $offset) {
-      fee
-      id
-      image
-      name
-      publicKey
-      website
-    }
-  }
-`;
-
-const NEWS = gql`
-  query NewsValidators {
-    news_validators(limit: 10) {
-      title
-      subtitle
-      link
-      cta
-      cta_color
-    }
-  }
-`;
-
-const GET_NONCE_AND_DELEGATE = gql`
-  query accountByKey($publicKey: String!) {
-    accountByKey(publicKey: $publicKey) {
-      delegate {
-        publicKey
-      }
-      usableNonce
-    }
-  }
-`;
-
-const GET_FEE = gql`
-  query GetFees {
-    estimatedFee {
-      average
-    }
-  }
-`;
-
-const BROADCAST_DELEGATION = gql`
-  mutation broadcastDelegation(
-    $input: SendDelegationInput!
-    $signature: SignatureInput
-  ) {
-    broadcastDelegation(input: $input, signature: $signature) {
-      id
-    }
-  }
-`;
 
 export default (props) => {
   const ModalStates = Object.freeze({
@@ -92,9 +38,9 @@ export default (props) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [offset, setOffset] = useState(0);
   const [customNonce, setCustomNonce] = useState(undefined);
-  const validators = useQuery(VALIDATORS, { variables: { offset } });
-  const fee = useQuery(GET_FEE);
-  const news = useQuery(NEWS);
+  const validators = useQuery(GET_VALIDATORS, { variables: { offset } });
+  const fee = useQuery(GET_AVERAGE_FEE);
+  const news = useQuery(GET_VALIDATORS_NEWS);
   const nonceAndDelegate = useQuery(GET_NONCE_AND_DELEGATE, {
     variables: { publicKey: props.sessionData.address },
   });
@@ -109,16 +55,13 @@ export default (props) => {
       },
     }
   );
+
   getAddress((address) => {
     setAddress(address);
   });
 
   useEffect(() => {
-    if (
-      nonceAndDelegate.data &&
-      nonceAndDelegate.data.accountByKey &&
-      nonceAndDelegate.data.accountByKey.delegate
-    ) {
+    if (nonceAndDelegate.data?.accountByKey?.delegate) {
       setCurrentDelegate(nonceAndDelegate.data.accountByKey.delegate.publicKey);
     }
   }, [nonceAndDelegate.data]);
@@ -126,9 +69,7 @@ export default (props) => {
   useEffect(() => {
     if (isLedgerEnabled && !ledgerTransactionData) {
       if (showModal === ModalStates.PASSPHRASE) {
-        const transactionListener = signLedgerTransaction(
-          setLedgerTransactionData
-        );
+        const transactionListener = signLedgerTransaction();
         return transactionListener.unsubscribe;
       }
     }
@@ -171,7 +112,7 @@ export default (props) => {
   function signStakeDelegate() {
     try {
       const actualNonce = getNonce();
-      const publicKey = CodaSDK.derivePublicKey(privateKey);
+      const publicKey = derivePublicKey(privateKey);
       const keypair = {
         privateKey: privateKey,
         publicKey: publicKey,
@@ -182,19 +123,10 @@ export default (props) => {
         fee: toNanoMINA(fee.data.estimatedFee.average),
         nonce: actualNonce,
       };
-      const signStake = CodaSDK.signStakeDelegation(stakeDelegation, keypair);
+      const signStake = signStakeDelegation(stakeDelegation, keypair);
       if (signStake) {
-        const SignatureInput = {
-          scalar: signStake.signature.scalar,
-          field: signStake.signature.field,
-        };
-        const SendPaymentInput = {
-          nonce: signStake.payload.nonce,
-          fee: signStake.payload.fee,
-          validUntil: signStake.payload.validUntil,
-          to: signStake.payload.to,
-          from: signStake.payload.from,
-        };
+        const SignatureInput = createSignatureInputFromSignature(signStake.signature);
+        const SendPaymentInput = createDelegationPaymentInputFromPayload(signStake.payload);
         broadcastDelegation({
           variables: {
             input: SendPaymentInput,
@@ -271,29 +203,6 @@ export default (props) => {
   }
 
   /**
-   * If news are available, render news banner
-   * @returns HTMLElement
-   */
-  function renderBanner() {
-    if (
-      news.data &&
-      news.data.news_validators &&
-      news.data.news_validators.length > 0
-    ) {
-      const latest = news.data.news_validators[0];
-      return (
-        <Banner
-          title={latest.title}
-          subtitle={latest.subtitle}
-          link={latest.link}
-          cta={latest.cta}
-          cta_color={latest.cta_color}
-        />
-      );
-    }
-  }
-
-  /**
    * Clear component state
    */
   function clearState() {
@@ -322,23 +231,12 @@ export default (props) => {
       await isMinaAppOpen();
       const actualNonce = getNonce();
       const senderAccount = props.sessionData.ledgerAccount || 0;
-      const transactionToSend = {
-        senderAccount,
-        senderAddress: address,
-        receiverAddress: delegateData.publicKey,
-        fee: +toNanoMINA(feeOrDefault(fee?.data?.estimatedFee?.average || '0')),
-        amount: 0,
-        nonce: actualNonce,
-        // TODO: FIX HARDCODING!
-        txType: TX_TYPE.DELEGATION,
-        // TODO: FIX HARDCODING!
-        networkId: NETWORK.DEVNET,
-        validUntil: +getDefaultValidUntilField(),
-      };
-
+      const receiverAddress = delegateData.publicKey;
+      const averageFee = fee?.data?.estimatedFee?.average || '0';
+      const transactionToSend = createLedgerDelegationTransaction(senderAccount,address,receiverAddress,averageFee,actualNonce);
       const signature = await signTransaction(transactionToSend);
       setShowModal(ModalStates.BROADCASTING);
-      callback(signature.signature);
+      setLedgerTransactionData(signature.signature);
     } catch (e) {
       props.showGlobalAlert(
         e.message || "An error occurred while loading hardware wallet",
@@ -353,12 +251,35 @@ export default (props) => {
    * @returns number Nonce number
    */
   function getNonce() {
-    if (nonceAndDelegate.data && nonceAndDelegate.data.accountByKey) {
+    if (nonceAndDelegate.data?.accountByKey) {
       return parseInt(nonceAndDelegate.data.accountByKey.usableNonce);
     } else if (nonceAndDelegate.data.accountByKey.usableNonce === 0) {
       return 0;
     }
     return customNonce;
+  }
+
+  /**
+   * If news are available, render news banner
+   * @returns HTMLElement
+   */
+  function renderBanner() {
+    if (
+      news.data &&
+      news.data.news_validators &&
+      news.data.news_validators.length > 0
+    ) {
+      const latest = news.data.news_validators[0];
+      return (
+        <Banner
+          title={latest.title}
+          subtitle={latest.subtitle}
+          link={latest.link}
+          cta={latest.cta}
+          cta_color={latest.cta_color}
+        />
+      );
+    }
   }
 
   return (

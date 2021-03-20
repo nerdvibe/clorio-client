@@ -1,5 +1,6 @@
 let ledgerAPI;
 import isElectron from 'is-electron';
+import { getDefaultValidUntilField } from '../utils';
 
 // Because of compatibility we need to use 2 transporters, one for Electron, one for the browser.
 // For the Electron, we use node-hid transporter by the ipcRenderer (node). For the browser @ledgerhq/hw-transport-webhid.
@@ -96,4 +97,66 @@ export const emojiToUnicode = (str) => {
  */
 export const escapeUnicode = (str) => {
   return [...str].map(c => /^[\x00-\x7F]$/.test(c) ? c : c.split("").map(a => "\\u" + a.charCodeAt().toString(16).padStart(4, "0")).join("")).join("");
+}
+  
+export async function createAndSignLedgerTransaction(senderAccount,senderAddress,transactionData,nonce){
+  const {receiverAddress,fee,amount,memo} = transactionData;
+  // For now mina-ledger-js doesn't support emojis
+  const cleanMemo = escapeUnicode(emojiToUnicode(memo));
+  await isMinaAppOpen();
+  if(cleanMemo.length > 32) {
+    throw new Error('Memo field too long')
+  }
+  const transactionToSend = {
+    senderAccount,
+    senderAddress,
+    receiverAddress,
+    fee: +fee,
+    amount: +amount,
+    memo:cleanMemo,
+    nonce,
+    // TODO: FIX HARDCODING!
+    txType: TX_TYPE.PAYMENT,
+    // TODO: FIX HARDCODING!
+    networkId: NETWORK.DEVNET,
+    validUntil: +getDefaultValidUntilField(),
+  };
+  return await signTransaction(transactionToSend);
+}
+
+
+export function createLedgerSignatureInputFromSignature(signature){
+  return {
+    scalar: signature.scalar,
+    field: signature.field,
+  }
+}
+
+export function createLedgerPaymentInputFromPayload(transactionData,fee,amount,senderAddress){
+  const {nonce,memo,receiverAddress} = transactionData;
+  return {
+    nonce,
+    memo,
+    fee: fee.toString(),
+    amount: amount.toString(),
+    to: receiverAddress,
+    from: senderAddress,
+  }
+}
+
+
+export function createLedgerDelegationTransaction(senderAccount,senderAddress,receiverAddress,averageFee,nonce){
+  return {
+    senderAccount,
+    senderAddress,
+    receiverAddress,
+    fee: +toNanoMINA(feeOrDefault(averageFee)),
+    amount: 0,
+    nonce,
+    // TODO: FIX HARDCODING!
+    txType: TX_TYPE.DELEGATION,
+    // TODO: FIX HARDCODING!
+    networkId: NETWORK.DEVNET,
+    validUntil: +getDefaultValidUntilField(),
+  };
 }

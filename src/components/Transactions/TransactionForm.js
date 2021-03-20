@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { Row, Col } from "react-bootstrap";
+import { MINIMUM_AMOUNT, MINIMUM_FEE } from "../../tools/const";
 import { toMINA, toNanoMINA } from "../../tools/utils";
 import Button from "../General/Button";
 import Input from "../General/Input";
 
-const MINIMUM_AMOUNT = toNanoMINA(0.0000001);
-const MINIMUM_FEE = toNanoMINA(0.001);
 
 export default function TransactionForm(props) {
   const [amount, setAmount] = useState(toMINA(props.transactionData.amount));

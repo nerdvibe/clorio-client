@@ -9,18 +9,8 @@ import ErrorImage from "../../assets/Error.svg";
 import { Row, Col } from "react-bootstrap";
 import StakeStatus from "./StakeStatus";
 import { useQuery, gql } from "@apollo/client";
-
-const ITEMS_PER_PAGE = 10;
-
-const GET_VALIDATORS_TOTAL = gql`
-  query CountValidators {
-    validators_aggregate {
-      aggregate {
-        count
-      }
-    }
-  }
-`;
+import { getTotalPages } from "../../tools/utils";
+import { GET_VALIDATORS_TOTAL } from "../../tools/query";
 
 export default function StakeTable(props) {
   const [searchbox, setSearchbox] = useState("");
@@ -65,7 +55,7 @@ export default function StakeTable(props) {
         </div>
         <Pagination
           page={props.page}
-          total={getTotalPages()}
+          total={getTotalPages(total.data?.validators_aggregate?.aggregate?.count)}
           setOffset={props.setOffset}
         />
       </Spinner>
@@ -119,18 +109,6 @@ export default function StakeTable(props) {
         </td>
       </tr>
     );
-  }
-
-  function getTotalPages() {
-    if (total.data && total.data.validators_aggregate) {
-      const totalItems = total.data.validators_aggregate.aggregate.count;
-      const pages = (totalItems / ITEMS_PER_PAGE).toFixed(0);
-      if(totalItems%ITEMS_PER_PAGE < 5 && totalItems%ITEMS_PER_PAGE!==0){
-        return parseInt(pages) === 0 ? 1 : parseInt(pages)+1;
-      }
-      return parseInt(pages) === 0 ? 1 : pages;
-    }
-    return 1;
   }
 
   function renderAddDelegate() {

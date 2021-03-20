@@ -5,27 +5,13 @@ import ErrorImage from "../../assets/Error.png";
 import NoTransactionsOrNotAvailableImage from "../../assets/NoTransactionsOrNotAvailable.svg";
 import TxHistoryNotAvailableImage from "../../assets/TxHistoryNotAvailable.svg";
 import NoTransactions from "../../assets/NoTransactions.svg";
-import { toMINA } from "../../tools/utils";
-import { useQuery, gql } from "@apollo/client";
+import { getTotalPages, toMINA } from "../../tools/utils";
+import { useQuery } from "@apollo/client";
 import Pagination from "../General/Pagination";
 import { ChevronRight, ChevronsDown, ChevronsUp, Check} from "react-feather";
 import ReactTooltip from "react-tooltip";
 import {formatDistance} from "date-fns";
-
-const ITEMS_PER_PAGE = 10;
-const GET_TRANSACTIONS_TOTAL = gql`
-  query TransactionsTotal($user: Int!) {
-    user_commands_aggregate(
-      where: {
-        _or: [{ receiver_id: { _eq: $user } }, { source_id: { _eq: $user } }]
-      }
-    ) {
-      aggregate {
-        count
-      }
-    }
-  }
-`;
+import { GET_TRANSACTIONS_TOTAL } from "../../tools/query";
 
 export default function TransactionsTable(props) {
   const { loading, error, data, mempool, userId, userAddress } = props;
@@ -216,22 +202,6 @@ export default function TransactionsTable(props) {
     );
   }
 
-  /**
-   * Get number of table pages
-   * @returns Number
-   */
-  function getTotalPages() {
-    if (total.data && total.data.user_commands_aggregate.aggregate) {
-      let totalItems = total.data.user_commands_aggregate.aggregate.count;
-      const pages = (totalItems / ITEMS_PER_PAGE).toFixed(0);
-      if(totalItems%ITEMS_PER_PAGE < 5 && totalItems%ITEMS_PER_PAGE!==0){
-        return parseInt(pages) === 0 ? 1 : parseInt(pages)+1;
-      }
-      return parseInt(pages) === 0 ? 1 : pages;
-    }
-    return 1;
-  }
-
   return (
     <div className="block-container">
       <Spinner className={"full-width"} show={loading}>
@@ -246,7 +216,7 @@ export default function TransactionsTable(props) {
           page={props.page}
           setOffset={props.setOffset}
           user={props.userId}
-          total={getTotalPages()}
+          total={getTotalPages(total.data?.user_commands_aggregate?.aggregate?.count)}
         />
       </Spinner>
     </div>

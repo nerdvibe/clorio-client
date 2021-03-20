@@ -1,4 +1,7 @@
 import Big from "big.js";
+import { ITEMS_PER_PAGE } from "./const";
+import html2pdf from "html2pdf.js";
+import * as CodaSDK from "@o1labs/client-sdk";
 
 export function copyToClipboard(content) {
   const el = document.createElement("textarea");
@@ -32,4 +35,64 @@ export function toMINA(amount) {
 
 export function getDefaultValidUntilField() {
   return "4294967295";
+}
+
+
+/**
+ * Get number of table pages
+ * @returns Number
+ */
+export function getTotalPages(totalItems) {
+  if (totalItems) {
+    const pages = (totalItems / ITEMS_PER_PAGE).toFixed(0);
+    if(totalItems%ITEMS_PER_PAGE < 5 && totalItems%ITEMS_PER_PAGE!==0){
+      return parseInt(pages) === 0 ? 1 : parseInt(pages)+1;
+    }
+    return parseInt(pages) === 0 ? 1 : pages;
+  }
+  return 1;
+}
+
+/**
+ * Calculate page from offset
+ * @param {number} offset 
+ * @returns number
+ */
+export function getPageFromOffset(offset){
+  return offset / ITEMS_PER_PAGE + 1
+}
+
+export function createAndDownloadPDF(){
+  return new Promise(
+    (resolve)=>{
+      const elementsToHide = document.getElementsByClassName("no-print");
+      const elementInitalState = [];
+      for (const el of elementsToHide) {
+        elementInitalState.push(el.style.display);
+        el.style.display = "none";
+      }
+      const elementsToShow = document.getElementsByClassName("pdf-only");
+      for (const el of elementsToShow) {
+        el.style.display = "inline";
+      }
+      const element = document.getElementById("element-to-print");
+      html2pdf()
+        .set({
+          margin: 20,
+          filename: "Clorio-Paperwallet.pdf",
+        })
+        .from(element)
+        .save();
+      setTimeout(() => {
+        for (const el of elementsToHide) {
+          const tmpStyle = elementInitalState.pop();
+          el.style.display = tmpStyle;
+        }
+        for (const el of elementsToShow) {
+          el.style.display = "none";
+        }
+        resolve(true)
+      }, 250);
+    }
+  )
 }

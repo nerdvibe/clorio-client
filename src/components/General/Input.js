@@ -15,7 +15,7 @@ export default function Input(props) {
         name="name"
         onChange={inputHandler}
         placeholder={placeholder}
-        autocomplete="false" 
+        autoComplete="false"
       />
       <span className="shadow-input1"></span>
     </div>
