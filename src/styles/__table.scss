@@ -89,7 +89,9 @@ th{
 	text-align: center !important;
 }
 
-
+.stake-th{
+	width: initial;
+}
 
 //SUPER BASIC PAGE STYLING
 // *,*:before,*:after{
@@ -183,6 +185,7 @@ table {
 // 		}
 // 	}
 // }
+
 
 @media screen and (max-width: $large-up) {
 	.table-element {
