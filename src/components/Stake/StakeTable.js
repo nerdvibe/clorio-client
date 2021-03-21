@@ -8,11 +8,12 @@ import Avatar from "../../tools/avatar";
 import ErrorImage from "../../assets/Error.svg";
 import { Row, Col } from "react-bootstrap";
 import StakeStatus from "./StakeStatus";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { getTotalPages } from "../../tools/utils";
-import { GET_VALIDATORS_TOTAL } from "../../tools/query";
+import { GET_VALIDATORS_TOTAL } from "../../graphql/query";
 
 export default function StakeTable(props) {
+  const {validators,loading,error} = props;
   const [searchbox, setSearchbox] = useState("");
   const total = useQuery(GET_VALIDATORS_TOTAL);
 
@@ -21,7 +22,7 @@ export default function StakeTable(props) {
   };
 
   function renderTable() {
-    if (props.validators.error) {
+    if (error) {
       return (
         <div className="block-container">
           <div className="full-width padding-y-50">
@@ -31,7 +32,7 @@ export default function StakeTable(props) {
       );
     }
     return (
-      <Spinner className={"full-width"} show={props.validators.loading}>
+      <Spinner className={"full-width"} show={loading || false}>
         <div id="transaction-table">
           <Table id="rwd-table-large">
             <thead>
@@ -55,7 +56,7 @@ export default function StakeTable(props) {
         </div>
         <Pagination
           page={props.page}
-          total={getTotalPages(total.data?.validators_aggregate?.aggregate?.count)}
+          total={getTotalPages(total.data?.validators_aggregate?.aggregate?.count || 0)}
           setOffset={props.setOffset}
         />
       </Spinner>
@@ -63,8 +64,8 @@ export default function StakeTable(props) {
   }
 
   function renderTableBody() {
-    if (props.validators.data && props.validators.data.validators) {
-      const filteredValidators = props.validators.data.validators.filter((el) =>
+    if (validators?.validators) {
+      const filteredValidators = validators?.validators.filter((el) =>
         el.name.toLowerCase().includes(searchbox)
       );
       return (
@@ -111,16 +112,6 @@ export default function StakeTable(props) {
     );
   }
 
-  function renderAddDelegate() {
-    return (
-      <Button
-        className="link-button custom-delegate-button"
-        text="Custom delegation"
-        onClick={props.openCustomDelegateModal}
-      />
-    );
-  }
-
   return (
     <div className="mx-auto  ">
       <div className="block-container  py-50">
@@ -130,7 +121,11 @@ export default function StakeTable(props) {
               <StakeStatus currentDelegate={props.currentDelegate} />
             </Col>
             <Col md={5} lg={4} xl={3} className="align-end small-screen-align-left">
-              {renderAddDelegate()}
+              <Button
+                className="link-button custom-delegate-button"
+                text="Custom delegation"
+                onClick={props.openCustomDelegateModal}
+              />
             </Col>
           </Row>
           <div className="v-spacer" />

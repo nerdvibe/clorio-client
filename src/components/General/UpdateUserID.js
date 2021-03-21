@@ -1,7 +1,7 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import React, { useState } from "react";
 import { getId, updateUser } from "../../tools";
-import { GET_ID } from "../../tools/query";
+import { GET_ID } from "../../graphql/query";
 
 
 export default function UpdateUserID(props) {
@@ -11,11 +11,7 @@ export default function UpdateUserID(props) {
     skip: address === "",
   });
 
-  if (
-    userID.data &&
-    userID.data.public_key &&
-    userID.data.public_key.length > 0
-  ) {
+  if (userID.data?.public_key?.length > 0) {
     updateUser(address, userID.data.public_key[0].id);
     setaddress(undefined);
   }

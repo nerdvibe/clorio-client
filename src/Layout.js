@@ -6,12 +6,12 @@ import { clearSession, readSession } from "./tools/auth";
 import Spinner from "./components/General/Spinner";
 import { useHistory } from "react-router-dom";
 import UpdateUserID from "./components/General/UpdateUserID";
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { isEmptyObject } from "./tools/utils";
 import Alert from "./components/General/Alert";
 import Wallet from "./components/General/Wallet";
 import {BalanceContextProvider} from "./context/BalanceContext";
-import { GET_NETWORK } from "./tools/query";
+import { GET_NETWORK } from "./graphql/query";
 
 
 function Layout() {

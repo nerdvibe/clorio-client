@@ -11,7 +11,7 @@ import Pagination from "../General/Pagination";
 import { ChevronRight, ChevronsDown, ChevronsUp, Check} from "react-feather";
 import ReactTooltip from "react-tooltip";
 import {formatDistance} from "date-fns";
-import { GET_TRANSACTIONS_TOTAL } from "../../tools/query";
+import { GET_TRANSACTIONS_TOTAL } from "../../graphql/query";
 
 export default function TransactionsTable(props) {
   const { loading, error, data, mempool, userId, userAddress } = props;
@@ -141,13 +141,10 @@ export default function TransactionsTable(props) {
   function renderTableBody() {
     return (
       <tbody>
-        {mempool.data &&
-          mempool.data.mempool &&
-          mempool.data.mempool.map((row, index) => {
+        {mempool?.data?.mempool?.map((row, index) => {
             return renderMempoolRow(row, index);
           })}
-        {data &&
-          data.user_commands.map((row, index) => {
+        {data?.user_commands?.map((row, index) => {
             return renderTransactionRow(row, index);
           })}
       </tbody>
@@ -216,7 +213,7 @@ export default function TransactionsTable(props) {
           page={props.page}
           setOffset={props.setOffset}
           user={props.userId}
-          total={getTotalPages(total.data?.user_commands_aggregate?.aggregate?.count)}
+          total={getTotalPages(total.data?.user_commands_aggregate?.aggregate?.count || 0)}
         />
       </Spinner>
     </div>

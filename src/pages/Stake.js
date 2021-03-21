@@ -1,22 +1,22 @@
 import React, { useState } from "react";
-import Banner from "../components/General/Banner";
+import {Banner} from "../components/General/Banner";
 import StakeTable from "../components/Stake/StakeTable";
 import Hoc from "../components/General/Hoc";
 import ModalContainer from "../components/Modals/ModalContainer";
-import { useQuery, gql, useMutation } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { getAddress } from "../tools";
 import { useEffect } from "react";
 import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
 import ConfirmDelegation from "../components/Modals/ConfirmDelegation";
 import CustomDelegation from "../components/Modals/CustomDelegation";
-import {isMinaAppOpen, signTransaction} from "../tools/ledger/ledger";
+import {isMinaAppOpen, signTransaction} from "../tools/ledger";
 import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
 import LedgerLoader from "../components/General/LedgerLoader";
 import CustomNonce from "../components/Modals/CustomNonce";
 import Button from "../components/General/Button";
 import { ITEMS_PER_PAGE } from "../tools/const";
-import { BROADCAST_DELEGATION,GET_VALIDATORS,GET_AVERAGE_FEE,GET_VALIDATORS_NEWS,GET_NONCE_AND_DELEGATE } from "../tools/query";
+import { BROADCAST_DELEGATION,GET_VALIDATORS,GET_AVERAGE_FEE,GET_VALIDATORS_NEWS,GET_NONCE_AND_DELEGATE } from "../graphql/query";
 import { createDelegationPaymentInputFromPayload, createSignatureInputFromSignature } from "../tools/transactions";
 import { derivePublicKey, signStakeDelegation } from "@o1labs/client-sdk";
 import { feeOrDefault } from "../tools/fees";
@@ -39,7 +39,7 @@ export default (props) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [offset, setOffset] = useState(0);
   const [customNonce, setCustomNonce] = useState(undefined);
-  const validators = useQuery(GET_VALIDATORS, { variables: { offset } });
+  const {data: validatorsData, error: validatorsError, loading: validatorsLoading} = useQuery(GET_VALIDATORS, { variables: { offset } });
   const fee = useQuery(GET_AVERAGE_FEE);
   const news = useQuery(GET_VALIDATORS_NEWS);
   const nonceAndDelegate = useQuery(GET_NONCE_AND_DELEGATE, {
@@ -47,6 +47,7 @@ export default (props) => {
   });
   const history = useHistory();
   const [ledgerTransactionData, setLedgerTransactionData] = useState(undefined);
+  const latestNews = news.data?.news_validators.length>0 ? news.data?.news_validators[0] : {};
   const [broadcastDelegation, broadcastResult] = useMutation(
     BROADCAST_DELEGATION,
     {
@@ -62,8 +63,8 @@ export default (props) => {
   });
 
   useEffect(() => {
-    if (nonceAndDelegate.data?.accountByKey?.delegate) {
-      setCurrentDelegate(nonceAndDelegate.data.accountByKey.delegate.publicKey);
+    if (nonceAndDelegate.data?.accountByKey?.delegate?.publicKey) {
+      setCurrentDelegate(nonceAndDelegate.data?.accountByKey.delegate.publicKey);
     }
   }, [nonceAndDelegate.data]);
 
@@ -79,7 +80,7 @@ export default (props) => {
   useEffect(() => {
     if (ledgerTransactionData) {
       const actualNonce = getNonce();
-      const averageFee = toNanoMINA(feeOrDefault(fee.data?.estimatedFee?.txFees?.average));
+      const averageFee = toNanoMINA(feeOrDefault(fee.data?.estimatedFee?.txFees?.average || 0));
       const SignatureInput = {
         rawSignature: ledgerTransactionData,
       };
@@ -112,6 +113,9 @@ export default (props) => {
    */
   function signStakeDelegate() {
     try {
+      if(!delegateData?.publicKey || delegateData.publicKey===""){
+        throw new Error("The Public key of the selected delegate is missing")
+      }
       const actualNonce = getNonce();
       const publicKey = derivePublicKey(privateKey);
       const keypair = {
@@ -121,7 +125,7 @@ export default (props) => {
       const stakeDelegation = {
         to: delegateData.publicKey,
         from: address,
-        fee: toNanoMINA(feeOrDefault(fee.data.estimatedFee?.txFees?.average)),
+        fee: toNanoMINA(feeOrDefault(fee.data?.estimatedFee?.txFees?.average)),
         nonce: actualNonce,
       };
       const signStake = signStakeDelegation(stakeDelegation, keypair);
@@ -138,7 +142,7 @@ export default (props) => {
       }
     } catch (e) {
       props.showGlobalAlert(
-        "There was an error processing your delegation, please try again later.",
+        e.message || "There was an error processing your delegation, please try again later.",
         "error-toast"
       );
     }
@@ -227,13 +231,16 @@ export default (props) => {
    * Sign delegation through ledger and
    * @param {function} callback Callback function called after ledger signed Delegation
    */
-  async function signLedgerTransaction(callback) {
+  const signLedgerTransaction = async () => {
     try {
+      if(!delegateData || delegateData?.publicKey){
+        throw new Error("Recipient Public key is not defined")
+      }
       await isMinaAppOpen();
       const actualNonce = getNonce();
-      const senderAccount = props.sessionData.ledgerAccount || 0;
-      const receiverAddress = delegateData.publicKey;
-      const averageFee = fee?.data?.estimatedFee?.average || '0';
+      const senderAccount = props.sessionData?.ledgerAccount || 0;
+      const receiverAddress = delegateData?.publicKey;
+      const averageFee = feeOrDefault(fee?.data?.estimatedFee?.average || '0');
       const transactionToSend = createLedgerDelegationTransaction(senderAccount,address,receiverAddress,averageFee,actualNonce);
       const signature = await signTransaction(transactionToSend);
       setShowModal(ModalStates.BROADCASTING);
@@ -252,44 +259,25 @@ export default (props) => {
    * @returns number Nonce number
    */
   function getNonce() {
-    if (nonceAndDelegate.data?.accountByKey) {
+    if (nonceAndDelegate.data?.accountByKey?.usableNonce) {
       return parseInt(nonceAndDelegate.data.accountByKey.usableNonce);
-    } else if (nonceAndDelegate.data.accountByKey.usableNonce === 0) {
+    } else if (nonceAndDelegate.data?.accountByKey?.usableNonce === 0) {
       return 0;
     }
     return customNonce;
   }
-
-  /**
-   * If news are available, render news banner
-   * @returns HTMLElement
-   */
-  function renderBanner() {
-    if (
-      news.data &&
-      news.data.news_validators &&
-      news.data.news_validators.length > 0
-    ) {
-      const latest = news.data.news_validators[0];
-      return (
-        <Banner
-          title={latest.title}
-          subtitle={latest.subtitle}
-          link={latest.link}
-          cta={latest.cta}
-          cta_color={latest.cta_color}
-        />
-      );
-    }
-  }
-
+  
   return (
     <Hoc className="main-container">
       <div className="animate__animated animate__fadeIn">
-        {renderBanner()}
+        <Banner 
+          newsData={latestNews}
+        />
         <StakeTable
           toggleModal={openModal}
-          validators={validators}
+          validators={validatorsData}
+          loading={validatorsLoading}
+          error={validatorsError}
           currentDelegate={currentDelegate}
           openCustomDelegateModal={openCustomDelegateModal}
           setOffset={changeOffset}
