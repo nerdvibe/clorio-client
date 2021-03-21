@@ -1,12 +1,14 @@
 import { gql } from "@apollo/client";
-import { ITEMS_PER_PAGE } from "./const";
+import { ITEMS_PER_PAGE } from "../tools/const";
 
 
 export const GET_FEE = gql`
 query GetFees {
   estimatedFee {
-    average
-    fast
+    txFees{
+      average
+      fast
+    }
   }
 }
 `;
@@ -45,7 +47,9 @@ export const BROADCAST_DELEGATION = gql`
 export const GET_AVERAGE_FEE = gql`
   query GetFees {
     estimatedFee {
-      average
+      txFees{
+        average
+      }
     }
   }
 `;

@@ -3,13 +3,13 @@ import { Row, Col } from "react-bootstrap";
 import Button from "./Button";
 import { Copy } from "react-feather";
 import { getAddress } from "../../tools";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import Avatar from "../../tools/avatar";
 import { copyToClipboard, toMINA } from "../../tools/utils";
 import ReactTooltip from "react-tooltip";
 import {BalanceContext} from "../../context/BalanceContext";
 import { useContext } from "react";
-import { GET_TICKER,GET_BALANCE } from "../../tools/query";
+import { GET_TICKER,GET_BALANCE } from "../../graphql/query";
 
 export default function Wallet(props) {
   let userBalance = 0;
@@ -34,22 +34,16 @@ export default function Wallet(props) {
     }
   }, [address]);
 
-  if (balance && balance.data) {
-    if (balance.data.accountByKey) {
-      userBalance = balance.data.accountByKey.balance.total;
-      const total = balance.data.accountByKey.balance.total;
-      const liquid = balance.data.accountByKey.balance.liquid;
-      const locked = balance.data.accountByKey.balance.locked;
-      const liquidUnconfirmed =
-        balance.data.accountByKey.balance.liquidUnconfirmed;
-      if (props.setContextBalance) {
-        props.setContextBalance({
-          total,
-          liquid,
-          locked,
-          liquidUnconfirmed,
-        });
-      }
+  if (balance.data?.accountByKey?.balance) {
+    const {total,liquid,locked,liquidUnconfirmed} = balance.data.accountByKey.balance;
+    userBalance = balance.data.accountByKey.balance.total;
+    if (props.setContextBalance) {
+      props.setContextBalance({
+        total,
+        liquid,
+        locked,
+        liquidUnconfirmed,
+      });
     }
   }
   if (address === undefined) {
@@ -74,7 +68,7 @@ export default function Wallet(props) {
     if(ticker.loading){
       return "Loading "
     }
-    if (ticker.data) {
+    if (ticker.data?.ticker) {
       if(ticker.data.ticker.BTCMINA === null){
         return "Not available";
       } else {

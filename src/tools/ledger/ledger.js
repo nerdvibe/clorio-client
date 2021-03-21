@@ -99,7 +99,7 @@ export const escapeUnicode = (str) => {
   return [...str].map(c => /^[\x00-\x7F]$/.test(c) ? c : c.split("").map(a => "\\u" + a.charCodeAt().toString(16).padStart(4, "0")).join("")).join("");
 }
   
-export async function createAndSignLedgerTransaction(senderAccount,senderAddress,transactionData,nonce){
+export const createAndSignLedgerTransaction = async (senderAccount,senderAddress,transactionData,nonce) => {
   const {receiverAddress,fee,amount,memo} = transactionData;
   // For now mina-ledger-js doesn't support emojis
   const cleanMemo = escapeUnicode(emojiToUnicode(memo));
@@ -125,14 +125,14 @@ export async function createAndSignLedgerTransaction(senderAccount,senderAddress
 }
 
 
-export function createLedgerSignatureInputFromSignature(signature){
+export const createLedgerSignatureInputFromSignature = (signature) => {
   return {
     scalar: signature.scalar,
     field: signature.field,
   }
 }
 
-export function createLedgerPaymentInputFromPayload(transactionData,fee,amount,senderAddress){
+export const createLedgerPaymentInputFromPayload = (transactionData,fee,amount,senderAddress) => {
   const {nonce,memo,receiverAddress} = transactionData;
   return {
     nonce,
@@ -145,7 +145,7 @@ export function createLedgerPaymentInputFromPayload(transactionData,fee,amount,s
 }
 
 
-export function createLedgerDelegationTransaction(senderAccount,senderAddress,receiverAddress,averageFee,nonce){
+export const createLedgerDelegationTransaction = (senderAccount,senderAddress,receiverAddress,averageFee,nonce) => {
   return {
     senderAccount,
     senderAddress,

@@ -8,8 +8,8 @@ import Footer from "../General/Footer";
 import { useQuery } from "@apollo/client";
 import { storeSession } from "../../tools";
 import LedgerLoader from "../General/LedgerLoader";
-import { GET_ID } from "../../tools/query";
-import { getPublicKey } from "../../tools/ledger/ledger";
+import { GET_ID } from "../../graphql/query";
+import { getPublicKey } from "../../tools/ledger";
 
 
 export default function LedgerGetAddress(props) {
@@ -45,7 +45,7 @@ export default function LedgerGetAddress(props) {
   /**
    * Listen for ledger action
    */
-  async function getWallet() {
+  const getWallet = async () => {
     try {
       const ledgerPublicKey = await getPublicKey(ledgerAccount)
       setPublicKey(ledgerPublicKey.publicKey);

@@ -1,9 +1,8 @@
 import Big from "big.js";
 import { ITEMS_PER_PAGE } from "./const";
 import html2pdf from "html2pdf.js";
-import * as CodaSDK from "@o1labs/client-sdk";
 
-export function copyToClipboard(content) {
+export function copyToClipboard(content="") {
   const el = document.createElement("textarea");
   el.value = content;
   document.body.appendChild(el);
@@ -42,7 +41,7 @@ export function getDefaultValidUntilField() {
  * Get number of table pages
  * @returns Number
  */
-export function getTotalPages(totalItems) {
+export function getTotalPages(totalItems=0) {
   if (totalItems) {
     const pages = (totalItems / ITEMS_PER_PAGE).toFixed(0);
     if(totalItems%ITEMS_PER_PAGE < 5 && totalItems%ITEMS_PER_PAGE!==0){
@@ -58,7 +57,7 @@ export function getTotalPages(totalItems) {
  * @param {number} offset 
  * @returns number
  */
-export function getPageFromOffset(offset){
+export function getPageFromOffset(offset=0){
   return offset / ITEMS_PER_PAGE + 1
 }
 

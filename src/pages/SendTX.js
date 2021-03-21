@@ -9,7 +9,7 @@ import BroadcastTransaction from "../components/Modals/BroadcastTransaction";
 import { useQuery, useMutation } from "@apollo/client";
 import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
-import {createAndSignLedgerTransaction} from "../tools/ledger/ledger";
+import {createAndSignLedgerTransaction} from "../tools/ledger";
 import {createPaymentInputFromPayload, createSignatureInputFromSignature, signTransaction} from "../tools/transactions"
 import { toNanoMINA } from "../tools/utils";
 import {Big} from "big.js";
@@ -17,7 +17,7 @@ import CustomNonce from "../components/Modals/CustomNonce";
 import { BalanceContext } from "../context/BalanceContext";
 import Spinner from "../components/General/Spinner";
 import { derivePublicKey } from "@o1labs/client-sdk";
-import { BROADCAST_TRANSACTION, GET_FEE, GET_NONCE } from "../tools/query";
+import { BROADCAST_TRANSACTION, GET_FEE, GET_NONCE } from "../graphql/query";
 
 const initialTransactionData = {
   amount: toNanoMINA(0),
@@ -33,7 +33,7 @@ export default function SendTX(props) {
     BROADCASTING: "broadcasting",
     NONCE: "nonce",
   });
-  const isLedgerEnabled = props.sessionData.ledger;
+  const isLedgerEnabled = props.sessionData?.ledger || false;
   const [privateKey, setPrivateKey] = useState("");
   const [sendTransactionFlag, setSendTransactionFlag] = useState(false);
   const [step, setStep] = useState(0);
@@ -118,7 +118,7 @@ export default function SendTX(props) {
       }
     } catch (e) {
       props.showGlobalAlert(
-        "There was an error broadcasting delegation",
+        "There was an error broadcasting transaction",
         "error-toast"
       );
     }
@@ -197,11 +197,7 @@ export default function SendTX(props) {
    * @returns number Wallet usable nonce
    */
   function checkNonce() {
-    return (
-      nonceQuery.data &&
-      (nonceQuery.data.accountByKey.usableNonce ||
-        nonceQuery.data.accountByKey.usableNonce === 0)
-    );
+    return (nonceQuery.data?.accountByKey?.usableNonce || nonceQuery.data?.accountByKey?.usableNonce === 0);
   }
 
   /**
@@ -270,9 +266,9 @@ export default function SendTX(props) {
   /**
    * Sign transaction with Ledger
    */
-  async function sendLedgerTransaction() {
+  const sendLedgerTransaction = async () => {
       try {
-        const senderAccount = props.sessionData.ledgerAccount || 0;
+        const senderAccount = props.sessionData?.ledgerAccount || 0;
         const actualNonce = getNonce();
         setTransactionData({
           ...transactionData,
@@ -296,8 +292,8 @@ export default function SendTX(props) {
         <div className="animate__animated animate__fadeIn">
           {step === 0 ? (
             <TransactionForm
-              defaultFee={feeQuery?.data?.estimatedFee?.average || 0}
-              fastFee={feeQuery?.data?.estimatedFee?.fast || 0}
+              defaultFee={feeQuery?.data?.estimatedFee?.txFees?.average || 0}
+              fastFee={feeQuery?.data?.estimatedFee?.txFees?.fast || 0}
               nextStep={openConfirmationModal}
               transactionData={transactionData}
               showGlobalAlert={props.showGlobalAlert}
