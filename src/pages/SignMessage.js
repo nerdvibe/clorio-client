@@ -64,6 +64,7 @@ export default function SignMessage(props) {
       publicKey:""
     });
     setMessage("");
+    setShowResult(false);
   }
 
   return (
