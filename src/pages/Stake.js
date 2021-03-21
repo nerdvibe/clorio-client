@@ -4,7 +4,7 @@ import StakeTable from "../components/Stake/StakeTable";
 import Hoc from "../components/General/Hoc";
 import ModalContainer from "../components/Modals/ModalContainer";
 import { useQuery, gql, useMutation } from "@apollo/client";
-import { getAddress } from "../tools";
+import { getAddress, readNetworkData } from "../tools";
 import { useEffect } from "react";
 import * as CodaSDK from "@o1labs/client-sdk";
 import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
@@ -114,6 +114,18 @@ export default (props) => {
   getAddress((address) => {
     setAddress(address);
   });
+
+
+  // TODO : Example - To be removed 
+  const readNetworkFromStorage = async () =>{
+    const networkData = await readNetworkData()
+    console.log("🚀 ~ file: Stake.js ~ line 120 ~ readNetworkFromStorage ~ networkData", networkData)
+  }
+
+  useEffect(() => {
+    readNetworkFromStorage()
+  }, [])
+    
 
   useEffect(() => {
     if (
