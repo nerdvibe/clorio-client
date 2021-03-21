@@ -13,7 +13,7 @@ export const isAuthenticated = () => {
 
 export const storeSession = (address, id, isLedgerEnabled, ledgerAccount=0 ,callback) => {
   const wallet = {
-    name: "Wallet",
+    rowName: "Wallet",
     address: address,
     id: id,
     ledger: isLedgerEnabled,
@@ -25,8 +25,34 @@ export const storeSession = (address, id, isLedgerEnabled, ledgerAccount=0 ,call
   });
 };
 
+export const storeNetworkData = (networkData) => {
+  return new Promise((resolve)=>{
+    if(networkData){
+      const network = {
+        rowName: "Network",
+        ...networkData
+      };
+      db.insert(network, () => {
+        resolve(true);
+      });
+    } else {
+      resolve(false);
+    }
+  })
+};
+
+export const readNetworkData = () => {
+  return new Promise((resolve)=>{
+    db.findOne({"rowName":"Network"}, (error, data) => {
+      if(data){
+        resolve(data)
+      } 
+    })
+  })
+};
+
 export const readSession = (callback, goToHome) => {
-  db.find({}, (error, data) => {
+  db.find({"rowName":"Wallet"}, (error, data) => {
     if (data.length > 0) {
       try {
         const row = data[0];
@@ -49,13 +75,13 @@ export const clearSession = () => {
 };
 
 export const getAddress = (callback) => {
-  return db.find({}, function (err, data) {
+  return db.find({"rowName":"Wallet"}, function (err, data) {
     return callback(data[0].address);
   });
 };
 
 export const getId = (callback) => {
-  return db.find({}, function (err, data) {
+  return db.find({"rowName":"Wallet"}, function (err, data) {
     if (data && data.length > 0) {
       return callback(data[0].id);
     }
@@ -64,9 +90,9 @@ export const getId = (callback) => {
 };
 
 export const updateUser = (address, id, isLedgerEnabled, callback) => {
-  db.remove({}, { multi: true }, function () {
+  db.remove({"rowName":"Wallet"}, { multi: true }, function () {
     const wallet = {
-      name: "Wallet",
+      rowName: "Wallet",
       address: address,
       id: id,
       ledger: isLedgerEnabled,

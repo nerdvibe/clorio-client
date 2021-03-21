@@ -8,14 +8,11 @@ import Logo from "../components/General/Logo";
 import Footer from "../components/General/Footer";
 import * as CodaSDK from "@o1labs/client-sdk";
 import { storeSession } from "../tools";
-import { copyToClipboard } from "../tools/utils";
+import { copyToClipboard, downloadPaperWalletPDF } from "../tools/utils";
 import Input from "../components/General/Input";
-import html2pdf from "html2pdf.js";
-import Spinner from "../components/General/Spinner";
 
 export default function Register(props) {
   const [validation, setValidation] = useState(false);
-  const [showLoader, setShowLoader] = useState(false);
   const [keys, setKeys] = useState(undefined);
   const [validationText, setValidationText] = useState("");
   const history = useHistory();
@@ -72,42 +69,7 @@ export default function Register(props) {
   function stepBackwards() {
     setValidationText(undefined);
     setValidation(false);
-  }
-
-  /**
-   * Download PDF with sensible data
-   */
-  function downloadPDF() {
-    setShowLoader(true);
-    const elementsToHide = document.getElementsByClassName("no-print");
-    const elementInitalState = [];
-    for (const el of elementsToHide) {
-      elementInitalState.push(el.style.display);
-      el.style.display = "none";
-    }
-    const elementsToShow = document.getElementsByClassName("pdf-only");
-    for (const el of elementsToShow) {
-      el.style.display = "inline";
-    }
-    const element = document.getElementById("element-to-print");
-    html2pdf()
-      .set({
-        margin: 25,
-        filename: "Clorio-Paperwallet.pdf",
-      })
-      .from(element)
-      .save();
-    setTimeout(() => {
-      for (const el of elementsToHide) {
-        const tmpStyle = elementInitalState.pop();
-        el.style.display = tmpStyle;
-      }
-      for (const el of elementsToShow) {
-        el.style.display = "none";
-      }
-      setShowLoader(false);
-    }, 250);
-  }
+  }     
 
   /**
    * Render wallet data screen
@@ -115,87 +77,85 @@ export default function Register(props) {
    */
   function renderRegisterStep() {
     return (
-      <Spinner show={showLoader}>
-        <div className="animate__animated animate__fadeIn full-width">
-          <Row className="full-width">
-            <Col md={12} lg={10} xl={8} className="offset-lg-1 offset-xl-2 text-center">
-              <div id="element-to-print">
-                <div className="v-spacer-big pdf-only" />
-                <div className="v-spacer-big pdf-only" />
-                <div className="mx-auto fit-content">
-                  <Logo big={true} />
-                </div>
-                <div className="v-spacer no-print" />
-                <h4 className="full-width-align-center">This is your address</h4>
-                <div
-                  className="wrap-input1 validate-input"
-                  data-validate="Name is required"
-                >
-                  <h5 className="full-width-align-center">
-                    {publicKey}
-                    <Button
-                      className="inline-element no-print"
-                      icon={<Copy />}
-                      onClick={() => copyToClipboard(publicKey)}
-                    />
-                  </h5>
-                </div>
-                <div className="v-spacer" />
-                <h4 className="full-width-align-center">
-                  This is your private key
-                </h4>
-                <div className="wrap-input1 validate-input">
-                  <h5 className="full-width-align-center">
-                    {privateKey}
-                    <Button
-                      className="inline-element no-print"
-                      icon={<Copy />}
-                      onClick={() => copyToClipboard(privateKey)}
-                    />
-                  </h5>
-                </div>
+      <div className="animate__animated animate__fadeIn full-width">
+        <Row className="full-width">
+          <Col md={12} lg={10} xl={8} className="offset-lg-1 offset-xl-2 text-center">
+            <div id="element-to-print">
+              <div className="v-spacer-big pdf-only" />
+              <div className="v-spacer-big pdf-only" />
+              <div className="mx-auto fit-content">
+                <Logo big={true} />
               </div>
-              <div className="v-spacer" />
+              <div className="v-spacer no-print" />
+              <h4 className="full-width-align-center">This is your address</h4>
               <div
-                className="wrap-input1 validate-input no-print"
+                className="wrap-input1 validate-input"
                 data-validate="Name is required"
               >
-                <p className="full-width-align-center">
-                  This is the only time you will see the passphrase and the
-                  private key. <br />
-                  Make sure have made a copy of them. If you loose your private
-                  key you will not be able to access your funds anymore! <br />
-                  <a className="link-button" onClick={downloadPDF}>
-                    Download a copy here
-                  </a>
-                </p>
+                <h5 className="full-width-align-center">
+                  {publicKey}
+                  <Button
+                    className="inline-element no-print"
+                    icon={<Copy />}
+                    onClick={() => copyToClipboard(publicKey)}
+                  />
+                </h5>
               </div>
               <div className="v-spacer" />
-              <Row className="no-print">
-                <Col xs={4}>
-                  <Link to="/">
-                    <Button className="link-button mx-auto" text="Cancel" />
-                  </Link>
-                </Col>
-                <Col xs={4}>
+              <h4 className="full-width-align-center">
+                This is your private key
+              </h4>
+              <div className="wrap-input1 validate-input">
+                <h5 className="full-width-align-center">
+                  {privateKey}
                   <Button
-                    className="link-button mx-auto"
-                    text="Generate new key"
-                    onClick={generateNew}
+                    className="inline-element no-print"
+                    icon={<Copy />}
+                    onClick={() => copyToClipboard(privateKey)}
                   />
-                </Col>
-                <Col xs={4}>
-                  <Button
-                    className="lightGreenButton__fullMono mx-auto"
-                    onClick={() => setValidation(true)}
-                    text="Continue"
-                  />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        </div>
-      </Spinner>
+                </h5>
+              </div>
+            </div>
+            <div className="v-spacer" />
+            <div
+              className="wrap-input1 validate-input no-print"
+              data-validate="Name is required"
+            >
+              <p className="full-width-align-center">
+                This is the only time you will see the passphrase and the
+                private key. <br />
+                Make sure have made a copy of them. If you loose your private
+                key you will not be able to access your funds anymore! <br />
+                <a className="link-button" onClick={() => downloadPaperWalletPDF(publicKey,privateKey)}>
+                  Download a copy here
+                </a>
+              </p>
+            </div>
+            <div className="v-spacer" />
+            <Row className="no-print">
+              <Col xs={4}>
+                <Link to="/">
+                  <Button className="link-button mx-auto" text="Cancel" />
+                </Link>
+              </Col>
+              <Col xs={4}>
+                <Button
+                  className="link-button mx-auto"
+                  text="Generate new key"
+                  onClick={generateNew}
+                />
+              </Col>
+              <Col xs={4}>
+                <Button
+                  className="lightGreenButton__fullMono mx-auto"
+                  onClick={() => setValidation(true)}
+                  text="Continue"
+                />
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </div>
     );
   }
 

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Sidebar from "./components/General/Sidebar";
 import { Container, Row, Col } from "react-bootstrap";
 import Routes from "./Routes";
-import { clearSession, readSession } from "./tools/auth";
+import { clearSession, readSession, storeNetworkData } from "./tools/auth";
 import Spinner from "./components/General/Spinner";
 import { useHistory } from "react-router-dom";
 import UpdateUserID from "./components/General/UpdateUserID";
@@ -30,7 +30,13 @@ function Layout() {
   const [alertText, setAlertText] = useState("");
   const [alertStyle, setAlertStyle] = useState("error-toast");
   const history = useHistory();
-  const network = useQuery(GET_NETWORK);
+  const network = useQuery(GET_NETWORK,{
+    onCompleted: (data) => {
+      if(data?.nodeInfo) {
+        storeNetworkData(data?.nodeInfo)
+      }
+    }
+  });
 
   const goToHome = () => {
     history.push("/");
