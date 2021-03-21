@@ -24,16 +24,16 @@ const GET_NETWORK = gql`
 `;
 
 function Layout() {
-  const [sessionData, setsessionData] = useState(undefined);
+  const [sessionData, setSessionData] = useState(undefined);
   const [showLoader, setShowLoader] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertText, setAlertText] = useState("");
   const [alertStyle, setAlertStyle] = useState("error-toast");
   const history = useHistory();
   const network = useQuery(GET_NETWORK,{
-    onCompleted: (data) => {
+    onCompleted: async (data) => {
       if(data?.nodeInfo) {
-        storeNetworkData(data?.nodeInfo)
+        await storeNetworkData(data?.nodeInfo)
       }
     }
   });
@@ -44,17 +44,17 @@ function Layout() {
 
   readSession((data) => {
     if (!sessionData) {
-      setsessionData(data);
+      setSessionData(data);
     }
   }, goToHome);
 
   const setLoader = () => {
-    setsessionData(undefined);
+    setSessionData(undefined);
   };
 
   window.onbeforeunload = () => {
     clearSession();
-    setsessionData(undefined);
+    setSessionData(undefined);
   };
 
   function showGlobalAlert(text, style) {

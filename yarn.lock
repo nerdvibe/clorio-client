@@ -9201,7 +9201,14 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
 
-nedb@1.8.0:
+nedb-promises@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/nedb-promises/-/nedb-promises-4.1.1.tgz#12440215a1b1e62ca6655ee2242bf72903fcb984"
+  integrity sha512-Y10f3r4FdcSy/6NlGnI2i9GxCf5KsPtYhlVEkXrKTqvFJ+ybJcoSBncgSm9G1W9QbtpecjJ6vYd7CGf54SNnbw==
+  dependencies:
+    nedb "^1.8.0"
+
+nedb@1.8.0, nedb@^1.8.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/nedb/-/nedb-1.8.0.tgz#0e3502cd82c004d5355a43c9e55577bd7bd91d88"
   integrity sha1-DjUCzYLABNU1WkPJ5VV3vXvZHYg=
