@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
-const TOAST_TIMEOUT = 2500;
+const TOAST_TIMEOUT = 5000;
 
 const Alert = (props) => {
   const [node] = useState(document.createElement("div"));
