@@ -2,7 +2,7 @@ import Big from "big.js";
 import { ITEMS_PER_PAGE } from "./const";
 import html2pdf from "html2pdf.js";
 
-export function copyToClipboard(content="") {
+export const copyToClipboard = (content="") => {
   const el = document.createElement("textarea");
   el.value = content;
   document.body.appendChild(el);
@@ -11,12 +11,12 @@ export function copyToClipboard(content="") {
   document.body.removeChild(el);
 }
 
-export function loadErrorMessage() {
+export const loadErrorMessage = ()  => {
   document.getElementsByClassName("show-on-load")[0].style = "";
   document.getElementsByClassName("show-on-load")[0].className = "show-mob";
 }
 
-export function isEmptyObject(objectToCheck) {
+export const isEmptyObject = (objectToCheck) =>  {
   return (
     objectToCheck &&
     Object.entries(objectToCheck).length === 0 &&
@@ -24,15 +24,15 @@ export function isEmptyObject(objectToCheck) {
   );
 }
 
-export function toNanoMINA(amount) {
+export const toNanoMINA = (amount) =>  {
   return Big(amount).mul(1e9).toFixed();
 }
 
-export function toMINA(amount) {
+export const toMINA = (amount)  => {
   return Big(amount).mul(1e-9).toFixed(3);
 }
 
-export function getDefaultValidUntilField() {
+export const getDefaultValidUntilField = () =>  {
   return "4294967295";
 }
 
@@ -41,7 +41,7 @@ export function getDefaultValidUntilField() {
  * Get number of table pages
  * @returns Number
  */
-export function getTotalPages(totalItems=0) {
+export const getTotalPages = (totalItems=0) =>  {
   if (totalItems) {
     const pages = (totalItems / ITEMS_PER_PAGE).toFixed(0);
     if(totalItems%ITEMS_PER_PAGE < 5 && totalItems%ITEMS_PER_PAGE!==0){
@@ -57,11 +57,11 @@ export function getTotalPages(totalItems=0) {
  * @param {number} offset 
  * @returns number
  */
-export function getPageFromOffset(offset=0){
+export const getPageFromOffset = (offset=0) => {
   return offset / ITEMS_PER_PAGE + 1
 }
 
-export function createAndDownloadPDF(){
+export const createAndDownloadPDF = () => {
   return new Promise(
     (resolve)=>{
       const elementsToHide = document.getElementsByClassName("no-print");
