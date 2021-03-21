@@ -17,6 +17,7 @@ export default function LedgerConnect(props) {
   const [customAccount, setCustomAccount] = useState(false);
   const [accountNumber, setAccountNumber] = useState(0);
   const [proceedToLedger, setProceedToLedger] = useState(false);
+  const [browserIncompatible, setBrowserIncompatible] = useState(false);
 
   const check = async() => {
     try {
@@ -24,6 +25,9 @@ export default function LedgerConnect(props) {
       setIsAvailable(open)
     } catch(e) {
         setIsAvailable(false)
+      if(e.message.includes("not supported")) {
+        setBrowserIncompatible(true);
+      }
     } 
   }
 
@@ -60,6 +64,22 @@ export default function LedgerConnect(props) {
         <div className="v-spacer" />
         <h6 className="full-width-align-center">
           Looking for devices
+        </h6>
+        <div className="v-spacer" />
+        <Link to="/">
+          <Button className="link-button mx-auto" text="Go back" />
+        </Link>
+      </div>
+    )
+
+  const renderIncompatible = (
+      <div>
+        <h4 className="full-width-align-center">
+          Connect your Ledger wallet and open the Mina app
+        </h4>
+        <div className="v-spacer" />
+        <h6 className="full-width-align-center">
+          ❌ Browser is incompatible, please use the last version of Chrome, Edge or Opera
         </h6>
         <div className="v-spacer" />
         <Link to="/">
@@ -127,6 +147,10 @@ export default function LedgerConnect(props) {
     return <LedgerGetAddress {...props} accountNumber={accountNumber}/>
   }
 
+  const isAvailableRender = isAvailable ?
+    renderAccountNumberSelect:
+    renderLookingForLedger
+
   return (
     <Hoc>
       <div className="block-container real-full-page-container center">
@@ -139,11 +163,7 @@ export default function LedgerConnect(props) {
               <div className="v-spacer" />
               <div className="v-spacer" />
               <div className="v-spacer" />
-              {
-                isAvailable ? 
-                renderAccountNumberSelect:
-                renderLookingForLedger
-              }
+              {browserIncompatible ? renderIncompatible : isAvailableRender}
             </Col>
           </Row>
         </div>
