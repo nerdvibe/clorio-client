@@ -11,6 +11,7 @@ import Button from "../General/Button";
 import LedgerGetAddress from "./LedgerGetAddress";
 import ReactTooltip from 'react-tooltip';
 import HelpHint from "../General/HelpHint";
+import { toast } from 'react-toastify';
 
 export default function LedgerConnect(props) {
   const [isAvailable, setIsAvailable] = useState(false);
@@ -50,7 +51,7 @@ export default function LedgerConnect(props) {
     if(+accountNumber>=0 && +accountNumber<=10000){
       setProceedToLedger(true)
     } else {
-      props.showGlobalAlert("Account number should be between 0 and 10000", "error-toast");
+      toast.error("Account number should be between 0 and 10000");
     }
   }
   
