@@ -17,6 +17,7 @@ import CustomNonce from "../components/Modals/CustomNonce";
 import { useContext } from "react";
 import { BalanceContext } from "../context/BalanceContext";
 import Spinner from "../components/General/Spinner";
+import { toast } from 'react-toastify';
 
 const GET_FEE = gql`
   query GetFees {
@@ -97,7 +98,7 @@ export default function SendTX(props) {
     BROADCAST_TRANSACTION,
     {
       onError: (error) => {
-        props.showGlobalAlert(error.message, "error-toast");
+        toast.error(error.message)
         clearState();
       },
     }
@@ -107,10 +108,7 @@ export default function SendTX(props) {
   // If broadcasted successfully return to initial page state
   if (showModal && broadcastResult && broadcastResult.data && sendTransactionFlag) {
     clearState();
-    props.showGlobalAlert(
-      "Transaction successfully broadcasted",
-      "success-toast"
-    );
+    toast.success("Transaction successfully broadcasted");
     history.replace("/send-tx");
   }
 
@@ -161,10 +159,7 @@ export default function SendTX(props) {
         setSendTransactionFlag(true);
       }
     } catch (e) {
-      props.showGlobalAlert(
-        "There was an error broadcasting delegation",
-        "error-toast"
-      );
+      toast.error("There was an error broadcasting delegation");
     }
   }, [ledgerTransactionData]);
 
@@ -184,17 +179,11 @@ export default function SendTX(props) {
       .minus(amount)
       .toNumber();
     if (balanceAfterTransaction < 0) {
-      props.showGlobalAlert(
-        "Your are trying to send too many Mina, please check your balance",
-        "error-toast"
-      );
+      toast.error("Your are trying to send too many Mina, please check your balance");
       return
     }
     if (transactionData.receiverAddress === "" || transactionData.amount === 0) {
-      props.showGlobalAlert(
-        "Please insert an address and an amount",
-        "error-toast"
-      );
+      toast.error( "Please insert an address and an amount");
       return
     }
     nonce.refetch({ publicKey: address });
@@ -214,7 +203,7 @@ export default function SendTX(props) {
    */
   function confirmPrivateKey() {
     if (privateKey === "") {
-      props.showGlobalAlert("Please insert a private key", "error-toast");
+      toast.error("Please insert a private key");
     } else {
       closeModal();
       setStep(1);
@@ -288,10 +277,7 @@ export default function SendTX(props) {
         }
       } catch (e) {
         setShowModal("");
-        props.showGlobalAlert(
-          "Check if the receiver address and/or the private key are right",
-          "error-toast"
-        );
+        toast.error("Check if the receiver address and/or the private key are right");
         stepBackwards();
       }
     }
@@ -355,10 +341,7 @@ export default function SendTX(props) {
         setShowModal(ModalStates.BROADCASTING);
         callback(signature.signature);
       } catch (e) {
-        props.showGlobalAlert(
-          e.message || "An error occurred while loading hardware wallet",
-          "error-toast"
-        );
+        toast.error(e.message || "An error occurred while loading hardware wallet");
         stepBackwards()
       }
   }
@@ -373,7 +356,6 @@ export default function SendTX(props) {
               fastFee={fee?.data?.estimatedFee?.txFees?.fast || 0}
               nextStep={openConfirmationModal}
               transactionData={transactionData}
-              showGlobalAlert={props.showGlobalAlert}
               setData={setTransactionData}
             />
           ) : isLedgerEnabled ? (
