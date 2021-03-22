@@ -1,14 +1,26 @@
+import { toast } from "react-toastify";
 import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { feeOrDefault } from "../../tools/fees";
-import { toNanoMINA } from "../../tools/utils";
+import { toMINA, toNanoMINA } from "../../tools/utils";
 import Button from "../General/Button";
 import Input from "../General/Input";
+
+const MINIMUM_FEE = toNanoMINA(0.001);
 
 export const DelegationFee = (props) => {
   const averageFee = feeOrDefault(props.fees.data?.estimatedFee?.txFees?.average || 0);
   const fastFee = feeOrDefault(props.fees.data?.estimatedFee?.txFees?.fast || 0);
   const [fee, setFee] = useState(feeOrDefault(averageFee));
+
+  const proceedButtonHandler = () => {
+    if(feeGreaterThanMinimum(fee)){
+      return props.proceedHandler(feeToSend)
+    }
+    const message = `Fee ${fee} is less than the minimum fee (${toMINA(MINIMUM_FEE)})`;
+    toast.error(message);
+  }
+  
   return(
     <div>
       <h2>Insert a Fee</h2>
@@ -43,7 +55,7 @@ export const DelegationFee = (props) => {
       <div className="v-spacer" />
       <Button
         className="lightGreenButton__fullMono mx-auto"
-        onClick={() => props.proceedHandler(toNanoMINA(fee))}
+        onClick={proceedButtonHandler}
         text="Proceed"
       />
     </div>

@@ -103,8 +103,8 @@ export default (props) => {
   const fee = useQuery(GET_FEE);
   const news = useQuery(NEWS);
   const nonceAndDelegate = useQuery(GET_NONCE_AND_DELEGATE, {
-    variables: { publicKey: props.sessionData.address },
-  });
+    variables: { publicKey: props.sessionData.address }}
+  );
   const history = useHistory();
   const [ledgerTransactionData, setLedgerTransactionData] = useState(undefined);
   const [broadcastDelegation, broadcastResult] = useMutation(
@@ -250,14 +250,18 @@ export default (props) => {
    * If nonce is not available and no custom nonce has already been asked, ask user for a custom nonce. Otherwise proceeds to private key insertion modal
    */
   function confirmDelegate() {
-    if ((!nonceAndDelegate || !nonceAndDelegate.data) && !customNonce) {
-      setShowModal(ModalStates.NONCE);
-    } else if (customDelegate) {
-      nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
-      setShowModal(ModalStates.FEE);
-      setDelegate({ publicKey: customDelegate });
-    } else {
-      nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
+    try{
+      if ((!nonceAndDelegate || !nonceAndDelegate.data) && !customNonce) {
+        setShowModal(ModalStates.NONCE);
+      } else if (customDelegate) {
+        nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
+        setShowModal(ModalStates.FEE);
+        setDelegate({ publicKey: customDelegate });
+      } else {
+        nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
+        setShowModal(ModalStates.FEE);
+      }
+    } catch(e){
       setShowModal(ModalStates.FEE);
     }
   }
@@ -267,9 +271,13 @@ export default (props) => {
    * @param {string} delegate Delegate private key
    */
   function confirmCustomDelegate(delegate) {
-    nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
-    setShowModal(ModalStates.FEE);
-    setDelegate({ publicKey: delegate });
+    try{
+      nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
+      setShowModal(ModalStates.FEE);
+      setDelegate({ publicKey: delegate });
+    } catch(e){
+      setShowModal(ModalStates.FEE);
+    }
   }
 
   /**
