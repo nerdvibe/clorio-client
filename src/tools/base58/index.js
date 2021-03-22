@@ -8,6 +8,9 @@ const NULL_VALUE_REGEX = /\0[\s\S]*$/g;
  * @returns {string}
  */
 export const decodeB58 = (msg) => {
+  if(!msg)  {
+    return ''
+  }
   const decoded = bs58(BASE58).decode(msg);
   const decodedString = decoded.slice(2, decoded.length - 4).toString('utf-8');
   const decodedStringEscaped = decodedString.replace(NULL_VALUE_REGEX,'');
