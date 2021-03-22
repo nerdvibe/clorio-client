@@ -4,14 +4,16 @@ import SignMessageForm from "../components/Forms/SignMessageForm";
 import { getAddress } from "../tools";
 import imageToRender  from "../assets/NotAvailableForLedger.svg";
 import * as CodaSDK from "@o1labs/client-sdk";
-import { isLedgerEnabled } from "../tools/utils";
 import { toast } from 'react-toastify';
+import { LedgerContext } from "../context/LedgerContext";
+import { useContext } from "react";
 
 export default function SignMessage(props) {
   const [message, setMessage] = useState("");
   const [privateKey, setPrivateKey] = useState("");
   const [publicKey, setPublicKey] = useState("");
   const [result, setResult] = useState(undefined);
+  const { isLedgerEnabled } = useContext(LedgerContext);
 
   getAddress((data) => {
     setPublicKey(data);
@@ -53,8 +55,7 @@ export default function SignMessage(props) {
     setResult(undefined);
     setMessage("");
   }
-
-  if(isLedgerEnabled()){
+  if(isLedgerEnabled){
     return (
       <Hoc>
         <div className="animate__animated animate__fadeIn">

@@ -11,6 +11,8 @@ import { isEmptyObject } from "./tools/utils";
 import Alert from "./components/General/Alert";
 import Wallet from "./components/General/Wallet";
 import {BalanceContextProvider} from "./context/BalanceContext";
+import { useContext } from "react";
+import { LedgerContext } from "./context/LedgerContext";
 
 const GET_NETWORK = gql`
   query NodeInfo {
@@ -26,6 +28,7 @@ const GET_NETWORK = gql`
 function Layout() {
   const [sessionData, setSessionData] = useState(undefined);
   const [showLoader, setShowLoader] = useState(false);
+  const { setLedgerContext } = useContext(LedgerContext);
   const history = useHistory();
   const network = useQuery(GET_NETWORK,{
     onCompleted: async (data) => {
@@ -42,6 +45,12 @@ function Layout() {
   readSession((data) => {
     if (!sessionData) {
       setSessionData(data);
+      if(setLedgerContext){
+        setLedgerContext({
+          ledger:data.ledger,
+          ledgerAccount: data.ledgerAccount
+        })
+      }
     }
   }, goToHome);
 
@@ -73,17 +82,17 @@ function Layout() {
           >
             <Container className="contentWrapper animate__animated animate__fadeIn">
               <BalanceContextProvider>
-                <Spinner show={!sessionData || showLoader}>
-                  {sessionData && !isEmptyObject(sessionData) && sessionData.address && (
-                    <Wallet />
-                  )}
-                  <Routes
-                    sessionData={sessionData}
-                    setLoader={setLoader}
-                    network={network.data}
-                    toggleLoader={setShowLoader}
-                  />
-                </Spinner>
+                  <Spinner show={!sessionData || showLoader}>
+                    {sessionData && !isEmptyObject(sessionData) && sessionData.address && (
+                      <Wallet />
+                    )}
+                    <Routes
+                      sessionData={sessionData}
+                      setLoader={setLoader}
+                      network={network.data}
+                      toggleLoader={setShowLoader}
+                    />
+                  </Spinner>
               </BalanceContextProvider>
             </Container>
           </Col>

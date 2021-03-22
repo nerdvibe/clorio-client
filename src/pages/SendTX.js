@@ -11,13 +11,14 @@ import { useQuery, gql, useMutation } from "@apollo/client";
 import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
 import {emojiToUnicode, escapeUnicode, isMinaAppOpen, NETWORK, signTransaction, TX_TYPE} from "../tools/ledger/ledger";
-import { getDefaultValidUntilField, isLedgerEnabled, toNanoMINA } from "../tools/utils";
+import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
 import {Big} from "big.js";
 import CustomNonce from "../components/Modals/CustomNonce";
 import { useContext } from "react";
 import { BalanceContext } from "../context/BalanceContext";
 import Spinner from "../components/General/Spinner";
 import { toast } from 'react-toastify';
+import { LedgerContext } from "../context/LedgerContext";
 
 const GET_FEE = gql`
   query GetFees {
@@ -63,7 +64,6 @@ export default function SendTX(props) {
     BROADCASTING: "broadcasting",
     NONCE: "nonce",
   });
-  const ledgerEnabled = isLedgerEnabled();
   const [privateKey, setPrivateKey] = useState("");
   const [sendTransactionFlag, setSendTransactionFlag] = useState(false);
   const [step, setStep] = useState(0);
@@ -72,6 +72,7 @@ export default function SendTX(props) {
   const [customNonce, setCustomNonce] = useState(undefined);
   const [showLoader, setShowLoader] = useState(true);
   const [ledgerTransactionData, setLedgerTransactionData] = useState(undefined);
+  const { isLedgerEnabled } = useContext(LedgerContext);
   const { balance } = useContext(BalanceContext);
   const [transactionData, setTransactionData] = useState(
     initialTransactionData
@@ -119,7 +120,7 @@ export default function SendTX(props) {
 
   // Listen for ledger action
   useEffect(() => {
-    if (ledgerEnabled && !ledgerTransactionData) {
+    if (isLedgerEnabled && !ledgerTransactionData) {
       if (step === 1) {
         const transactionListener = sendLedgerTransaction(
           setLedgerTransactionData
@@ -127,7 +128,7 @@ export default function SendTX(props) {
         return transactionListener.unsubscribe;
       }
     }
-  }, [ledgerEnabled, ledgerTransactionData, step]);
+  }, [ledgerTransactionData, step]);
 
   // Ledger data arrived, broadcast transaction
   useEffect(() => {
@@ -187,7 +188,7 @@ export default function SendTX(props) {
       return
     }
     nonce.refetch({ publicKey: address });
-    if (!ledgerEnabled) {
+    if (!isLedgerEnabled) {
       setShowModal(ModalStates.PASSPHRASE);
     } else {
       setStep(1);
@@ -358,7 +359,7 @@ export default function SendTX(props) {
               transactionData={transactionData}
               setData={setTransactionData}
             />
-          ) : ledgerEnabled ? (
+          ) : isLedgerEnabled ? (
             <ConfirmLedgerTransaction
               transactionData={transactionData}
             />
@@ -391,7 +392,7 @@ export default function SendTX(props) {
           close={closeNonceModal}
         >
           <CustomNonce
-            openModal={openConfirmationModal}
+            proceedHandler={openConfirmationModal}
             setCustomNonce={setCustomNonce}
           />
         </ModalContainer>
