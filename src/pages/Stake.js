@@ -145,9 +145,7 @@ export default (props) => {
   useEffect(() => {
     if (isLedgerEnabled && !ledgerTransactionData) {
       if (showModal === ModalStates.PASSPHRASE) {
-        const transactionListener = signLedgerTransaction(
-          setLedgerTransactionData
-        );
+        const transactionListener = signLedgerTransaction();
         return transactionListener.unsubscribe;
       }
     }
@@ -335,7 +333,7 @@ export default (props) => {
    * Sign delegation through ledger and
    * @param {function} callback Callback function called after ledger signed Delegation
    */
-  async function signLedgerTransaction(callback) {
+  async function signLedgerTransaction() {
     try {
       await isMinaAppOpen();
       const actualNonce = getNonce();
@@ -344,7 +342,7 @@ export default (props) => {
         senderAccount,
         senderAddress: address,
         receiverAddress: delegateData.publicKey,
-        fee: selectedFee,
+        fee: +selectedFee,
         amount: 0,
         nonce: actualNonce,
         // TODO: FIX HARDCODING!
@@ -356,7 +354,7 @@ export default (props) => {
 
       const signature = await signTransaction(transactionToSend);
       setShowModal(ModalStates.BROADCASTING);
-      callback(signature.signature);
+      setLedgerTransactionData(signature.signature);
     } catch (e) {
       toast.error(e.message || "An error occurred while loading hardware wallet",);
       setShowModal(undefined);
