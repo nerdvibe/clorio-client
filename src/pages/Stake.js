@@ -11,6 +11,7 @@ import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
 import ConfirmDelegation from "../components/Modals/ConfirmDelegation";
 import CustomDelegation from "../components/Modals/CustomDelegation";
+import {DelegationFee} from "../components/Modals/DelegationFee";
 import {isMinaAppOpen, NETWORK, signTransaction, TX_TYPE} from "../tools/ledger/ledger";
 import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
 import LedgerLoader from "../components/General/LedgerLoader";
@@ -61,6 +62,7 @@ const GET_FEE = gql`
   query GetFees {
     estimatedFee {
       txFees{
+        fast
         average
       }
     }
@@ -84,6 +86,7 @@ export default (props) => {
     CONFIRM_DELEGATION: "confirm",
     CUSTOM_DELEGATION: "custom",
     NONCE: "nonce",
+    FEE: "fee",
   });
   const isLedgerEnabled = props.sessionData.ledger;
   const [delegateData, setDelegate] = useState({});
@@ -95,6 +98,7 @@ export default (props) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [offset, setOffset] = useState(0);
   const [customNonce, setCustomNonce] = useState(undefined);
+  const [selectedFee, setSelectedFee] = useState(toNanoMINA(0.001));
   const validators = useQuery(VALIDATORS, { variables: { offset } });
   const fee = useQuery(GET_FEE);
   const news = useQuery(NEWS);
@@ -152,14 +156,13 @@ export default (props) => {
   useEffect(() => {
     if (ledgerTransactionData) {
       const actualNonce = getNonce();
-      const averageFee = toNanoMINA(feeOrDefault(fee.data?.estimatedFee?.txFees?.average));
       const SignatureInput = {
         rawSignature: ledgerTransactionData,
       };
       const SendPaymentInput = {
         nonce: actualNonce.toString(),
         memo: "",
-        fee: averageFee.toString(),
+        fee: selectedFee.toString(),
         to: delegateData.publicKey,
         from: address,
         validUntil: getDefaultValidUntilField(),
@@ -191,7 +194,7 @@ export default (props) => {
       const stakeDelegation = {
         to: delegateData.publicKey,
         from: address,
-        fee: toNanoMINA(feeOrDefault(fee.data.estimatedFee?.txFees?.average)),
+        fee: selectedFee,
         nonce: actualNonce,
       };
       const signStake = CodaSDK.signStakeDelegation(stakeDelegation, keypair);
@@ -253,11 +256,11 @@ export default (props) => {
       setShowModal(ModalStates.NONCE);
     } else if (customDelegate) {
       nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
-      setShowModal(ModalStates.PASSPHRASE);
+      setShowModal(ModalStates.FEE);
       setDelegate({ publicKey: customDelegate });
     } else {
       nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
-      setShowModal(ModalStates.PASSPHRASE);
+      setShowModal(ModalStates.FEE);
     }
   }
 
@@ -267,7 +270,7 @@ export default (props) => {
    */
   function confirmCustomDelegate(delegate) {
     nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
-    setShowModal(ModalStates.PASSPHRASE);
+    setShowModal(ModalStates.FEE);
     setDelegate({ publicKey: delegate });
   }
 
@@ -311,6 +314,7 @@ export default (props) => {
     setCustomNonce(undefined);
     setCustomDelegate("");
     setLedgerTransactionData(undefined);
+    setSelectedFee(feeOrDefault());
   }
 
   /**
@@ -320,6 +324,11 @@ export default (props) => {
   function changeOffset(page) {
     const data = (page - 1) * ITEMS_PER_PAGE;
     setOffset(data);
+  }
+
+  const setFee = (value) => {
+    setSelectedFee(value);
+    setShowModal(ModalStates.PASSPHRASE);
   }
 
   /**
@@ -335,7 +344,7 @@ export default (props) => {
         senderAccount,
         senderAddress: address,
         receiverAddress: delegateData.publicKey,
-        fee: +toNanoMINA(feeOrDefault(fee?.data?.estimatedFee?.txFees?.average || '0')),
+        fee: selectedFee,
         amount: 0,
         nonce: actualNonce,
         // TODO: FIX HARDCODING!
@@ -437,6 +446,16 @@ export default (props) => {
         <CustomDelegation
           closeModal={closeModal}
           confirmCustomDelegate={confirmCustomDelegate}
+        />
+      </ModalContainer>
+      <ModalContainer
+        show={showModal === ModalStates.FEE}
+        close={closeModal}
+      >
+        <DelegationFee
+          closeModal={closeModal}
+          fees={fee}
+          proceedHandler={setFee}
         />
       </ModalContainer>
     </Hoc>
