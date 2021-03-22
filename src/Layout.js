@@ -26,9 +26,6 @@ const GET_NETWORK = gql`
 function Layout() {
   const [sessionData, setSessionData] = useState(undefined);
   const [showLoader, setShowLoader] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertText, setAlertText] = useState("");
-  const [alertStyle, setAlertStyle] = useState("error-toast");
   const history = useHistory();
   const network = useQuery(GET_NETWORK,{
     onCompleted: async (data) => {
@@ -56,12 +53,6 @@ function Layout() {
     clearSession();
     setSessionData(undefined);
   };
-
-  function showGlobalAlert(text, style) {
-    setAlertText(text);
-    setAlertStyle(style);
-    setShowAlert(true);
-  }
 
   return (
     <div>
@@ -91,20 +82,13 @@ function Layout() {
                     setLoader={setLoader}
                     network={network.data}
                     toggleLoader={setShowLoader}
-                    showGlobalAlert={showGlobalAlert}
                   />
                 </Spinner>
               </BalanceContextProvider>
             </Container>
           </Col>
         </Row>
-        <Alert
-          show={showAlert}
-          hideToast={() => setShowAlert(false)}
-          type={alertStyle}
-        >
-          {alertText}
-        </Alert>
+        <Alert />
         <UpdateUserID sessionData={sessionData} />
       </Container>
     </div>
