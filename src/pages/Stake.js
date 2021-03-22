@@ -12,12 +12,14 @@ import { useHistory } from "react-router-dom";
 import ConfirmDelegation from "../components/Modals/ConfirmDelegation";
 import CustomDelegation from "../components/Modals/CustomDelegation";
 import {isMinaAppOpen, NETWORK, signTransaction, TX_TYPE} from "../tools/ledger/ledger";
-import { getDefaultValidUntilField, isLedgerEnabled, toNanoMINA } from "../tools/utils";
+import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
 import LedgerLoader from "../components/General/LedgerLoader";
 import CustomNonce from "../components/Modals/CustomNonce";
 import Button from "../components/General/Button";
 import {feeOrDefault} from "../tools/fees";
 import { toast } from 'react-toastify';
+import { LedgerContext } from "../context/LedgerContext";
+import { useContext } from "react";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -85,7 +87,6 @@ export default (props) => {
     CUSTOM_DELEGATION: "custom",
     NONCE: "nonce",
   });
-  const ledgerEnabled = isLedgerEnabled();
   const [delegateData, setDelegate] = useState({});
   const [currentDelegate, setCurrentDelegate] = useState("");
   const [showModal, setShowModal] = useState("");
@@ -95,6 +96,7 @@ export default (props) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [offset, setOffset] = useState(0);
   const [customNonce, setCustomNonce] = useState(undefined);
+  const { isLedgerEnabled } = useContext(LedgerContext);
   const validators = useQuery(VALIDATORS, { variables: { offset } });
   const fee = useQuery(GET_FEE);
   const news = useQuery(NEWS);
@@ -139,7 +141,7 @@ export default (props) => {
   }, [nonceAndDelegate.data]);
 
   useEffect(() => {
-    if (ledgerEnabled && !ledgerTransactionData) {
+    if (isLedgerEnabled && !ledgerTransactionData) {
       if (showModal === ModalStates.PASSPHRASE) {
         const transactionListener = signLedgerTransaction(
           setLedgerTransactionData
@@ -147,7 +149,7 @@ export default (props) => {
         return transactionListener.unsubscribe;
       }
     }
-  }, [ledgerEnabled, ledgerTransactionData, showModal]);
+  }, [ledgerTransactionData, showModal]);
 
   useEffect(() => {
     if (ledgerTransactionData) {
@@ -403,7 +405,7 @@ export default (props) => {
         show={showModal === ModalStates.PASSPHRASE}
         close={closeModal}
       >
-        {ledgerEnabled ? (
+        {isLedgerEnabled ? (
           <div className="mx-auto">
             <h2>Please confirm transaction </h2>
             <div className="v-spacer" />
