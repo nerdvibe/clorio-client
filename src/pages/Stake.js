@@ -4,7 +4,7 @@ import StakeTable from "../components/Stake/StakeTable";
 import Hoc from "../components/General/Hoc";
 import ModalContainer from "../components/Modals/ModalContainer";
 import { useQuery, gql, useMutation } from "@apollo/client";
-import { getAddress } from "../tools";
+import { getAddress, readNetworkData } from "../tools";
 import { useEffect } from "react";
 import * as CodaSDK from "@o1labs/client-sdk";
 import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
@@ -17,6 +17,7 @@ import LedgerLoader from "../components/General/LedgerLoader";
 import CustomNonce from "../components/Modals/CustomNonce";
 import Button from "../components/General/Button";
 import {feeOrDefault} from "../tools/fees";
+import { toast } from 'react-toastify';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -106,7 +107,7 @@ export default (props) => {
     BROADCAST_DELEGATION,
     {
       onError: (error) => {
-        props.showGlobalAlert(error.message, "error-toast");
+        toast.error(error.message);
         return clearState();
       },
     }
@@ -114,6 +115,18 @@ export default (props) => {
   getAddress((address) => {
     setAddress(address);
   });
+
+
+  // TODO : Example - To be removed 
+  const readNetworkFromStorage = async () =>{
+    const networkData = await readNetworkData()
+    console.log("🚀 ~ file: Stake.js ~ line 120 ~ readNetworkFromStorage ~ networkData", networkData)
+  }
+
+  useEffect(() => {
+    readNetworkFromStorage()
+  }, [])
+    
 
   useEffect(() => {
     if (
@@ -160,10 +173,7 @@ export default (props) => {
   if (!showSuccess && broadcastResult && broadcastResult.data) {
     clearState();
     setShowSuccess(true);
-    props.showGlobalAlert(
-      "Delegation successfully broadcasted",
-      "success-toast"
-    );
+    toast.success("Delegation successfully broadcasted");
     history.push("/stake");
   }
 
@@ -206,10 +216,7 @@ export default (props) => {
         setShowModal("");
       }
     } catch (e) {
-      props.showGlobalAlert(
-        "There was an error processing your delegation, please try again later.",
-        "error-toast"
-      );
+      toast.error("There was an error processing your delegation, please try again later.");
     }
   }
 
@@ -342,10 +349,7 @@ export default (props) => {
       setShowModal(ModalStates.BROADCASTING);
       callback(signature.signature);
     } catch (e) {
-      props.showGlobalAlert(
-        e.message || "An error occurred while loading hardware wallet",
-        "error-toast"
-      );
+      toast.error(e.message || "An error occurred while loading hardware wallet",);
       setShowModal(undefined);
     }
   }
