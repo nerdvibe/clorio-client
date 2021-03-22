@@ -3,6 +3,7 @@ import { useState } from "react";
 import Hoc from "../components/General/Hoc";
 import VerifyForm from "../components/Forms/VerifyMessageForm";
 import * as CodaSDK from "@o1labs/client-sdk";
+import { toast } from 'react-toastify';
 
 export default function VerifyMessage(props) {
   const [address, setAddress] = useState("");
@@ -34,13 +35,13 @@ export default function VerifyMessage(props) {
         };
         const verifiedMessage = CodaSDK.verifyMessage(signedMessage);
         if (verifiedMessage) {
-          props.showGlobalAlert("Message is valid", "success-toast");
+          toast.success("Message is valid");
         } else {
-          props.showGlobalAlert("Message is not valid", "error-toast");
+          toast.error("Message is not valid");
         }
       }
     } catch (e) {
-      props.showGlobalAlert("Message is not valid", "error-toast");
+      toast.error("Message is not valid");
     }
   }
 

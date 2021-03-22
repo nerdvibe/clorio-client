@@ -4,7 +4,7 @@ import StakeTable from "../components/Stake/StakeTable";
 import Hoc from "../components/General/Hoc";
 import ModalContainer from "../components/Modals/ModalContainer";
 import { useQuery, gql, useMutation } from "@apollo/client";
-import { getAddress } from "../tools";
+import { getAddress, readNetworkData } from "../tools";
 import { useEffect } from "react";
 import * as CodaSDK from "@o1labs/client-sdk";
 import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
@@ -17,6 +17,7 @@ import LedgerLoader from "../components/General/LedgerLoader";
 import CustomNonce from "../components/Modals/CustomNonce";
 import Button from "../components/General/Button";
 import {feeOrDefault} from "../tools/fees";
+import { toast } from 'react-toastify';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -59,7 +60,9 @@ const GET_NONCE_AND_DELEGATE = gql`
 const GET_FEE = gql`
   query GetFees {
     estimatedFee {
-      average
+      txFees{
+        average
+      }
     }
   }
 `;
@@ -104,7 +107,7 @@ export default (props) => {
     BROADCAST_DELEGATION,
     {
       onError: (error) => {
-        props.showGlobalAlert(error.message, "error-toast");
+        toast.error(error.message);
         return clearState();
       },
     }
@@ -112,6 +115,18 @@ export default (props) => {
   getAddress((address) => {
     setAddress(address);
   });
+
+
+  // TODO : Example - To be removed 
+  const readNetworkFromStorage = async () =>{
+    const networkData = await readNetworkData()
+    console.log("🚀 ~ file: Stake.js ~ line 120 ~ readNetworkFromStorage ~ networkData", networkData)
+  }
+
+  useEffect(() => {
+    readNetworkFromStorage()
+  }, [])
+    
 
   useEffect(() => {
     if (
@@ -137,7 +152,7 @@ export default (props) => {
   useEffect(() => {
     if (ledgerTransactionData) {
       const actualNonce = getNonce();
-      const averageFee = toNanoMINA(fee.data.estimatedFee.average);
+      const averageFee = toNanoMINA(feeOrDefault(fee.data?.estimatedFee?.txFees?.average));
       const SignatureInput = {
         rawSignature: ledgerTransactionData,
       };
@@ -158,10 +173,7 @@ export default (props) => {
   if (!showSuccess && broadcastResult && broadcastResult.data) {
     clearState();
     setShowSuccess(true);
-    props.showGlobalAlert(
-      "Delegation successfully broadcasted",
-      "success-toast"
-    );
+    toast.success("Delegation successfully broadcasted");
     history.push("/stake");
   }
 
@@ -179,7 +191,7 @@ export default (props) => {
       const stakeDelegation = {
         to: delegateData.publicKey,
         from: address,
-        fee: toNanoMINA(fee.data.estimatedFee.average),
+        fee: toNanoMINA(feeOrDefault(fee.data.estimatedFee?.txFees?.average)),
         nonce: actualNonce,
       };
       const signStake = CodaSDK.signStakeDelegation(stakeDelegation, keypair);
@@ -204,10 +216,7 @@ export default (props) => {
         setShowModal("");
       }
     } catch (e) {
-      props.showGlobalAlert(
-        "There was an error processing your delegation, please try again later.",
-        "error-toast"
-      );
+      toast.error("There was an error processing your delegation, please try again later.");
     }
   }
 
@@ -326,7 +335,7 @@ export default (props) => {
         senderAccount,
         senderAddress: address,
         receiverAddress: delegateData.publicKey,
-        fee: +toNanoMINA(feeOrDefault(fee?.data?.estimatedFee?.average || '0')),
+        fee: +toNanoMINA(feeOrDefault(fee?.data?.estimatedFee?.txFees?.average || '0')),
         amount: 0,
         nonce: actualNonce,
         // TODO: FIX HARDCODING!
@@ -340,10 +349,7 @@ export default (props) => {
       setShowModal(ModalStates.BROADCASTING);
       callback(signature.signature);
     } catch (e) {
-      props.showGlobalAlert(
-        e.message || "An error occurred while loading hardware wallet",
-        "error-toast"
-      );
+      toast.error(e.message || "An error occurred while loading hardware wallet",);
       setShowModal(undefined);
     }
   }

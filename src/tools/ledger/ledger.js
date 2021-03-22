@@ -37,6 +37,7 @@ export const isMinaAppOpen = async() => {
   return true
   } catch (e) {
     console.error(e)
+    throw e
   }
 }
 

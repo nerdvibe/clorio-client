@@ -1,6 +1,5 @@
-import Datastore from "nedb";
-const options = { filename: "./db/wallets.db", autoload: true };
-const db = new Datastore(options);
+const Datastore = require('nedb-promises')
+const db = Datastore.create();
 
 export const isAuthenticated = () => {
   const address = localStorage.getItem("address");
@@ -11,37 +10,48 @@ export const isAuthenticated = () => {
   return false;
 };
 
-export const storeSession = (address, id, isLedgerEnabled, ledgerAccount=0 ,callback) => {
+export const storeSession = async (address, id, isLedgerEnabled, ledgerAccount=0 ,callback) => {
   const wallet = {
-    name: "Wallet",
+    type: "wallet",
     address: address,
     id: id,
     ledger: isLedgerEnabled,
     ledgerAccount,
     coins: 0,
   };
-  db.insert(wallet, () => {
-    callback();
-  });
+  await db.insert(wallet)
+  callback();
 };
 
-export const readSession = (callback, goToHome) => {
-  db.find({}, (error, data) => {
-    if (data.length > 0) {
-      try {
-        const row = data[0];
-        const dataToReturn = {
-          ...row,
-        };
-        return callback(dataToReturn);
-      } catch (error) {
-        clearSession();
-        callback({});
-        return goToHome();
-      }
+export const storeNetworkData = async (networkData) => {
+  const network = {
+    type: "network",
+    ...networkData
+  };
+  return db.insert(network);
+};
+
+export const readNetworkData = async () => {
+  return db.findOne({"type":"network"});
+};
+
+export const readSession = async (callback, goToHome) => {
+  const result = await db.find({"type":"wallet"})
+  if (result.length > 0) {
+    try {
+      const row = result[0];
+      const dataToReturn = {
+        ...row,
+      };
+      return callback(dataToReturn);
+    } catch (error) {
+      clearSession();
+      callback({});
+      return goToHome();
     }
+  } else {
     callback({});
-  });
+  }
 };
 
 export const getLedgerData = (callback, goToHome) => {
@@ -67,38 +77,36 @@ export const getLedgerData = (callback, goToHome) => {
   });
 };
 
-export const clearSession = () => {
-  db.remove({}, { multi: true }, function () {});
+export const clearSession = async () => {
+  await db.remove({"type":"wallet"});
 };
 
-export const getAddress = (callback) => {
-  return db.find({}, function (err, data) {
-    return callback(data[0].address);
-  });
+export const getAddress = async (callback) => {
+  const result = await db.find({"type":"wallet"});
+  if(result){
+    callback(result[0].address);
+  }
 };
 
-export const getId = (callback) => {
-  return db.find({}, function (err, data) {
-    if (data && data.length > 0) {
-      return callback(data[0].id);
-    }
-    return undefined;
-  });
+export const getId = async (callback) => {
+  const result = await db.find({"type":"wallet"})
+  if (result?.length > 0) {
+    return callback(result[0].id);
+  }
+  return undefined;
 };
 
-export const updateUser = (address, id, isLedgerEnabled, callback) => {
-  db.remove({}, { multi: true }, function () {
-    const wallet = {
-      name: "Wallet",
-      address: address,
-      id: id,
-      ledger: isLedgerEnabled,
-      coins: 0,
-    };
-    db.insert(wallet, () => {
-      if (callback) {
-        callback();
-      }
-    });
-  });
+export const updateUser = async (address, id, isLedgerEnabled, callback) => {
+  await db.remove({"type":"wallet"})
+  const wallet = {
+    type: "wallet",
+    address: address,
+    id: id,
+    ledger: isLedgerEnabled,
+    coins: 0,
+  };
+  await db.insert(wallet)
+  if (callback) {
+    callback();
+  }
 };
