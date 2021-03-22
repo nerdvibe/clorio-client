@@ -11,6 +11,7 @@ import { storeSession } from "../tools";
 import Input from "../components/General/Input";
 import * as CodaSDK from "@o1labs/client-sdk";
 import { useQuery, gql } from "@apollo/client";
+import { toast } from 'react-toastify';
 
 const GET_ID = gql`
   query GetIDFromPublicKey($publicKey: String) {
@@ -68,10 +69,7 @@ export default function Login(props) {
       setPublicKey(derivedPublicKey);
       setLoader(true);
     } catch (e) {
-      props.showGlobalAlert(
-        "Private key not valid, please try again.",
-        "error-toast"
-      );
+      toast.error("Private key not valid, please try again.")
     }
   }
 

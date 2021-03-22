@@ -36,6 +36,7 @@
     "react-feather": "2.0.9",
     "react-router-dom": "5.1.2",
     "react-scripts": "4.0.1",
+    "react-toastify": "^7.0.3",
     "react-tooltip": "^4.2.15",
     "subscriptions-transport-ws": "0.9.5"
   },
