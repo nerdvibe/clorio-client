@@ -11,6 +11,7 @@ import Pagination from "../General/Pagination";
 import { ChevronRight, ChevronsDown, ChevronsUp, Check} from "react-feather";
 import ReactTooltip from "react-tooltip";
 import {formatDistance} from "date-fns";
+import {decodeB58} from "../../tools/base58";
 
 const ITEMS_PER_PAGE = 10;
 const GET_TRANSACTIONS_TOTAL = gql`
@@ -93,10 +94,12 @@ export default function TransactionsTable(props) {
     const isSelf =  receiver === sender
     const humanAmount = isOutgoing ? (isSelf || type === 'delegation') ? amount : `-${amount}` : `+${amount}`
     const amountColor = isOutgoing ? (isSelf || type === 'delegation') ? '' : 'red' : 'green';
+    const memo = decodeB58(row.memo);
+
     return (
       <tr key={index}>
         <td className="table-element table-icon"> {renderTransactionOrDelegationIcon(type,sender,receiver)} </td>
-        <td className="table-element table-hash">
+        <td className="table-element table-hash" data-tip={memo ? `Memo: ${memo}` : null}>
           <a
             href={`https://devnet.minaexplorer.com/block/${state_hash}`}
             target="_blank"
@@ -128,12 +131,14 @@ export default function TransactionsTable(props) {
     const humanAmount = isOutgoing ? isSelf ? amount : `-${amount}` : `+${amount}`
     const amountColor = isOutgoing ? isSelf ? '' : 'red' : 'green';
     const fee = "Fee : " +(row.fee ? toMINA(row.fee) : 0) + " Mina";
+    const memo = decodeB58(row.memo);
+
     return (
       <tr key={index}>
         <td className="table-element"> {renderTransactionOrDelegationIcon(row.amount,sender,receiver)} </td>
-        <td className="table-element">
+        <td className="table-element" data-tip={memo ? `Memo: ${memo}` : null}>
           <a
-            href={`https://devnet.minaexplorer.com/payment/${row.id}`}
+            href={`https://devnet.minaexplorer.com/transaction/${row.id}`}
             target="_blank"
             rel="noreferrer"
           >
