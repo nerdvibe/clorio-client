@@ -108,7 +108,7 @@ export default function TransactionsTable(props) {
             {row.hash}
           </a>
         </td>
-        <td className="table-element force-right" data-tip={timeISOString}>{timeDistance}</td>
+        <td className="table-element" data-tip={timeISOString}>{timeDistance}</td>
         <td className="table-element">{sender === userAddress ? 'you' : sender}</td>
         <td className="table-element">{receiver === userAddress ? 'you' : receiver}</td>
         <td className="table-element" style={{color:amountColor}} data-tip={fee}>{humanAmount} Mina</td>
@@ -136,7 +136,7 @@ export default function TransactionsTable(props) {
     return (
       <tr key={index}>
         <td className="table-element"> {renderTransactionOrDelegationIcon(row.amount,sender,receiver)} </td>
-        <td className="table-element" data-tip={memo ? `Memo: ${memo}` : null}>
+        <td className="table-element table-hash" data-tip={memo ? `Memo: ${memo}` : null}>
           <a
             href={`https://devnet.minaexplorer.com/transaction/${row.id}`}
             target="_blank"
