@@ -5,6 +5,7 @@ import { getAddress } from "../tools";
 import imageToRender  from "../assets/NotAvailableForLedger.svg";
 import * as CodaSDK from "@o1labs/client-sdk";
 import { isLedgerEnabled } from "../tools/utils";
+import { toast } from 'react-toastify';
 
 export default function SignMessage(props) {
   const [message, setMessage] = useState("");
@@ -40,7 +41,7 @@ export default function SignMessage(props) {
         setResult(signedMessage);
       }
     } catch (e) {
-      props.showGlobalAlert("Please check private key", "error-toast");
+      toast.error("Please check private key");
     }
   }
 

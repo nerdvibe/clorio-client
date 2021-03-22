@@ -9,6 +9,7 @@ import { useQuery, gql } from "@apollo/client";
 import { storeSession } from "../../tools";
 import LedgerLoader from "../General/LedgerLoader";
 import {getPublicKey} from "../../tools/ledger/ledger";
+import { toast } from 'react-toastify';
 
 const GET_ID = gql`
   query GetIDFromPublicKey($publicKey: String) {
@@ -44,10 +45,7 @@ export default function LedgerGetAddress(props) {
         callback(ledgerPublicKey.publicKey);
       } catch (e) {
         console.log(e);
-        props.showGlobalAlert(
-          e.message || "An error occurred while loading hardware wallet",
-          "error-toast"
-        );
+        toast.error(e.message || "An error occurred while loading hardware wallet");
         history.push("/");
       }
   }
