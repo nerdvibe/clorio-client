@@ -4,8 +4,16 @@ import StakeTableValue from "./StakeTableValue";
 import Avatar from "../../tools/avatar";
 
 export default function StakeTableRow({index, element, toggleModal}) {
+
+  let supportTooltip = ''
+  let boostedClassName = ''
+  if(element.priority === 1) {
+    supportTooltip = '~Clorio is built by Carbonara. Delegate to Cabonara to support Clorio and other software for Mina :)';
+    boostedClassName = 'is-boosted';
+  }
+
   return (
-      <tr key={index} className="stake-table-row">
+      <tr key={index} className={`stake-table-row ${boostedClassName}`} data-tip={supportTooltip}>
         <StakeTableValue
           avatar={
             <div className="walletImageContainer small-image inline-element">
@@ -24,8 +32,8 @@ export default function StakeTableRow({index, element, toggleModal}) {
           text={element.name}
           className="table-element"
         />
-        <StakeTableValue className="table-element" header={"Commission"} text={`${element.fee}%`} />
-        <StakeTableValue className="table-element" header={"Staked"} text={parseInt(element.stakedSum)} />
+        <StakeTableValue className="table-element" header={"Fee"} text={`${element.fee}%`} />
+        <StakeTableValue className="table-element" header={"Staked"} text={`${parseInt(element.stakedSum)} Mina`} />
         <StakeTableValue className="table-element" header={"info"} text={"Website"} website={element.website} />
         <td className="table-element stake-table-button">
           <Button

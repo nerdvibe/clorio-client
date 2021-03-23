@@ -8,7 +8,7 @@ import { getAddress, readNetworkData } from "../tools";
 import { useEffect } from "react";
 import * as CodaSDK from "@o1labs/client-sdk";
 import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
-import { useHistory } from "react-router-dom";
+import { useHistory} from "react-router-dom";
 import ConfirmDelegation from "../components/Modals/ConfirmDelegation";
 import CustomDelegation from "../components/Modals/CustomDelegation";
 import {isMinaAppOpen, NETWORK, signTransaction, TX_TYPE} from "../tools/ledger/ledger";
@@ -31,6 +31,7 @@ const VALIDATORS = gql`
       publicKey
       website
       stakedSum
+      priority
     }
   }
 `;
