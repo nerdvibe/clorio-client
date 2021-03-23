@@ -72,7 +72,7 @@ export const downloadPaperWalletPDF = (publicKey,privateKey) => {
 export const feeGreaterThanMinimum = (fee) => {
   if(fee){
     const feeToSend = toNanoMINA(fee)
-    const feeMinusMinimum = Big(feeToSend).sub(MINIMUM_FEE).valueOf()
+    const feeMinusMinimum = +Big(feeToSend).sub(MINIMUM_FEE)
     if(feeMinusMinimum>=0){
       return true
     }
