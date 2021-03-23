@@ -720,7 +720,41 @@ input[type=number] {
     text-align: center;
     position: fixed;
 }
+
+.big-modal-container{
+    width: 70vw;
+    height: fit-content;
+    height: max-content;
+    left: 5vw;
+    top: 15vh;
+}
+
+
+.terms {
+    height: 30vh;
+    cursor: move;
+    padding: 20px;
+    border-radius: 3px;
+    p,h1,h2,h3,h4 {
+        color: #000;
+        line-height: 25px;
+    }
+}
+
+@media screen and (max-height: 899px){
+    .big-modal-container{
+        top:8vh
+    }
+}
+
 @media (min-width: 1200px) {
+
+    .big-modal-container{
+        width: 70vw;
+        height: fit-content;
+        height: max-content;
+        left: 15vw;
+    }
 
     .small-screen{
         display: none;
@@ -801,5 +835,10 @@ input[type=number] {
     .small-screen-align-left{
         text-align: left;
     }
+}
 
+@media (max-width:700px){
+    .terms{
+        overflow-y: scroll;
+    }
 }
