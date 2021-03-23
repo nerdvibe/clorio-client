@@ -2,21 +2,22 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export default function Button(props) {
+  const {className,onClick,text,icon,disabled,link} = props
   const button = (
     <div
-      className={props.className + " button"}
-      onClick={props.onClick}
+      className={className + " button"}
+      onClick={onClick}
     >
-      {props.icon} {props.text}
+      {icon}&nbsp;{text}
     </div>
   );
   const disabledButton = (
     <div className={"disabledButton margin-auto"}>
-      {props.icon} {props.text}
+      {icon}&nbsp;{text}
     </div>
   );
-  if (props.disabled) {
+  if (disabled) {
     return disabledButton;
   }
-  return props.link ? <Link to={props.link}> {button} </Link> : button;
+  return link ? <Link to={link}> {button} </Link> : button;
 }
