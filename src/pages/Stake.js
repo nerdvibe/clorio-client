@@ -11,6 +11,7 @@ import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
 import { useHistory} from "react-router-dom";
 import ConfirmDelegation from "../components/Modals/ConfirmDelegation";
 import CustomDelegation from "../components/Modals/CustomDelegation";
+import {DelegationFee} from "../components/Modals/DelegationFee";
 import {isMinaAppOpen, NETWORK, signTransaction, TX_TYPE} from "../tools/ledger/ledger";
 import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
 import LedgerLoader from "../components/General/LedgerLoader";
@@ -68,6 +69,7 @@ const GET_FEE = gql`
   query GetFees {
     estimatedFee {
       txFees{
+        fast
         average
       }
     }
@@ -91,6 +93,7 @@ export default (props) => {
     CONFIRM_DELEGATION: "confirm",
     CUSTOM_DELEGATION: "custom",
     NONCE: "nonce",
+    FEE: "fee",
   });
   const [delegateData, setDelegate] = useState({});
   const [currentDelegate, setCurrentDelegate] = useState("");
@@ -99,9 +102,10 @@ export default (props) => {
   const [address, setAddress] = useState("");
   const [privateKey, setPrivateKey] = useState("");
   const [customDelegate, setCustomDelegate] = useState("");
-  const [showSuccess, setShowSuccess] = useState(false);
   const [offset, setOffset] = useState(0);
   const [customNonce, setCustomNonce] = useState(undefined);
+  const [selectedFee, setSelectedFee] = useState(toNanoMINA(0.001));
+  const [sendTransactionFlag, setSendTransactionFlag] = useState(false);
   const { isLedgerEnabled } = useContext(LedgerContext);
   const { balance,setShouldBalanceUpdate } = useContext(BalanceContext);
   const validators = useQuery(VALIDATORS, { variables: { offset } });
@@ -152,9 +156,7 @@ export default (props) => {
   useEffect(() => {
     if (isLedgerEnabled && !ledgerTransactionData) {
       if (showModal === ModalStates.PASSPHRASE) {
-        const transactionListener = signLedgerTransaction(
-          setLedgerTransactionData
-        );
+        const transactionListener = signLedgerTransaction();
         return transactionListener.unsubscribe;
       }
     }
@@ -163,14 +165,13 @@ export default (props) => {
   useEffect(() => {
     if (ledgerTransactionData) {
       const actualNonce = getNonce();
-      const averageFee = toNanoMINA(feeOrDefault(fee.data?.estimatedFee?.txFees?.average));
       const SignatureInput = {
         rawSignature: ledgerTransactionData,
       };
       const SendPaymentInput = {
         nonce: actualNonce.toString(),
         memo: "",
-        fee: averageFee.toString(),
+        fee: selectedFee.toString(),
         to: delegateData.publicKey,
         from: address,
         validUntil: getDefaultValidUntilField(),
@@ -178,17 +179,19 @@ export default (props) => {
       broadcastDelegation({
         variables: { input: SendPaymentInput, signature: SignatureInput },
       });
+      setSendTransactionFlag(true);
     }
   }, [ledgerTransactionData]);
 
-  if (!showSuccess && broadcastResult && broadcastResult.data) {
-    clearState();
-    setShowSuccess(true);
-    setShouldBalanceUpdate(true)
-    nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
-    toast.success("Delegation successfully broadcasted");
-    history.push("/stake");
-  }
+  useEffect(() => {
+    if (sendTransactionFlag) {
+      clearState();
+      setShouldBalanceUpdate(true)
+      nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
+      toast.success("Delegation successfully broadcasted");
+      history.push("/stake");
+    }
+  },[sendTransactionFlag])
 
   /**
    * Throw error if the fee is greater than the balance
@@ -210,8 +213,7 @@ export default (props) => {
   function signStakeDelegate() {
     try {
       const actualNonce = getNonce();
-      const transactionFee = +toNanoMINA(feeOrDefault(fee.data.estimatedFee?.txFees?.average));
-      checkBalance(transactionFee);
+      checkBalance(selectedFee);
       const publicKey = CodaSDK.derivePublicKey(privateKey);
       const keypair = {
         privateKey: privateKey,
@@ -220,7 +222,7 @@ export default (props) => {
       const stakeDelegation = {
         to: delegateData.publicKey,
         from: address,
-        fee:transactionFee,
+        fee: selectedFee,
         nonce: actualNonce,
       };
       const signStake = CodaSDK.signStakeDelegation(stakeDelegation, keypair);
@@ -242,6 +244,7 @@ export default (props) => {
             signature: SignatureInput,
           },
         });
+        setSendTransactionFlag(true);
         setShowModal("");
       }
     } catch (e) {
@@ -278,15 +281,19 @@ export default (props) => {
    * If nonce is not available and no custom nonce has already been asked, ask user for a custom nonce. Otherwise proceeds to private key insertion modal
    */
   function confirmDelegate() {
-    if ((!nonceAndDelegate || !nonceAndDelegate.data) && !customNonce) {
-      setShowModal(ModalStates.NONCE);
-    } else if (customDelegate) {
-      nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
-      setShowModal(ModalStates.PASSPHRASE);
-      setDelegate({ publicKey: customDelegate });
-    } else {
-      nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
-      setShowModal(ModalStates.PASSPHRASE);
+    try{
+      if ((!nonceAndDelegate || !nonceAndDelegate.data) && !customNonce) {
+        setShowModal(ModalStates.NONCE);
+      } else if (customDelegate) {
+        nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
+        setShowModal(ModalStates.FEE);
+        setDelegate({ publicKey: customDelegate });
+      } else {
+        nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
+        setShowModal(ModalStates.FEE);
+      }
+    } catch(e){
+      setShowModal(ModalStates.FEE);
     }
   }
 
@@ -295,9 +302,13 @@ export default (props) => {
    * @param {string} delegate Delegate private key
    */
   function confirmCustomDelegate(delegate) {
-    nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
-    setShowModal(ModalStates.PASSPHRASE);
-    setDelegate({ publicKey: delegate });
+    try{
+      nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
+      setShowModal(ModalStates.FEE);
+      setDelegate({ publicKey: delegate });
+    } catch(e){
+      setShowModal(ModalStates.FEE);
+    }
   }
 
   /**
@@ -337,9 +348,11 @@ export default (props) => {
   function clearState() {
     setShowModal("");
     setDelegate({});
+    setSendTransactionFlag(false);
     setCustomNonce(undefined);
     setCustomDelegate("");
     setLedgerTransactionData(undefined);
+    setSelectedFee(feeOrDefault());
   }
 
   /**
@@ -351,22 +364,26 @@ export default (props) => {
     setOffset(data);
   }
 
+  const setFee = (value) => {
+    setSelectedFee(value);
+    setShowModal(ModalStates.PASSPHRASE);
+  }
+
   /**
-   * Sign delegation through ledger and
+   * Sign delegation through ledger and store the result inside the component state
    * @param {function} callback Callback function called after ledger signed Delegation
    */
-  async function signLedgerTransaction(callback) {
+  async function signLedgerTransaction() {
     try {
       await isMinaAppOpen();
       const actualNonce = getNonce();
-      const transactionFee = +toNanoMINA(feeOrDefault(fee?.data?.estimatedFee?.txFees?.average || '0'));
-      checkBalance(transactionFee);
+      checkBalance(selectedFee);
       const senderAccount = props.sessionData.ledgerAccount || 0;
       const transactionToSend = {
         senderAccount,
         senderAddress: address,
         receiverAddress: delegateData.publicKey,
-        fee: transactionFee,
+        fee: +selectedFee,
         amount: 0,
         nonce: actualNonce,
         // TODO: FIX HARDCODING!
@@ -378,7 +395,7 @@ export default (props) => {
 
       const signature = await signTransaction(transactionToSend);
       setShowModal(ModalStates.BROADCASTING);
-      callback(signature.signature);
+      setLedgerTransactionData(signature.signature);
     } catch (e) {
       toast.error(e.message || "An error occurred while loading hardware wallet",);
       setShowModal(undefined);
@@ -469,6 +486,16 @@ export default (props) => {
         <CustomDelegation
           closeModal={closeModal}
           confirmCustomDelegate={confirmCustomDelegate}
+        />
+      </ModalContainer>
+      <ModalContainer
+        show={showModal === ModalStates.FEE}
+        close={closeModal}
+      >
+        <DelegationFee
+          closeModal={closeModal}
+          fees={fee}
+          proceedHandler={setFee}
         />
       </ModalContainer>
     </Hoc>
