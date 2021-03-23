@@ -2,14 +2,18 @@ import React, { useState } from "react";
 import Hoc from "../components/General/Hoc";
 import SignMessageForm from "../components/Forms/SignMessageForm";
 import { getAddress } from "../tools";
+import imageToRender  from "../assets/NotAvailableForLedger.svg";
 import * as CodaSDK from "@o1labs/client-sdk";
 import { toast } from 'react-toastify';
+import { LedgerContext } from "../context/LedgerContext";
+import { useContext } from "react";
 
 export default function SignMessage(props) {
   const [message, setMessage] = useState("");
   const [privateKey, setPrivateKey] = useState("");
   const [publicKey, setPublicKey] = useState("");
   const [result, setResult] = useState(undefined);
+  const { isLedgerEnabled } = useContext(LedgerContext);
 
   getAddress((data) => {
     setPublicKey(data);
@@ -50,6 +54,22 @@ export default function SignMessage(props) {
     setPrivateKey("");
     setResult(undefined);
     setMessage("");
+  }
+  if(isLedgerEnabled){
+    return (
+      <Hoc>
+        <div className="animate__animated animate__fadeIn">
+          <div className="mx-auto">
+            <div className="block-container">
+              <img
+                src={imageToRender}
+                className="animate__animated animate__fadeIn"
+              />
+            </div>
+          </div>
+        </div>
+      </Hoc>
+    );
   }
 
   return (

@@ -54,6 +54,10 @@ export const readSession = async (callback, goToHome) => {
   }
 };
 
+export const getWalletData = async () => {
+  return db.findOne({"type":"wallet"}) 
+};
+
 export const clearSession = async () => {
   await db.remove({"type":"wallet"});
 };
