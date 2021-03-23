@@ -8,6 +8,8 @@ import { Row, Col } from "react-bootstrap";
 import StakeStatus from "./StakeStatus";
 import { useQuery, gql } from "@apollo/client";
 import StakeTableRow from "./StakeTableRow";
+import ReactTooltip from "react-tooltip";
+import Hoc from "../General/Hoc";
 
 const ITEMS_PER_PAGE = 100;
 
@@ -96,8 +98,8 @@ export default function StakeTable(props) {
                   <thead>
                   <tr className="th-background">
                     <th className="th-first-stake-item stake-th">Stake</th>
-                    <th></th>
-                    <th></th>
+                    <th className="stake-fee-th"></th>
+                    <th className="stake-staked-th"></th>
                     <th></th>
                     <th className="th-last-item" >
                       <input
@@ -110,6 +112,7 @@ export default function StakeTable(props) {
                   </tr>
                   </thead>
                   {tableBody()}
+                  <ReactTooltip multiline={true} />
                 </Table>
               </div>
               <Pagination

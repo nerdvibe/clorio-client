@@ -10,8 +10,15 @@ $global-radius: 4px;
 	width: 10%;
 }
 .stake-th{
-	width: initial;
 	width: 33%;
+}
+
+.stake-fee-th{
+	width: 10%;
+}
+
+.stake-staked-th{
+	width: 25%;
 }
 
 .th-last-item{
@@ -25,6 +32,10 @@ $global-radius: 4px;
 
 .table-icon{
 	width: 20%;
+}
+
+.is-boosted {
+	background: #fffdef;
 }
 
 .table-hash{
