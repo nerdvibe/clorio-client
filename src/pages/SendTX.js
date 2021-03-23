@@ -18,6 +18,7 @@ import { useContext } from "react";
 import { BalanceContext } from "../context/BalanceContext";
 import Spinner from "../components/General/Spinner";
 import { toast } from 'react-toastify';
+import { LedgerContext } from "../context/LedgerContext";
 
 const GET_FEE = gql`
   query GetFees {
@@ -63,7 +64,6 @@ export default function SendTX(props) {
     BROADCASTING: "broadcasting",
     NONCE: "nonce",
   });
-  const isLedgerEnabled = props.sessionData.ledger;
   const [privateKey, setPrivateKey] = useState("");
   const [sendTransactionFlag, setSendTransactionFlag] = useState(false);
   const [step, setStep] = useState(0);
@@ -72,6 +72,7 @@ export default function SendTX(props) {
   const [customNonce, setCustomNonce] = useState(undefined);
   const [showLoader, setShowLoader] = useState(true);
   const [ledgerTransactionData, setLedgerTransactionData] = useState(undefined);
+  const { isLedgerEnabled } = useContext(LedgerContext);
   const { balance,setShouldBalanceUpdate } = useContext(BalanceContext);
   const [transactionData, setTransactionData] = useState(
     initialTransactionData
@@ -130,7 +131,7 @@ export default function SendTX(props) {
         return transactionListener.unsubscribe;
       }
     }
-  }, [isLedgerEnabled, ledgerTransactionData, step]);
+  }, [ledgerTransactionData, step]);
 
   // Ledger data arrived, broadcast transaction
   useEffect(() => {
