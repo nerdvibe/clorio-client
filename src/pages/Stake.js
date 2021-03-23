@@ -8,7 +8,7 @@ import { getAddress, readNetworkData } from "../tools";
 import { useEffect } from "react";
 import * as CodaSDK from "@o1labs/client-sdk";
 import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
-import { useHistory } from "react-router-dom";
+import { useHistory} from "react-router-dom";
 import ConfirmDelegation from "../components/Modals/ConfirmDelegation";
 import CustomDelegation from "../components/Modals/CustomDelegation";
 import {isMinaAppOpen, NETWORK, signTransaction, TX_TYPE} from "../tools/ledger/ledger";
@@ -22,17 +22,19 @@ import { useContext } from "react";
 import { BalanceContext } from "../context/BalanceContext";
 import Big from "big.js";
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 100;
 
 const VALIDATORS = gql`
   query validators($offset: Int!) {
-    validators(limit: ${ITEMS_PER_PAGE}, offset: $offset) {
+    validators(limit: ${ITEMS_PER_PAGE}, offset: $offset, order_by: {priority: asc}) {
       fee
       id
       image
       name
       publicKey
       website
+      stakedSum
+      priority
     }
   }
 `;
@@ -54,6 +56,7 @@ const GET_NONCE_AND_DELEGATE = gql`
     accountByKey(publicKey: $publicKey) {
       delegate {
         publicKey
+          name
       }
       usableNonce
     }
@@ -91,6 +94,7 @@ export default (props) => {
   const isLedgerEnabled = props.sessionData.ledger;
   const [delegateData, setDelegate] = useState({});
   const [currentDelegate, setCurrentDelegate] = useState("");
+  const [currentDelegateName, setCurrentDelegateName] = useState("");
   const [showModal, setShowModal] = useState("");
   const [address, setAddress] = useState("");
   const [privateKey, setPrivateKey] = useState("");
@@ -140,6 +144,7 @@ export default (props) => {
       nonceAndDelegate.data.accountByKey.delegate
     ) {
       setCurrentDelegate(nonceAndDelegate.data.accountByKey.delegate.publicKey);
+      setCurrentDelegateName(nonceAndDelegate.data.accountByKey.delegate.name);
     }
   }, [nonceAndDelegate.data]);
 
@@ -400,6 +405,7 @@ export default (props) => {
           toggleModal={openModal}
           validators={validators}
           currentDelegate={currentDelegate}
+          currentDelegateName={currentDelegateName}
           openCustomDelegateModal={openCustomDelegateModal}
           setOffset={changeOffset}
           page={offset / ITEMS_PER_PAGE + 1}

@@ -4,12 +4,38 @@ $medium-up: 600px;
 $large-up: 1200px;
 $global-radius: 4px;
 
+
 .th-first-item{
+	border-radius: 10px 0px 0px 0px;
 	width: 10%;
+}
+.stake-th{
+	width: 33%;
+}
+
+.stake-fee-th{
+	width: 10%;
+}
+
+.stake-staked-th{
+	width: 25%;
+}
+
+.th-last-item{
+	border-radius: 0px 10px 0px 0px;
+}
+
+.th-background{
+	background-color: $white;
+	border-top: 0px;
 }
 
 .table-icon{
 	width: 20%;
+}
+
+.is-boosted {
+	background: #fffdef;
 }
 
 .table-hash{
@@ -23,10 +49,6 @@ $global-radius: 4px;
 
 th{
 	text-align: center !important;
-}
-
-.stake-th{
-	width: initial;
 }
 
 #transaction-table{
