@@ -18,6 +18,9 @@ import CustomNonce from "../components/Modals/CustomNonce";
 import Button from "../components/General/Button";
 import {feeOrDefault} from "../tools/fees";
 import { toast } from 'react-toastify';
+import { useContext } from "react";
+import { BalanceContext } from "../context/BalanceContext";
+import Big from "big.js";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -95,11 +98,13 @@ export default (props) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [offset, setOffset] = useState(0);
   const [customNonce, setCustomNonce] = useState(undefined);
+  const { balance,setShouldBalanceUpdate } = useContext(BalanceContext);
   const validators = useQuery(VALIDATORS, { variables: { offset } });
   const fee = useQuery(GET_FEE);
   const news = useQuery(NEWS);
   const nonceAndDelegate = useQuery(GET_NONCE_AND_DELEGATE, {
     variables: { publicKey: props.sessionData.address },
+    fetchPolicy: "network-only",
   });
   const history = useHistory();
   const [ledgerTransactionData, setLedgerTransactionData] = useState(undefined);
@@ -173,8 +178,24 @@ export default (props) => {
   if (!showSuccess && broadcastResult && broadcastResult.data) {
     clearState();
     setShowSuccess(true);
+    setShouldBalanceUpdate(true)
+    nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
     toast.success("Delegation successfully broadcasted");
     history.push("/stake");
+  }
+
+  /**
+   * Throw error if the fee is greater than the balance
+   * @param {number} transactionFee 
+   */
+  const checkBalance = (transactionFee) => {
+    const available = balance.liquidUnconfirmed;
+    const balanceAfterTransaction = Big(available)
+      .minus(transactionFee)
+      .toNumber();
+    if(balanceAfterTransaction<0){
+      throw new Error("You don't have enough funds");
+    }
   }
 
   /**
@@ -183,6 +204,8 @@ export default (props) => {
   function signStakeDelegate() {
     try {
       const actualNonce = getNonce();
+      const transactionFee = +toNanoMINA(feeOrDefault(fee.data.estimatedFee?.txFees?.average));
+      checkBalance(transactionFee);
       const publicKey = CodaSDK.derivePublicKey(privateKey);
       const keypair = {
         privateKey: privateKey,
@@ -191,7 +214,7 @@ export default (props) => {
       const stakeDelegation = {
         to: delegateData.publicKey,
         from: address,
-        fee: toNanoMINA(feeOrDefault(fee.data.estimatedFee?.txFees?.average)),
+        fee:transactionFee,
         nonce: actualNonce,
       };
       const signStake = CodaSDK.signStakeDelegation(stakeDelegation, keypair);
@@ -216,7 +239,7 @@ export default (props) => {
         setShowModal("");
       }
     } catch (e) {
-      toast.error("There was an error processing your delegation, please try again later.");
+      toast.error(e.message||"There was an error processing your delegation, please try again later.");
     }
   }
 
@@ -330,12 +353,14 @@ export default (props) => {
     try {
       await isMinaAppOpen();
       const actualNonce = getNonce();
+      const transactionFee = +toNanoMINA(feeOrDefault(fee?.data?.estimatedFee?.txFees?.average || '0'));
+      checkBalance(transactionFee);
       const senderAccount = props.sessionData.ledgerAccount || 0;
       const transactionToSend = {
         senderAccount,
         senderAddress: address,
         receiverAddress: delegateData.publicKey,
-        fee: +toNanoMINA(feeOrDefault(fee?.data?.estimatedFee?.txFees?.average || '0')),
+        fee: transactionFee,
         amount: 0,
         nonce: actualNonce,
         // TODO: FIX HARDCODING!
