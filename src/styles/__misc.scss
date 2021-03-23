@@ -731,21 +731,12 @@ input[type=number] {
 
 
 .terms {
-    height: 40vh;
+    height: 30vh;
     cursor: move;
     padding: 20px;
-    background: #9290DB;
-    background: -webkit-linear-gradient(to right, #185a9d, #9290DB);
-    background: -webkit-gradient(linear, left top, right top, from(#185a9d), to(#9290DB));
-    background: -webkit-linear-gradient(left, #185a9d, #9290DB);
-    background: -o-linear-gradient(left, #185a9d, #9290DB);
-    background: linear-gradient(to right, #185a9d, #9290DB);
-    overflow-y: scroll;
     border-radius: 3px;
-    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.9);
-    box-shadow: 0 0 10px rgba(0,0,0,0.9);
     p,h1,h2,h3,h4 {
-        color: #fff;
+        color: #000;
         line-height: 25px;
     }
 }
@@ -844,5 +835,10 @@ input[type=number] {
     .small-screen-align-left{
         text-align: left;
     }
+}
 
+@media (max-width:700px){
+    .terms{
+        overflow-y: scroll;
+    }
 }

@@ -2,7 +2,8 @@ import React from 'react'
 import { useHistory } from 'react-router';
 import Button from '../General/Button';
 import ModalContainer from './ModalContainer';
-import {PenTool,Check} from 'react-feather';
+import {Check} from 'react-feather';
+import Logo from '../General/Logo';
 
 export default function TermsAndConditions(props) {
   const session = sessionStorage.getItem('terms-and-conditions');
@@ -16,26 +17,14 @@ export default function TermsAndConditions(props) {
   return (
     <div className="mx-auto">
       <ModalContainer show={!session} className="big-modal-container">
-          <h2 className="full-width-align-center"><PenTool/> &nbsp; Terms & Conditions</h2>
-          <h5 className="align-center mx-auto">
-            In order to start using Clorio, you have to accept our Terms & Conditions
-          </h5>
-          <div className="v-spacer" />
+          <Logo big={true}/>
+          <h2 className="align-center mx-auto">
+            Welcome to Clorio Wallet
+          </h2>
+          <hr/>
           <div class="terms">
-              <h3>Updated Terms and Conditions</h3>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates nesciunt explicabo error saepe assumenda excepturi nobis, tenetur dolorem autem velit et officiis porro quisquam non. Sint eius iusto ipsam illo.</p>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates nesciunt explicabo error saepe assumenda excepturi nobis, tenetur dolorem autem velit et officiis porro quisquam non. Sint eius iusto ipsam illo.</p>
-              <h3>Our Programs</h3>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates nesciunt explicabo error saepe assumenda excepturi nobis, tenetur dolorem autem velit et officiis porro quisquam non. Sint eius iusto ipsam illo.</p>
-      
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates nesciunt explicabo error saepe assumenda excepturi nobis, tenetur dolorem autem velit et officiis porro quisquam non. Sint eius iusto ipsam illo.</p>
-      
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates nesciunt explicabo error saepe assumenda excepturi nobis, tenetur dolorem autem velit et officiis porro quisquam non. Sint eius iusto ipsam illo.</p>
-      
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates nesciunt explicabo error saepe assumenda excepturi nobis, tenetur dolorem autem velit et officiis porro quisquam non. Sint eius iusto ipsam illo.</p>
-      
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates nesciunt explicabo error saepe assumenda excepturi nobis, tenetur dolorem autem velit et officiis porro quisquam non. Sint eius iusto ipsam illo.</p>
-      
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates nesciunt explicabo error saepe assumenda excepturi nobis, tenetur dolorem autem velit et officiis porro quisquam non. Sint eius iusto ipsam illo.
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates nesciunt explicabo error saepe assumenda excepturi nobis, tenetur dolorem autem velit et officiis porro quisquam non. Sint eius iusto ipsam illo.</p>
               <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates nesciunt explicabo error saepe assumenda excepturi nobis, tenetur dolorem autem velit et officiis porro quisquam non. Sint eius iusto ipsam illo.</p>
       
           </div>
@@ -44,7 +33,7 @@ export default function TermsAndConditions(props) {
           <Button
             className="lightGreenButton__fullMono mx-auto"
             onClick={acceptTermsAndConditions}
-            text="Accept"
+            text="I Understand"
             icon={<Check />}
           />
         </ModalContainer>
