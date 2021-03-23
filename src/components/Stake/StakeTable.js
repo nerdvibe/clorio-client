@@ -49,7 +49,6 @@ export default function StakeTable(props) {
       return (
         <tbody>
           {filteredValidators.map((el, index) => {
-            console.log(el);
             return <StakeTableRow element={el} index={index} toggleModal={props.toggleModal}/>
           }) }
         </tbody>
