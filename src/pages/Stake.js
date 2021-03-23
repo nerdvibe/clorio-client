@@ -18,6 +18,7 @@ import CustomNonce from "../components/Modals/CustomNonce";
 import Button from "../components/General/Button";
 import {feeOrDefault} from "../tools/fees";
 import { toast } from 'react-toastify';
+import { LedgerContext } from "../context/LedgerContext";
 import { useContext } from "react";
 import { BalanceContext } from "../context/BalanceContext";
 import Big from "big.js";
@@ -91,7 +92,6 @@ export default (props) => {
     CUSTOM_DELEGATION: "custom",
     NONCE: "nonce",
   });
-  const isLedgerEnabled = props.sessionData.ledger;
   const [delegateData, setDelegate] = useState({});
   const [currentDelegate, setCurrentDelegate] = useState("");
   const [currentDelegateName, setCurrentDelegateName] = useState("");
@@ -102,6 +102,7 @@ export default (props) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [offset, setOffset] = useState(0);
   const [customNonce, setCustomNonce] = useState(undefined);
+  const { isLedgerEnabled } = useContext(LedgerContext);
   const { balance,setShouldBalanceUpdate } = useContext(BalanceContext);
   const validators = useQuery(VALIDATORS, { variables: { offset } });
   const fee = useQuery(GET_FEE);
@@ -157,7 +158,7 @@ export default (props) => {
         return transactionListener.unsubscribe;
       }
     }
-  }, [isLedgerEnabled, ledgerTransactionData, showModal]);
+  }, [ledgerTransactionData, showModal]);
 
   useEffect(() => {
     if (ledgerTransactionData) {
