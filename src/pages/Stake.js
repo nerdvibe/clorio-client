@@ -102,10 +102,10 @@ export default (props) => {
   const [address, setAddress] = useState("");
   const [privateKey, setPrivateKey] = useState("");
   const [customDelegate, setCustomDelegate] = useState("");
-  const [showSuccess, setShowSuccess] = useState(false);
   const [offset, setOffset] = useState(0);
   const [customNonce, setCustomNonce] = useState(undefined);
   const [selectedFee, setSelectedFee] = useState(toNanoMINA(0.001));
+  const [sendTransactionFlag, setSendTransactionFlag] = useState(false);
   const { balance,setShouldBalanceUpdate } = useContext(BalanceContext);
   const validators = useQuery(VALIDATORS, { variables: { offset } });
   const fee = useQuery(GET_FEE);
@@ -178,17 +178,19 @@ export default (props) => {
       broadcastDelegation({
         variables: { input: SendPaymentInput, signature: SignatureInput },
       });
+      setSendTransactionFlag(true);
     }
   }, [ledgerTransactionData]);
 
-  if (!showSuccess && broadcastResult && broadcastResult.data) {
-    clearState();
-    setShowSuccess(true);
-    setShouldBalanceUpdate(true)
-    nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
-    toast.success("Delegation successfully broadcasted");
-    history.push("/stake");
-  }
+  useEffect(() => {
+    if (sendTransactionFlag) {
+      clearState();
+      setShouldBalanceUpdate(true)
+      nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
+      toast.success("Delegation successfully broadcasted");
+      history.push("/stake");
+    }
+  },[sendTransactionFlag])
 
   /**
    * Throw error if the fee is greater than the balance
@@ -241,6 +243,7 @@ export default (props) => {
             signature: SignatureInput,
           },
         });
+        setSendTransactionFlag(true);
         setShowModal("");
       }
     } catch (e) {
@@ -344,6 +347,7 @@ export default (props) => {
   function clearState() {
     setShowModal("");
     setDelegate({});
+    setSendTransactionFlag(false);
     setCustomNonce(undefined);
     setCustomDelegate("");
     setLedgerTransactionData(undefined);
@@ -365,7 +369,7 @@ export default (props) => {
   }
 
   /**
-   * Sign delegation through ledger and
+   * Sign delegation through ledger and store the result inside the component state
    * @param {function} callback Callback function called after ledger signed Delegation
    */
   async function signLedgerTransaction() {
