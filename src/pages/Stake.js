@@ -19,17 +19,18 @@ import Button from "../components/General/Button";
 import {feeOrDefault} from "../tools/fees";
 import { toast } from 'react-toastify';
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 100;
 
 const VALIDATORS = gql`
   query validators($offset: Int!) {
-    validators(limit: ${ITEMS_PER_PAGE}, offset: $offset) {
+    validators(limit: ${ITEMS_PER_PAGE}, offset: $offset, order_by: {priority: asc}) {
       fee
       id
       image
       name
       publicKey
       website
+      stakedSum
     }
   }
 `;
@@ -51,6 +52,7 @@ const GET_NONCE_AND_DELEGATE = gql`
     accountByKey(publicKey: $publicKey) {
       delegate {
         publicKey
+          name
       }
       usableNonce
     }
@@ -88,6 +90,7 @@ export default (props) => {
   const isLedgerEnabled = props.sessionData.ledger;
   const [delegateData, setDelegate] = useState({});
   const [currentDelegate, setCurrentDelegate] = useState("");
+  const [currentDelegateName, setCurrentDelegateName] = useState("");
   const [showModal, setShowModal] = useState("");
   const [address, setAddress] = useState("");
   const [privateKey, setPrivateKey] = useState("");
@@ -135,6 +138,7 @@ export default (props) => {
       nonceAndDelegate.data.accountByKey.delegate
     ) {
       setCurrentDelegate(nonceAndDelegate.data.accountByKey.delegate.publicKey);
+      setCurrentDelegateName(nonceAndDelegate.data.accountByKey.delegate.name);
     }
   }, [nonceAndDelegate.data]);
 
@@ -375,6 +379,7 @@ export default (props) => {
           toggleModal={openModal}
           validators={validators}
           currentDelegate={currentDelegate}
+          currentDelegateName={currentDelegateName}
           openCustomDelegateModal={openCustomDelegateModal}
           setOffset={changeOffset}
           page={offset / ITEMS_PER_PAGE + 1}
