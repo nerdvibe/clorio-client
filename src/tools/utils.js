@@ -2,6 +2,8 @@ import Big from "big.js";
 import { jsPDF } from "jspdf";
 import ClorioLogoB64 from '../assets/ClorioLogoB64.json'
 
+const MINIMUM_FEE = toNanoMINA(0.001);
+
 export function copyToClipboard(content) {
   const el = document.createElement("textarea");
   el.value = content;
@@ -69,4 +71,15 @@ export const downloadPaperWalletPDF = (publicKey,privateKey) => {
   doc.setFontSize(10);
   doc.text(105, 290,'~Clorio is a wallet offered by Carbonara from WeStake.Club and is not developed by O(1)Labs.','center');
   doc.save('Clorio-Paperwallet.pdf');
+}
+
+export const feeGreaterThanMinimum = (fee) => {
+  if(fee){
+    const feeToSend = toNanoMINA(fee)
+    const feeMinusMinimum = +Big(feeToSend).sub(MINIMUM_FEE)
+    if(feeMinusMinimum>=0){
+      return true
+    }
+  }
+  return false
 }
