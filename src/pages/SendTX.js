@@ -73,23 +73,24 @@ export default function SendTX(props) {
   const [showLoader, setShowLoader] = useState(true);
   const [ledgerTransactionData, setLedgerTransactionData] = useState(undefined);
   const { isLedgerEnabled } = useContext(LedgerContext);
-  const { balance } = useContext(BalanceContext);
+  const { balance,setShouldBalanceUpdate } = useContext(BalanceContext);
   const [transactionData, setTransactionData] = useState(
     initialTransactionData
     );
   const nonce = useQuery(GET_NONCE, {
     variables: { publicKey: address },
     skip: address === "",
+    fetchPolicy: "network-only",
   });
   const fee = useQuery(GET_FEE,{
     onCompleted:(data)=>{
-    if(data?.estimatedFee?.txFees?.average){
+      if(data?.estimatedFee?.txFees?.average){
         setTransactionData({
           ...transactionData,
           fee:toNanoMINA(data.estimatedFee.txFees.average)
         })
-        setShowLoader(false);
       }
+      setShowLoader(false);
     },
     onError:()=>{
       setShowLoader(false);
@@ -109,6 +110,8 @@ export default function SendTX(props) {
   // If broadcasted successfully return to initial page state
   if (showModal && broadcastResult && broadcastResult.data && sendTransactionFlag) {
     clearState();
+    nonce.refetch({ publicKey: address });
+    setShouldBalanceUpdate(true);
     toast.success("Transaction successfully broadcasted");
     history.replace("/send-tx");
   }
@@ -164,7 +167,6 @@ export default function SendTX(props) {
     }
   }, [ledgerTransactionData]);
 
-
   /**
    * Check if nonce is available, if not asks user for custom nonce. After is set proceeds data verification and to private key verification
    */
@@ -187,7 +189,6 @@ export default function SendTX(props) {
       toast.error( "Please insert an address and an amount");
       return
     }
-    nonce.refetch({ publicKey: address });
     if (!isLedgerEnabled) {
       setShowModal(ModalStates.PASSPHRASE);
     } else {
