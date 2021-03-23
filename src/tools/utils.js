@@ -34,6 +34,10 @@ export function toMINA(amount) {
   return Big(amount).mul(1e-9).toFixed(3);
 }
 
+export function toLongMINA(amount) {
+  return Big(amount).mul(1e-9).toFixed(9);
+}
+
 export function getDefaultValidUntilField() {
   return "4294967295";
 }

@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { feeOrDefault } from "../../tools/fees";
-import { toMINA, toNanoMINA } from "../../tools/utils";
+import { toMINA, toNanoMINA,feeGreaterThanMinimum } from "../../tools/utils";
 import Button from "../General/Button";
 import Input from "../General/Input";
 
@@ -15,6 +15,7 @@ export const DelegationFee = (props) => {
 
   const proceedButtonHandler = () => {
     if(feeGreaterThanMinimum(fee)){
+      const feeToSend = toNanoMINA(fee)
       return props.proceedHandler(feeToSend)
     }
     const message = `Fee ${fee} is less than the minimum fee (${toMINA(MINIMUM_FEE)})`;

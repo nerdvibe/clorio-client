@@ -26,15 +26,16 @@ const BALANCE = gql`
         liquid
         locked
         liquidUnconfirmed
+        unconfirmedTotal
       }
     }
   }
 `;
 
 export default function Wallet(props) {
-  let userBalance = 0;
   const [address, setaddress] = useState(undefined);
-  const { setBalanceContext } = useContext(BalanceContext);
+  const [userBalance, setUserBalance] = useState(0);
+  const { setBalanceContext,shouldBalanceUpdate,setShouldBalanceUpdate } = useContext(BalanceContext);
   const ticker = useQuery(TICKER);
   const balance = useQuery(BALANCE, {
     variables: { publicKey: address },
@@ -54,24 +55,18 @@ export default function Wallet(props) {
     }
   }, [address]);
 
-  if (balance && balance.data) {
-    if (balance.data.accountByKey) {
-      userBalance = balance.data.accountByKey.balance.total;
-      const total = balance.data.accountByKey.balance.total;
-      const liquid = balance.data.accountByKey.balance.liquid;
-      const locked = balance.data.accountByKey.balance.locked;
-      const liquidUnconfirmed =
-        balance.data.accountByKey.balance.liquidUnconfirmed;
-      if (props.setContextBalance) {
-        props.setContextBalance({
-          total,
-          liquid,
-          locked,
-          liquidUnconfirmed,
-        });
-      }
+  useEffect(() => {
+    if(shouldBalanceUpdate){
+      balance.refetch({ publicKey: address });
+      setShouldBalanceUpdate(false);
     }
-  }
+    if(balance.data?.accountByKey?.balance){
+      const {unconfirmedTotal} = balance.data.accountByKey.balance;
+      setUserBalance(unconfirmedTotal);
+      setBalanceContext(balance.data.accountByKey.balance);
+    }
+  },[shouldBalanceUpdate,balance])
+
   if (address === undefined) {
     return <div />;
   }
