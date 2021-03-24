@@ -106,6 +106,7 @@ export default function StakeTable(props) {
                         placeholder={"Filter..."}
                         value={searchBox}
                         onChange={(e) => searchBoxHandler(e.currentTarget.value)}
+                        autoComplete="off"
                       />
                     </th>
                   </tr>

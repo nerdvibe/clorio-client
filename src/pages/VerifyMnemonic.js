@@ -101,6 +101,7 @@ export default function Verify() {
                           onChange={(e) =>
                             validateWord(index, e.currentTarget.value)
                           }
+                          autoComplete="off"
                         />
                       </Col>
                     );

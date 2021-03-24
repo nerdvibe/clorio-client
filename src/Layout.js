@@ -13,7 +13,7 @@ import Wallet from "./components/General/Wallet";
 import {BalanceContextProvider} from "./context/BalanceContext";
 import { useContext } from "react";
 import { LedgerContext } from "./context/LedgerContext";
-import TermsAndConditions from "./components/Modals/TermsAndConditions";
+import { TermsAndConditions } from "./components/Modals/TermsAndConditions";
 
 const GET_NETWORK = gql`
   query NodeInfo {
