@@ -4,7 +4,7 @@ import Hoc from "../components/General/Hoc";
 import Homepage from "../components/General/Homepage";
 import { clearSession } from "../tools";
 
-export const SplashScreen = (props) => {
+export default function SplashScreen (props) {
   useEffect(() => {
     clearSession();
   }, []);
