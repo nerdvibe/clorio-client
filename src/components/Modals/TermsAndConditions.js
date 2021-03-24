@@ -5,7 +5,7 @@ import ModalContainer from './ModalContainer';
 import {Check} from 'react-feather';
 import Logo from '../General/Logo';
 
-export default function TermsAndConditions(props) {
+export const TermsAndConditions = () => {
   const session = sessionStorage.getItem('terms-and-conditions');
   const history = useHistory();
   
@@ -23,10 +23,11 @@ export default function TermsAndConditions(props) {
           </h2>
           <hr/>
           <div class="terms">
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates nesciunt explicabo error saepe assumenda excepturi nobis, tenetur dolorem autem velit et officiis porro quisquam non. Sint eius iusto ipsam illo.
+              <p>~Clorio let’s you use the Mina Protocol currency.   Lorem ipsum dolor sit amet consectetur adipisicing elit.Lorem ipsum dolor sit amet consectetur adipisicing elit.Lorem ipsum dolor sit amet consectetur adipisicing elit.
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates nesciunt explicabo error saepe assumenda excepturi nobis, tenetur dolorem autem velit et officiis porro quisquam non. Sint eius iusto ipsam illo.</p>
+              <p>Only use ~Clorio if you accept that you alone are responsible for all risk associated with this use TODO assumenda excepturi nobis, tenetur dolorem autem velit et officiis porro quisquam non. Sint eius iusto ipsam illo.</p>
               <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates nesciunt explicabo error saepe assumenda excepturi nobis, tenetur dolorem autem velit et officiis porro quisquam non. Sint eius iusto ipsam illo.</p>
-      
+
           </div>
           <div className="v-spacer" />
           <div className="v-spacer" />

@@ -8,7 +8,7 @@ export default function StakeTableRow({index, element, toggleModal}) {
   let supportTooltip = ''
   let boostedClassName = ''
   if(element.priority === 1) {
-    supportTooltip = '~Clorio is built by Carbonara. Delegate to Cabonara to support Clorio and other software for Mina :)';
+    supportTooltip = '~Clorio is built by Carbonara. <br>  You can support the development of this wallet by delegating your stake to Carbonara ❤️';
     boostedClassName = 'is-boosted';
   }
 
