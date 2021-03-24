@@ -117,7 +117,7 @@ export default (props) => {
   });
   const history = useHistory();
   const [ledgerTransactionData, setLedgerTransactionData] = useState(undefined);
-  const [broadcastDelegation, broadcastResult] = useMutation(
+  const [broadcastDelegation] = useMutation(
     BROADCAST_DELEGATION,
     {
       onError: (error) => {
@@ -350,6 +350,7 @@ export default (props) => {
     setDelegate({});
     setSendTransactionFlag(false);
     setCustomNonce(undefined);
+    setPrivateKey("")
     setCustomDelegate("");
     setLedgerTransactionData(undefined);
     setSelectedFee(feeOrDefault());
