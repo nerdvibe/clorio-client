@@ -12,6 +12,7 @@ import Input from "../components/General/Input";
 import { useQuery } from "@apollo/client";
 import { derivePublicKey } from "@o1labs/client-sdk";
 import { GET_ID } from "../graphql/query";
+import { toast } from "react-toastify";
 
 export default function Login(props) {
   const [publicKey, setPublicKey] = useState("");
@@ -26,24 +27,26 @@ export default function Login(props) {
   // Clean component state on component dismount
   useEffect(() => {
     return () => {
-      setPrivatekey("")
-      setPublicKey("")
-    }
-  }, [])
+      setPrivatekey("");
+      setPublicKey("");
+    };
+  }, []);
 
   /**
    * If Public key has been derived, show loader and set session data
    */
   useEffect(() => {
     if (publicKey && publicKey !== "" && !userID.loading) {
-      const id = userID.data?.public_keys?.length>0? userID.data.public_keys[0].id : -1;
+      const id =
+        userID.data?.public_keys?.length > 0
+          ? userID.data.public_keys[0].id
+          : -1;
       props.setLoader();
-      storeSession(publicKey, id, false, 0)
-      .then(success=>{
-        if(success){
+      storeSession(publicKey, id, false, 0).then((success) => {
+        if (success) {
           history.push("/overview");
         }
-      })
+      });
     }
   }, [userID]);
 
@@ -62,13 +65,10 @@ export default function Login(props) {
     try {
       const derivedPublicKey = derivePublicKey(privateKey);
       setPublicKey(derivedPublicKey);
-      userID.refetch({ publicKey:derivedPublicKey });
+      userID.refetch({ publicKey: derivedPublicKey });
       setLoader(true);
     } catch (e) {
-      props.showGlobalAlert(
-        "Private key not valid, please try again.",
-        "error-toast"
-      );
+      toast.error("Private key not valid, please try again.");
     }
   }
 

@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { getId, updateUser } from "../../tools";
 import { GET_ID } from "../../graphql/query";
 
-
 export default function UpdateUserID(props) {
   const [address, setaddress] = useState("");
   const userID = useQuery(GET_ID, {

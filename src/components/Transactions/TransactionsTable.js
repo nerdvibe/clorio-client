@@ -8,10 +8,11 @@ import NoTransactions from "../../assets/NoTransactions.svg";
 import { getTotalPages, toMINA } from "../../tools/utils";
 import { useQuery } from "@apollo/client";
 import Pagination from "../General/Pagination";
-import { ChevronRight, ChevronsDown, ChevronsUp, Check} from "react-feather";
+import { ChevronRight, ChevronsDown, ChevronsUp, Check } from "react-feather";
 import ReactTooltip from "react-tooltip";
-import {formatDistance} from "date-fns";
+import { formatDistance } from "date-fns";
 import { GET_TRANSACTIONS_TOTAL } from "../../graphql/query";
+import { decodeB58 } from "../../tools/base58";
 
 export default function TransactionsTable(props) {
   const { loading, error, data, mempool, userId, userAddress } = props;
@@ -44,18 +45,18 @@ export default function TransactionsTable(props) {
     );
   }
 
-  function renderTransactionOrDelegationIcon(txType,sender,receiver){
-    if(txType === 'delegation'){
-      return(<Check data-tip="Delegation TX" />)
-    }else{
-      if (receiver===sender) {
-        return (<ChevronRight data-tip="Self transaction" />)
-      } else if(userAddress===sender){
-        return(<ChevronsUp data-tip="Outgoing TX" color="red"/>)
-      } else if(userAddress===receiver){
-        return(<ChevronsDown data-tip="Incoming TX" color="green"/>)
+  function renderTransactionOrDelegationIcon(txType, sender, receiver) {
+    if (txType === "delegation") {
+      return <Check data-tip="Delegation TX" />;
+    } else {
+      if (receiver === sender) {
+        return <ChevronRight data-tip="Self transaction" />;
+      } else if (userAddress === sender) {
+        return <ChevronsUp data-tip="Outgoing TX" color="red" />;
+      } else if (userAddress === receiver) {
+        return <ChevronsDown data-tip="Incoming TX" color="green" />;
       } else {
-        return(<ChevronRight />)
+        return <ChevronRight />;
       }
     }
   }
@@ -71,18 +72,37 @@ export default function TransactionsTable(props) {
     const amount = row.amount ? toMINA(row.amount) : 0;
     const sender = row.publicKeyBySourceId.value;
     const receiver = row.publicKeyByReceiverId.value;
-    const fee = "Fee : " +(row.fee ? toMINA(row.fee) : 0) + " Mina";
+    const fee = "Fee : " + (row.fee ? toMINA(row.fee) : 0) + " Mina";
     const type = row.type;
-    const timeDistance = formatDistance(timestamp, new Date(), {includeSeconds: true, addSuffix: true});
+    const timeDistance = formatDistance(timestamp, new Date(), {
+      includeSeconds: true,
+      addSuffix: true,
+    });
     const timeISOString = new Date(timestamp).toISOString();
-    const isOutgoing =  userAddress === sender
-    const isSelf =  receiver === sender
-    const humanAmount = isOutgoing ? (isSelf || type === 'delegation') ? amount : `-${amount}` : `+${amount}`
-    const amountColor = isOutgoing ? (isSelf || type === 'delegation') ? '' : 'red' : 'green';
+    const isOutgoing = userAddress === sender;
+    const isSelf = receiver === sender;
+    const humanAmount = isOutgoing
+      ? isSelf || type === "delegation"
+        ? amount
+        : `-${amount}`
+      : `+${amount}`;
+    const amountColor = isOutgoing
+      ? isSelf || type === "delegation"
+        ? ""
+        : "red"
+      : "green";
+    const memo = decodeB58(row.memo);
+
     return (
       <tr key={index}>
-        <td className="table-element table-icon"> {renderTransactionOrDelegationIcon(type,sender,receiver)} </td>
-        <td className="table-element table-hash">
+        <td className="table-element table-icon">
+          {" "}
+          {renderTransactionOrDelegationIcon(type, sender, receiver)}{" "}
+        </td>
+        <td
+          className="table-element table-hash"
+          data-tip={memo ? `Memo: ${memo}` : null}
+        >
           <a
             href={`https://devnet.minaexplorer.com/block/${state_hash}`}
             target="_blank"
@@ -91,10 +111,22 @@ export default function TransactionsTable(props) {
             {row.hash}
           </a>
         </td>
-        <td className="table-element force-right" data-tip={timeISOString}>{timeDistance}</td>
-        <td className="table-element">{sender === userAddress ? 'you' : sender}</td>
-        <td className="table-element">{receiver === userAddress ? 'you' : receiver}</td>
-        <td className="table-element" style={{color:amountColor}} data-tip={fee}>{humanAmount} Mina</td>
+        <td className="table-element" data-tip={timeISOString}>
+          {timeDistance}
+        </td>
+        <td className="table-element">
+          {sender === userAddress ? "you" : sender}
+        </td>
+        <td className="table-element">
+          {receiver === userAddress ? "you" : receiver}
+        </td>
+        <td
+          className="table-element"
+          style={{ color: amountColor }}
+          data-tip={fee}
+        >
+          {humanAmount} Mina
+        </td>
       </tr>
     );
   }
@@ -107,19 +139,31 @@ export default function TransactionsTable(props) {
    */
   function renderMempoolRow(row, index) {
     const amount = row.amount ? toMINA(row.amount) : 0;
-    const sender = row.source && row.source.publicKey
-    const receiver = row.receiver && row.receiver.publicKey
-    const isOutgoing =  userAddress === sender
-    const isSelf =  receiver === sender
-    const humanAmount = isOutgoing ? isSelf ? amount : `-${amount}` : `+${amount}`
-    const amountColor = isOutgoing ? isSelf ? '' : 'red' : 'green';
-    const fee = "Fee : " +(row.fee ? toMINA(row.fee) : 0) + " Mina";
+    const sender = row.source && row.source.publicKey;
+    const receiver = row.receiver && row.receiver.publicKey;
+    const isOutgoing = userAddress === sender;
+    const isSelf = receiver === sender;
+    const humanAmount = isOutgoing
+      ? isSelf
+        ? amount
+        : `-${amount}`
+      : `+${amount}`;
+    const amountColor = isOutgoing ? (isSelf ? "" : "red") : "green";
+    const fee = "Fee : " + (row.fee ? toMINA(row.fee) : 0) + " Mina";
+    const memo = decodeB58(row.memo);
+
     return (
       <tr key={index}>
-        <td className="table-element"> {renderTransactionOrDelegationIcon(row.amount,sender,receiver)} </td>
         <td className="table-element">
+          {" "}
+          {renderTransactionOrDelegationIcon(row.amount, sender, receiver)}{" "}
+        </td>
+        <td
+          className="table-element table-hash"
+          data-tip={memo ? `Memo: ${memo}` : null}
+        >
           <a
-            href={`https://devnet.minaexplorer.com/payment/${row.id}`}
+            href={`https://devnet.minaexplorer.com/transaction/${row.id}`}
             target="_blank"
             rel="noreferrer"
           >
@@ -127,9 +171,19 @@ export default function TransactionsTable(props) {
           </a>
         </td>
         <td className="table-element">Waiting for confirmation</td>
-        <td className="table-element">{sender === userAddress ? 'you' : sender}</td>
-        <td className="table-element">{receiver === userAddress ? 'you' : receiver}</td>
-        <td className="table-element" style={{color:amountColor}} data-tip={fee}>{humanAmount} Mina</td>
+        <td className="table-element">
+          {sender === userAddress ? "you" : sender}
+        </td>
+        <td className="table-element">
+          {receiver === userAddress ? "you" : receiver}
+        </td>
+        <td
+          className="table-element"
+          style={{ color: amountColor }}
+          data-tip={fee}
+        >
+          {humanAmount} Mina
+        </td>
       </tr>
     );
   }
@@ -142,11 +196,11 @@ export default function TransactionsTable(props) {
     return (
       <tbody>
         {mempool?.data?.mempool?.map((row, index) => {
-            return renderMempoolRow(row, index);
-          })}
+          return renderMempoolRow(row, index);
+        })}
         {data?.user_commands?.map((row, index) => {
-            return renderTransactionRow(row, index);
-          })}
+          return renderTransactionRow(row, index);
+        })}
       </tbody>
     );
   }
@@ -204,7 +258,10 @@ export default function TransactionsTable(props) {
       <Spinner className={"full-width"} show={loading}>
         <ReactTooltip multiline={true} />
         <div id="transaction-table">
-          <Table className="animate__animated animate__fadeIn"  id="rwd-table-large">
+          <Table
+            className="animate__animated animate__fadeIn"
+            id="rwd-table-large"
+          >
             <thead>{renderTableHeader()}</thead>
             {renderTableBody()}
           </Table>
@@ -213,7 +270,9 @@ export default function TransactionsTable(props) {
           page={props.page}
           setOffset={props.setOffset}
           user={props.userId}
-          total={getTotalPages(total.data?.user_commands_aggregate?.aggregate?.count || 0)}
+          total={getTotalPages(
+            total.data?.user_commands_aggregate?.aggregate?.count || 0
+          )}
         />
       </Spinner>
     </div>

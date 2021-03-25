@@ -1,35 +1,34 @@
 import { gql } from "@apollo/client";
 import { ITEMS_PER_PAGE } from "../tools/const";
 
-
 export const GET_FEE = gql`
-query GetFees {
-  estimatedFee {
-    txFees{
-      average
-      fast
+  query GetFees {
+    estimatedFee {
+      txFees{
+        fast
+        average
+      }
     }
   }
-}
 `;
 
 export const GET_NONCE = gql`
-query accountByKey($publicKey: String!) {
-  accountByKey(publicKey: $publicKey) {
-    usableNonce
+  query accountByKey($publicKey: String!) {
+    accountByKey(publicKey: $publicKey) {
+      usableNonce
+    }
   }
-}
 `;
 
 export const BROADCAST_TRANSACTION = gql`
-mutation broadcastTransaction(
-  $input: SendPaymentInput!
-  $signature: SignatureInput!
-) {
-  broadcastTransaction(input: $input, signature: $signature) {
-    id
+  mutation broadcastTransaction(
+    $input: SendPaymentInput!
+    $signature: SignatureInput!
+  ) {
+    broadcastTransaction(input: $input, signature: $signature) {
+      id
+    }
   }
-}
 `;
 
 export const BROADCAST_DELEGATION = gql`
@@ -43,11 +42,10 @@ export const BROADCAST_DELEGATION = gql`
   }
 `;
 
-
 export const GET_AVERAGE_FEE = gql`
   query GetFees {
     estimatedFee {
-      txFees{
+      txFees {
         average
       }
     }
@@ -55,16 +53,18 @@ export const GET_AVERAGE_FEE = gql`
 `;
 
 export const GET_VALIDATORS = gql`
-  query validators($offset: Int!) {
-    validators(limit: ${ITEMS_PER_PAGE}, offset: $offset) {
-      fee
-      id
-      image
-      name
-      publicKey
-      website
-    }
+query validators($offset: Int!) {
+  validators(limit: 100, offset: $offset, order_by: {priority: asc}) {
+    fee
+    id
+    image
+    name
+    publicKey
+    website
+    stakedSum
+    priority
   }
+}
 `;
 
 export const GET_VALIDATORS_NEWS = gql`
@@ -84,6 +84,7 @@ export const GET_NONCE_AND_DELEGATE = gql`
     accountByKey(publicKey: $publicKey) {
       delegate {
         publicKey
+          name
       }
       usableNonce
     }
@@ -139,6 +140,7 @@ export const GET_BALANCE = gql`
         liquid
         locked
         liquidUnconfirmed
+        unconfirmedTotal
       }
     }
   }
@@ -220,3 +222,4 @@ export const GET_HOME_NEWS = gql`
     }
   }
 `;
+

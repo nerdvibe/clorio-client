@@ -52,7 +52,12 @@ export default function SignMessageForm(props) {
         <div className="transaction-form animate__animated animate__fadeIn ">
           <div className="mx-auto fit-content">
             <strong>
-              <h2>Sign message <HelpHint hint={"Cryptographically sign a message with your keypair."}/></h2>
+              <h2>
+                Sign message{" "}
+                <HelpHint
+                  hint={"Cryptographically sign a message with your keypair."}
+                />
+              </h2>
             </strong>
           </div>
           <div className="v-spacer" />
@@ -85,7 +90,9 @@ export default function SignMessageForm(props) {
                   name="privateKey"
                   value={props.privateKey}
                   placeholder="Private key"
-                  inputHandler={(e) => props.setPrivateKey(e.currentTarget.value)}
+                  inputHandler={(e) =>
+                    props.setPrivateKey(e.currentTarget.value)
+                  }
                 />
                 <span className="shadow-input1"></span>
               </div>

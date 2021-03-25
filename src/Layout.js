@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Sidebar from "./components/General/Sidebar";
 import { Container, Row, Col } from "react-bootstrap";
 import Routes from "./Routes";
-import { clearSession, readSession } from "./tools/auth";
+import { clearSession, readSession, storeNetworkData } from "./tools/auth";
 import Spinner from "./components/General/Spinner";
 import { useHistory } from "react-router-dom";
 import UpdateUserID from "./components/General/UpdateUserID";
@@ -10,18 +10,24 @@ import { useQuery } from "@apollo/client";
 import { isEmptyObject } from "./tools/utils";
 import Alert from "./components/General/Alert";
 import Wallet from "./components/General/Wallet";
-import {BalanceContextProvider} from "./context/BalanceContext";
+import { BalanceContextProvider } from "./context/BalanceContext";
 import { GET_NETWORK } from "./graphql/query";
-
+import { useContext } from "react";
+import { LedgerContext } from "./context/LedgerContext";
+import { TermsAndConditions } from "./components/Modals/TermsAndConditions";
 
 function Layout() {
-  const [sessionData, setsessionData] = useState(undefined);
+  const [sessionData, setSessionData] = useState(undefined);
   const [showLoader, setShowLoader] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertText, setAlertText] = useState("");
-  const [alertStyle, setAlertStyle] = useState("error-toast");
+  const { setLedgerContext } = useContext(LedgerContext);
   const history = useHistory();
-  const network = useQuery(GET_NETWORK);
+  const network = useQuery(GET_NETWORK, {
+    onCompleted: async (data) => {
+      if (data?.nodeInfo) {
+        await storeNetworkData(data?.nodeInfo);
+      }
+    },
+  });
 
   const goToHome = () => {
     history.push("/");
@@ -29,28 +35,29 @@ function Layout() {
 
   readSession((data) => {
     if (!sessionData) {
-      setsessionData(data);
+      setSessionData(data);
+      if (setLedgerContext) {
+        setLedgerContext({
+          ledger: data.ledger,
+          ledgerAccount: data.ledgerAccount,
+        });
+      }
     }
   }, goToHome);
 
   const setLoader = () => {
-    setsessionData(undefined);
+    setSessionData(undefined);
   };
 
   window.onbeforeunload = () => {
     clearSession();
-    setsessionData(undefined);
+    setSessionData(undefined);
   };
-
-  function showGlobalAlert(text, style) {
-    setAlertText(text);
-    setAlertStyle(style);
-    setShowAlert(true);
-  }
 
   return (
     <div>
       <Container fluid>
+        <TermsAndConditions />
         <Row>
           {sessionData && !isEmptyObject(sessionData) && sessionData.address && (
             <Col md={3} lg={3} xl={2} id="sidebar-wrapper">
@@ -68,28 +75,21 @@ function Layout() {
             <Container className="contentWrapper animate__animated animate__fadeIn">
               <BalanceContextProvider>
                 <Spinner show={!sessionData || showLoader}>
-                  {sessionData && !isEmptyObject(sessionData) && sessionData.address && (
-                    <Wallet />
-                  )}
+                  {sessionData &&
+                    !isEmptyObject(sessionData) &&
+                    sessionData.address && <Wallet />}
                   <Routes
                     sessionData={sessionData}
                     setLoader={setLoader}
                     network={network.data}
                     toggleLoader={setShowLoader}
-                    showGlobalAlert={showGlobalAlert}
                   />
                 </Spinner>
               </BalanceContextProvider>
             </Container>
           </Col>
         </Row>
-        <Alert
-          show={showAlert}
-          hideToast={() => setShowAlert(false)}
-          type={alertStyle}
-        >
-          {alertText}
-        </Alert>
+        <Alert />
         <UpdateUserID sessionData={sessionData} />
       </Container>
     </div>

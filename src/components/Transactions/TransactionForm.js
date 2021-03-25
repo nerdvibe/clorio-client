@@ -4,6 +4,7 @@ import { MINIMUM_AMOUNT, MINIMUM_FEE } from "../../tools/const";
 import { toMINA, toNanoMINA } from "../../tools/utils";
 import Button from "../General/Button";
 import Input from "../General/Input";
+import { toast } from 'react-toastify';
 
 
 export default function TransactionForm(props) {
@@ -81,10 +82,7 @@ export default function TransactionForm(props) {
 
   function memoHandler(memo) {
     if (memo.length > 32) {
-      return props.showGlobalAlert(
-        "Memo is limited to 32 characters",
-        "error-toast"
-      );
+      toast.error("Memo is limited to 32 characters")
     } else {
       return props.setData({
         ...props.transactionData,
@@ -99,16 +97,16 @@ export default function TransactionForm(props) {
       const message = `Amount ${toMINA(
         amount
       )} is less than the minimum amount (${toMINA(MINIMUM_AMOUNT)})`;
-      return props.showGlobalAlert(message, "error-toast");
+      return toast.error(message)
     }
     if (fee < MINIMUM_FEE) {
       const message = `Fee ${toMINA(
         fee
       )} is less than the minimum fee (${toMINA(MINIMUM_FEE)})`;
-      return props.showGlobalAlert(message, "error-toast");
+      return toast.error(message)
     }
     if (receiverAddress === "") {
-      return props.showGlobalAlert("Please insert a recipient", "error-toast");
+      return toast.error("Please insert a recipient")
     }
     return props.nextStep();
   }

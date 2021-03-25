@@ -4,7 +4,7 @@ import { isEmptyObject } from "../../tools/utils";
 import Button from "./Button";
 
 export const Banner = (props) => {
-  const {title,subtitle,link,cta,cta_color} = props.newsData
+  const { title, subtitle, link, cta, cta_color } = props.newsData;
   const buttonStyle = () => {
     switch (cta_color) {
       case "success":
@@ -14,7 +14,7 @@ export const Banner = (props) => {
       default:
         return "lightGreenButton__outlineMono ";
     }
-  }
+  };
 
   return !isEmptyObject(props.newsData) ? (
     <div className="block-container">
@@ -43,4 +43,4 @@ export const Banner = (props) => {
   ) : (
     <></>
   );
-}
+};

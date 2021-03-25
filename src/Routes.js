@@ -1,15 +1,16 @@
-import React from "react";
-import Overview from "./pages/Overview";
-import SendTX from "./pages/SendTX";
-import Stake from "./pages/Stake";
-import { SplashScreen } from "./pages/SplashScreen";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import React, { Suspense } from "react";
+const Overview = React.lazy(() => import("./pages/Overview"));
+const SendTX = React.lazy(() => import("./pages/SendTX"));
+const Stake = React.lazy(() => import("./pages/Stake"));
+const SplashScreen = React.lazy(() => import("./pages/SplashScreen"));
+const Login = React.lazy(() => import("./pages/Login"));
+const Register = React.lazy(() => import("./pages/Register"));
 import { Route, Redirect, Switch } from "react-router-dom";
-import LedgerLogin from "./pages/LedgerLogin";
-import SignMessage from "./pages/SignMessage";
-import NotFound from "./pages/404";
-import VerifyMessage from "./pages/VerifyMessage";
+import Spinner from "./components/General/Spinner";
+const LedgerLogin = React.lazy(() => import("./pages/LedgerLogin"));
+const SignMessage = React.lazy(() => import("./pages/SignMessage"));
+const NotFound = React.lazy(() => import("./pages/404"));
+const VerifyMessage = React.lazy(() => import("./pages/VerifyMessage"));
 import { isEmptyObject } from "./tools/utils";
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
@@ -45,62 +46,64 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
 function Routes(props) {
   const { sessionData } = props;
   return (
-    <Switch>
-      <ProtectedRoute
-        exact
-        path="/overview"
-        component={Overview}
-        sessionData={sessionData}
-        {...props}
-      />
-      <ProtectedRoute
-        exact
-        path="/send-tx"
-        component={SendTX}
-        sessionData={sessionData}
-        {...props}
-      />
-      <ProtectedRoute
-        exact
-        path="/stake"
-        component={Stake}
-        sessionData={sessionData}
-        {...props}
-      />
-      <ProtectedRoute
-        exact
-        path="/sign-message"
-        component={SignMessage}
-        sessionData={sessionData}
-        {...props}
-      />
-      <ProtectedRoute
-        exact
-        path="/verify-message"
-        component={VerifyMessage}
-        sessionData={sessionData}
-        {...props}
-      />
-      <Route path="/login" exact>
-        <Login {...props} network={props.network} />
-      </Route>
-      <Route path="/register" exact>
-        <Register {...props} network={props.network} />
-      </Route>
-      <Route path="/ledger" exact>
-        <LedgerLogin {...props} network={props.network} />
-      </Route>
-      {/*<Route path="/register">
-        <Entropy />
-      </Route>*/}
-      {/*<Route path="/verify">
-        <VerifyMnemonic />
-      </Route>*/}
-      <Route path="/" exact>
-        <SplashScreen network={props.network} />
-      </Route>
-      <Route component={NotFound} />
-    </Switch>
+    <Suspense fallback={<Spinner show={true} />}>
+      <Switch>
+        <ProtectedRoute
+          exact
+          path="/overview"
+          component={Overview}
+          sessionData={sessionData}
+          {...props}
+        />
+        <ProtectedRoute
+          exact
+          path="/send-tx"
+          component={SendTX}
+          sessionData={sessionData}
+          {...props}
+        />
+        <ProtectedRoute
+          exact
+          path="/stake"
+          component={Stake}
+          sessionData={sessionData}
+          {...props}
+        />
+        <ProtectedRoute
+          exact
+          path="/sign-message"
+          component={SignMessage}
+          sessionData={sessionData}
+          {...props}
+        />
+        <ProtectedRoute
+          exact
+          path="/verify-message"
+          component={VerifyMessage}
+          sessionData={sessionData}
+          {...props}
+        />
+        <Route path="/login" exact>
+          <Login {...props} network={props.network} />
+        </Route>
+        <Route path="/register" exact>
+          <Register {...props} network={props.network} />
+        </Route>
+        <Route path="/ledger" exact>
+          <LedgerLogin {...props} network={props.network} />
+        </Route>
+        {/*<Route path="/register">
+          <Entropy />
+        </Route>*/}
+        {/*<Route path="/verify">
+          <VerifyMnemonic />
+        </Route>*/}
+        <Route path="/" exact>
+          <SplashScreen network={props.network} />
+        </Route>
+        <Route component={NotFound} />
+      </Switch>
+    </Suspense>
   );
 }
 

@@ -7,7 +7,7 @@ import Button from "../components/General/Button";
 import Footer from "../components/General/Footer";
 
 export default function Entropy() {
-  const [progress, setprogress] = useState(20);
+  const [progress] = useState(20);
   const genRanHex = (size) =>
     [...Array(size)]
       .map(() => Math.floor(Math.random() * 16).toString(16))
