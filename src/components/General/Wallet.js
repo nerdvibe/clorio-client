@@ -7,23 +7,27 @@ import { useQuery } from "@apollo/client";
 import Avatar from "../../tools/avatar";
 import { copyToClipboard, toMINA } from "../../tools/utils";
 import ReactTooltip from "react-tooltip";
-import {BalanceContext} from "../../context/BalanceContext";
+import { BalanceContext } from "../../context/BalanceContext";
 import { useContext } from "react";
-import { GET_TICKER,GET_BALANCE } from "../../graphql/query";
+import { GET_TICKER, GET_BALANCE } from "../../graphql/query";
 
 export default function Wallet(props) {
-  let userBalance = 0;
   const [address, setaddress] = useState(undefined);
-  const { setBalanceContext } = useContext(BalanceContext);
+  const [userBalance, setUserBalance] = useState(0);
+  const {
+    setBalanceContext,
+    shouldBalanceUpdate,
+    setShouldBalanceUpdate,
+  } = useContext(BalanceContext);
   const ticker = useQuery(GET_TICKER);
   const balance = useQuery(GET_BALANCE, {
     variables: { publicKey: address },
-    skip: !address || address==="",
+    skip: !address || address === "",
     onCompleted: (data) => {
-      if(setBalanceContext) {
-        setBalanceContext(data?.accountByKey?.balance || {})
+      if (setBalanceContext) {
+        setBalanceContext(data?.accountByKey?.balance || {});
       }
-    }
+    },
   });
 
   useEffect(() => {
@@ -34,28 +38,28 @@ export default function Wallet(props) {
     }
   }, [address]);
 
-  if (balance.data?.accountByKey?.balance) {
-    const {total,liquid,locked,liquidUnconfirmed} = balance.data.accountByKey.balance;
-    userBalance = balance.data.accountByKey.balance.total;
-    if (props.setContextBalance) {
-      props.setContextBalance({
-        total,
-        liquid,
-        locked,
-        liquidUnconfirmed,
-      });
+  useEffect(() => {
+    if (shouldBalanceUpdate) {
+      balance.refetch({ publicKey: address });
+      setShouldBalanceUpdate(false);
     }
-  }
+    if (balance.data?.accountByKey?.balance) {
+      const { unconfirmedTotal } = balance.data.accountByKey.balance;
+      setUserBalance(unconfirmedTotal);
+      setBalanceContext(balance.data.accountByKey.balance);
+    }
+  }, [shouldBalanceUpdate, balance]);
+
   if (address === undefined) {
     return <div />;
   }
 
   function renderBalance() {
-    if(balance.loading){
-      return "Loading "
+    if (balance.loading) {
+      return "Loading ";
     }
     if (balance.data) {
-      if(!userBalance){
+      if (!userBalance) {
         return "Not available";
       } else {
         return toMINA(userBalance) + " Mina";
@@ -65,11 +69,11 @@ export default function Wallet(props) {
   }
 
   function renderAverageValue() {
-    if(ticker.loading){
-      return "Loading "
+    if (ticker.loading) {
+      return "Loading ";
     }
     if (ticker.data?.ticker) {
-      if(ticker.data.ticker.BTCMINA === null){
+      if (ticker.data.ticker.BTCMINA === null) {
         return "Not available";
       } else {
         return toMINA(userBalance * ticker.data.ticker.BTCMINA) + " BTC";
@@ -104,7 +108,19 @@ export default function Wallet(props) {
             <Col>
               <div className="inline-block-element">
                 <h6 className="secondaryText">Your balance</h6>
-                <h5 data-tip={+props.balance?.locked ? `Locked: ${toMINA(props.balance.locked)} Mina <br/> Liquid: ${toMINA(props.balance.liquid)} Mina`:``}>{renderBalance()}</h5>
+                <h5
+                  data-tip={
+                    +props.balance?.locked
+                      ? `Locked: ${toMINA(
+                          props.balance.locked
+                        )} Mina <br/> Liquid: ${toMINA(
+                          props.balance.liquid
+                        )} Mina`
+                      : ``
+                  }
+                >
+                  {renderBalance()}
+                </h5>
                 <ReactTooltip multiline={true} />
               </div>
               <div className="inline-block-element">
@@ -122,7 +138,7 @@ export default function Wallet(props) {
       </div>
       <div className="align-left small-screen">
         <Row>
-        <Col md={12}>
+          <Col md={12}>
             <div className="inline-block-element walletImageContainer">
               <div className="walletImageOutline">
                 <Avatar address={address} />
@@ -143,9 +159,14 @@ export default function Wallet(props) {
         </Row>
         <div className="inline-block-element wallet-data full-width">
           <Row>
-            <Col md={5} className="full-width-align-center small-screen-wallet-value">
+            <Col
+              md={5}
+              className="full-width-align-center small-screen-wallet-value"
+            >
               <div className="inline-block-element full-width-align-center">
-                <h6 className="secondaryText full-width-align-center">Your balance</h6>
+                <h6 className="secondaryText full-width-align-center">
+                  Your balance
+                </h6>
                 <h5 className="full-width-align-center">{renderBalance()}</h5>
               </div>
             </Col>
@@ -157,9 +178,11 @@ export default function Wallet(props) {
             <Col md={5} className="full-width-align-center ">
               <div className="inline-block-element full-width-align-center small-screen-wallet-value">
                 <span>
-                  <h6 className="secondaryText full-width-align-center">Apx value</h6>
+                  <h6 className="secondaryText full-width-align-center">
+                    Apx value
+                  </h6>
                   <h5 className="full-width-align-center">
-                    {renderAverageValue()} 
+                    {renderAverageValue()}
                   </h5>
                 </span>
               </div>

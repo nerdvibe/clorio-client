@@ -10,7 +10,7 @@ import { storeSession } from "../../tools";
 import LedgerLoader from "../General/LedgerLoader";
 import { GET_ID } from "../../graphql/query";
 import { getPublicKey } from "../../tools/ledger";
-
+import { toast } from "react-toastify";
 
 export default function LedgerGetAddress(props) {
   const [publicKey, setPublicKey] = useState(undefined);
@@ -32,10 +32,12 @@ export default function LedgerGetAddress(props) {
   function setSession() {
     if (userID.data) {
       props.setLoader();
-      const id = userID.data?.public_keys?.length>0? userID.data.public_keys[0].id : -1;
-      storeSession(publicKey, id, true, ledgerAccount)
-      .then((success) => {
-        if(success){
+      const id =
+        userID.data?.public_keys?.length > 0
+          ? userID.data.public_keys[0].id
+          : -1;
+      storeSession(publicKey, id, true, ledgerAccount).then((success) => {
+        if (success) {
           history.push("/overview");
         }
       });
@@ -47,16 +49,16 @@ export default function LedgerGetAddress(props) {
    */
   const getWallet = async () => {
     try {
-      const ledgerPublicKey = await getPublicKey(ledgerAccount)
+      const ledgerPublicKey = await getPublicKey(ledgerAccount);
       setPublicKey(ledgerPublicKey.publicKey);
     } catch (e) {
-      props.showGlobalAlert(
-        e.message || "An error occurred while loading hardware wallet",
-        "error-toast"
+      console.log(e);
+      toast.error(
+        e.message || "An error occurred while loading hardware wallet"
       );
       history.push("/");
     }
-  }
+  };
 
   /**
    * Render Ledger confirmation screen
@@ -108,13 +110,14 @@ export default function LedgerGetAddress(props) {
               {!publicKey ? (
                 <div>
                   <h4 className="full-width-align-center">
-                    Let's verify the your address
+                    Let&apos;s verify the your address
                   </h4>
                   <div className="v-spacer" />
                   <LedgerLoader />
                   <div className="v-spacer" />
                   <h6 className="full-width-align-center">
-                    Looking for the publicKey. Please confirm it on your Ledger device
+                    Looking for the publicKey. Please confirm it on your Ledger
+                    device
                   </h6>
                   <div className="v-spacer" />
                   <Link to="/">

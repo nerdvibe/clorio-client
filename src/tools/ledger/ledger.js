@@ -1,83 +1,85 @@
 let ledgerAPI;
-import isElectron from 'is-electron';
-import { getDefaultValidUntilField } from '../utils';
+import isElectron from "is-electron";
+import { feeOrDefault } from "../fees";
+import { getDefaultValidUntilField, toNanoMINA } from "../utils";
 
 // Because of compatibility we need to use 2 transporters, one for Electron, one for the browser.
 // For the Electron, we use node-hid transporter by the ipcRenderer (node). For the browser @ledgerhq/hw-transport-webhid.
 
-if(isElectron()) {
-   ledgerAPI = require("./ledgerElectronAPI");
-} else { // Is browser
-  ledgerAPI = require("./ledgerBrowserAPI")
+if (isElectron()) {
+  ledgerAPI = require("./ledgerElectronAPI");
+} else {
+  // Is browser
+  ledgerAPI = require("./ledgerBrowserAPI");
 }
 
 export const TX_TYPE = {
   PAYMENT: 0x00,
   DELEGATION: 0x04,
-}
+};
 export const NETWORK = {
   MAINNET: 0x01,
   DEVNET: 0x00,
-}
+};
 
 /**
  * Checks if the Mina Ledger app is open on the device. If not open, throw an error
  * @returns {Promise<boolean>}
  */
-export const isMinaAppOpen = async() => {
+export const isMinaAppOpen = async () => {
   try {
+    const ledgerNameVersion = await ledgerAPI.isMinaAppOpen();
+    if (ledgerNameVersion.returnCode !== "9000") {
+      throw new Error("~Clorio couldn't communicate with the Ledger device");
+    }
+    if (ledgerNameVersion.name !== "Mina") {
+      throw new Error(
+        "Please make sure that you have the Mina app open on the Ledger device"
+      );
+    }
 
-  const ledgerNameVersion = await ledgerAPI.isMinaAppOpen();
-  if(ledgerNameVersion.returnCode !== '9000') {
-    throw new Error("~Clorio couldn't communicate with the Ledger device")
-  }
-  if(ledgerNameVersion.name !== 'Mina') {
-    throw new Error("Please make sure that you have the Mina app open on the Ledger device")
-  }
-
-  return true
+    return true;
   } catch (e) {
-    console.error(e)
+    console.error(e);
+    throw e;
   }
-}
+};
 
 /**
  * Returns the publicKey from the Ledger device on the given account number
  * @param {number} account
  * @returns {Promise<{publicKey}|any>}
  */
-export const getPublicKey = async(account) => {
+export const getPublicKey = async (account) => {
   const ledgerPublicKey = await ledgerAPI.getPublicKey(account);
   // In case the user doesn't accept the address on the device
-  if(ledgerPublicKey.returnCode === '27013') {
+  if (ledgerPublicKey.returnCode === "27013") {
     throw new Error(`Ledger error: couldn't verify the address`);
   }
-  if(ledgerPublicKey.returnCode !== '9000' || !ledgerPublicKey.publicKey) {
+  if (ledgerPublicKey.returnCode !== "9000" || !ledgerPublicKey.publicKey) {
     throw new Error(`Ledger error: ${ledgerPublicKey.message}`);
   }
 
-  return ledgerPublicKey
-}
+  return ledgerPublicKey;
+};
 
 /**
  * Signs a transaction on the Ledger device
  * @param transaction
  * @returns {Promise<{signature}|any>}
  */
-export const signTransaction = async(transaction) => {
-  const ledgerTransaction = await ledgerAPI.signTransaction(
-    transaction
-  );
+export const signTransaction = async (transaction) => {
+  const ledgerTransaction = await ledgerAPI.signTransaction(transaction);
   // In case the user doesn't accept the transaction on the device
-  if(ledgerTransaction.returnCode === '27013') {
+  if (ledgerTransaction.returnCode === "27013") {
     throw new Error(`Ledger error: couldn't generate the signature`);
   }
-  if(ledgerTransaction.returnCode !== '9000' || !ledgerTransaction.signature) {
+  if (ledgerTransaction.returnCode !== "9000" || !ledgerTransaction.signature) {
     throw new Error(`Ledger error: ${ledgerTransaction.message}`);
   }
 
-  return ledgerTransaction
-}
+  return ledgerTransaction;
+};
 
 /**
  * converts emoji to unicode
@@ -85,10 +87,18 @@ export const signTransaction = async(transaction) => {
  * @returns str {*}
  */
 export const emojiToUnicode = (str) => {
-  return str.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, function(e) {
-    return "\\u" + e.charCodeAt(0).toString(16) + "\\u" + e.charCodeAt(1).toString(16);
-  });
-}
+  return str.replace(
+    /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
+    function (e) {
+      return (
+        "\\u" +
+        e.charCodeAt(0).toString(16) +
+        "\\u" +
+        e.charCodeAt(1).toString(16)
+      );
+    }
+  );
+};
 
 /**
  * escapes invalid unicode chars
@@ -96,16 +106,30 @@ export const emojiToUnicode = (str) => {
  * @returns {string}
  */
 export const escapeUnicode = (str) => {
-  return [...str].map(c => /^[\x00-\x7F]$/.test(c) ? c : c.split("").map(a => "\\u" + a.charCodeAt().toString(16).padStart(4, "0")).join("")).join("");
-}
-  
-export const createAndSignLedgerTransaction = async (senderAccount,senderAddress,transactionData,nonce) => {
-  const {receiverAddress,fee,amount,memo} = transactionData;
+  return [...str]
+    .map((c) =>
+      /^[\x00-\x7F]$/.test(c)
+        ? c
+        : c
+            .split("")
+            .map((a) => "\\u" + a.charCodeAt().toString(16).padStart(4, "0"))
+            .join("")
+    )
+    .join("");
+};
+
+export const createAndSignLedgerTransaction = async (
+  senderAccount,
+  senderAddress,
+  transactionData,
+  nonce
+) => {
+  const { receiverAddress, fee, amount, memo } = transactionData;
   // For now mina-ledger-js doesn't support emojis
   const cleanMemo = escapeUnicode(emojiToUnicode(memo));
   await isMinaAppOpen();
-  if(cleanMemo.length > 32) {
-    throw new Error('Memo field too long')
+  if (cleanMemo.length > 32) {
+    throw new Error("Memo field too long");
   }
   const transactionToSend = {
     senderAccount,
@@ -113,7 +137,7 @@ export const createAndSignLedgerTransaction = async (senderAccount,senderAddress
     receiverAddress,
     fee: +fee,
     amount: +amount,
-    memo:cleanMemo,
+    memo: cleanMemo,
     nonce,
     // TODO: FIX HARDCODING!
     txType: TX_TYPE.PAYMENT,
@@ -122,18 +146,22 @@ export const createAndSignLedgerTransaction = async (senderAccount,senderAddress
     validUntil: +getDefaultValidUntilField(),
   };
   return await signTransaction(transactionToSend);
-}
-
+};
 
 export const createLedgerSignatureInputFromSignature = (signature) => {
   return {
     scalar: signature.scalar,
     field: signature.field,
-  }
-}
+  };
+};
 
-export const createLedgerPaymentInputFromPayload = (transactionData,fee,amount,senderAddress) => {
-  const {nonce,memo,receiverAddress} = transactionData;
+export const createLedgerPaymentInputFromPayload = (
+  transactionData,
+  fee,
+  amount,
+  senderAddress
+) => {
+  const { nonce, memo, receiverAddress } = transactionData;
   return {
     nonce,
     memo,
@@ -141,11 +169,16 @@ export const createLedgerPaymentInputFromPayload = (transactionData,fee,amount,s
     amount: amount.toString(),
     to: receiverAddress,
     from: senderAddress,
-  }
-}
+  };
+};
 
-
-export const createLedgerDelegationTransaction = (senderAccount,senderAddress,receiverAddress,averageFee,nonce) => {
+export const createLedgerDelegationTransaction = (
+  senderAccount,
+  senderAddress,
+  receiverAddress,
+  averageFee,
+  nonce
+) => {
   return {
     senderAccount,
     senderAddress,
@@ -159,4 +192,4 @@ export const createLedgerDelegationTransaction = (senderAccount,senderAddress,re
     networkId: NETWORK.DEVNET,
     validUntil: +getDefaultValidUntilField(),
   };
-}
+};

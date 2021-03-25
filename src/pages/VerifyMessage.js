@@ -3,8 +3,9 @@ import { useState } from "react";
 import Hoc from "../components/General/Hoc";
 import VerifyForm from "../components/Forms/VerifyMessageForm";
 import { verifyMessage } from "@o1labs/client-sdk";
+import { toast } from "react-toastify";
 
-export default function VerifyMessage(props) {
+export default function VerifyMessage() {
   const [address, setAddress] = useState("");
   const [message, setMessage] = useState("");
   const [field, setField] = useState("");
@@ -33,13 +34,13 @@ export default function VerifyMessage(props) {
           },
         };
         if (verifyMessage(signedMessage)) {
-          props.showGlobalAlert("Message is valid", "success-toast");
+          toast.success("Message is valid");
         } else {
-          props.showGlobalAlert("Message is not valid", "error-toast");
+          toast.error("Message is not valid");
         }
       }
     } catch (e) {
-      props.showGlobalAlert("Message is not valid", "error-toast");
+      toast.error("Message is not valid");
     }
   }
 

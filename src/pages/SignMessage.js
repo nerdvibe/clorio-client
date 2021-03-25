@@ -3,20 +3,25 @@ import Hoc from "../components/General/Hoc";
 import SignMessageForm from "../components/Forms/SignMessageForm";
 import { getAddress } from "../tools";
 import { signMessage } from "@o1labs/client-sdk";
+import imageToRender from "../assets/NotAvailableForLedger.svg";
+import { toast } from "react-toastify";
+import { LedgerContext } from "../context/LedgerContext";
+import { useContext } from "react";
 
-export default function SignMessage(props) {
+export default function SignMessage() {
   const [message, setMessage] = useState("");
   const [privateKey, setPrivateKey] = useState("");
   const [publicKey, setPublicKey] = useState("");
   const [showResult, setShowResult] = useState(false);
   const [result, setResult] = useState({
-    payload:"",
-    signature:{
-      scalar:"",
-      field:""
+    payload: "",
+    signature: {
+      scalar: "",
+      field: "",
     },
-    publicKey:""
+    publicKey: "",
   });
+  const { isLedgerEnabled } = useContext(LedgerContext);
 
   getAddress((data) => {
     setPublicKey(data);
@@ -46,7 +51,7 @@ export default function SignMessage(props) {
         setShowResult(true);
       }
     } catch (e) {
-      props.showGlobalAlert("Please check private key", "error-toast");
+      toast.error("Please check private key");
     }
   }
 
@@ -56,15 +61,31 @@ export default function SignMessage(props) {
   function resetForm() {
     setPrivateKey("");
     setResult({
-      payload:"",
-      signature:{
-        scalar:"",
-        field:""
+      payload: "",
+      signature: {
+        scalar: "",
+        field: "",
       },
-      publicKey:""
+      publicKey: "",
     });
     setMessage("");
     setShowResult(false);
+  }
+  if (isLedgerEnabled) {
+    return (
+      <Hoc>
+        <div className="animate__animated animate__fadeIn">
+          <div className="mx-auto">
+            <div className="block-container">
+              <img
+                src={imageToRender}
+                className="animate__animated animate__fadeIn"
+              />
+            </div>
+          </div>
+        </div>
+      </Hoc>
+    );
   }
 
   return (

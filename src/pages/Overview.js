@@ -1,5 +1,5 @@
 import React from "react";
-import {Banner} from "../components/General/Banner";
+import { Banner } from "../components/General/Banner";
 import TransactionsTable from "../components/Transactions/TransactionsTable";
 import Hoc from "../components/General/Hoc";
 import { useQuery } from "@apollo/client";
@@ -9,13 +9,14 @@ import { useContext } from "react";
 import { BalanceContext } from "../context/BalanceContext";
 import { ITEMS_PER_PAGE } from "../tools/const";
 import { getPageFromOffset } from "../tools/utils";
-import { GET_MEMPOOL, GET_TRANSACTIONS,GET_HOME_NEWS } from "../graphql/query";
+import { GET_MEMPOOL, GET_TRANSACTIONS, GET_HOME_NEWS } from "../graphql/query";
 
 export default function Overview(props) {
   const { balance } = useContext(BalanceContext);
   const [offset, setOffset] = useState(0);
   const news = useQuery(GET_HOME_NEWS);
-  const latestNews = news.data?.news_home.length>0 ? news.data?.news_home[0] : {};
+  const latestNews =
+    news.data?.news_home.length > 0 ? news.data?.news_home[0] : {};
   let queryResult;
   let mempool;
   if (props.sessionData) {
@@ -44,9 +45,7 @@ export default function Overview(props) {
   return (
     <Hoc className="main-container">
       <Spinner show={queryResult.loading}>
-        <Banner
-          newsData={latestNews}
-          />
+        <Banner newsData={latestNews} />
         <TransactionsTable
           {...queryResult}
           mempool={mempool}
