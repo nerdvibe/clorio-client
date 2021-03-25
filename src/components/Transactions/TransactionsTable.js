@@ -82,7 +82,7 @@ export default function TransactionsTable(props) {
    * @returns HTMLElement
    */
   function renderTransactionRow(row, index) {
-    const { timestamp, state_hash } = row.blocks_user_commands[0].block;
+    const { timestamp } = row.blocks_user_commands[0].block;
     const amount = row.amount ? toMINA(row.amount) : 0;
     const sender = row.publicKeyBySourceId.value;
     const receiver = row.publicKeyByReceiverId.value;
@@ -101,7 +101,7 @@ export default function TransactionsTable(props) {
         <td className="table-element table-icon"> {renderTransactionOrDelegationIcon(type,sender,receiver)} </td>
         <td className="table-element table-hash" data-tip={memo ? `Memo: ${memo}` : null}>
           <a
-            href={`https://devnet.minaexplorer.com/block/${state_hash}`}
+            href={`https://devnet.minaexplorer.com/transaction/${row.hash}`}
             target="_blank"
             rel="noreferrer"
           >
@@ -138,7 +138,7 @@ export default function TransactionsTable(props) {
         <td className="table-element"> {renderTransactionOrDelegationIcon(row.amount,sender,receiver)} </td>
         <td className="table-element table-hash" data-tip={memo ? `Memo: ${memo}` : null}>
           <a
-            href={`https://devnet.minaexplorer.com/transaction/${row.id}`}
+            href={`https://devnet.minaexplorer.com/payment/${row.id}`}
             target="_blank"
             rel="noreferrer"
           >
