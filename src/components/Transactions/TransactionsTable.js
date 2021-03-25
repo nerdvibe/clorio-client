@@ -135,7 +135,7 @@ export default function TransactionsTable(props) {
 
     return (
       <tr key={index}>
-        <td className="table-element"> {renderTransactionOrDelegationIcon(row.amount,sender,receiver)} </td>
+        <td className="table-element table-icon"> {renderTransactionOrDelegationIcon(row.amount,sender,receiver)} </td>
         <td className="table-element table-hash" data-tip={memo ? `Memo: ${memo}` : null}>
           <a
             href={`https://devnet.minaexplorer.com/payment/${row.id}`}
