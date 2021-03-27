@@ -24,6 +24,7 @@ import { useContext } from "react";
 import { BalanceContext } from "../context/BalanceContext";
 import Big from "big.js";
 
+const DEFAULT_INTERVAL = 30 * 1000;
 const ITEMS_PER_PAGE = 100;
 
 const VALIDATORS = gql`
@@ -114,6 +115,7 @@ export default (props) => {
   const nonceAndDelegate = useQuery(GET_NONCE_AND_DELEGATE, {
     variables: { publicKey: props.sessionData.address },
     fetchPolicy: "network-only",
+    pollInterval: DEFAULT_INTERVAL,
   });
   const history = useHistory();
   const [ledgerTransactionData, setLedgerTransactionData] = useState(undefined);
