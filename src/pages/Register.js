@@ -230,8 +230,8 @@ export default function Register(props) {
   }
 
   return (
-    <Hoc className="main-container ">
-      <div className="block-container no-bg real-full-page-container center">
+    <Hoc className="main-container register">
+      <div className="block-container no-bg real-full-page-container center ">
         {validation ? renderValidationStep() : renderRegisterStep()}
         <Footer network={props.network} />
       </div>

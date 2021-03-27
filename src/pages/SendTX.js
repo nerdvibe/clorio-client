@@ -12,14 +12,17 @@ import { useHistory } from "react-router-dom";
 import {
   createAndSignLedgerTransaction,
   createLedgerPaymentInputFromPayload,
+  emojiToUnicode,
+  escapeUnicode,
+  isMinaAppOpen,
+  signTransaction,
 } from "../tools/ledger";
 import {
   createPaymentInputFromPayload,
   createSignatureInputFromSignature,
-  signTransaction,
 } from "../tools/transactions";
 import { toNanoMINA } from "../tools/utils";
-import { Big } from "big.js";
+import {Big} from "big.js";
 import CustomNonce from "../components/Modals/CustomNonce";
 import { BalanceContext } from "../context/BalanceContext";
 import Spinner from "../components/General/Spinner";
@@ -292,12 +295,18 @@ export default function SendTX(props) {
    */
   const sendLedgerTransaction = async () => {
     try {
+      await isMinaAppOpen();
       const senderAccount = props.sessionData?.ledgerAccount || 0;
       const actualNonce = getNonce();
       setTransactionData({
         ...transactionData,
         nonce: actualNonce.toString(),
       });
+      // For now mina-ledger-js doesn't support emojis
+      const memo = escapeUnicode(emojiToUnicode(transactionData.memo));
+      if(memo.length > 32) {
+        throw new Error('Memo field too long')
+      }
       const signature = await createAndSignLedgerTransaction(
         senderAccount,
         senderAddress,
@@ -307,9 +316,7 @@ export default function SendTX(props) {
       setShowModal(ModalStates.BROADCASTING);
       setLedgerTransactionData(signature.signature);
     } catch (e) {
-      toast.error(
-        e.message || "An error occurred while loading hardware wallet"
-      );
+      toast.error(e.message || "An error occurred while loading hardware wallet");
       stepBackwards();
     }
   };

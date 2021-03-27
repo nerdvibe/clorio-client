@@ -746,6 +746,27 @@ input[type=number] {
     }
 }
 
+@media screen and (max-height: 759px){
+    .v-spacer{
+        height: 3px;
+    }
+}
+
+@media screen and (max-height: 649px){
+    .modal-container{
+        top: 15%;
+    }
+    
+    .big-logo{
+        width: 200px;
+    }
+    .register{
+        .center{
+            align-items: unset;
+        }
+    }
+}
+
 @media (min-width: 1200px) {
 
     .big-modal-container{

@@ -69,10 +69,13 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
+.env.mainnet
+.env.devnet
+.env.development
 .env.test
 
 dist
 .idea/
 
 build
+.DS_Store
