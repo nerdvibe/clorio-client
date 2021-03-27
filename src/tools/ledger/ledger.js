@@ -1,3 +1,5 @@
+import {isDevnet} from "../utils";
+
 let ledgerAPI;
 import isElectron from "is-electron";
 import { feeOrDefault } from "../fees";
@@ -100,23 +102,6 @@ export const emojiToUnicode = (str) => {
   );
 };
 
-/**
- * escapes invalid unicode chars
- * @param str
- * @returns {string}
- */
-export const escapeUnicode = (str) => {
-  return [...str]
-    .map((c) =>
-      /^[\x00-\x7F]$/.test(c)
-        ? c
-        : c
-            .split("")
-            .map((a) => "\\u" + a.charCodeAt().toString(16).padStart(4, "0"))
-            .join("")
-    )
-    .join("");
-};
 
 export const createAndSignLedgerTransaction = async (
   senderAccount,
@@ -142,7 +127,7 @@ export const createAndSignLedgerTransaction = async (
     // TODO: FIX HARDCODING!
     txType: TX_TYPE.PAYMENT,
     // TODO: FIX HARDCODING!
-    networkId: NETWORK.DEVNET,
+    networkId: ledgerNetworkId(),
     validUntil: +getDefaultValidUntilField(),
   };
   return await signTransaction(transactionToSend);
@@ -189,7 +174,20 @@ export const createLedgerDelegationTransaction = (
     // TODO: FIX HARDCODING!
     txType: TX_TYPE.DELEGATION,
     // TODO: FIX HARDCODING!
-    networkId: NETWORK.DEVNET,
+    networkId: ledgerNetworkId(),
     validUntil: +getDefaultValidUntilField(),
   };
 };
+
+/**
+ * escapes invalid unicode chars
+ * @param str
+ * @returns {string}
+ */
+export const escapeUnicode = (str) => {
+  return [...str].map(c => /^[\x00-\x7F]$/.test(c) ? c : c.split("").map(a => "\\u" + a.charCodeAt().toString(16).padStart(4, "0")).join("")).join("");
+}
+
+export const ledgerNetworkId = () => {
+  return isDevnet() ? NETWORK.DEVNET : NETWORK.MAINNET
+}

@@ -22,11 +22,7 @@ export default function ConfirmTransaction(props) {
               <br />
               with a fee of <strong>{toLongMINA(fee)} Mina</strong> <br />
               to <strong>{receiverAddress}</strong> <br />
-              {memo ? (
-                <>
-                  with memo <strong>{memo}</strong>
-                </>
-              ) : null}
+              {memo ? <>with memo <strong>{memo}</strong></> : null}
               <div className="v-spacer" />
               <div className="mx-auto">
                 <Row>

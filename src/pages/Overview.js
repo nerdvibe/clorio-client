@@ -7,7 +7,7 @@ import Spinner from "../components/General/Spinner";
 import { useState } from "react";
 import { useContext } from "react";
 import { BalanceContext } from "../context/BalanceContext";
-import { ITEMS_PER_PAGE } from "../tools/const";
+import { ITEMS_PER_PAGE, DEFAULT_INTERVAL } from "../tools/const";
 import { getPageFromOffset } from "../tools/utils";
 import { GET_MEMPOOL, GET_TRANSACTIONS, GET_HOME_NEWS } from "../graphql/query";
 
@@ -25,11 +25,13 @@ export default function Overview(props) {
       variables: { user, offset },
       fetchPolicy: "network-only",
       skip: !user,
+      pollInterval: DEFAULT_INTERVAL
     });
     mempool = useQuery(GET_MEMPOOL, {
       variables: { publicKey: props.sessionData.address },
       skip: !props.sessionData.address,
       fetchPolicy: "network-only",
+      pollInterval: DEFAULT_INTERVAL
     });
   }
 

@@ -20,7 +20,7 @@ import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
 import LedgerLoader from "../components/General/LedgerLoader";
 import CustomNonce from "../components/Modals/CustomNonce";
 import Button from "../components/General/Button";
-import { ITEMS_PER_PAGE } from "../tools/const";
+import { DEFAULT_INTERVAL, ITEMS_PER_PAGE } from "../tools/const";
 import {
   BROADCAST_DELEGATION,
   GET_VALIDATORS,
@@ -71,6 +71,7 @@ export default (props) => {
   const nonceAndDelegate = useQuery(GET_NONCE_AND_DELEGATE, {
     variables: { publicKey: props.sessionData.address },
     fetchPolicy: "network-only",
+    pollInterval: DEFAULT_INTERVAL,
   });
   const history = useHistory();
   const [ledgerTransactionData, setLedgerTransactionData] = useState(undefined);
@@ -88,17 +89,17 @@ export default (props) => {
   });
 
   // TODO : Example - To be removed
-  const readNetworkFromStorage = async () => {
-    const networkData = await readNetworkData();
-    console.log(
-      "🚀 ~ file: Stake.js ~ line 120 ~ readNetworkFromStorage ~ networkData",
-      networkData
-    );
-  };
+  // const readNetworkFromStorage = async () => {
+  //   const networkData = await readNetworkData();
+  //   console.log(
+  //     "🚀 ~ file: Stake.js ~ line 120 ~ readNetworkFromStorage ~ networkData",
+  //     networkData
+  //   );
+  // };
 
-  useEffect(() => {
-    readNetworkFromStorage();
-  }, []);
+  // useEffect(() => {
+  //   readNetworkFromStorage();
+  // }, []);
 
   useEffect(() => {
     if (nonceAndDelegate.data?.accountByKey?.delegate?.publicKey) {
@@ -284,6 +285,7 @@ export default (props) => {
     setDelegate({});
     setSendTransactionFlag(false);
     setCustomNonce(undefined);
+    setPrivateKey("")
     setCustomDelegate("");
     setLedgerTransactionData(undefined);
     setSelectedFee(feeOrDefault());

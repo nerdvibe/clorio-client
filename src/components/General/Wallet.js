@@ -10,19 +10,21 @@ import ReactTooltip from "react-tooltip";
 import { BalanceContext } from "../../context/BalanceContext";
 import { useContext } from "react";
 import { GET_TICKER, GET_BALANCE } from "../../graphql/query";
+import { DEFAULT_INTERVAL } from "../../tools/const";
 
 export default function Wallet(props) {
   const [address, setaddress] = useState(undefined);
   const [userBalance, setUserBalance] = useState(0);
-  const {
-    setBalanceContext,
-    shouldBalanceUpdate,
-    setShouldBalanceUpdate,
-  } = useContext(BalanceContext);
+  const { setBalanceContext,shouldBalanceUpdate,setShouldBalanceUpdate } = useContext(BalanceContext);
   const ticker = useQuery(GET_TICKER);
   const balance = useQuery(GET_BALANCE, {
-    variables: { publicKey: address },
-    skip: !address || address === "",
+    variables: { 
+      publicKey: address,
+      notifyOnNetworkStatusChange: true 
+    },
+    fetchPolicy: "network-only",
+    skip: !address || address==="",
+    pollInterval: DEFAULT_INTERVAL,
     onCompleted: (data) => {
       if (setBalanceContext) {
         setBalanceContext(data?.accountByKey?.balance || {});
@@ -84,6 +86,7 @@ export default function Wallet(props) {
 
   return (
     <div className="block-container">
+      <ReactTooltip multiline={true}/>
       <div className="align-left big-screen">
         <div className="inline-block-element walletImageContainer">
           <div className="walletImageOutline">
@@ -108,20 +111,7 @@ export default function Wallet(props) {
             <Col>
               <div className="inline-block-element">
                 <h6 className="secondaryText">Your balance</h6>
-                <h5
-                  data-tip={
-                    +props.balance?.locked
-                      ? `Locked: ${toMINA(
-                          props.balance.locked
-                        )} Mina <br/> Liquid: ${toMINA(
-                          props.balance.liquid
-                        )} Mina`
-                      : ``
-                  }
-                >
-                  {renderBalance()}
-                </h5>
-                <ReactTooltip multiline={true} />
+                <h5  data-tip={`Locked: ${balance.data?.accountByKey?.balance?.locked ? toMINA(balance.data.accountByKey.balance.locked ) : 0 } Mina <br/> Liquid: ${balance.data?.accountByKey?.balance?.liquid ? toMINA(balance.data.accountByKey.balance.liquid) : 0} Mina`}>{renderBalance()}</h5>
               </div>
               <div className="inline-block-element">
                 <div className="v-div" />
@@ -164,10 +154,8 @@ export default function Wallet(props) {
               className="full-width-align-center small-screen-wallet-value"
             >
               <div className="inline-block-element full-width-align-center">
-                <h6 className="secondaryText full-width-align-center">
-                  Your balance
-                </h6>
-                <h5 className="full-width-align-center">{renderBalance()}</h5>
+                <h6 className="secondaryText full-width-align-center">Your balance</h6>
+                <h5 className="full-width-align-center" data-tip={`Locked: ${balance.data?.accountByKey?.balance?.locked ? toMINA(balance.data.accountByKey.balance.locked ) : 0 } Mina <br/> Liquid: ${balance.data?.accountByKey?.balance?.liquid ? toMINA(balance.data.accountByKey.balance.liquid) : 0} Mina`}>{renderBalance()}</h5>
               </div>
             </Col>
             <Col md={2} className="full-width-align-center">
