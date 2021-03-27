@@ -10,6 +10,8 @@ import ReactTooltip from "react-tooltip";
 import {BalanceContext} from "../../context/BalanceContext";
 import { useContext } from "react";
 
+const DEFAULT_INTERVAL = 30 * 1000;
+
 const TICKER = gql`
   query ticker {
     ticker {
@@ -38,8 +40,13 @@ export default function Wallet(props) {
   const { setBalanceContext,shouldBalanceUpdate,setShouldBalanceUpdate } = useContext(BalanceContext);
   const ticker = useQuery(TICKER);
   const balance = useQuery(BALANCE, {
-    variables: { publicKey: address },
+    variables: { 
+      publicKey: address,
+      notifyOnNetworkStatusChange: true 
+    },
+    fetchPolicy: "network-only",
     skip: !address || address==="",
+    pollInterval: DEFAULT_INTERVAL,
     onCompleted: (data) => {
       if(setBalanceContext) {
         setBalanceContext(data?.accountByKey?.balance || {})
