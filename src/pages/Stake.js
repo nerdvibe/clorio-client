@@ -12,7 +12,7 @@ import { useHistory} from "react-router-dom";
 import ConfirmDelegation from "../components/Modals/ConfirmDelegation";
 import CustomDelegation from "../components/Modals/CustomDelegation";
 import {DelegationFee} from "../components/Modals/DelegationFee";
-import {isMinaAppOpen, NETWORK, signTransaction, TX_TYPE} from "../tools/ledger/ledger";
+import {isMinaAppOpen, ledgerNetworkId, signTransaction, TX_TYPE} from "../tools/ledger/ledger";
 import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
 import LedgerLoader from "../components/General/LedgerLoader";
 import CustomNonce from "../components/Modals/CustomNonce";
@@ -132,14 +132,14 @@ export default (props) => {
 
 
   // TODO : Example - To be removed 
-  const readNetworkFromStorage = async () =>{
-    const networkData = await readNetworkData()
-    console.log("🚀 ~ file: Stake.js ~ line 120 ~ readNetworkFromStorage ~ networkData", networkData)
-  }
+  // const readNetworkFromStorage = async () =>{
+  //   const networkData = await readNetworkData()
+  //   console.log("🚀 ~ file: Stake.js ~ line 120 ~ readNetworkFromStorage ~ networkData", networkData)
+  // }
 
-  useEffect(() => {
-    readNetworkFromStorage()
-  }, [])
+  // useEffect(() => {
+  //   readNetworkFromStorage()
+  // }, [])
     
 
   useEffect(() => {
@@ -386,10 +386,8 @@ export default (props) => {
         fee: +selectedFee,
         amount: 0,
         nonce: actualNonce,
-        // TODO: FIX HARDCODING!
         txType: TX_TYPE.DELEGATION,
-        // TODO: FIX HARDCODING!
-        networkId: NETWORK.DEVNET,
+        networkId:  ledgerNetworkId(),
         validUntil: +getDefaultValidUntilField(),
       };
 
