@@ -150,8 +150,12 @@ export default (props) => {
       nonceAndDelegate.data.accountByKey &&
       nonceAndDelegate.data.accountByKey.delegate
     ) {
-      setCurrentDelegate(nonceAndDelegate.data.accountByKey.delegate.publicKey);
-      setCurrentDelegateName(nonceAndDelegate.data.accountByKey.delegate.name);
+      if(nonceAndDelegate.data.accountByKey.delegate.publicKey === address){
+        setCurrentDelegate("Yourself");
+      }else{
+        setCurrentDelegate(nonceAndDelegate.data.accountByKey.delegate.publicKey);
+        setCurrentDelegateName(nonceAndDelegate.data.accountByKey.delegate.name);
+      }
     }
   }, [nonceAndDelegate.data]);
 
