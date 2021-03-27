@@ -9,6 +9,7 @@ import { useContext } from "react";
 import { BalanceContext } from "../context/BalanceContext";
 
 const ITEMS_PER_PAGE = 10;
+const DEFAULT_INTERVAL = 30 * 1000;
 
 const TRANSACTIONS = gql`
   query GetTransactions($user: Int!, $offset: Int!) {
@@ -88,11 +89,13 @@ export default function Overview(props) {
       variables: { user, offset },
       fetchPolicy: "network-only",
       skip: !user,
+      pollInterval: DEFAULT_INTERVAL
     });
     mempool = useQuery(GET_MEMPOOL, {
       variables: { publicKey: props.sessionData.address },
       skip: !props.sessionData.address,
       fetchPolicy: "network-only",
+      pollInterval: DEFAULT_INTERVAL
     });
   }
   const news = useQuery(NEWS);
