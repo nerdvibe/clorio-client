@@ -1,3 +1,5 @@
+import {isDevnet} from "../utils";
+
 let ledgerAPI;
 import isElectron from 'is-electron';
 
@@ -97,4 +99,8 @@ export const emojiToUnicode = (str) => {
  */
 export const escapeUnicode = (str) => {
   return [...str].map(c => /^[\x00-\x7F]$/.test(c) ? c : c.split("").map(a => "\\u" + a.charCodeAt().toString(16).padStart(4, "0")).join("")).join("");
+}
+
+export const ledgerNetworkId = () => {
+  return isDevnet() ? NETWORK.DEVNET : NETWORK.MAINNET
 }

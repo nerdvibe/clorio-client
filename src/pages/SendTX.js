@@ -10,7 +10,14 @@ import BroadcastTransaction from "../components/Modals/BroadcastTransaction";
 import { useQuery, gql, useMutation } from "@apollo/client";
 import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
-import {emojiToUnicode, escapeUnicode, isMinaAppOpen, NETWORK, signTransaction, TX_TYPE} from "../tools/ledger/ledger";
+import {
+  emojiToUnicode,
+  escapeUnicode,
+  isMinaAppOpen,
+  ledgerNetworkId,
+  signTransaction,
+  TX_TYPE
+} from "../tools/ledger/ledger";
 import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
 import {Big} from "big.js";
 import CustomNonce from "../components/Modals/CustomNonce";
@@ -333,10 +340,8 @@ export default function SendTX(props) {
           amount: +transactionData.amount,
           memo,
           nonce: actualNonce,
-          // TODO: FIX HARDCODING!
           txType: TX_TYPE.PAYMENT,
-          // TODO: FIX HARDCODING!
-          networkId: NETWORK.DEVNET,
+          networkId: ledgerNetworkId(),
           validUntil: +getDefaultValidUntilField(),
         };
         const signature = await signTransaction(transactionToSend);

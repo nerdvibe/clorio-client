@@ -107,12 +107,12 @@ export default function Login(props) {
                   Sign in with your passphrase
                 </h4>
                 <h6 className="full-width-align-center">
-                  Don&apos;t have an account?{" "}
+                  Don&apos;t have an wallet?{" "}
                   <Link to="/register">
                     <Button
                       className="link-button inline-element"
                       onClick={props.register}
-                      text="Sign-in"
+                      text="Create one"
                     />
                   </Link>
                 </h6>
@@ -134,7 +134,7 @@ export default function Login(props) {
                     <Button
                       className="lightGreenButton__fullMono mx-auto"
                       onClick={checkCredentials}
-                      text="Access a wallet"
+                      text="Access the wallet"
                       disabled={disableButton()}
                     />
                   </Col>

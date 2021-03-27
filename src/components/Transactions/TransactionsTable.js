@@ -101,7 +101,7 @@ export default function TransactionsTable(props) {
         <td className="table-element table-icon"> {renderTransactionOrDelegationIcon(type,sender,receiver)} </td>
         <td className="table-element table-hash" data-tip={memo ? `Memo: ${memo}` : null}>
           <a
-            href={`https://devnet.minaexplorer.com/block/${state_hash}`}
+            href={`${process.env.REACT_APP_EXPLORER_URL}/block/${state_hash}`}
             target="_blank"
             rel="noreferrer"
           >
@@ -138,7 +138,7 @@ export default function TransactionsTable(props) {
         <td className="table-element"> {renderTransactionOrDelegationIcon(row.amount,sender,receiver)} </td>
         <td className="table-element table-hash" data-tip={memo ? `Memo: ${memo}` : null}>
           <a
-            href={`https://devnet.minaexplorer.com/transaction/${row.id}`}
+            href={`${process.env.REACT_APP_EXPLORER_URL}/transaction/${row.id}`}
             target="_blank"
             rel="noreferrer"
           >
