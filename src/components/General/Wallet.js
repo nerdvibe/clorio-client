@@ -108,6 +108,7 @@ export default function Wallet(props) {
 
   return (
     <div className="block-container">
+      <ReactTooltip multiline={true}/>
       <div className="align-left big-screen">
         <div className="inline-block-element walletImageContainer">
           <div className="walletImageOutline">
@@ -132,8 +133,7 @@ export default function Wallet(props) {
             <Col>
               <div className="inline-block-element">
                 <h6 className="secondaryText">Your balance</h6>
-                <h5 data-tip={+props.balance?.locked ? `Locked: ${toMINA(props.balance.locked)} Mina <br/> Liquid: ${toMINA(props.balance.liquid)} Mina`:``}>{renderBalance()}</h5>
-                <ReactTooltip multiline={true} />
+                <h5  data-tip={`Locked: ${toMINA(props.balance?.locked || 0)} Mina <br/> Liquid: ${toMINA(props.balance?.liquid || 0)} Mina`}>{renderBalance()}</h5>
               </div>
               <div className="inline-block-element">
                 <div className="v-div" />
@@ -174,7 +174,7 @@ export default function Wallet(props) {
             <Col md={5} className="full-width-align-center small-screen-wallet-value">
               <div className="inline-block-element full-width-align-center">
                 <h6 className="secondaryText full-width-align-center">Your balance</h6>
-                <h5 className="full-width-align-center">{renderBalance()}</h5>
+                <h5 className="full-width-align-center" data-tip={`Locked: ${toMINA(props.balance?.locked || 0)} Mina <br/> Liquid: ${toMINA(props.balance?.liquid || 0)} Mina`}>{renderBalance()}</h5>
               </div>
             </Col>
             <Col md={2} className="full-width-align-center">
