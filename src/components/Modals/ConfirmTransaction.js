@@ -4,7 +4,7 @@ import { toLongMINA } from "../../tools/utils";
 import Button from "../General/Button";
 
 export default function ConfirmTransaction(props) {
-  const { amount, fee, address, memo } = props.transactionData;
+  const { amount, fee, receiverAddress, memo } = props.transactionData;
   const { stepBackward, sendTransaction } = props;
   return (
     <div className="mx-auto  ">
@@ -20,7 +20,7 @@ export default function ConfirmTransaction(props) {
             <Col md={8} className="offset-md-2">
               You are about to send <strong>{toLongMINA(amount)} Mina</strong> <br />
               with a fee of <strong>{toLongMINA(fee)} Mina</strong> <br />
-              to <strong>{address}</strong> <br />
+              to <strong>{receiverAddress}</strong> <br />
               {memo ? <>with memo <strong>{memo}</strong></> : null}
               <div className="v-spacer" />
               <div className="mx-auto">
