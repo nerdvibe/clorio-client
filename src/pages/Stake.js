@@ -353,7 +353,7 @@ export default (props) => {
   return (
     <Hoc className="main-container">
       <div className="animate__animated animate__fadeIn">
-        <Banner newsData={latestNews} />
+        <Banner {...latestNews} />
         <StakeTable
           toggleModal={openModal}
           validators={validatorsData}

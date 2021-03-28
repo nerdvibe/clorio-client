@@ -1,7 +1,15 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
-export default function Button(props) {
+interface IProps{
+  className?:string,
+  onClick?:()=>void,
+  text?:string,
+  icon?:HTMLElement,
+  disabled?:boolean,
+  link?:string
+}
+
+const Button = (props:IProps) => {
   const { className, onClick, text, icon, disabled, link } = props;
   const button = (
     <div className={className + " button"} onClick={onClick}>
@@ -18,3 +26,5 @@ export default function Button(props) {
   }
   return link ? <Link to={link}> {button} </Link> : button;
 }
+
+export default Button;

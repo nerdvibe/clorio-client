@@ -164,9 +164,9 @@ export const feeGreaterThanMinimum = (fee) => {
       return true;
     }
   }
-  return false
-}
+  return false;
+};
 
 export const isDevnet = () => {
-  return process.env.REACT_APP_NETWORK === 'devnet'
-}
+  return process.env.REACT_APP_NETWORK === "devnet";
+};

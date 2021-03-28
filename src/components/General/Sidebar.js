@@ -14,21 +14,21 @@ function Sidebar(props) {
     networkData = props.network.nodeInfo;
   }
 
-  function logout() {
+  const logout = () => {
     props.setLoader();
     clearSession();
     history.push("/overview");
-  }
+  };
 
-  function checkRoute(route) {
+  const checkRoute = (route) => {
     const location = useLocation();
     const currentRoute = location.pathname.toLowerCase();
     return currentRoute.includes(route)
       ? " sidebar-item-container-active"
       : " ";
-  }
+  };
 
-  function renderNetwork() {
+  const renderNetwork = () => {
     if (networkData) {
       return (
         <div>
@@ -37,7 +37,7 @@ function Sidebar(props) {
       );
     }
     return "Network unavailable";
-  }
+  };
 
   function renderStatusDot() {
     if (networkData) {

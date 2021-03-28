@@ -1,12 +1,20 @@
-import React from "react";
+import { INetworkData } from "../../models/network-data";
 
-export default function Footer(props) {
-  let networkData;
+interface INodeInfo{
+  nodeInfo:INetworkData
+}
+
+interface IProps {
+  network?:INodeInfo
+}
+
+const Footer = (props:IProps) => {
+  let networkData:INetworkData;
   if (props.network && props.network.nodeInfo) {
     networkData = props.network.nodeInfo;
   }
 
-  function renderNetwork() {
+  const renderNetwork = () => {
     if (networkData) {
       return (
         <div>
@@ -26,3 +34,5 @@ export default function Footer(props) {
     </p>
   );
 }
+
+export default Footer;

@@ -1,10 +1,10 @@
-import React from "react";
 import { Row, Col } from "react-bootstrap";
+import { INewsData } from "../../models/news-data";
 import { isEmptyObject } from "../../tools/utils";
 import Button from "./Button";
 
-export const Banner = (props) => {
-  const { title, subtitle, link, cta, cta_color } = props.newsData;
+export const Banner = (props:INewsData) => {
+  const { title, subtitle, link, cta, cta_color } = props;
   const buttonStyle = () => {
     switch (cta_color) {
       case "success":
@@ -16,7 +16,7 @@ export const Banner = (props) => {
     }
   };
 
-  return !isEmptyObject(props.newsData) ? (
+  return !isEmptyObject(props) ? (
     <div className="block-container">
       <Row>
         <Col md={8} lg={8} xl={9}>
@@ -26,7 +26,7 @@ export const Banner = (props) => {
         <Col className="align-end ml-auto " style={{ paddingTop: "20px" }}>
           {link ? (
             <a href={link} target="_blank" rel="noreferrer">
-              <Button
+              <Button 
                 className={`${buttonStyle} mx-auto`}
                 text={cta || "Learn more"}
               />

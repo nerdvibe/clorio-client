@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Hoc from "../General/Hoc";
-import Input from "../General/Input";
+import Input from "../General/input/Input";
 import { isMinaAppOpen } from "../../tools/ledger";
 import { Row, Col } from "react-bootstrap";
 import Logo from "../General/Logo";

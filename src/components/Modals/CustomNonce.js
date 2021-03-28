@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "../General/Button";
-import Input from "../General/Input";
+import Input from "../General/input/Input";
 
 export default function CustomNonce(props) {
   return (

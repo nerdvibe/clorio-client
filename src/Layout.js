@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Sidebar from "./components/General/Sidebar";
-import { Container, Row, Col } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import Routes from "./Routes";
 import { clearSession, readSession, storeNetworkData } from "./tools/auth";
 import Spinner from "./components/General/Spinner";
@@ -16,7 +16,7 @@ import { useContext } from "react";
 import { LedgerContext } from "./context/LedgerContext";
 import { TermsAndConditions } from "./components/Modals/TermsAndConditions";
 
-function Layout() {
+const Layout = () => {
   const [sessionData, setSessionData] = useState(undefined);
   const [showLoader, setShowLoader] = useState(false);
   const { setLedgerContext } = useContext(LedgerContext);
@@ -36,11 +36,11 @@ function Layout() {
   readSession((data) => {
     if (!sessionData) {
       setSessionData(data);
-      if (setLedgerContext) {
+      if(setLedgerContext){
         setLedgerContext({
-          ledger: data.ledger,
-          ledgerAccount: data.ledgerAccount,
-        });
+          ledger:data.ledger,
+          ledgerAccount: data.ledgerAccount
+        })
       }
     }
   }, goToHome);

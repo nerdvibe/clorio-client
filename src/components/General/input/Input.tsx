@@ -1,6 +1,6 @@
-import React from "react";
+import { IInputProps } from "./input-props";
 
-export default function Input(props) {
+const Input = (props:IInputProps) => {
   const { type, value, inputHandler, placeholder, small } = props;
   return (
     <div
@@ -25,3 +25,5 @@ export default function Input(props) {
     </div>
   );
 }
+
+export default Input;

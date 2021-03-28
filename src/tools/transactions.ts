@@ -1,6 +1,10 @@
+import { ISignature } from './../models/signature';
 import { signPayment } from "@o1labs/client-sdk";
+import { IKeypair } from "../models/keypair";
+import { ITransactionPayload } from '../models/transaction-payload';
 
-export function signTransaction(transactionData, keypair, sender, actualNonce) {
+// TODO : Fix props
+export const signTransaction = (transactionData:any, keypair:IKeypair, sender:string, actualNonce:number) => {
   const { fee, amount, receiverAddress, memo } = transactionData;
   const signedPayment = signPayment(
     {
@@ -16,14 +20,14 @@ export function signTransaction(transactionData, keypair, sender, actualNonce) {
   return signedPayment;
 }
 
-export function createSignatureInputFromSignature(signature) {
+export const createSignatureInputFromSignature = (signature:ISignature) => {
   return {
     scalar: signature.scalar,
     field: signature.field,
   };
 }
 
-export function createPaymentInputFromPayload(payload) {
+export const createPaymentInputFromPayload = (payload:ITransactionPayload) => {
   return {
     nonce: payload.nonce,
     memo: payload.memo,
@@ -34,7 +38,7 @@ export function createPaymentInputFromPayload(payload) {
   };
 }
 
-export function createDelegationPaymentInputFromPayload(payload) {
+export const createDelegationPaymentInputFromPayload = (payload:ITransactionPayload) => {
   return {
     nonce: payload.nonce,
     fee: payload.fee,

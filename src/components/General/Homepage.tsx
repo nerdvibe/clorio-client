@@ -1,10 +1,9 @@
-import React from "react";
 import { Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Button from "./Button";
 import Logo from "./Logo";
 
-export default function Homepage() {
+const Homepage = () => {
   return (
     <div className="block-container no-bg real-full-page-container center no-margin">
       <Row>
@@ -42,3 +41,5 @@ export default function Homepage() {
     </div>
   );
 }
+
+export default Homepage;

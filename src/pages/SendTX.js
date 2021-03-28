@@ -14,12 +14,12 @@ import {
   createLedgerPaymentInputFromPayload,
   emojiToUnicode,
   escapeUnicode,
-  isMinaAppOpen,
-  signTransaction,
+  isMinaAppOpen
 } from "../tools/ledger";
 import {
   createPaymentInputFromPayload,
   createSignatureInputFromSignature,
+  signTransaction,
 } from "../tools/transactions";
 import { toNanoMINA } from "../tools/utils";
 import {Big} from "big.js";
