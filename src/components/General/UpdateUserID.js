@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import React, { useState } from "react";
-import { getId, updateUser } from "../../tools";
+import { getId, updateUser } from "../../tools/auth";
 import { GET_ID } from "../../graphql/query";
 
 export default function UpdateUserID(props) {

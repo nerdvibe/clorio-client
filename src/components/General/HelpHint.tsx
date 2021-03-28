@@ -1,8 +1,12 @@
-import React from "react";
 import { HelpCircle } from "react-feather";
 import ReactTooltip from "react-tooltip";
 
-export default function HelpHint({ hint }) {
+interface IProps{
+  hint:string
+}
+
+export default function HelpHint(props:IProps ) {
+  const {hint} = props;
   return (
     <>
       <HelpCircle data-tip={hint} />

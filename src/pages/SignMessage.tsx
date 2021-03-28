@@ -1,17 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Hoc from "../components/General/Hoc";
-import SignMessageForm from "../components/Forms/SignMessageForm";
-import { getAddress } from "../tools";
-import { signMessage } from "@o1labs/client-sdk";
+import SignMessageForm from "../components/forms/sign-message/SignMessageForm";
+import { derivePublicKey, signMessage } from "@o1labs/client-sdk";
 import imageToRender from "../assets/NotAvailableForLedger.svg";
 import { toast } from "react-toastify";
 import { LedgerContext } from "../context/LedgerContext";
 import { useContext } from "react";
+import SignMessageResult from "../components/forms/sign-message/SignMessageResult";
+import { IMessageToSign } from "../models/message-to-sign";
 
 export default function SignMessage() {
-  const [message, setMessage] = useState("");
-  const [privateKey, setPrivateKey] = useState("");
-  const [publicKey, setPublicKey] = useState("");
   const [showResult, setShowResult] = useState(false);
   const [result, setResult] = useState({
     payload: "",
@@ -21,35 +19,23 @@ export default function SignMessage() {
     },
     publicKey: "",
   });
+  // TODO : Remove ts-ignore
+  // @ts-ignore
   const { isLedgerEnabled } = useContext(LedgerContext);
 
-  getAddress((data) => {
-    setPublicKey(data);
-  });
-
-  /**
-   * Check if message, private key and public key are not empty
-   * @returns boolean
-   */
-  function signButtonStateHandler() {
-    const checkCondition =
-      message === "" || privateKey === "" || publicKey === "";
-    return checkCondition;
-  }
 
   /**
    * If fields are not empty, sign message and set result to component state
    */
-  function submitHandler() {
+  const submitHandler = (messageToSign:IMessageToSign) => {
     try {
-      if (!signButtonStateHandler()) {
-        const keypair = {
-          publicKey,
-          privateKey,
-        };
-        setResult(signMessage(message, keypair));
-        setShowResult(true);
-      }
+      const publicKey = derivePublicKey(messageToSign.privateKey)
+      const keypair = {
+        publicKey,
+        privateKey: messageToSign.privateKey,
+      };
+      setResult(signMessage(messageToSign.message, keypair));
+      setShowResult(true);
     } catch (e) {
       toast.error("Please check private key");
     }
@@ -58,8 +44,7 @@ export default function SignMessage() {
   /**
    * Clear form data from state
    */
-  function resetForm() {
-    setPrivateKey("");
+  const resetForm = () => {
     setResult({
       payload: "",
       signature: {
@@ -68,9 +53,9 @@ export default function SignMessage() {
       },
       publicKey: "",
     });
-    setMessage("");
     setShowResult(false);
   }
+
   if (isLedgerEnabled) {
     return (
       <Hoc>
@@ -88,19 +73,24 @@ export default function SignMessage() {
     );
   }
 
+  if (showResult) {
+    return (
+      <Hoc>
+        <div className="animate__animated animate__fadeIn">
+          <SignMessageResult 
+            {...result}
+            reset={resetForm}
+            />
+        </div>
+      </Hoc>
+    )
+  }
+
   return (
     <Hoc>
       <div className="animate__animated animate__fadeIn">
         <SignMessageForm
-          message={message}
-          privateKey={privateKey}
-          setMessage={setMessage}
-          setPrivateKey={setPrivateKey}
-          disableButton={signButtonStateHandler}
           submitHandler={submitHandler}
-          result={result}
-          showResult={showResult}
-          reset={resetForm}
         />
       </div>
     </Hoc>

@@ -47,7 +47,7 @@ export default function Overview(props) {
   return (
     <Hoc className="main-container">
       <Spinner show={queryResult.loading}>
-        <Banner newsData={latestNews} />
+        <Banner {...latestNews} />
         <TransactionsTable
           {...queryResult}
           mempool={mempool}

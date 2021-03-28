@@ -8,7 +8,7 @@ import Logo from "../components/General/Logo";
 import Footer from "../components/General/Footer";
 import { useState, useEffect } from "react";
 import { storeSession } from "../tools";
-import Input from "../components/General/Input";
+import Input from "../components/General/input/Input";
 import { useQuery } from "@apollo/client";
 import { derivePublicKey } from "@o1labs/client-sdk";
 import { GET_ID } from "../graphql/query";

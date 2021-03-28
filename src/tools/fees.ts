@@ -5,7 +5,7 @@ const DEFAULT_FEE = "0.1";
  * @param fee
  * @returns {string}
  */
-export const feeOrDefault = (fee) => {
+export const feeOrDefault = (fee:number) => {
   if (!fee) {
     return DEFAULT_FEE;
   }

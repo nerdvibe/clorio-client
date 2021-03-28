@@ -1,10 +1,40 @@
-import React from "react";
+import { useState } from "react";
 import { Row, Col } from "react-bootstrap";
-import Button from "../General/Button";
-import HelpHint from "../General/HelpHint";
-import Input from "../General/Input";
+import Button from "../../General/Button";
+import HelpHint from "../../General/HelpHint";
+import Input from "../../General/input/Input";
+import { IMessageToVerify } from "../../../models/message-to-verify";
 
-export default function VerifyForm(props) {
+interface IProps{
+  verifyMessage:(messageToVerify:IMessageToVerify)=>void;
+}
+
+const VerifyForm = (props:IProps) => {
+  const {verifyMessage} = props;
+  const [message, setMessage] = useState("");
+  const [address, setAddress] = useState("");
+  const [field, setField] = useState("");
+  const [scalar, setScalar] = useState("");
+
+
+  /**
+   * If one between address,message,field or scalar is empty button is disabled
+   * @returns boolean
+   */
+  const disableButton = () => {
+    return address === "" || message === "" || field === "" || scalar === "";
+  }
+
+  const createDataObjectAndVerify = () => {
+    const messageToVerify = {
+      message,
+      address,
+      field,
+      scalar
+    }
+    verifyMessage(messageToVerify)
+  }
+
   return (
     <div className="mx-auto">
       <div className="block-container fit-content-container  ">
@@ -14,9 +44,7 @@ export default function VerifyForm(props) {
               <h2>
                 Verify message{" "}
                 <HelpHint
-                  hint={
-                    "Paste the signature message in the fields in order to verify the cryptographic authenticity."
-                  }
+                  hint="Paste the signature message in the fields in order to verify the cryptographic authenticity."
                 />
               </h2>
             </strong>
@@ -34,9 +62,9 @@ export default function VerifyForm(props) {
                   className="input1"
                   type="text"
                   name="message"
-                  value={props.message}
+                  value={message}
                   placeholder="Message "
-                  inputHandler={(e) => props.setMessage(e.currentTarget.value)}
+                  inputHandler={(e) => setMessage(e.currentTarget.value)}
                 />
                 <span className="shadow-input1"></span>
               </div>
@@ -51,9 +79,9 @@ export default function VerifyForm(props) {
                   className="input1"
                   type="text"
                   name="message"
-                  value={props.address}
+                  value={address}
                   placeholder="Public key "
-                  inputHandler={(e) => props.setAddress(e.currentTarget.value)}
+                  inputHandler={(e) => setAddress(e.currentTarget.value)}
                 />
                 <span className="shadow-input1"></span>
               </div>
@@ -68,9 +96,9 @@ export default function VerifyForm(props) {
                   className="input1"
                   type="text"
                   name="message"
-                  value={props.field}
+                  value={field}
                   placeholder="Field "
-                  inputHandler={(e) => props.setField(e.currentTarget.value)}
+                  inputHandler={(e) => setField(e.currentTarget.value)}
                 />
                 <span className="shadow-input1"></span>
               </div>
@@ -85,17 +113,17 @@ export default function VerifyForm(props) {
                   className="input1"
                   type="text"
                   name="message"
-                  value={props.scalar}
+                  value={scalar}
                   placeholder="Scalar "
-                  inputHandler={(e) => props.setScalar(e.currentTarget.value)}
+                  inputHandler={(e) => setScalar(e.currentTarget.value)}
                 />
                 <span className="shadow-input1"></span>
               </div>
               <div className="v-spacer" />
               <Button
                 className="lightGreenButton__fullMono mx-auto"
-                onClick={props.verifyMessage}
-                disabled={props.disableButton()}
+                onClick={createDataObjectAndVerify}
+                disabled={disableButton()}
                 text="Verify"
               />
             </Col>
@@ -105,3 +133,5 @@ export default function VerifyForm(props) {
     </div>
   );
 }
+
+export default VerifyForm;

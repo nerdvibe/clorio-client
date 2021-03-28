@@ -8,7 +8,7 @@ import Logo from "../components/General/Logo";
 import Footer from "../components/General/Footer";
 import { storeSession } from "../tools";
 import { copyToClipboard, downloadPaperWalletPDF } from "../tools/utils";
-import Input from "../components/General/Input";
+import Input from "../components/General/input/Input";
 import { genKeys } from "@o1labs/client-sdk";
 
 export default function Register(props) {

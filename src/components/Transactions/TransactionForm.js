@@ -3,7 +3,7 @@ import { Row, Col } from "react-bootstrap";
 import { MINIMUM_AMOUNT, MINIMUM_FEE } from "../../tools/const";
 import { toMINA, toNanoMINA } from "../../tools/utils";
 import Button from "../General/Button";
-import Input from "../General/Input";
+import Input from "../General/input/Input";
 import { toast } from 'react-toastify';
 
 

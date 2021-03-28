@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Row, Col } from "react-bootstrap";
 import Button from "../General/Button";
-import Input from "../General/Input";
+import Input from "../General/input/Input";
 
 export default function ConfirmDelegation(props) {
   const { closeModal, confirmCustomDelegate } = props;
