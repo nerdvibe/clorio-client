@@ -23,8 +23,8 @@ export const TermsAndConditions = () => {
           </h2>
           <hr/>
           <div class="terms">
-              <p>~Clorio lets you use the Mina Protocol currency. You are the custodian of your own private keys, this comes with the big responsibility that you have to safe-keep your keys. Never ever disclose your private key to anyone, prefer desktop wallets over web wallets, and follow the best security practices such as using a hardware wallet.</p>
-              <p>Only use ~Clorio if you accept that you alone are responsible for any loss incurred. This wallet is open source, you should audit the source code before using this software and you are invited to run your own infrastructure.</p>
+              <p>~Clorio lets you use the Mina Protocol currency. You are the custodian of your own private keys, this comes with the big responsibility that you have to safe-keep your keys. Never ever disclose your private key to anyone, and follow the best security practices such as using a hardware wallet.</p>
+              <p>Only use ~Clorio if you accept that you alone are responsible for any loss incurred. This wallet is open source, you should audit the source code before using this software and you are invited to run your own infrastructure. This is an early beta of ~Clorio, please report any issue on <a href="https://discord.gg/4GnkRqwsDK" target="_blank">WeStake.Club's discord</a>.</p>
             <p>By using ~Clorio Wallet you agree to the <a href="https://clor.io/terms-and-contions" target="_blank">terms and conditions</a> and you accept that <u>nobody can be held liable for any bug or security issue</u>.</p>
 
           </div>
