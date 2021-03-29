@@ -78,4 +78,6 @@ dist
 .idea/
 
 build
+build-devnet
+build-mainnet
 .DS_Store
