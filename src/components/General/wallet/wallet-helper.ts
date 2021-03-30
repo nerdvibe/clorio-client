@@ -1,4 +1,4 @@
-import { IBalanceData } from './../../../context/balance-type.d';
+import { IBalanceData } from '../../../context/balance-interfaces';
 import { toMINA } from "../../../tools";
 
 interface ITicker{
