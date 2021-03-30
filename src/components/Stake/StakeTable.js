@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Button from "../General/Button";
 import { Table } from "react-bootstrap";
 import Spinner from "../General/Spinner";
-import Pagination from "../General/Pagination";
+import Pagination from "../General/pagination/Pagination";
 import StakeTableRow from "./StakeTableRow";
 import ErrorImage from "../../assets/Error.svg";
 import { Row, Col } from "react-bootstrap";

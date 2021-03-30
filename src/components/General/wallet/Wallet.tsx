@@ -1,25 +1,21 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect,useContext } from "react";
 import { Row, Col } from "react-bootstrap";
-import Button from "./Button";
+import Button from "../Button";
 import { Copy } from "react-feather";
-import { getAddress } from "../../tools";
+import { getAddress } from "../../../tools";
 import { useQuery } from "@apollo/client";
-import Avatar from "../../tools/avatar";
-import { copyToClipboard, toMINA } from "../../tools/utils";
+import Avatar from "../../../tools/avatar";
+import { copyToClipboard, toMINA } from "../../../tools/utils";
 import ReactTooltip from "react-tooltip";
-import { BalanceContext } from "../../context/BalanceContext";
-import { useContext } from "react";
-import { GET_TICKER, GET_BALANCE } from "../../graphql/query";
-import { DEFAULT_INTERVAL } from "../../tools/const";
+import { BalanceContext } from "../../../context/BalanceContext";
+import { GET_TICKER, GET_BALANCE } from "../../../graphql/query";
+import { DEFAULT_INTERVAL } from "../../../tools/const";
+import { renderBalance,renderAverageValue } from "./wallet-helper";
 
-export default function Wallet() {
-  const [address, setaddress] = useState(undefined);
+const Wallet = () => {
+  const [address, setAddress] = useState<string|undefined>(undefined);
   const [userBalance, setUserBalance] = useState(0);
-  const {
-    setBalanceContext,
-    shouldBalanceUpdate,
-    setShouldBalanceUpdate,
-  } = useContext(BalanceContext);
+  const {setBalanceContext,shouldBalanceUpdate,setShouldBalanceUpdate}:any = useContext(BalanceContext);
   const ticker = useQuery(GET_TICKER);
   const balance = useQuery(GET_BALANCE, {
     variables: {
@@ -36,11 +32,15 @@ export default function Wallet() {
     },
   });
 
+  // Get sender public key
+  const getAndSetAddress = async () => {
+    const walletAddress = await getAddress();
+    setAddress(walletAddress.address);
+  }
+
   useEffect(() => {
     if (!address) {
-      getAddress((data) => {
-        setaddress(data);
-      });
+      getAndSetAddress()
     }
   }, [address]);
 
@@ -58,34 +58,6 @@ export default function Wallet() {
 
   if (address === undefined) {
     return <div />;
-  }
-
-  function renderBalance() {
-    if (balance.loading) {
-      return "Loading ";
-    }
-    if (balance.data) {
-      if (!userBalance) {
-        return "Not available";
-      } else {
-        return toMINA(userBalance) + " Mina";
-      }
-    }
-    return "Not available";
-  }
-
-  function renderAverageValue() {
-    if (ticker.loading) {
-      return "Loading ";
-    }
-    if (ticker.data?.ticker) {
-      if (ticker.data.ticker.BTCMINA === null) {
-        return "Not available";
-      } else {
-        return toMINA(userBalance * ticker.data.ticker.BTCMINA) + " BTC";
-      }
-    }
-    return "Not available";
   }
 
   return (
@@ -126,7 +98,7 @@ export default function Wallet() {
                       : 0
                   } Mina`}
                 >
-                  {renderBalance()}
+                  {renderBalance(balance.data,balance.loading,userBalance)}
                 </h5>
               </div>
               <div className="inline-block-element">
@@ -135,7 +107,7 @@ export default function Wallet() {
               <div className="inline-block-element">
                 <span>
                   <h6 className="secondaryText">BTC Apx. value</h6>
-                  <h5>{renderAverageValue()} </h5>
+                  <h5>{renderAverageValue(ticker.data,ticker.loading,userBalance)} </h5>
                 </span>
               </div>
             </Col>
@@ -185,7 +157,7 @@ export default function Wallet() {
                       : 0
                   } Mina`}
                 >
-                  {renderBalance()}
+                  {renderBalance(balance.data,balance.loading,userBalance)}
                 </h5>
               </div>
             </Col>
@@ -201,7 +173,7 @@ export default function Wallet() {
                     Apx value
                   </h6>
                   <h5 className="full-width-align-center">
-                    {renderAverageValue()}
+                    {renderAverageValue(ticker.data,ticker.loading,userBalance)}
                   </h5>
                 </span>
               </div>
@@ -212,3 +184,5 @@ export default function Wallet() {
     </div>
   );
 }
+
+export default Wallet;

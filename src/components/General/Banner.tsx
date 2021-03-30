@@ -5,6 +5,11 @@ import Button from "./Button";
 
 export const Banner = (props:INewsData) => {
   const { title, subtitle, link, cta, cta_color } = props;
+
+  /**
+   * Returns the style based on cta_color prop
+   * @returns string Classname
+   */
   const buttonStyle = () => {
     switch (cta_color) {
       case "success":

@@ -1,6 +1,4 @@
-import React from "react";
-
-export default function LedgerLoader() {
+const LedgerLoader = () => {
   return (
     <div>
       <div className="lds-ellipsis">
@@ -12,3 +10,5 @@ export default function LedgerLoader() {
     </div>
   );
 }
+
+export default LedgerLoader;

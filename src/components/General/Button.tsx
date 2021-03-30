@@ -4,7 +4,7 @@ interface IProps{
   className?:string,
   onClick?:()=>void,
   text?:string,
-  icon?:HTMLElement,
+  icon?:React.ReactNode,
   disabled?:boolean,
   link?:string
 }
