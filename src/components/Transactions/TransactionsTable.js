@@ -7,7 +7,7 @@ import TxHistoryNotAvailableImage from "../../assets/TxHistoryNotAvailable.svg";
 import NoTransactions from "../../assets/NoTransactions.svg";
 import { getTotalPages, toMINA } from "../../tools/utils";
 import { useQuery } from "@apollo/client";
-import Pagination from "../General/Pagination";
+import Pagination from "../General/pagination/Pagination";
 import { ChevronRight, ChevronsDown, ChevronsUp, Check } from "react-feather";
 import ReactTooltip from "react-tooltip";
 import { formatDistance } from "date-fns";

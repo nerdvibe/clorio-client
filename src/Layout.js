@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Sidebar from "./components/General/Sidebar";
+import Sidebar from "./components/General/sidebar/Sidebar";
 import { Col, Container, Row } from "react-bootstrap";
 import Routes from "./Routes";
 import { clearSession, readSession, storeNetworkData } from "./tools/auth";
@@ -9,7 +9,7 @@ import UpdateUserID from "./components/General/UpdateUserID";
 import { useQuery } from "@apollo/client";
 import { isEmptyObject } from "./tools/utils";
 import Alert from "./components/General/Alert";
-import Wallet from "./components/General/Wallet";
+import Wallet from "./components/General/wallet/Wallet";
 import { BalanceContextProvider } from "./context/BalanceContext";
 import { GET_NETWORK } from "./graphql/query";
 import { useContext } from "react";

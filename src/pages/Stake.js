@@ -4,7 +4,7 @@ import StakeTable from "../components/Stake/StakeTable";
 import Hoc from "../components/General/Hoc";
 import ModalContainer from "../components/Modals/ModalContainer";
 import { useQuery, useMutation } from "@apollo/client";
-import { getAddress, readNetworkData } from "../tools";
+import { getAddress } from "../tools";
 import { useEffect } from "react";
 import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
@@ -84,9 +84,17 @@ export default (props) => {
     },
   });
 
-  getAddress((address) => {
-    setAddress(address);
-  });
+  // Get sender public key
+  const getAndSetAddress = async () => {
+    const walletAddress = await getAddress();
+    setAddress(walletAddress.address);
+  }
+
+  useEffect(() => {
+    if(address===""){
+      getAndSetAddress()
+    }
+  })
 
   // TODO : Example - To be removed
   // const readNetworkFromStorage = async () => {

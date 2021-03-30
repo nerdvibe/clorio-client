@@ -1,51 +1,31 @@
-import React from "react";
 import { Nav } from "react-bootstrap";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { Cpu, LogIn, TrendingUp, Edit3, Check } from "react-feather";
-import Logo from "./Logo";
-import { useLocation } from "react-router-dom";
-import { clearSession } from "../../tools";
+import Logo from "../Logo";
+import { clearSession } from "../../../tools";
+import { checkRoute, renderNetwork } from "./sidebar-helper";
+import { INetworkData } from "../../../models/network-data";
 
-function Sidebar(props) {
+interface IProps{
+  network:INetworkData,
+  setLoader:()=>void
+}
+
+const Sidebar = (props:IProps) => {
+  const {network,setLoader} = props;
   const history = useHistory();
-  let networkData;
-  if (props.network && props.network.nodeInfo) {
-    networkData = props.network.nodeInfo;
-  }
+  const statusDot = network?.nodeInfo ? <span className="green-dot" /> : <span className="red-dot" />
 
+  /**
+   * Clear session data and go back to splashscreen
+   */
   const logout = () => {
-    props.setLoader();
+    setLoader();
     clearSession();
     history.push("/overview");
   };
 
-  const checkRoute = (route) => {
-    const location = useLocation();
-    const currentRoute = location.pathname.toLowerCase();
-    return currentRoute.includes(route)
-      ? " sidebar-item-container-active"
-      : " ";
-  };
-
-  const renderNetwork = () => {
-    if (networkData) {
-      return (
-        <div>
-          {networkData.name} | {networkData.network}
-        </div>
-      );
-    }
-    return "Network unavailable";
-  };
-
-  function renderStatusDot() {
-    if (networkData) {
-      return <span className="green-dot" />;
-    } else {
-      return <span className="red-dot" />;
-    }
-  }
 
   return (
     <div style={{ padding: "5px" }}>
@@ -115,7 +95,7 @@ function Sidebar(props) {
             </Link>
           </Nav.Item>
           <div className="sidebar-footer-network">
-            {renderNetwork()} {renderStatusDot()}
+            {renderNetwork(network?.nodeInfo)} {statusDot}
           </div>
         </div>
       </Nav>

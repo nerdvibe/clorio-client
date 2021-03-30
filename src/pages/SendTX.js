@@ -88,24 +88,11 @@ export default function SendTX(props) {
   );
   const history = useHistory();
 
-  // If broadcasted successfully return to initial page state
-  if (
-    showModal &&
-    broadcastResult &&
-    broadcastResult.data &&
-    sendTransactionFlag
-  ) {
-    clearState();
-    nonceQuery.refetch({ publicKey: senderAddress });
-    setShouldBalanceUpdate(true);
-    toast.success("Transaction successfully broadcasted");
-    history.replace("/send-tx");
-  }
-
   // Get sender public key
-  getAddress((publicKey) => {
-    setSenderAddress(publicKey);
-  });
+  const getAndSetAddress = async () => {
+    const walletAddress = await getAddress();
+    setSenderAddress(walletAddress.address);
+  }
 
   // Listen for ledger action
   useEffect(() => {
@@ -142,6 +129,21 @@ export default function SendTX(props) {
       toast.error("There was an error broadcasting delegation");
     }
   }, [ledgerTransactionData]);
+
+  /**
+   * if address is not stored inside component state, fetch it and save it
+   * If broadcasted successfully return to initial page state
+   */
+  useEffect(() => {
+    getAndSetAddress()
+    if ( showModal && broadcastResult?.data && sendTransactionFlag ) {
+      clearState();
+      nonceQuery.refetch({ publicKey: senderAddress });
+      setShouldBalanceUpdate(true);
+      toast.success("Transaction successfully broadcasted");
+      history.replace("/send-tx");
+    }
+  })
 
   /**
    * Clean component state on dismount

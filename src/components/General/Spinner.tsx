@@ -1,8 +1,13 @@
-import React from "react";
+interface IProps{
+  show:boolean,
+  className:string,
+  children: React.ReactNode
+}
 
-export default function Spinner(props) {
-  return props.show ? (
-    <div className={"spinner-container center " + props.className}>
+const Spinner = (props:IProps) => {
+  const {show,className,children} = props;
+  return show ? (
+    <div className={"spinner-container center " + className}>
       <div className="show">
         <div className="lds-roller">
           <div></div>
@@ -17,6 +22,8 @@ export default function Spinner(props) {
       </div>
     </div>
   ) : (
-    props.children
+    children
   );
 }
+
+export default Spinner;

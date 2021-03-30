@@ -5,7 +5,7 @@ interface IProps{
   hint:string
 }
 
-export default function HelpHint(props:IProps ) {
+const HelpHint = (props:IProps ) => {
   const {hint} = props;
   return (
     <>
@@ -14,3 +14,5 @@ export default function HelpHint(props:IProps ) {
     </>
   );
 }
+
+export default HelpHint

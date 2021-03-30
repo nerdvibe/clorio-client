@@ -1,7 +1,17 @@
-import React from "react";
+import CSS from 'csstype';
 
-const ProgressBar = (props) => {
+interface IProps{
+  text:string,
+  progress:number
+}
+
+const ProgressBar = (props:IProps) => {
   const { text, progress } = props;
+
+  /**
+   * Set progressbar color based on progress percentage
+   * @returns color
+   */
   const progressColor = () => {
     if (progress > 75) {
       return "#2A9D8F";
@@ -20,19 +30,19 @@ const ProgressBar = (props) => {
     margin: 50,
   };
 
-  const fillerStyles = {
+  const fillerStyles:CSS.Properties = {
     height: "100%",
     width: `${progress}%`,
     backgroundColor: progressColor(),
     borderRadius: "inherit",
     textAlign: "right",
-    padding: 10,
+    padding: '10px',
     transition: "1s",
     maxWidth: "100%",
   };
 
-  const labelStyles = {
-    padding: 5,
+  const labelStyles:CSS.Properties = {
+    padding: "5 px",
     color: "white",
     fontWeight: "bold",
   };

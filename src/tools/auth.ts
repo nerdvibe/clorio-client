@@ -1,5 +1,5 @@
 import { IWalletData } from '../models/wallet-data';
-import { INetworkData } from "../models/network-data";
+import { INodeInfo } from "../models/network-data";
 
 const Datastore = require("nedb-promises");
 const db = Datastore.create();
@@ -29,7 +29,7 @@ export const storeSession = async (
   return db.insert(wallet);
 };
 
-export const storeNetworkData = async (networkData:INetworkData) => {
+export const storeNetworkData = async (networkData:INodeInfo) => {
   const network = {
     type: "network",
     ...networkData,
@@ -71,32 +71,19 @@ export const clearSession = async () => {
   await db.remove({ type: "wallet" });
 };
 
-export const getAddress = async (callback:(address:string)=>void) => {
-  const result = await db.findOne({ type: "wallet" });
-  if (result) {
-    callback(result.address);
-  }
+export const getAddress = async () => {
+  return db.findOne({ type: "wallet" });
 };
 
-export const getId = async (callback:(data:IWalletData)=>void) => {
-  const result = await db.find({ type: "wallet" });
-  if (result?.length > 0) {
-    return callback(result[0].id);
-  }
-  return undefined;
-};
-
-export const updateUser = async (address:string, id:number, isLedgerEnabled:boolean, callback:(data?:IWalletData)=>void) => {
+export const updateUser = async (address:string, id:number) => {
+  const walletData = await getWalletData();
   await db.remove({ type: "wallet" });
   const wallet = {
     type: "wallet",
     address: address,
     id: id,
-    ledger: isLedgerEnabled,
+    ledger: walletData.isLedgerEnabled,
     coins: 0,
   };
   await db.insert(wallet);
-  if (callback) {
-    callback();
-  }
 };
