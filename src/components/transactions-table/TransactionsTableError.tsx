@@ -1,6 +1,6 @@
-import ErrorImage from "../../../assets/Error.png";
-import NoTransactionsOrNotAvailableImage from "../../../assets/NoTransactionsOrNotAvailable.svg";
-import TxHistoryNotAvailableImage from "../../../assets/TxHistoryNotAvailable.svg";
+import ErrorImage from "../../assets/Error.png";
+import NoTransactionsOrNotAvailableImage from "../../assets/NoTransactionsOrNotAvailable.svg";
+import TxHistoryNotAvailableImage from "../../assets/TxHistoryNotAvailable.svg";
 
 const TransactionsTableError = (balance:number) => {
   let imageToRender = ErrorImage;

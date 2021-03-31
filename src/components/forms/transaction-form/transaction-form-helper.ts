@@ -1,5 +1,5 @@
 import { MINIMUM_AMOUNT, MINIMUM_FEE, toMINA } from '../../../tools';
-import { ITransactionData } from './../../../models/transaction-data';
+import { ITransactionData } from '../../../models/transaction-data';
 import { toast } from 'react-toastify';
 
 export const checkFieldsAndProceed = (transactionData:ITransactionData,nextStep:()=>void) => {

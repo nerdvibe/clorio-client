@@ -1,12 +1,12 @@
 import { useState } from "react";
 import Button from "../../general/Button";
-import StakeTableRow from "../stakeTableRow/StakeTableRow";
+import StakeTableRow from "../stake-table-row/StakeTableRow";
 import { Row, Col, Table } from "react-bootstrap";
 import StakeStatus from "../StakeStatus";
 import { useQuery } from "@apollo/client";
 import { GET_VALIDATORS_TOTAL } from "../../../graphql/query";
 import ReactTooltip from "react-tooltip";
-import {IValidatorData} from "../stakeTableRow/validator-data";
+import {IValidatorData} from "../stake-table-row/validator-data";
 import StakeTableError from "./StakeTableError";
 import Spinner from "../../general/Spinner";
 

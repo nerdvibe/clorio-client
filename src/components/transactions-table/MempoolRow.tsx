@@ -1,5 +1,5 @@
-import { toMINA } from "../../../tools";
-import { decodeB58 } from "../../../tools/base58";
+import { toMINA } from "../../tools";
+import { decodeB58 } from "../../tools/base58";
 import TransactionOrDelegationIcon from "./TransactionDelegationIcon";
 import { IMempoolTransactionData } from "./transactions";
 
