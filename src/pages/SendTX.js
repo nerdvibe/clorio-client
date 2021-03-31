@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import TransactionForm from "../components/transactions/transactionForm/TransactionForm";
+import TransactionForm from "../components/forms/transaction-form/TransactionForm";
 import ConfirmTransaction from "../components/modals/ConfirmTransaction";
 import ConfirmLedgerTransaction from "../components/modals/ConfirmLedgerTransaction";
 import Hoc from "../components/general/Hoc";

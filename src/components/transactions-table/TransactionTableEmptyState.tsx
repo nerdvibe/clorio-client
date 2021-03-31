@@ -1,6 +1,6 @@
-import NoTransactionsOrNotAvailableImage from "../../../assets/NoTransactionsOrNotAvailable.svg";
-import TxHistoryNotAvailableImage from "../../../assets/TxHistoryNotAvailable.svg";
-import NoTransactions from "../../../assets/NoTransactions.svg";
+import NoTransactionsOrNotAvailableImage from "../../assets/NoTransactionsOrNotAvailable.svg";
+import TxHistoryNotAvailableImage from "../../assets/TxHistoryNotAvailable.svg";
+import NoTransactions from "../../assets/NoTransactions.svg";
 
 const TransactionTableEmptyState = (balance:number) => {
   let imageToRender = NoTransactions;

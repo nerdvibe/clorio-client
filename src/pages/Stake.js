@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Banner } from "../components/general/Banner";
-import StakeTable from "../components/stake/stakeTable/StakeTable";
+import StakeTable from "../components/stake/stake-table/StakeTable";
 import Hoc from "../components/general/Hoc";
 import ModalContainer from "../components/modals/ModalContainer";
 import { useQuery, useMutation } from "@apollo/client";

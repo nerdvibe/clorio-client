@@ -1,7 +1,7 @@
 import { formatDistance } from "date-fns";
 import { ITransactionData } from "./transactions";
-import { toMINA } from "../../../tools";
-import { decodeB58 } from "../../../tools/base58";
+import { toMINA } from "../../tools";
+import { decodeB58 } from "../../tools/base58";
 import TransactionOrDelegationIcon from "./TransactionDelegationIcon";
 
 const TransactionRow = (row:ITransactionData, index:number, userAddress:string) => {

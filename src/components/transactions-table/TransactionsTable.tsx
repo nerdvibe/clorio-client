@@ -1,10 +1,10 @@
 import { Table } from "react-bootstrap";
-import Spinner from "../../general/Spinner";
-import { getTotalPages } from "../../../tools/utils";
+import Spinner from "../general/Spinner";
+import { getTotalPages } from "../../tools/utils";
 import { useQuery } from "@apollo/client";
-import Pagination from "../../general/pagination/Pagination";
+import Pagination from "../general/pagination/Pagination";
 import ReactTooltip from "react-tooltip";
-import { GET_TRANSACTIONS_TOTAL } from "../../../graphql/query";
+import { GET_TRANSACTIONS_TOTAL } from "../../graphql/query";
 import { ITransactionTableProps } from "./transactions";
 import TransactionRow from "./TransactionRow";
 import MempoolRow from "./MempoolRow";
