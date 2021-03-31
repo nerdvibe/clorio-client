@@ -1,9 +1,16 @@
-import React from "react";
-import Button from "../general/Button";
-import StakeTableValue from "./StakeTableValue";
-import Avatar from "../../tools/avatar";
+import Button from "../../general/Button";
+import StakeTableValue from "../StakeTableValue";
+import Avatar from "../../../tools/avatar";
+import { IValidatorData } from "./validator-data";
 
-export default function StakeTableRow({ index, element, toggleModal }) {
+interface IProps{
+  index:number,
+  element:IValidatorData, 
+  toggleModal:(element:IValidatorData)=>void
+}
+
+const StakeTableRow = (props:IProps) => {
+  const {element,index,toggleModal} = props
   let supportTooltip = "";
   let boostedClassName = "";
   if (element.priority === 1) {
@@ -62,3 +69,5 @@ export default function StakeTableRow({ index, element, toggleModal }) {
     </tr>
   );
 }
+
+export default StakeTableRow;
