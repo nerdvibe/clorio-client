@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Row, Col } from "react-bootstrap";
-import Button from "../../General/Button";
-import HelpHint from "../../General/HelpHint";
-import Input from "../../General/input/Input";
+import Button from "../../general/Button";
+import HelpHint from "../../general/HelpHint";
+import Input from "../../general/input/Input";
 
 interface IProps{
   submitHandler:(data:any) => void;

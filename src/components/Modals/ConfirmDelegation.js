@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import Button from "../General/Button";
+import Button from "../general/Button";
 
 export default function ConfirmDelegation(props) {
   const { name, closeModal, confirmDelegate } = props;

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Button from "../General/Button";
+import Button from "../general/Button";
 import { Table } from "react-bootstrap";
-import Spinner from "../General/Spinner";
-import Pagination from "../General/pagination/Pagination";
+import Spinner from "../general/Spinner";
+import Pagination from "../general/pagination/Pagination";
 import StakeTableRow from "./StakeTableRow";
 import ErrorImage from "../../assets/Error.svg";
 import { Row, Col } from "react-bootstrap";

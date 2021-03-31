@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Banner } from "../components/General/Banner";
+import { Banner } from "../components/general/Banner";
 import StakeTable from "../components/Stake/StakeTable";
-import Hoc from "../components/General/Hoc";
+import Hoc from "../components/general/Hoc";
 import ModalContainer from "../components/Modals/ModalContainer";
 import { useQuery, useMutation } from "@apollo/client";
 import { getAddress } from "../tools";
@@ -17,9 +17,9 @@ import {
   signTransaction,
 } from "../tools/ledger/ledger";
 import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
-import LedgerLoader from "../components/General/LedgerLoader";
+import LedgerLoader from "../components/general/LedgerLoader";
 import CustomNonce from "../components/Modals/CustomNonce";
-import Button from "../components/General/Button";
+import Button from "../components/general/Button";
 import { DEFAULT_INTERVAL, ITEMS_PER_PAGE } from "../tools/const";
 import {
   BROADCAST_DELEGATION,

@@ -3,8 +3,8 @@ import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { feeOrDefault } from "../../tools/fees";
 import { toMINA, toNanoMINA, feeGreaterThanMinimum } from "../../tools/utils";
-import Button from "../General/Button";
-import Input from "../General/input/Input";
+import Button from "../general/Button";
+import Input from "../general/input/Input";
 
 const MINIMUM_FEE = toNanoMINA(0.001);
 

@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Row, Col } from "react-bootstrap";
 import { MINIMUM_AMOUNT, MINIMUM_FEE } from "../../tools/const";
 import { toMINA, toNanoMINA } from "../../tools/utils";
-import Button from "../General/Button";
-import Input from "../General/input/Input";
+import Button from "../general/Button";
+import Input from "../general/input/Input";
 import { toast } from 'react-toastify';
 
 

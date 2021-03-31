@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import Footer from "../components/General/Footer";
-import Hoc from "../components/General/Hoc";
-import Homepage from "../components/General/Homepage";
+import Footer from "../components/general/Footer";
+import Hoc from "../components/general/Hoc";
+import Homepage from "../components/general/Homepage";
 import { clearSession } from "../tools";
 
 export default function SplashScreen (props) {

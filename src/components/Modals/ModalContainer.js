@@ -1,5 +1,5 @@
 import React from "react";
-import Hoc from "../General/Hoc";
+import Hoc from "../general/Hoc";
 
 export default function ModalContainer(props) {
   const { close, children, show, className = "" } = props;
