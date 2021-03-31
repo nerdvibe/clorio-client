@@ -1,5 +1,5 @@
 import React from "react";
-import TransactionsTable from "../components/Transactions/TransactionsTable";
+import TransactionsTable from "../components/transactions/transactionsTable/TransactionsTable";
 import Hoc from "../components/general/Hoc";
 import { useQuery } from "@apollo/client";
 import Spinner from "../components/general/Spinner";

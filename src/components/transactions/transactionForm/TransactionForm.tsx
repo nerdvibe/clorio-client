@@ -1,114 +1,103 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Row, Col } from "react-bootstrap";
-import { MINIMUM_AMOUNT, MINIMUM_FEE } from "../../tools/const";
-import { toMINA, toNanoMINA } from "../../tools/utils";
-import Button from "../general/Button";
-import Input from "../general/input/Input";
+import { toMINA, toNanoMINA } from "../../../tools/utils";
+import Button from "../../general/Button";
+import Input from "../../general/input/Input";
 import { toast } from 'react-toastify';
+import { ITransactionData } from "../../../models/transaction-data";
+import { checkFieldsAndProceed } from "./transaction-form-helper";
 
+interface IProps{
+  transactionData:ITransactionData,
+  defaultFee:number,
+  fastFee:number,
+  setData:(transactionData:ITransactionData) => void,
+  nextStep:() => void,
+}
 
-export default function TransactionForm(props) {
-  const [amount, setAmount] = useState(toMINA(props.transactionData.amount));
-  const [fee, setFee] = useState(toMINA(props.transactionData.fee));
+const TransactionForm = (props:IProps) => {
+  const {transactionData,defaultFee,fastFee,setData,nextStep} = props;
+  const [amount, setAmount] = useState(toMINA(transactionData.amount));
+  const [fee, setFee] = useState(toMINA(transactionData.fee));
 
-  function setDefaultFee() {
-    const fee = props.defaultFee;
-    if (props.defaultFee) {
+  const setDefaultFee = () => {
+    const fee = defaultFee;
+    if (defaultFee) {
       setFee(fee);
-      props.setData({
-        ...props.transactionData,
-        fee: toNanoMINA(props.defaultFee),
+      setData({
+        ...transactionData,
+        fee: toNanoMINA(defaultFee),
       });
     } else {
       setFee(0.1);
-      props.setData({
-        ...props.transactionData,
+      setData({
+        ...transactionData,
         fee: toNanoMINA(0.1),
       });
     }
   }
-
-  function setFastFee() {
-    const fee = props.fastFee;
+  
+  const setFastFee = () => {
+    const fee = fastFee;
     if (fee) {
       setFee(fee);
-      props.setData({
-        ...props.transactionData,
+      setData({
+        ...transactionData,
         fee: toNanoMINA(fee),
       });
     } else {
       setFee(0.1);
-      props.setData({
-        ...props.transactionData,
+      setData({
+        ...transactionData,
         fee: toNanoMINA(0.1),
       });
     }
   }
-
-  function addressHandler(receiverAddress) {
-    props.setData({
-      ...props.transactionData,
+  
+  const addressHandler = (receiverAddress:string) => {
+    setData({
+      ...transactionData,
       receiverAddress,
     });
   }
-
-  function amountHandler(amount) {
+  
+  const amountHandler = (amount:string) => {
     setAmount(amount);
     if (amount) {
-      return props.setData({
-        ...props.transactionData,
+      return setData({
+        ...transactionData,
         amount: toNanoMINA(amount),
       });
     }
-    return props.setData({
-      ...props.transactionData,
+    return setData({
+      ...transactionData,
       amount: toNanoMINA(0),
     });
   }
-
-  function feeHandler(fee) {
+  
+  const feeHandler = (fee:string) => {
     setFee(fee);
     if (fee) {
-      return props.setData({
-        ...props.transactionData,
+      return setData({
+        ...transactionData,
         fee: toNanoMINA(fee),
       });
     }
-    return props.setData({
-      ...props.transactionData,
+    return setData({
+      ...transactionData,
       fee: toNanoMINA(0),
     });
   }
-
-  function memoHandler(memo) {
+  
+  const memoHandler = (memo:string) => {
     if (memo.length > 32) {
       toast.error("Memo is limited to 32 characters")
     } else {
-      return props.setData({
-        ...props.transactionData,
+      return setData({
+        ...transactionData,
         memo,
       });
     }
-  }
-
-  function checkFieldsAndProceed() {
-    const { amount, fee, receiverAddress } = props.transactionData;
-    if (amount < MINIMUM_AMOUNT || amount === 0) {
-      const message = `Amount ${toMINA(
-        amount
-      )} is less than the minimum amount (${toMINA(MINIMUM_AMOUNT)})`;
-      return toast.error(message)
-    }
-    if (fee < MINIMUM_FEE) {
-      const message = `Fee ${toMINA(
-        fee
-      )} is less than the minimum fee (${toMINA(MINIMUM_FEE)})`;
-      return toast.error(message)
-    }
-    if (receiverAddress === "") {
-      return toast.error("Please insert a recipient")
-    }
-    return props.nextStep();
   }
 
   return (
@@ -125,13 +114,13 @@ export default function TransactionForm(props) {
             <Col md={8} className="offset-md-2">
               <h3>Recipient</h3>
               <Input
-                value={props.transactionData.receiverAddress}
+                value={transactionData.receiverAddress}
                 placeholder="Enter address "
                 inputHandler={(e) => addressHandler(e.currentTarget.value)}
               />
               <h3>Memo</h3>
               <Input
-                value={props.transactionData.memo}
+                value={transactionData.memo}
                 placeholder="Enter memo "
                 inputHandler={(e) => memoHandler(e.currentTarget.value)}
               />
@@ -176,7 +165,7 @@ export default function TransactionForm(props) {
               <div className="v-spacer" />
               <Button
                 className="lightGreenButton__fullMono mx-auto"
-                onClick={checkFieldsAndProceed}
+                onClick={() => checkFieldsAndProceed(transactionData,nextStep)}
                 text="Preview"
               />
             </Col>
@@ -186,3 +175,5 @@ export default function TransactionForm(props) {
     </div>
   );
 }
+
+export default TransactionForm;
