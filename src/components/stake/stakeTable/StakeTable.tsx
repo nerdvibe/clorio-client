@@ -1,49 +1,56 @@
-import React, { useState } from "react";
-import Button from "../general/Button";
-import { Table } from "react-bootstrap";
-import Spinner from "../general/Spinner";
-import Pagination from "../general/pagination/Pagination";
-import StakeTableRow from "./StakeTableRow";
-import ErrorImage from "../../assets/Error.svg";
-import { Row, Col } from "react-bootstrap";
-import StakeStatus from "./StakeStatus";
+import { useState } from "react";
+import Button from "../../general/Button";
+import StakeTableRow from "../stakeTableRow/StakeTableRow";
+import { Row, Col, Table } from "react-bootstrap";
+import StakeStatus from "../StakeStatus";
 import { useQuery } from "@apollo/client";
-import { GET_VALIDATORS_TOTAL } from "../../graphql/query";
+import { GET_VALIDATORS_TOTAL } from "../../../graphql/query";
 import ReactTooltip from "react-tooltip";
-import { ITEMS_PER_PAGE } from "../../tools/const";
+import {IValidatorData} from "../stakeTableRow/validator-data";
+import StakeTableError from "./StakeTableError";
+import Spinner from "../../general/Spinner";
 
-export default function StakeTable(props) {
+interface IProps{
+  error:any,
+  validators:IValidatorData[],
+  toggleModal:()=>void,
+  openCustomDelegateModal:()=>void,
+  currentDelegate:string,
+  currentDelegateName:string,
+  loading:boolean
+}
+
+const StakeTable = (props:IProps) => {
+  const {error,validators,toggleModal,openCustomDelegateModal,currentDelegate,currentDelegateName,loading} = props;
   const [searchBox, setSearchBox] = useState("");
   const total = useQuery(GET_VALIDATORS_TOTAL);
 
-  const searchBoxHandler = (search) => {
+  /**
+   * Store search text inside component state
+   * @param search string Search text
+   */
+  const searchBoxHandler = (search:string) => {
     setSearchBox(search.toLowerCase());
   };
 
-  if (props.error) {
-    return (
-      <div className="block-container">
-        <div className="full-width padding-y-50">
-          <img src={ErrorImage} />
-        </div>
-      </div>
-    );
-  }
-
+  /**
+   * Store search text inside component state
+   * @param search string Search text
+   */
   const tableBody = () => {
-    if (props.validators && props.validators.validators) {
-      const filteredValidators = props.validators.validators.filter((el) =>
+    if (validators) {
+      const filteredValidators = validators.filter((el) =>
         el.name.toLowerCase().includes(searchBox)
       );
       return (
         <tbody>
-          {filteredValidators.map((el, index) => {
+          {filteredValidators.map((el, index:number) => {
             return (
               <StakeTableRow
                 key={index}
                 element={el}
                 index={index}
-                toggleModal={props.toggleModal}
+                toggleModal={toggleModal}
               />
             );
           })}
@@ -53,28 +60,9 @@ export default function StakeTable(props) {
     return <tbody />;
   };
 
-  function getTotalPages() {
-    if (total.data && total.data.validators_aggregate) {
-      const totalItems = total.data.validators_aggregate.aggregate.count;
-      const pages = (totalItems / ITEMS_PER_PAGE).toFixed(0);
-      if (
-        totalItems % ITEMS_PER_PAGE < 5 &&
-        totalItems % ITEMS_PER_PAGE !== 0
-      ) {
-        return parseInt(pages) === 0 ? 1 : parseInt(pages) + 1;
-      }
-      return parseInt(pages) === 0 ? 1 : pages;
-    }
-    return 1;
+  if (error) {
+    return <StakeTableError />
   }
-
-  const customDelegation = (
-    <Button
-      className="link-button custom-delegate-button"
-      text="Custom delegation"
-      onClick={props.openCustomDelegateModal}
-    />
-  );
 
   return (
     <div className="mx-auto  ">
@@ -83,8 +71,8 @@ export default function StakeTable(props) {
           <Row>
             <Col md={12} lg={12} xl={8} className="stake-status-container">
               <StakeStatus
-                currentDelegate={props.currentDelegate}
-                currentDelegateName={props.currentDelegateName}
+                currentDelegate={currentDelegate}
+                currentDelegateName={currentDelegateName}
               />
             </Col>
             <Col
@@ -93,11 +81,15 @@ export default function StakeTable(props) {
               xl={3}
               className="align-end small-screen-align-left"
             >
-              {customDelegation}
+              <Button
+                className="link-button custom-delegate-button"
+                text="Custom delegation"
+                onClick={openCustomDelegateModal}
+              />
             </Col>
           </Row>
           <div className="v-spacer" />
-          <Spinner className={"full-width"} show={props.loading}>
+          <Spinner className={"full-width"} show={loading}>
             <div id="transaction-table">
               <Table id="rwd-table-large">
                 <thead>
@@ -122,15 +114,13 @@ export default function StakeTable(props) {
                 {tableBody()}
                 <ReactTooltip multiline={true} />
               </Table>
+                &nbsp;
             </div>
-            <Pagination
-              page={props.page}
-              total={getTotalPages()}
-              setOffset={props.setOffset}
-            />
           </Spinner>
         </div>
       </div>
     </div>
   );
 }
+
+export default StakeTable;

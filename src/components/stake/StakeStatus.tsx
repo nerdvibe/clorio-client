@@ -1,7 +1,11 @@
-import React from "react";
+interface IProps{
+  currentDelegate:string,
+  currentDelegateName:string
+}
 
-export default function StakeStatus(props) {
-  if (props.currentDelegate === "") {
+const StakeStatus = (props:IProps) => {
+  const {currentDelegate,currentDelegateName} = props;
+  if ( currentDelegate === "") {
     return (
       <div>
         <h4>Validators:</h4>
@@ -10,7 +14,7 @@ export default function StakeStatus(props) {
         </h6>
       </div>
     );
-  } else if (!props.currentDelegate) {
+  } else if (!currentDelegate) {
     return (
       <div>
         <h4>Validators:</h4>
@@ -21,8 +25,8 @@ export default function StakeStatus(props) {
     );
   }
 
-  const name = props.currentDelegateName
-    ? `(${props.currentDelegateName})`
+  const name = currentDelegateName
+    ? `(${currentDelegateName})`
     : "";
   return (
     <div>
@@ -30,9 +34,11 @@ export default function StakeStatus(props) {
       <h6 className="full-width-align-left">
         Your are staking for :
         <div className="current-delegate-address">
-          {`${props.currentDelegate} ${name}` || "Nobody"}
+          {`${currentDelegate} ${name}` || "Nobody"}
         </div>
       </h6>
     </div>
   );
 }
+
+export default StakeStatus;

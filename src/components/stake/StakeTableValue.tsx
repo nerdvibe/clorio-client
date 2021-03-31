@@ -1,18 +1,28 @@
-import React from "react";
 import { Row, Col } from "react-bootstrap";
+// @ts-ignore Missing interface
 import appendQuery from "append-query";
+import React from "react";
 
-export default function StakeTableValue(props) {
-  if (props.avatar) {
+interface IProps{
+  avatar?: React.ReactNode,
+  className?: string,
+  header: string,
+  text?: string,
+  website?: string
+}
+
+const StakeTableValue = (props:IProps) => {
+  const {avatar,className,header,text,website} = props;
+  if (avatar) {
     return (
-      <td className={props.className}>
+      <td className={className}>
         <div>
           <Row className="stake-row-value">
             <Col sm={12} className="small-screen-stake-table-text">
-              <div className="inline-block-element">{props.avatar}</div>
+              <div className="inline-block-element">{avatar}</div>
               <div className="inline-block-element">
-                <p className="secondaryText no-bottom">{props.header}</p>
-                <h5>{props.text}</h5>
+                <p className="secondaryText no-bottom">{header}</p>
+                <h5>{text}</h5>
               </div>
             </Col>
           </Row>
@@ -21,20 +31,20 @@ export default function StakeTableValue(props) {
     );
   }
 
-  if (props.header.toLowerCase() === "info") {
+  if (header.toLowerCase() === "info") {
     return (
-      <td className={props.className}>
+      <td className={className}>
         <div>
           <Row className="stake-row-value">
             <Col sm={9} className="small-screen-stake-table-text">
-              <p className="secondaryText no-bottom">{props.header}</p>
-              {props.website ? (
+              <p className="secondaryText no-bottom">{header}</p>
+              {website ? (
                 <a
-                  href={appendQuery(props.website, { ref: "clorio" })}
+                  href={appendQuery(website, { ref: "clorio" })}
                   target="_blank"
                   rel="noreferrer"
                 >
-                  {props.text}
+                  {text}
                 </a>
               ) : null}
             </Col>
@@ -45,15 +55,17 @@ export default function StakeTableValue(props) {
   }
 
   return (
-    <td className={props.className}>
+    <td className={className}>
       <div>
         <Row className="stake-row-value">
           <Col sm={9} className="small-screen-stake-table-text">
-            <p className="secondaryText no-bottom">{props.header}</p>
-            <h5>{props.text}</h5>
+            <p className="secondaryText no-bottom">{header}</p>
+            <h5>{text}</h5>
           </Col>
         </Row>
       </div>
     </td>
   );
 }
+
+export default StakeTableValue;

@@ -1,7 +1,7 @@
 interface IProps{
-  show:boolean,
-  className:string,
-  children: React.ReactNode
+  show?:boolean,
+  className?:string,
+  children: JSX.Element
 }
 
 const Spinner = (props:IProps) => {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Banner } from "../components/general/Banner";
-import StakeTable from "../components/Stake/StakeTable";
+import StakeTable from "../components/stake/stakeTable/StakeTable";
 import Hoc from "../components/general/Hoc";
 import ModalContainer from "../components/modals/ModalContainer";
 import { useQuery, useMutation } from "@apollo/client";
@@ -364,7 +364,7 @@ export default (props) => {
         <Banner {...latestNews} />
         <StakeTable
           toggleModal={openModal}
-          validators={validatorsData}
+          validators={validatorsData?.validators}
           loading={validatorsLoading}
           error={validatorsError}
           currentDelegate={currentDelegate}
