@@ -1,8 +1,14 @@
-import React from "react";
 import Button from "../general/Button";
 import Input from "../general/input/Input";
 
-export default function CustomNonce(props) {
+interface IProps{
+  proceedHandler:() => void;
+  setCustomNonce:(customNonce:string) => void;
+}
+
+const CustomNonce = (props:IProps) => {
+  const {proceedHandler,setCustomNonce} = props;
+  
   return (
     <div className="mx-auto">
       <h2>Insert nonce</h2>
@@ -14,15 +20,17 @@ export default function CustomNonce(props) {
         <div className="v-spacer" />
         <Input
           type="number"
-          inputHandler={(e) => props.setCustomNonce(e.target.value)}
+          inputHandler={(e) => setCustomNonce(e.target.value)}
         />
         <div className="v-spacer" />
         <Button
           className="lightGreenButton__fullMono mx-auto"
-          onClick={props.proceedHandler}
+          onClick={proceedHandler}
           text="Proceed"
         />
       </div>
     </div>
   );
 }
+
+export default CustomNonce;

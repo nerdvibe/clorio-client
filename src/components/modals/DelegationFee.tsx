@@ -5,26 +5,33 @@ import { feeOrDefault } from "../../tools/fees";
 import { toMINA, toNanoMINA, feeGreaterThanMinimum } from "../../tools/utils";
 import Button from "../general/Button";
 import Input from "../general/input/Input";
+import {IEstimatedFee} from "../../models/fee" 
 
 const MINIMUM_FEE = toNanoMINA(0.001);
 
-export const DelegationFee = (props) => {
-  const averageFee = feeOrDefault(
-    props.fees.data?.estimatedFee?.txFees?.average || 0
-  );
-  const fastFee = feeOrDefault(
-    props.fees.data?.estimatedFee?.txFees?.fast || 0
-  );
+interface IProps{
+  proceedHandler:(fee:number)=>void,
+  fees?:{
+    estimatedFee:IEstimatedFee
+  }
+}
+
+const DelegationFee = (props:IProps) => {
+  const {proceedHandler,fees} = props;
+  const averageFee = feeOrDefault(fees?.estimatedFee?.txFees?.average || 0);
+  const fastFee = feeOrDefault(fees?.estimatedFee?.txFees?.fast || 0);
   const [fee, setFee] = useState(feeOrDefault(averageFee));
 
+  /**
+   * If the selected fee is less than the minimum show an error alert, otherwise close the modal
+   */
   const proceedButtonHandler = () => {
     if (feeGreaterThanMinimum(fee)) {
       const feeToSend = toNanoMINA(fee);
-      return props.proceedHandler(feeToSend);
+      proceedHandler(feeToSend);
+      return 
     }
-    const message = `Fee ${fee} is less than the minimum fee (${toMINA(
-      MINIMUM_FEE
-    )})`;
+    const message = `Fee ${fee} is less than the minimum fee (${toMINA(MINIMUM_FEE)})`;
     toast.error(message);
   };
 
@@ -55,7 +62,7 @@ export const DelegationFee = (props) => {
         <Input
           placeholder="Enter a fee "
           value={fee}
-          inputHandler={(e) => setFee(e.target.value)}
+          inputHandler={(e) => setFee(+e.target.value)}
           type="number"
         />
       </div>
@@ -68,3 +75,5 @@ export const DelegationFee = (props) => {
     </div>
   );
 };
+
+export default DelegationFee;

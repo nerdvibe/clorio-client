@@ -1,6 +1,4 @@
-import React from "react";
-
-export default function BroadcastTransaction() {
+const BroadcastTransaction = () => {
   return (
     <div className="mx-auto">
       <h2>Broadcasting your transaction</h2>
@@ -12,3 +10,5 @@ export default function BroadcastTransaction() {
     </div>
   );
 }
+
+export default BroadcastTransaction;

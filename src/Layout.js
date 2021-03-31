@@ -14,7 +14,7 @@ import { BalanceContextProvider } from "./context/BalanceContext";
 import { GET_NETWORK } from "./graphql/query";
 import { useContext } from "react";
 import { LedgerContext } from "./context/LedgerContext";
-import { TermsAndConditions } from "./components/Modals/TermsAndConditions";
+import TermsAndConditions from "./components/modals/TermsAndConditions";
 
 const Layout = () => {
   const [sessionData, setSessionData] = useState(undefined);

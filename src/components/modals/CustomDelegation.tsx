@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Row, Col } from "react-bootstrap";
 import Button from "../general/Button";
 import Input from "../general/input/Input";
 
-export default function ConfirmDelegation(props) {
+interface IProps{
+  closeModal: () => void,
+  confirmCustomDelegate: (customDelegate:string) => void
+}
+
+const ConfirmDelegation = (props:IProps) => {
   const { closeModal, confirmCustomDelegate } = props;
   const [customDelegate, setCustomDelegate] = useState("");
   return (
@@ -35,3 +40,5 @@ export default function ConfirmDelegation(props) {
     </div>
   );
 }
+
+export default ConfirmDelegation;

@@ -1,4 +1,4 @@
-const DEFAULT_FEE = "0.1";
+const DEFAULT_FEE = 0.1;
 
 /**
  * if a fee is 0, returns the default fee
