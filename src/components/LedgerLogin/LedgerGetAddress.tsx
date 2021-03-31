@@ -11,9 +11,11 @@ import LedgerLoader from "../general/LedgerLoader";
 import { GET_ID } from "../../graphql/query";
 import { getPublicKey } from "../../tools/ledger";
 import { toast } from "react-toastify";
+import { IProps } from "./ledger-login-props";
 
-export default function LedgerGetAddress(props) {
-  const [publicKey, setPublicKey] = useState(undefined);
+
+const LedgerGetAddress = (props:IProps) => {
+  const [publicKey, setPublicKey] = useState("");
   const [ledgerAccount] = useState(props.accountNumber || 0);
   const history = useHistory();
   const userID = useQuery(GET_ID, {
@@ -23,14 +25,16 @@ export default function LedgerGetAddress(props) {
 
   useEffect(() => {
     const deviceListener = getWallet();
+    // To be checked with ledger tests
+    // @ts-ignore 
     return deviceListener.unsubscribe;
   }, []);
 
   /**
    * Set public key that arrived from Ledger inside the storage
    */
-  function setSession() {
-    if (userID.data) {
+  const setSession = () => {
+    if (userID.data && !!publicKey) {
       props.setLoader();
       const id =
         userID.data?.public_keys?.length > 0
@@ -102,7 +106,7 @@ export default function LedgerGetAddress(props) {
           <Row>
             <Col md={8} xl={8} className="offset-md-2 offset-xl-2 text-center">
               <div className="mx-auto fit-content">
-                <Logo big="true" />
+                <Logo big={true} />
               </div>
               <div className="v-spacer" />
               <div className="v-spacer" />
@@ -135,3 +139,5 @@ export default function LedgerGetAddress(props) {
     </Hoc>
   );
 }
+
+export default LedgerGetAddress;

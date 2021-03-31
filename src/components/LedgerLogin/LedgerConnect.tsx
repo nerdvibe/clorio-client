@@ -12,8 +12,9 @@ import LedgerGetAddress from "./LedgerGetAddress";
 import ReactTooltip from "react-tooltip";
 import HelpHint from "../general/HelpHint";
 import { toast } from "react-toastify";
+import { IProps } from "./ledger-login-props";
 
-export default function LedgerConnect(props) {
+const LedgerConnect = (props:IProps) =>  {
   const [isAvailable, setIsAvailable] = useState(false);
   const [customAccount, setCustomAccount] = useState(false);
   const [accountNumber, setAccountNumber] = useState(0);
@@ -39,12 +40,12 @@ export default function LedgerConnect(props) {
     };
   }, []);
 
-  function accountNumberHandler(event) {
+  const accountNumberHandler = (event:React.ChangeEvent<HTMLInputElement>) => {
     const number = +event.target.value || 0;
     setAccountNumber(number);
   }
 
-  function verifyAccountNumber() {
+  const verifyAccountNumber = () => {
     if (+accountNumber >= 0 && +accountNumber <= 10000) {
       setProceedToLedger(true);
     } else {
@@ -154,7 +155,7 @@ export default function LedgerConnect(props) {
           <Row>
             <Col md={8} xl={8} className="offset-md-2 offset-xl-2 text-center">
               <div className="mx-auto fit-content">
-                <Logo big="true" />
+                <Logo big={true} />
               </div>
               <div className="v-spacer" />
               <div className="v-spacer" />
@@ -168,3 +169,5 @@ export default function LedgerConnect(props) {
     </Hoc>
   );
 }
+
+export default LedgerConnect;
