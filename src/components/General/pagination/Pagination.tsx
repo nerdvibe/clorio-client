@@ -3,14 +3,15 @@ import { createIndexesArray, indexToRender } from "./pagination-helper";
 
 interface IProps{
   page:number,
-  total:number,
+  total:number|string,
+  user?:number,
   setOffset:(index:number) => void,
 }
 
 const Pagination = (props:IProps) => {
   const [page, setPage] = useState(props.page);
   const maxPages = props.total;
-  const indexes : number[] = createIndexesArray(maxPages);
+  const indexes : number[] = createIndexesArray(+maxPages);
 
   /**
    * Change page
@@ -27,7 +28,7 @@ const Pagination = (props:IProps) => {
   /**
    * Array with pagination elements
    */
-  const elements = indexToRender(page,indexes,maxPages).map((index:number) => {
+  const elements = indexToRender(page,indexes,+maxPages).map((index:number) => {
     return (<p
         key={index}
         onClick={() => changePage(index)}
