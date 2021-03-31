@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
-import Button from "../components/General/Button";
-import Hoc from "../components/General/Hoc";
+import Button from "../components/general/Button";
+import Hoc from "../components/general/Hoc";
 import { Copy } from "react-feather";
-import Logo from "../components/General/Logo";
-import Footer from "../components/General/Footer";
+import Logo from "../components/general/Logo";
+import Footer from "../components/general/Footer";
 import { storeSession } from "../tools";
 import { copyToClipboard, downloadPaperWalletPDF } from "../tools/utils";
-import Input from "../components/General/input/Input";
+import Input from "../components/general/input/Input";
 import { genKeys } from "@o1labs/client-sdk";
 
 export default function Register(props) {

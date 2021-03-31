@@ -1,13 +1,13 @@
 import React from "react";
 import { Table } from "react-bootstrap";
-import Spinner from "../General/Spinner";
+import Spinner from "../general/Spinner";
 import ErrorImage from "../../assets/Error.png";
 import NoTransactionsOrNotAvailableImage from "../../assets/NoTransactionsOrNotAvailable.svg";
 import TxHistoryNotAvailableImage from "../../assets/TxHistoryNotAvailable.svg";
 import NoTransactions from "../../assets/NoTransactions.svg";
 import { getTotalPages, toMINA } from "../../tools/utils";
 import { useQuery } from "@apollo/client";
-import Pagination from "../General/pagination/Pagination";
+import Pagination from "../general/pagination/Pagination";
 import { ChevronRight, ChevronsDown, ChevronsUp, Check } from "react-feather";
 import ReactTooltip from "react-tooltip";
 import { formatDistance } from "date-fns";

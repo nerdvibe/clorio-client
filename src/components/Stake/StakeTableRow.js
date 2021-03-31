@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "../General/Button";
+import Button from "../general/Button";
 import StakeTableValue from "./StakeTableValue";
 import Avatar from "../../tools/avatar";
 

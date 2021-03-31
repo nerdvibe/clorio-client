@@ -1,7 +1,7 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
 import { toLongMINA } from "../../tools/utils";
-import Button from "../General/Button";
+import Button from "../general/Button";
 
 export default function ConfirmTransaction(props) {
   const { amount, fee, receiverAddress, memo } = props.transactionData;

@@ -2,17 +2,17 @@
 import React from "react";
 import { Row, Col, Spinner } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
-import Button from "../components/General/Button";
-import Hoc from "../components/General/Hoc";
-import Logo from "../components/General/Logo";
-import Footer from "../components/General/Footer";
+import Hoc from "../components/general/Hoc";
+import Footer from "../components/general/Footer";
 import { useState, useEffect } from "react";
 import { storeSession } from "../tools";
-import Input from "../components/General/input/Input";
 import { useQuery } from "@apollo/client";
 import { derivePublicKey } from "@o1labs/client-sdk";
 import { GET_ID } from "../graphql/query";
 import { toast } from "react-toastify";
+import Button from "../components/general/Button";
+import Input from "../components/general/input/Input";
+import Logo from "../components/general/Logo";
 
 export default function Login(props) {
   const [publicKey, setPublicKey] = useState("");

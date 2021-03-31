@@ -1,15 +1,15 @@
 import React from "react";
-import { Banner } from "../components/General/Banner";
 import TransactionsTable from "../components/Transactions/TransactionsTable";
-import Hoc from "../components/General/Hoc";
+import Hoc from "../components/general/Hoc";
 import { useQuery } from "@apollo/client";
-import Spinner from "../components/General/Spinner";
+import Spinner from "../components/general/Spinner";
 import { useState } from "react";
 import { useContext } from "react";
 import { BalanceContext } from "../context/BalanceContext";
 import { ITEMS_PER_PAGE, DEFAULT_INTERVAL } from "../tools/const";
 import { getPageFromOffset } from "../tools/utils";
 import { GET_MEMPOOL, GET_TRANSACTIONS, GET_HOME_NEWS } from "../graphql/query";
+import { Banner } from "../components/general/Banner";
 
 export default function Overview(props) {
   const { balance } = useContext(BalanceContext);

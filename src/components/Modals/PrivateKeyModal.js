@@ -1,7 +1,7 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import Button from "../General/Button";
-import Input from "../General/input/Input";
+import Button from "../general/Button";
+import Input from "../general/input/Input";
 
 export default function PrivateKeyModal(props) {
   return (

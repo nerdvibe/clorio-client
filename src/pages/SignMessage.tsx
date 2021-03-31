@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Hoc from "../components/General/Hoc";
+import Hoc from "../components/general/Hoc";
 import SignMessageForm from "../components/forms/sign-message/SignMessageForm";
 import { derivePublicKey, signMessage } from "@o1labs/client-sdk";
 import imageToRender from "../assets/NotAvailableForLedger.svg";
