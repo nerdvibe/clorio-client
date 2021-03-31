@@ -1,8 +1,13 @@
-import React from "react";
 import { Row, Col } from "react-bootstrap";
 import Button from "../general/Button";
 
-export default function ConfirmDelegation(props) {
+interface IProps{
+  confirmDelegate: () => void,
+  closeModal: () => void,
+  name:string
+}
+
+const ConfirmDelegation = (props:IProps) => {
   const { name, closeModal, confirmDelegate } = props;
   return (
     <div className="mx-auto">
@@ -28,3 +33,5 @@ export default function ConfirmDelegation(props) {
     </div>
   );
 }
+
+export default ConfirmDelegation;

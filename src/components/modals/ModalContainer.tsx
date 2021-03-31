@@ -1,7 +1,13 @@
-import React from "react";
 import Hoc from "../general/Hoc";
 
-export default function ModalContainer(props) {
+interface IProps{
+  close?:()=>void,
+  children:React.ReactNode,
+  show:boolean,
+  className?: string
+}
+
+const ModalContainer = (props:IProps) => {
   const { close, children, show, className = "" } = props;
   return show ? (
     <Hoc className="mx-auto first-place  animate__animated animate__fadeIn">
@@ -12,3 +18,5 @@ export default function ModalContainer(props) {
     <></>
   );
 }
+
+export default ModalContainer;

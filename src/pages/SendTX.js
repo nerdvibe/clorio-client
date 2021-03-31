@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import TransactionForm from "../components/Transactions/TransactionForm";
-import ConfirmTransaction from "../components/Modals/ConfirmTransaction";
-import ConfirmLedgerTransaction from "../components/Modals/ConfirmLedgerTransaction";
+import ConfirmTransaction from "../components/modals/ConfirmTransaction";
+import ConfirmLedgerTransaction from "../components/modals/ConfirmLedgerTransaction";
 import Hoc from "../components/general/Hoc";
 import { getAddress } from "../tools";
-import ModalContainer from "../components/Modals/ModalContainer";
-import BroadcastTransaction from "../components/Modals/BroadcastTransaction";
+import ModalContainer from "../components/modals/ModalContainer";
+import BroadcastTransaction from "../components/modals/BroadcastTransaction";
 import { useQuery, useMutation } from "@apollo/client";
-import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
+import PrivateKeyModal from "../components/modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
 import {
   createAndSignLedgerTransaction,
@@ -23,7 +23,7 @@ import {
 } from "../tools/transactions";
 import { toNanoMINA } from "../tools/utils";
 import {Big} from "big.js";
-import CustomNonce from "../components/Modals/CustomNonce";
+import CustomNonce from "../components/modals/CustomNonce";
 import { BalanceContext } from "../context/BalanceContext";
 import Spinner from "../components/general/Spinner";
 import { derivePublicKey } from "@o1labs/client-sdk";
@@ -336,7 +336,7 @@ export default function SendTX(props) {
               setData={setTransactionData}
             />
           ) : isLedgerEnabled ? (
-            <ConfirmLedgerTransaction transactionData={transactionData} />
+            <ConfirmLedgerTransaction {...transactionData} />
           ) : (
             <ConfirmTransaction
               transactionData={transactionData}

@@ -1,11 +1,9 @@
-import React from "react";
 import { Row, Col } from "react-bootstrap";
+import { ITransactionData } from "../../models/transaction-data";
 import { toLongMINA } from "../../tools/utils";
-import Button from "../general/Button";
 
-export default function ConfirmTransaction(props) {
-  const { amount, fee, receiverAddress, memo } = props.transactionData;
-  const { stepBackward, sendTransaction } = props;
+const ConfirmLedgerTransaction = (props:ITransactionData) => {
+  const { amount, fee, receiverAddress, memo } = props;
   return (
     <div className="mx-auto  ">
       <div className="block-container full-page-container">
@@ -22,26 +20,21 @@ export default function ConfirmTransaction(props) {
               <br />
               with a fee of <strong>{toLongMINA(fee)} Mina</strong> <br />
               to <strong>{receiverAddress}</strong> <br />
-              {memo ? <>with memo <strong>{memo}</strong></> : null}
+              {memo ? (
+                <>
+                  with memo <strong>{memo}</strong>
+                </>
+              ) : null}
               <div className="v-spacer" />
               <div className="mx-auto">
-                <Row>
-                  <Col md={3} className="offset-md-3">
-                    <Button
-                      className="link-button inline-element"
-                      onClick={stepBackward}
-                      text="Cancel"
-                    />
-                  </Col>
-                  <Col md={3}>
-                    <Button
-                      className="lightGreenButton__fullMono inline-element mx-auto"
-                      onClick={sendTransaction}
-                      text="Confirm"
-                    />
-                  </Col>
-                </Row>
+                <div className="lds-ellipsis">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
               </div>
+              <strong>Check your hardware wallet to proceed</strong>
             </Col>
           </Row>
         </div>
@@ -49,3 +42,5 @@ export default function ConfirmTransaction(props) {
     </div>
   );
 }
+
+export default ConfirmLedgerTransaction;

@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { Banner } from "../components/general/Banner";
 import StakeTable from "../components/Stake/StakeTable";
 import Hoc from "../components/general/Hoc";
-import ModalContainer from "../components/Modals/ModalContainer";
+import ModalContainer from "../components/modals/ModalContainer";
 import { useQuery, useMutation } from "@apollo/client";
 import { getAddress } from "../tools";
 import { useEffect } from "react";
-import PrivateKeyModal from "../components/Modals/PrivateKeyModal";
+import PrivateKeyModal from "../components/modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
-import ConfirmDelegation from "../components/Modals/ConfirmDelegation";
-import CustomDelegation from "../components/Modals/CustomDelegation";
-import { DelegationFee } from "../components/Modals/DelegationFee";
+import ConfirmDelegation from "../components/modals/ConfirmDelegation";
+import CustomDelegation from "../components/modals/CustomDelegation";
+import DelegationFee from "../components/modals/DelegationFee";
 import {
   createLedgerDelegationTransaction,
   isMinaAppOpen,
@@ -18,7 +18,7 @@ import {
 } from "../tools/ledger/ledger";
 import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
 import LedgerLoader from "../components/general/LedgerLoader";
-import CustomNonce from "../components/Modals/CustomNonce";
+import CustomNonce from "../components/modals/CustomNonce";
 import Button from "../components/general/Button";
 import { DEFAULT_INTERVAL, ITEMS_PER_PAGE } from "../tools/const";
 import {
@@ -436,7 +436,7 @@ export default (props) => {
       <ModalContainer show={showModal === ModalStates.FEE} close={closeModal}>
         <DelegationFee
           closeModal={closeModal}
-          fees={fee}
+          fees={fee?.data}
           proceedHandler={setFee}
         />
       </ModalContainer>
