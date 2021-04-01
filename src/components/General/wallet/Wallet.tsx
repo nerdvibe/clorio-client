@@ -7,7 +7,7 @@ import { useQuery } from "@apollo/client";
 import Avatar from "../../../tools/avatar";
 import { copyToClipboard, toMINA } from "../../../tools/utils";
 import ReactTooltip from "react-tooltip";
-import { BalanceContext } from "../../../context/BalanceContext";
+import { BalanceContext } from "../../../context/balance/BalanceContext";
 import { GET_TICKER, GET_BALANCE } from "../../../graphql/query";
 import { DEFAULT_INTERVAL } from "../../../tools/const";
 import { renderBalance,renderAverageValue } from "./wallet-helper";

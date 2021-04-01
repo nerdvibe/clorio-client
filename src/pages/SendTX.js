@@ -24,7 +24,7 @@ import {
 import { toNanoMINA } from "../tools/utils";
 import {Big} from "big.js";
 import CustomNonce from "../components/modals/CustomNonce";
-import { BalanceContext } from "../context/BalanceContext";
+import { BalanceContext } from "../context/balance/BalanceContext";
 import Spinner from "../components/general/Spinner";
 import { derivePublicKey } from "@o1labs/client-sdk";
 import { BROADCAST_TRANSACTION, GET_FEE, GET_NONCE } from "../graphql/query";

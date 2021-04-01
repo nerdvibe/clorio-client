@@ -5,7 +5,7 @@ import { useQuery } from "@apollo/client";
 import Spinner from "../components/general/Spinner";
 import { useState } from "react";
 import { useContext } from "react";
-import { BalanceContext } from "../context/BalanceContext";
+import { BalanceContext } from "../context/balance/BalanceContext";
 import { ITEMS_PER_PAGE, DEFAULT_INTERVAL } from "../tools/const";
 import { getPageFromOffset } from "../tools/utils";
 import { GET_MEMPOOL, GET_TRANSACTIONS, GET_HOME_NEWS } from "../graphql/query";
