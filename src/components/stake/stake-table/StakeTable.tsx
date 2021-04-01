@@ -6,7 +6,7 @@ import StakeStatus from "../StakeStatus";
 import { useQuery } from "@apollo/client";
 import { GET_VALIDATORS_TOTAL } from "../../../graphql/query";
 import ReactTooltip from "react-tooltip";
-import {IValidatorData} from "../stake-table-row/validator-data";
+import {IValidatorData} from "../stake-table-row/validator-data-interface";
 import StakeTableError from "./StakeTableError";
 import Spinner from "../../general/Spinner";
 
