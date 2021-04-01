@@ -1,10 +1,9 @@
-import React from "react";
 import Hoc from "../components/general/Hoc";
 import Logo from "../components/general/Logo";
 import { Row, Col } from "react-bootstrap";
 import Button from "../components/general/Button";
 
-export default function NotFound() {
+const NotFound = () => {
   return (
     <Hoc>
       <div className="block-container no-bg real-full-page-container center">
@@ -25,3 +24,5 @@ export default function NotFound() {
     </Hoc>
   );
 }
+
+export default NotFound;

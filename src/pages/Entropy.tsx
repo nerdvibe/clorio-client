@@ -1,14 +1,20 @@
-import React, { useState } from "react";
-import ProgressBar from "../components/ProgressBar";
+import { useState } from "react";
 import Hoc from "../components/general/Hoc";
 import Logo from "../components/general/Logo";
 import { Row, Col } from "react-bootstrap";
 import Button from "../components/general/Button";
 import Footer from "../components/general/Footer";
+import ProgressBar from "../components/general/ProgressBar";
 
-export default function Entropy() {
+const Entropy = () => {
   const [progress] = useState(20);
-  const genRanHex = (size) =>
+
+  /**
+   * Generate a random hexadecimal string
+   * @param size number
+   * @returns string
+   */
+  const generateRandomHex = (size:number) =>
     [...Array(size)]
       .map(() => Math.floor(Math.random() * 16).toString(16))
       .join("");
@@ -25,7 +31,7 @@ export default function Entropy() {
                 Here we go! <br />
                 Move your mouse aroud to create random Bytes.
               </h4>
-              <ProgressBar progress={progress} text={genRanHex(progress)} />
+              <ProgressBar progress={progress} text={generateRandomHex(progress)} />
               <div className="v-spacer" />
               <Row>
                 <Col>
@@ -47,3 +53,5 @@ export default function Entropy() {
     </Hoc>
   );
 }
+
+export default Entropy;

@@ -12,16 +12,16 @@ import TransactionsTableError from "./TransactionsTableError";
 import TransactionTableEmptyState from "./TransactionTableEmptyState";
 
 export default function TransactionsTable(props:ITransactionTableProps) {
-  const { loading, error, data, mempool, userId, userAddress, page, setOffset, balance } = props;
+  const { transactions, error, mempool, loading, userId, userAddress, page, setOffset, balance } = props;
   const total = useQuery(GET_TRANSACTIONS_TOTAL, {
     variables: { user: userId },
     skip: !userId,
     fetchPolicy: "network-only",
   });
-  if (error || mempool.error) {
+  if (error) {
     return TransactionsTableError(balance);
   }
-  if (!data || data.user_commands.length === 0) {
+  if (!transactions || transactions.user_commands.length === 0) {
     return TransactionTableEmptyState(balance);
   }
 
@@ -49,10 +49,10 @@ export default function TransactionsTable(props:ITransactionTableProps) {
   function renderTableBody() {
     return (
       <tbody>
-        {mempool?.data?.mempool?.map((row, index) => {
+        {mempool?.mempool?.map((row, index) => {
           return MempoolRow(row, index,userAddress);
         })}
-        {data?.user_commands?.map((row, index) => {
+        {transactions?.user_commands?.map((row, index) => {
           return TransactionRow(row, index, userAddress);
         })}
       </tbody>

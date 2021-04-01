@@ -34,21 +34,21 @@ export interface IMempoolTransactionData{
 }
 
 export interface ITransactionTableProps{
-  loading: boolean,
-  error: any,
-  data: {
-    user_commands:ITransactionData[]
-  },
-  mempool:{
-    data:{
-      mempool:IMempoolTransactionData[]
-    },
-    error:any,
-    loading:boolean
-  },  
+  transactions?:ITransactionQueryResult,
+  mempool?:IMempoolQueryResult,
   userId: number,
   userAddress: string,
   balance:number,
   page:number,
+  error?:any,
+  loading:boolean,
   setOffset:(page:number) => void
+}
+
+export interface ITransactionQueryResult{
+  user_commands:ITransactionData[]  
+}
+
+export interface IMempoolQueryResult{
+  mempool:IMempoolTransactionData[]  
 }

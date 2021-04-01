@@ -1,13 +1,13 @@
 import { useState } from "react";
-import Hoc from "../components/general/Hoc";
-import SignMessageForm from "../components/forms/sign-message/SignMessageForm";
+import Hoc from "../../components/general/Hoc";
+import SignMessageForm from "../../components/forms/sign-message/SignMessageForm";
 import { derivePublicKey, signMessage } from "@o1labs/client-sdk";
-import imageToRender from "../assets/NotAvailableForLedger.svg";
 import { toast } from "react-toastify";
-import { LedgerContext } from "../context/LedgerContext";
+import { LedgerContext } from "../../context/LedgerContext";
 import { useContext } from "react";
-import SignMessageResult from "../components/forms/sign-message/SignMessageResult";
-import { IMessageToSign } from "../models/message-to-sign";
+import { IMessageToSign } from "../../models/message-to-sign";
+import SignatureMessageResult from "./SignatureMessageResult";
+import SignMessageLedgerScreen from "./SignMessageLedgerScreen";
 
 export default function SignMessage() {
   const [showResult, setShowResult] = useState(false);
@@ -19,10 +19,7 @@ export default function SignMessage() {
     },
     publicKey: "",
   });
-  // TODO : Remove ts-ignore
-  // @ts-ignore
-  const { isLedgerEnabled } = useContext(LedgerContext);
-
+  const { isLedgerEnabled }:any = useContext(LedgerContext);
 
   /**
    * If fields are not empty, sign message and set result to component state
@@ -57,33 +54,13 @@ export default function SignMessage() {
   }
 
   if (isLedgerEnabled) {
-    return (
-      <Hoc>
-        <div className="animate__animated animate__fadeIn">
-          <div className="mx-auto">
-            <div className="block-container">
-              <img
-                src={imageToRender}
-                className="animate__animated animate__fadeIn"
-              />
-            </div>
-          </div>
-        </div>
-      </Hoc>
-    );
+    return <SignMessageLedgerScreen />;
   }
 
   if (showResult) {
-    return (
-      <Hoc>
-        <div className="animate__animated animate__fadeIn">
-          <SignMessageResult 
-            {...result}
-            reset={resetForm}
-            />
-        </div>
-      </Hoc>
-    )
+    return <SignatureMessageResult 
+      result={result} 
+      resetForm={resetForm} />
   }
 
   return (
