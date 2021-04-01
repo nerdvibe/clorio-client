@@ -1,6 +1,11 @@
 import { createContext, useState } from "react";
+import { IBalanceData } from "./balance-interfaces";
 
 export const BalanceContext = createContext({});
+
+interface IProps{
+  children:React.ReactChild
+}
 
 const initialBalance = {
   liquid: "0",
@@ -8,13 +13,13 @@ const initialBalance = {
   locked: "0",
   total: "0",
   unconfirmedTotal: "0",
-};
+} as IBalanceData;
 
-export const BalanceContextProvider = (props) => {
+export const BalanceContextProvider = (props:IProps) => {
   const [shouldBalanceUpdate, setShouldBalanceUpdate] = useState(false);
   const [balance, setBalanceData] = useState(initialBalance);
 
-  const setBalanceContext = (data) => {
+  const setBalanceContext = (data:IBalanceData) => {
     if (data) {
       setBalanceData(data);
     } else {

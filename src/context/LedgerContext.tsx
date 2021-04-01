@@ -1,13 +1,23 @@
-import React, { createContext, useState } from "react";
+import { createContext, useState } from "react";
 export const LedgerContext = createContext({});
 
-export const LedgerContextProvider = (props) => {
+interface IProps{
+  children:React.ReactChild
+}
+
+interface ILedgerData {
+  ledger:boolean,
+  ledgerAccount:number
+}
+
+
+export const LedgerContextProvider = (props:IProps) => {
   const [ledgerData, setLedgerData] = useState({
     ledger: false,
     ledgerAccount: 0,
   });
 
-  const setLedgerContext = (data) => {
+  const setLedgerContext = (data:ILedgerData) => {
     setLedgerData(data);
   };
 

@@ -37,7 +37,7 @@ import { feeOrDefault } from "../tools/fees";
 import { toast } from "react-toastify";
 import { LedgerContext } from "../context/LedgerContext";
 import { useContext } from "react";
-import { BalanceContext } from "../context/BalanceContext";
+import { BalanceContext } from "../context/balance/BalanceContext";
 import Big from "big.js";
 
 export default (props) => {
