@@ -65,7 +65,7 @@ export function toLongMINA(amount) {
   return Big(amount).mul(1e-9).toFixed(9);
 }
 
-export const downloadPaperWalletPDF = (publicKey, privateKey) => {
+export const downloadPaperWalletPDF = (keypair) => {
   const doc = new jsPDF();
   doc.addImage(ClorioLogoB64, "PNG", 70, 20);
   doc.setFont("Helvetica");
@@ -78,9 +78,9 @@ export const downloadPaperWalletPDF = (publicKey, privateKey) => {
   );
   doc.setFontSize(15);
   doc.text(105, 80, "This is your public key", "center");
-  doc.text(105, 90, publicKey, "center");
+  doc.text(105, 90, keypair.publicKey, "center");
   doc.text(105, 100, "This is your private key", "center");
-  doc.text(105, 110, privateKey, "center");
+  doc.text(105, 110, keypair.privateKey, "center");
   doc.setFontSize(20);
   doc.text(20, 140, "What to do now?", "left");
   doc.setFontSize(15);
