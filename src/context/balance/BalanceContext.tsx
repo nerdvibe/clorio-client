@@ -13,7 +13,7 @@ const initialBalance = {
   locked: "0",
   total: "0",
   unconfirmedTotal: "0",
-} as IBalanceData;
+};
 
 export const BalanceContextProvider = (props:IProps) => {
   const [shouldBalanceUpdate, setShouldBalanceUpdate] = useState(false);
