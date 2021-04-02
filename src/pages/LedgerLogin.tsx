@@ -1,5 +1,5 @@
-import { IProps } from "../components/ledger-login/ledger-login-props";
-import LedgerConnect from "../components/ledger-login/LedgerConnect";
+import { IProps } from "../components/ledgerLogin/LedgerLoginProps";
+import LedgerConnect from "../components/ledgerLogin/LedgerConnect";
 
 const LedgerLogin = (props:IProps) => {
   return (

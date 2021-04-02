@@ -8,7 +8,7 @@ const Register = React.lazy(() => import("./pages/register/Register"));
 import { Route, Redirect, Switch } from "react-router-dom";
 import Spinner from "./components/general/Spinner";
 const LedgerLogin = React.lazy(() => import("./pages/LedgerLogin"));
-const SignMessage = React.lazy(() => import("./pages/sign-message/SignMessage"));
+const SignMessage = React.lazy(() => import("./pages/signMessage/SignMessage"));
 const NotFound = React.lazy(() => import("./pages/404"));
 const VerifyMessage = React.lazy(() => import("./pages/VerifyMessage"));
 import { isEmptyObject } from "./tools/utils";

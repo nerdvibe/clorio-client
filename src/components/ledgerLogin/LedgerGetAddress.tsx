@@ -11,7 +11,7 @@ import LedgerLoader from "../general/LedgerLoader";
 import { GET_ID } from "../../graphql/query";
 import { getPublicKey } from "../../tools/ledger";
 import { toast } from "react-toastify";
-import { IProps } from "./ledger-login-props";
+import { IProps } from "./LedgerLoginProps";
 
 
 const LedgerGetAddress = (props:IProps) => {

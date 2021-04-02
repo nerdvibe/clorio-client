@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createIndexesArray, indexToRender } from "./pagination-helper";
+import { createIndexesArray, indexToRender } from "./PaginationHelper";
 
 interface IProps{
   page:number,

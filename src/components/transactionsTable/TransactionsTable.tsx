@@ -5,7 +5,7 @@ import { useQuery } from "@apollo/client";
 import Pagination from "../general/pagination/Pagination";
 import ReactTooltip from "react-tooltip";
 import { GET_TRANSACTIONS_TOTAL } from "../../graphql/query";
-import { ITransactionTableProps } from "./transactions";
+import { ITransactionTableProps } from "./Transactions";
 import TransactionRow from "./TransactionRow";
 import MempoolRow from "./MempoolRow";
 import TransactionsTableError from "./TransactionsTableError";

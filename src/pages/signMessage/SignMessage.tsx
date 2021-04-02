@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Hoc from "../../components/general/Hoc";
-import SignMessageForm from "../../components/forms/sign-message/SignMessageForm";
+import SignMessageForm from "../../components/forms/signMessage/SignMessageForm";
 import { derivePublicKey, signMessage } from "@o1labs/client-sdk";
 import { toast } from "react-toastify";
 import { LedgerContext } from "../../context/LedgerContext";
@@ -9,7 +9,7 @@ import { IMessageToSign } from "../../models/message-to-sign";
 import SignatureMessageResult from "./SignatureMessageResult";
 import SignMessageLedgerScreen from "./SignMessageLedgerScreen";
 
-export default function SignMessage() {
+const SignMessage = () => {
   const [showResult, setShowResult] = useState(false);
   const [result, setResult] = useState({
     payload: "",
@@ -73,3 +73,5 @@ export default function SignMessage() {
     </Hoc>
   );
 }
+
+export default SignMessage;

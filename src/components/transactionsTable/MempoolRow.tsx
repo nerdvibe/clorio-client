@@ -1,7 +1,7 @@
 import { toMINA } from "../../tools";
 import { decodeB58 } from "../../tools/base58";
 import TransactionOrDelegationIcon from "./TransactionDelegationIcon";
-import { IMempoolTransactionData } from "./transactions";
+import { IMempoolTransactionData } from "./Transactions";
 
 const MempoolRow = (row:IMempoolTransactionData, index:number, userAddress:string) => {
   const amount = row.amount ? toMINA(row.amount) : 0;

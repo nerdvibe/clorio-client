@@ -1,5 +1,5 @@
 import { formatDistance } from "date-fns";
-import { ITransactionData } from "./transactions";
+import { ITransactionData } from "./Transactions";
 import { toMINA } from "../../tools";
 import { decodeB58 } from "../../tools/base58";
 import TransactionOrDelegationIcon from "./TransactionDelegationIcon";

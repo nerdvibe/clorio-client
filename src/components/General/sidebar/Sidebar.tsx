@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Cpu, LogIn, TrendingUp, Edit3, Check } from "react-feather";
 import Logo from "../Logo";
 import { clearSession } from "../../../tools";
-import { checkRoute, renderNetwork } from "./sidebar-helper";
+import { checkRoute, renderNetwork } from "./SidebarHelper";
 import { INetworkData } from "../../../models/network-data";
 
 interface IProps{
