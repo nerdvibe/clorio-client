@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { IBalanceData } from "./balance-interfaces";
+import { IBalanceData } from "./BalanceInterfaces";
 
 export const BalanceContext = createContext({});
 

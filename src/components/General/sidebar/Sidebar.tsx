@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import { Cpu, LogIn, TrendingUp, Edit3, Check } from "react-feather";
 import Logo from "../Logo";
 import { clearSession } from "../../../tools";
-import { checkRoute, renderNetwork } from "./SidebarHelper";
-import { INetworkData } from "../../../models/network-data";
+import { isRouteActiveClass, renderNetworkLabel } from "./SidebarHelper";
+import { INetworkData } from "../../../models/NetworkData";
 
 interface IProps{
   network:INetworkData,
@@ -39,7 +39,7 @@ const Sidebar = (props:IProps) => {
         </div>
         <hr />
         <Nav.Item
-          className={"sidebar-item-container " + checkRoute("overview")}
+          className={"sidebar-item-container " + isRouteActiveClass("overview")}
         >
           <Link to="/overview" className="sidebar-item selected-item">
             {" "}
@@ -48,7 +48,7 @@ const Sidebar = (props:IProps) => {
             </span>
           </Link>
         </Nav.Item>
-        <Nav.Item className={"sidebar-item-container " + checkRoute("send-tx")}>
+        <Nav.Item className={"sidebar-item-container " + isRouteActiveClass("send-tx")}>
           <Link to="/send-tx" className="sidebar-item">
             {" "}
             <span>
@@ -56,7 +56,7 @@ const Sidebar = (props:IProps) => {
             </span>
           </Link>
         </Nav.Item>
-        <Nav.Item className={"sidebar-item-container " + checkRoute("stake")}>
+        <Nav.Item className={"sidebar-item-container " + isRouteActiveClass("stake")}>
           <Link to="/stake" className="sidebar-item">
             {" "}
             <span>
@@ -65,7 +65,7 @@ const Sidebar = (props:IProps) => {
           </Link>
         </Nav.Item>
         <Nav.Item
-          className={"sidebar-item-container " + checkRoute("sign-message")}
+          className={"sidebar-item-container " + isRouteActiveClass("sign-message")}
         >
           <Link to="/sign-message" className="sidebar-item">
             {" "}
@@ -75,7 +75,7 @@ const Sidebar = (props:IProps) => {
           </Link>
         </Nav.Item>
         <Nav.Item
-          className={"sidebar-item-container " + checkRoute("verify-message")}
+          className={"sidebar-item-container " + isRouteActiveClass("verify-message")}
         >
           <Link to="/verify-message" className="sidebar-item">
             {" "}
@@ -95,7 +95,7 @@ const Sidebar = (props:IProps) => {
             </Link>
           </Nav.Item>
           <div className="sidebar-footer-network">
-            {renderNetwork(network?.nodeInfo)} {statusDot}
+            {renderNetworkLabel(network?.nodeInfo)} {statusDot}
           </div>
         </div>
       </Nav>

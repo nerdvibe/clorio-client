@@ -12,7 +12,7 @@ import Alert from "./components/general/Alert";
 import Wallet from "./components/general/wallet/Wallet";
 import { GET_NETWORK } from "./graphql/query";
 import { useContext } from "react";
-import { LedgerContext } from "./context/LedgerContext";
+import { LedgerContext } from "./context/ledger/LedgerContext";
 import TermsAndConditions from "./components/modals/TermsAndConditions";
 import { BalanceContextProvider } from "./context/balance/BalanceContext";
 

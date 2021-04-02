@@ -29,7 +29,7 @@ import Spinner from "../components/general/Spinner";
 import { derivePublicKey } from "@o1labs/client-sdk";
 import { BROADCAST_TRANSACTION, GET_FEE, GET_NONCE } from "../graphql/query";
 import { toast } from "react-toastify";
-import { LedgerContext } from "../context/LedgerContext";
+import { LedgerContext } from "../context/ledger/LedgerContext";
 
 const initialTransactionData = {
   amount: toNanoMINA(0),

@@ -1,7 +1,7 @@
-import { ISignature } from './../models/signature';
+import { ISignature } from '../models/Signature';
 import { signPayment } from "@o1labs/client-sdk";
-import { IKeypair } from "../models/keypair";
-import { ITransactionPayload } from '../models/transaction-payload';
+import { IKeypair } from "../models/Keypair";
+import { ITransactionPayload } from '../models/TransactionPayload';
 
 // TODO : Fix props
 export const signTransaction = (transactionData:any, keypair:IKeypair, sender:string, actualNonce:number) => {
