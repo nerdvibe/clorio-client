@@ -1,4 +1,4 @@
-import TransactionsTable from "../components/transactions-table/TransactionsTable";
+import TransactionsTable from "../components/transactionsTable/TransactionsTable";
 import Hoc from "../components/general/Hoc";
 import { useQuery } from "@apollo/client";
 import Spinner from "../components/general/Spinner";
@@ -10,7 +10,7 @@ import { getPageFromOffset } from "../tools/utils";
 import { GET_MEMPOOL, GET_TRANSACTIONS, GET_HOME_NEWS } from "../graphql/query";
 import { Banner } from "../components/general/Banner";
 import { IWalletData } from "../models/wallet-data";
-import { ITransactionQueryResult,IMempoolQueryResult } from "../components/transactions-table/transactions";
+import { ITransactionQueryResult,IMempoolQueryResult } from "../components/transactionsTable/Transactions";
 
 interface IProps{
   sessionData:IWalletData

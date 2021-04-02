@@ -12,7 +12,7 @@ import LedgerGetAddress from "./LedgerGetAddress";
 import ReactTooltip from "react-tooltip";
 import HelpHint from "../general/HelpHint";
 import { toast } from "react-toastify";
-import { IProps } from "./ledger-login-props";
+import { IProps } from "./LedgerLoginProps";
 
 const LedgerConnect = (props:IProps) =>  {
   const [isAvailable, setIsAvailable] = useState(false);

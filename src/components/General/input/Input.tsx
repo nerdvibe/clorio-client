@@ -1,4 +1,4 @@
-import { IInputProps } from "./input-props";
+import { IInputProps } from "./InputProps";
 
 const Input = (props:IInputProps) => {
   const { type, value, inputHandler, placeholder, small } = props;

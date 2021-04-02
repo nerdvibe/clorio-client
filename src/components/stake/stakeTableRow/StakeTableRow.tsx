@@ -1,7 +1,7 @@
 import Button from "../../general/Button";
 import StakeTableValue from "../StakeTableValue";
 import Avatar from "../../../tools/avatar";
-import { IValidatorData } from "./validator-data-interface";
+import { IValidatorData } from "./ValidatorDataInterface";
 
 interface IProps{
   index:number,

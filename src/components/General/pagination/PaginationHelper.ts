@@ -32,7 +32,8 @@ export const indexToRender = (page:number,indexes:number[],maxPages:number) => {
 }
 
 /**
- * Create an array based on the number of the pages
+ * Creates an array of numbers from 1 to n
+ * maxPages 10 -> return [1,2,...10]
  */
 export const createIndexesArray = (maxPages:number) => {
   const indexes = []

@@ -1,5 +1,5 @@
 import Hoc from "../components/general/Hoc";
-import VerifyForm from "../components/forms/verify-message/VerifyMessageForm";
+import VerifyForm from "../components/forms/verifyMessage/VerifyMessageForm";
 import { verifyMessage } from "@o1labs/client-sdk";
 import { toast } from "react-toastify";
 import {IMessageToVerify} from "../models/message-to-verify";

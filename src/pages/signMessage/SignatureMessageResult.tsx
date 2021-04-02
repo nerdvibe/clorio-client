@@ -1,4 +1,4 @@
-import SignMessageResult from "../../components/forms/sign-message/SignMessageResult";
+import SignMessageResult from "../../components/forms/signMessage/SignMessageResult";
 import Hoc from "../../components/general/Hoc";
 import { ISignMessage } from "./sign-message-interface";
 

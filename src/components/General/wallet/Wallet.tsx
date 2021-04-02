@@ -10,7 +10,7 @@ import ReactTooltip from "react-tooltip";
 import { BalanceContext } from "../../../context/balance/BalanceContext";
 import { GET_TICKER, GET_BALANCE } from "../../../graphql/query";
 import { DEFAULT_INTERVAL } from "../../../tools/const";
-import { renderBalance,renderAverageValue } from "./wallet-helper";
+import { renderBalance,renderAverageValue } from "./WalletHelper";
 
 const Wallet = () => {
   const [address, setAddress] = useState<string|undefined>(undefined);
