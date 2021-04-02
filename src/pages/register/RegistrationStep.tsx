@@ -3,7 +3,7 @@ import { Copy } from "react-feather";
 import { Link } from "react-router-dom";
 import Button from "../../components/general/Button";
 import Logo from "../../components/general/Logo";
-import { IKeypair } from "../../models/keypair";
+import { IKeypair } from "../../models/Keypair";
 import { copyToClipboard, downloadPaperWalletPDF } from "../../tools";
 
 interface IProps{

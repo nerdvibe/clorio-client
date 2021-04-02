@@ -35,7 +35,7 @@ import {
 import { derivePublicKey, signStakeDelegation } from "@o1labs/client-sdk";
 import { feeOrDefault } from "../tools/fees";
 import { toast } from "react-toastify";
-import { LedgerContext } from "../context/LedgerContext";
+import { LedgerContext } from "../context/ledger/LedgerContext";
 import { useContext } from "react";
 import { BalanceContext } from "../context/balance/BalanceContext";
 import Big from "big.js";

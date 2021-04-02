@@ -3,9 +3,9 @@ import Hoc from "../../components/general/Hoc";
 import SignMessageForm from "../../components/forms/signMessage/SignMessageForm";
 import { derivePublicKey, signMessage } from "@o1labs/client-sdk";
 import { toast } from "react-toastify";
-import { LedgerContext } from "../../context/LedgerContext";
+import { LedgerContext } from "../../context/ledger/LedgerContext";
 import { useContext } from "react";
-import { IMessageToSign } from "../../models/message-to-sign";
+import { IMessageToSign } from "../../models/MessageToSign";
 import SignatureMessageResult from "./SignatureMessageResult";
 import SignMessageLedgerScreen from "./SignMessageLedgerScreen";
 

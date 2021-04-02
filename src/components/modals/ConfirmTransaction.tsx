@@ -1,5 +1,5 @@
 import { Row, Col } from "react-bootstrap";
-import { ITransactionData } from "../../models/transaction-data";
+import { ITransactionData } from "../../models/TransactionData";
 import { toLongMINA } from "../../tools/utils";
 import Button from "../general/Button";
 

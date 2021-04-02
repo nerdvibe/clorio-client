@@ -69,7 +69,6 @@ const SignMessageForm = (props:IProps) => {
                   placeholder="Message "
                   inputHandler={(e) => setMessage(e.currentTarget.value)}
                 />
-                <span className="shadow-input1"></span>
               </div>
               <h3>Private key</h3>
               <div
@@ -84,7 +83,6 @@ const SignMessageForm = (props:IProps) => {
                   placeholder="Private key"
                   inputHandler={(e) => setPrivateKey(e.currentTarget.value)}
                 />
-                <span className="shadow-input1"></span>
               </div>
               <div className="v-spacer" />
               <Button

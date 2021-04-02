@@ -1,4 +1,4 @@
-import { INetworkData } from "../../models/network-data";
+import { INetworkData } from "../../models/NetworkData";
 
 export interface IProps {
   accountNumber?:number,

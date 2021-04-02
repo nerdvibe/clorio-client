@@ -4,7 +4,7 @@ import Hoc from "../../components/general/Hoc";
 import Footer from "../../components/general/Footer";
 import { storeSession } from "../../tools";
 import { genKeys } from "@o1labs/client-sdk";
-import { INetworkData } from "../../models/network-data";
+import { INetworkData } from "../../models/NetworkData";
 import RegisterStep from "./RegistrationStep";
 import ValidationStep from "./ValidationStep";
 

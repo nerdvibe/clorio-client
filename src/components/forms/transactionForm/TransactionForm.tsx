@@ -4,7 +4,7 @@ import { toMINA, toNanoMINA } from "../../../tools/utils";
 import Button from "../../general/Button";
 import Input from "../../general/input/Input";
 import { toast } from 'react-toastify';
-import { ITransactionData } from "../../../models/transaction-data";
+import { ITransactionData } from "../../../models/TransactionData";
 import { checkFieldsAndProceed } from "./TransactionFormHelper";
 
 interface IProps{

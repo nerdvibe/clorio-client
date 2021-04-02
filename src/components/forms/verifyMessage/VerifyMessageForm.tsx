@@ -3,7 +3,7 @@ import { Row, Col } from "react-bootstrap";
 import Button from "../../general/Button";
 import HelpHint from "../../general/HelpHint";
 import Input from "../../general/input/Input";
-import { IMessageToVerify } from "../../../models/message-to-verify";
+import { IMessageToVerify } from "../../../models/MessageToVerify";
 
 interface IProps{
   verifyMessage:(messageToVerify:IMessageToVerify)=>void;
@@ -66,7 +66,6 @@ const VerifyForm = (props:IProps) => {
                   placeholder="Message "
                   inputHandler={(e) => setMessage(e.currentTarget.value)}
                 />
-                <span className="shadow-input1"></span>
               </div>
               <div className="v-spacer" />
               <h3>Public key</h3>
@@ -83,7 +82,6 @@ const VerifyForm = (props:IProps) => {
                   placeholder="Public key "
                   inputHandler={(e) => setAddress(e.currentTarget.value)}
                 />
-                <span className="shadow-input1"></span>
               </div>
               <div className="v-spacer" />
               <h3>Field</h3>
@@ -100,7 +98,6 @@ const VerifyForm = (props:IProps) => {
                   placeholder="Field "
                   inputHandler={(e) => setField(e.currentTarget.value)}
                 />
-                <span className="shadow-input1"></span>
               </div>
               <div className="v-spacer" />
               <h3>Scalar</h3>
@@ -117,7 +114,6 @@ const VerifyForm = (props:IProps) => {
                   placeholder="Scalar "
                   inputHandler={(e) => setScalar(e.currentTarget.value)}
                 />
-                <span className="shadow-input1"></span>
               </div>
               <div className="v-spacer" />
               <Button

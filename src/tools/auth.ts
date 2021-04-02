@@ -1,5 +1,5 @@
-import { IWalletData } from '../models/wallet-data';
-import { INodeInfo } from "../models/network-data";
+import { IWalletData } from '../models/WalletData';
+import { INodeInfo } from "../models/NetworkData";
 
 const Datastore = require("nedb-promises");
 const db = Datastore.create();

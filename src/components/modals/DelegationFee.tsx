@@ -5,7 +5,7 @@ import { feeOrDefault } from "../../tools/fees";
 import { toMINA, toNanoMINA, feeGreaterThanMinimum } from "../../tools/utils";
 import Button from "../general/Button";
 import Input from "../general/input/Input";
-import {IEstimatedFee} from "../../models/fee" 
+import {IEstimatedFee} from "../../models/Fee" 
 
 const MINIMUM_FEE = toNanoMINA(0.001);
 

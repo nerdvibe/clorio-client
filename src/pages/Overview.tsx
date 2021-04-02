@@ -9,7 +9,7 @@ import { ITEMS_PER_PAGE, DEFAULT_INTERVAL } from "../tools/const";
 import { getPageFromOffset } from "../tools/utils";
 import { GET_MEMPOOL, GET_TRANSACTIONS, GET_HOME_NEWS } from "../graphql/query";
 import { Banner } from "../components/general/Banner";
-import { IWalletData } from "../models/wallet-data";
+import { IWalletData } from "../models/WalletData";
 import { ITransactionQueryResult,IMempoolQueryResult } from "../components/transactionsTable/Transactions";
 
 interface IProps{

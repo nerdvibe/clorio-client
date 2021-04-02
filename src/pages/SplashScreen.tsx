@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Footer from "../components/general/Footer";
 import Hoc from "../components/general/Hoc";
 import Homepage from "../components/general/Homepage";
-import { INetworkData } from "../models/network-data";
+import { INetworkData } from "../models/NetworkData";
 import { clearSession } from "../tools";
 
 interface IProps{

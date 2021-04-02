@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import Button from "../components/general/Button";
 import Input from "../components/general/input/Input";
 import Logo from "../components/general/Logo";
-import { INetworkData } from "../models/network-data";
+import { INetworkData } from "../models/NetworkData";
 import Spinner from "../components/general/Spinner";
 
 interface IProps {
