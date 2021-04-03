@@ -43,17 +43,18 @@ const Login = (props:IProps) => {
    * If Public key has been derived, show loader and set session data
    */
   useEffect(() => {
+    const storeSessionAndRedirect = async (publicKey:string,id:number) => {
+      const success = await storeSession(publicKey, id, false, 0)
+      if(success){
+        history.push("/overview");
+      }
+    }
     if (publicKey && publicKey !== "" && !userID.loading) {
-      const id =
-        userID.data?.public_keys?.length > 0
-          ? userID.data.public_keys[0].id
-          : -1;
-          props.setLoader();
-      storeSession(publicKey, id, false, 0).then((success) => {
-        if (success) {
-          history.push("/overview");
-        }
-      });
+      const id = userID.data?.public_keys?.length > 0
+        ? userID.data.public_keys[0].id
+        : -1;
+      props.setLoader();
+      storeSessionAndRedirect(publicKey,id);
     }
   }, [userID]);
 
