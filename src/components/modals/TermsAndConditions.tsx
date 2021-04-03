@@ -1,8 +1,8 @@
 import { useHistory } from "react-router";
-import Button from "../general/Button";
+import Button from "../UI/Button";
 import ModalContainer from "./ModalContainer";
 import { Check } from "react-feather";
-import Logo from "../general/Logo";
+import Logo from "../UI/Logo";
 
 const TermsAndConditions = () => {
   const session = sessionStorage.getItem("terms-and-conditions");

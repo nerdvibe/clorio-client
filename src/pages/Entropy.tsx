@@ -1,10 +1,10 @@
 import { useState } from "react";
-import Hoc from "../components/general/Hoc";
-import Logo from "../components/general/Logo";
+import Hoc from "../components/UI/Hoc";
+import Logo from "../components/UI/Logo";
 import { Row, Col } from "react-bootstrap";
-import Button from "../components/general/Button";
-import Footer from "../components/general/Footer";
-import ProgressBar from "../components/general/ProgressBar";
+import Button from "../components/UI/Button";
+import Footer from "../components/UI/Footer";
+import ProgressBar from "../components/UI/ProgressBar";
 
 const Entropy = () => {
   const [progress] = useState(20);

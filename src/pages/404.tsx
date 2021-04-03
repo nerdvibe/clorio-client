@@ -1,7 +1,7 @@
-import Hoc from "../components/general/Hoc";
-import Logo from "../components/general/Logo";
+import Hoc from "../components/UI/Hoc";
+import Logo from "../components/UI/Logo";
 import { Row, Col } from "react-bootstrap";
-import Button from "../components/general/Button";
+import Button from "../components/UI/Button";
 
 const NotFound = () => {
   return (

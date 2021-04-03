@@ -1,14 +1,14 @@
 import TransactionsTable from "../components/transactionsTable/TransactionsTable";
-import Hoc from "../components/general/Hoc";
+import Hoc from "../components/UI/Hoc";
 import { useQuery } from "@apollo/client";
-import Spinner from "../components/general/Spinner";
+import Spinner from "../components/UI/Spinner";
 import { useState } from "react";
 import { useContext } from "react";
 import { BalanceContext } from "../context/balance/BalanceContext";
 import { ITEMS_PER_PAGE, DEFAULT_INTERVAL } from "../tools/const";
 import { getPageFromOffset } from "../tools/utils";
 import { GET_MEMPOOL, GET_TRANSACTIONS, GET_HOME_NEWS } from "../graphql/query";
-import NewsBanner from "../components/general/NewsBanner";
+import NewsBanner from "../components/UI/NewsBanner";
 import { IWalletData } from "../models/WalletData";
 import { ITransactionQueryResult,IMempoolQueryResult } from "../components/transactionsTable/Transactions";
 

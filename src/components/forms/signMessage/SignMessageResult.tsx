@@ -1,6 +1,6 @@
 import { Col, Row } from "react-bootstrap"
 import { ISignature } from "../../../models/Signature"
-import Button from "../../general/Button"
+import Button from "../../UI/Button"
 
 interface IProps{
   signature:ISignature,

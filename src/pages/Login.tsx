@@ -1,18 +1,18 @@
 import { Row, Col } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
-import Hoc from "../components/general/Hoc";
-import Footer from "../components/general/Footer";
+import Hoc from "../components/UI/Hoc";
+import Footer from "../components/UI/Footer";
 import { useState, useEffect } from "react";
 import { storeSession } from "../tools";
 import { useQuery } from "@apollo/client";
 import { derivePublicKey } from "@o1labs/client-sdk";
 import { GET_ID } from "../graphql/query";
 import { toast } from "react-toastify";
-import Button from "../components/general/Button";
-import Input from "../components/general/input/Input";
-import Logo from "../components/general/Logo";
+import Button from "../components/UI/Button";
+import Input from "../components/UI/input/Input";
+import Logo from "../components/UI/Logo";
 import { INetworkData } from "../models/NetworkData";
-import Spinner from "../components/general/Spinner";
+import Spinner from "../components/UI/Spinner";
 
 interface IProps {
   setLoader:()=>void,

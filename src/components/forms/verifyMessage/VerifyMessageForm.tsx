@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Row, Col } from "react-bootstrap";
-import Button from "../../general/Button";
-import HelpHint from "../../general/HelpHint";
-import Input from "../../general/input/Input";
+import Button from "../../UI/Button";
+import HelpHint from "../../UI/HelpHint";
+import Input from "../../UI/input/Input";
 import { IMessageToVerify } from "../../../models/MessageToVerify";
 
 interface IProps{

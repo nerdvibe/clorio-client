@@ -1,4 +1,4 @@
-import Hoc from "../general/Hoc";
+import Hoc from "../UI/Hoc";
 
 interface IProps{
   close?:()=>void,

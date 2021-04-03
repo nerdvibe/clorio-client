@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import Hoc from "../components/general/Hoc";
-import Logo from "../components/general/Logo";
+import Hoc from "../components/UI/Hoc";
+import Logo from "../components/UI/Logo";
 import { Row, Col } from "react-bootstrap";
-import Button from "../components/general/Button";
+import Button from "../components/UI/Button";
 import { storeSession } from "../tools/auth";
-import Footer from "../components/general/Footer";
+import Footer from "../components/UI/Footer";
 import { useHistory } from "react-router-dom";
 
 export default function Verify() {

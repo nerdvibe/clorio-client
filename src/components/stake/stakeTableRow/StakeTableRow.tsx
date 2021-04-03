@@ -1,4 +1,4 @@
-import Button from "../../general/Button";
+import Button from "../../UI/Button";
 import StakeTableValue from "../StakeTableValue";
 import Avatar from "../../../tools/avatar";
 import { IValidatorData } from "./ValidatorDataInterface";

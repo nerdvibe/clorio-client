@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Row, Col } from "react-bootstrap";
 import { toMINA, toNanoMINA } from "../../../tools/utils";
-import Button from "../../general/Button";
-import Input from "../../general/input/Input";
+import Button from "../../UI/Button";
+import Input from "../../UI/input/Input";
 import { toast } from 'react-toastify';
 import { ITransactionData } from "../../../models/TransactionData";
 import { checkFieldsAndProceed } from "./TransactionFormHelper";

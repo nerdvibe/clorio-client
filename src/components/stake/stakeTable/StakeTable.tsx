@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Button from "../../general/Button";
+import Button from "../../UI/Button";
 import StakeTableRow from "../stakeTableRow/StakeTableRow";
 import { Row, Col, Table } from "react-bootstrap";
 import StakeStatus from "../StakeStatus";
@@ -8,7 +8,7 @@ import { GET_VALIDATORS_TOTAL } from "../../../graphql/query";
 import ReactTooltip from "react-tooltip";
 import {IValidatorData} from "../stakeTableRow/ValidatorDataInterface";
 import StakeTableError from "./StakeTableError";
-import Spinner from "../../general/Spinner";
+import Spinner from "../../UI/Spinner";
 
 interface IProps{
   error:any,

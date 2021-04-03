@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Hoc from "../../components/general/Hoc";
+import Hoc from "../../components/UI/Hoc";
 import SignMessageForm from "../../components/forms/signMessage/SignMessageForm";
 import { derivePublicKey, signMessage } from "@o1labs/client-sdk";
 import { toast } from "react-toastify";
