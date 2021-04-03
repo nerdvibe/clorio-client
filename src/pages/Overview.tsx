@@ -16,7 +16,7 @@ interface IProps{
   sessionData:IWalletData
 }
 
-export default function Overview(props:IProps) {
+const Overview = (props:IProps) => {
   const {sessionData} = props;
   const { balance }:any = useContext(BalanceContext);
   const [offset, setOffset] = useState(0);
@@ -39,7 +39,7 @@ export default function Overview(props:IProps) {
    * Set query offset param based on selected table page
    * @param {number} page Page number
    */
-  function changeOffset(page:number) {
+  const changeOffset = (page:number) => {
     const data = (page - 1) * ITEMS_PER_PAGE;
     setOffset(data);
   }
@@ -65,3 +65,5 @@ export default function Overview(props:IProps) {
     </Hoc>
   );
 }
+
+export default Overview;
