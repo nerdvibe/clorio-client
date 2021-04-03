@@ -47,7 +47,7 @@ export interface ITransactionTableProps{
 
 export interface ITransactionRowData{
   id:string,
-  amount:string,
+  amount:number,
   sender:string,
   receiver:string,
   isSelf:boolean,

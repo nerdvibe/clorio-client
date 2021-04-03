@@ -5,7 +5,7 @@ import { Copy } from "react-feather";
 import { readSession } from "../../../tools";
 import { useQuery } from "@apollo/client";
 import Avatar from "../../../tools/avatar";
-import { copyToClipboard, toMINA } from "../../../tools/utils";
+import { copyToClipboard, toMINA } from "../../../tools";
 import ReactTooltip from "react-tooltip";
 import { BalanceContext } from "../../../context/balance/BalanceContext";
 import { GET_TICKER, GET_BALANCE } from "../../../graphql/query";
@@ -13,7 +13,7 @@ import { DEFAULT_INTERVAL } from "../../../tools/const";
 import { renderBalance, userBalanceToBTCValue } from "./BalanceHelper";
 
 const Balance = () => {
-  const [address, setAddress] = useState<string|undefined>(undefined);
+  const [address, setAddress] = useState<string>("");
   const [userBalance, setUserBalance] = useState(0);
   const {setBalanceContext,shouldBalanceUpdate,setShouldBalanceUpdate}:any = useContext(BalanceContext);
   const {data:tickerData,loading:tickerLoading} = useQuery(GET_TICKER);
@@ -58,7 +58,7 @@ const Balance = () => {
     }
   }, [shouldBalanceUpdate, balanceData]);
 
-  if (address === undefined) {
+  if (address === "") {
     return <div />;
   }
 

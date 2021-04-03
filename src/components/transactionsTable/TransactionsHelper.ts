@@ -8,7 +8,7 @@ export const mempoolQueryRowToTableRow = (mempoolRow:IMempoolQueryData) => {
   const sender = mempoolRow.source && mempoolRow.source.publicKey;
   const receiver = mempoolRow.receiver && mempoolRow.receiver.publicKey;
   const isSelf = receiver === sender;
-  const fee = "Fee : " + (mempoolRow.fee ? toMINA(mempoolRow.fee) : 0) + " Mina";
+  const fee = "Fee : " + (mempoolRow.fee ? +toMINA(mempoolRow.fee) : 0) + " Mina";
   const memo = decodeB58(mempoolRow.memo);
   const type = ""
   return {
@@ -29,7 +29,7 @@ export const transactionQueryRowToTableRow = (transactionRow:ITransactionQueryDa
   const amount = transactionRow.amount ? toMINA(transactionRow.amount) : 0;
   const sender = transactionRow.publicKeyBySourceId.value;
   const receiver = transactionRow.publicKeyByReceiverId.value;
-  const fee = "Fee : " + (transactionRow.fee ? toMINA(transactionRow.fee) : 0) + " Mina";
+  const fee = "Fee : " + (transactionRow.fee ? + toMINA(transactionRow.fee) : 0) + " Mina";
   const type = transactionRow.type;
   const isSelf = receiver === sender;
   const memo = decodeB58(transactionRow.memo);

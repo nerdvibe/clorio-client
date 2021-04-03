@@ -2,13 +2,10 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { feeOrDefault } from "../../tools/fees";
-import { toMINA, toNanoMINA, feeGreaterThanMinimum } from "../../tools/utils";
+import { toMINA, toNanoMINA, feeGreaterThanMinimum, MINIMUM_FEE } from "../../tools";
 import Button from "../UI/Button";
 import Input from "../UI/input/Input";
 import {IEstimatedFee} from "../../models/Fee" 
-
-const MINIMUM_FEE = toNanoMINA(0.001);
-
 interface IProps{
   proceedHandler:(fee:number)=>void,
   fees?:{
@@ -20,7 +17,7 @@ const DelegationFee = (props:IProps) => {
   const {proceedHandler,fees} = props;
   const averageFee = feeOrDefault(fees?.estimatedFee?.txFees?.average || 0);
   const fastFee = feeOrDefault(fees?.estimatedFee?.txFees?.fast || 0);
-  const [fee, setFee] = useState(feeOrDefault(averageFee));
+  const [fee, setFee] = useState<string|number>(feeOrDefault(averageFee));
 
   /**
    * If the selected fee is less than the minimum show an error alert, otherwise close the modal

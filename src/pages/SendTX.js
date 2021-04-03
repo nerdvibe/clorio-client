@@ -21,7 +21,7 @@ import {
   createSignatureInputFromSignature,
   signTransaction,
 } from "../tools/transactions";
-import { toNanoMINA } from "../tools/utils";
+import { toNanoMINA } from "../tools";
 import {Big} from "big.js";
 import CustomNonce from "../components/modals/CustomNonce";
 import { BalanceContext } from "../context/balance/BalanceContext";
