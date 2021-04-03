@@ -7,3 +7,4 @@ export const MINIMUM_LEDGER_ACCOUNT_NUMBER = 0;
 // TODO : To be modified
 export const MAXIMUM_LEDGER_ACCOUNT_NUMBER = 10000;
 export const DEFAULT_VALID_UNTIL_FIELD = "4294967295";
+export const DEFAULT_FEE = 0.1;
