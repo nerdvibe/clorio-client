@@ -8,7 +8,7 @@ import { BalanceContext } from "../context/balance/BalanceContext";
 import { ITEMS_PER_PAGE, DEFAULT_INTERVAL } from "../tools/const";
 import { getPageFromOffset } from "../tools/utils";
 import { GET_MEMPOOL, GET_TRANSACTIONS, GET_HOME_NEWS } from "../graphql/query";
-import { Banner } from "../components/general/Banner";
+import NewsBanner from "../components/general/NewsBanner";
 import { IWalletData } from "../models/WalletData";
 import { ITransactionQueryResult,IMempoolQueryResult } from "../components/transactionsTable/Transactions";
 
@@ -48,7 +48,7 @@ export default function Overview(props:IProps) {
     <Hoc className="main-container">
       <Spinner show={transactions.loading}>
         <div>
-          <Banner {...latestNews} />
+          <NewsBanner {...latestNews} />
           <TransactionsTable
             transactions={transactions.data}
             mempool={mempool.data}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Banner } from "../components/general/Banner";
+import NewsBanner from "../components/general/NewsBanner";
 import StakeTable from "../components/stake/stakeTable/StakeTable";
 import Hoc from "../components/general/Hoc";
 import ModalContainer from "../components/modals/ModalContainer";
@@ -361,7 +361,7 @@ export default (props) => {
   return (
     <Hoc className="main-container">
       <div className="animate__animated animate__fadeIn">
-        <Banner {...latestNews} />
+        <NewsBanner {...latestNews} />
         <StakeTable
           toggleModal={openModal}
           validators={validatorsData?.validators}

@@ -10,14 +10,14 @@ import ReactTooltip from "react-tooltip";
 import { BalanceContext } from "../../../context/balance/BalanceContext";
 import { GET_TICKER, GET_BALANCE } from "../../../graphql/query";
 import { DEFAULT_INTERVAL } from "../../../tools/const";
-import { renderBalance,renderAverageValue } from "./WalletHelper";
+import { renderBalance, userBalanceToBTCValue } from "./BalanceHelper";
 
-const Wallet = () => {
+const Balance = () => {
   const [address, setAddress] = useState<string|undefined>(undefined);
   const [userBalance, setUserBalance] = useState(0);
   const {setBalanceContext,shouldBalanceUpdate,setShouldBalanceUpdate}:any = useContext(BalanceContext);
-  const ticker = useQuery(GET_TICKER);
-  const balance = useQuery(GET_BALANCE, {
+  const {data:tickerData,loading:tickerLoading} = useQuery(GET_TICKER);
+  const {data:balanceData,loading:balanceLoading,refetch:balanceRefetch} = useQuery(GET_BALANCE, {
     variables: {
       publicKey: address,
       notifyOnNetworkStatusChange: true,
@@ -46,15 +46,15 @@ const Wallet = () => {
 
   useEffect(() => {
     if (shouldBalanceUpdate) {
-      balance.refetch({ publicKey: address });
+      balanceRefetch({ publicKey: address });
       setShouldBalanceUpdate(false);
     }
-    if (balance.data?.accountByKey?.balance) {
-      const { unconfirmedTotal } = balance.data.accountByKey.balance;
+    if (balanceData?.accountByKey?.balance) {
+      const { unconfirmedTotal } = balanceData.accountByKey.balance;
       setUserBalance(unconfirmedTotal);
-      setBalanceContext(balance.data.accountByKey.balance);
+      setBalanceContext(balanceData.accountByKey.balance);
     }
-  }, [shouldBalanceUpdate, balance]);
+  }, [shouldBalanceUpdate, balanceData]);
 
   if (address === undefined) {
     return <div />;
@@ -89,16 +89,16 @@ const Wallet = () => {
                 <h6 className="secondaryText">Your balance</h6>
                 <h5
                   data-tip={`Locked: ${
-                    balance.data?.accountByKey?.balance?.locked
-                      ? toMINA(balance.data.accountByKey.balance.locked)
+                    balanceData?.accountByKey?.balance?.locked
+                      ? toMINA(balanceData.accountByKey.balance.locked)
                       : 0
                   } Mina <br/> Liquid: ${
-                    balance.data?.accountByKey?.balance?.liquid
-                      ? toMINA(balance.data.accountByKey.balance.liquid)
+                    balanceData?.accountByKey?.balance?.liquid
+                      ? toMINA(balanceData.accountByKey.balance.liquid)
                       : 0
                   } Mina`}
                 >
-                  {renderBalance(balance.data,balance.loading,userBalance)}
+                  {renderBalance({balanceData,balanceLoading,userBalance})}
                 </h5>
               </div>
               <div className="inline-block-element">
@@ -107,7 +107,7 @@ const Wallet = () => {
               <div className="inline-block-element">
                 <span>
                   <h6 className="secondaryText">BTC Apx. value</h6>
-                  <h5>{renderAverageValue(ticker.data,ticker.loading,userBalance)} </h5>
+                  <h5>{userBalanceToBTCValue({tickerData,tickerLoading,userBalance})} </h5>
                 </span>
               </div>
             </Col>
@@ -148,16 +148,16 @@ const Wallet = () => {
                 <h5
                   className="full-width-align-center"
                   data-tip={`Locked: ${
-                    balance.data?.accountByKey?.balance?.locked
-                      ? toMINA(balance.data.accountByKey.balance.locked)
+                    balanceData?.accountByKey?.balance?.locked
+                      ? toMINA(balanceData.accountByKey.balance.locked)
                       : 0
                   } Mina <br/> Liquid: ${
-                    balance.data?.accountByKey?.balance?.liquid
-                      ? toMINA(balance.data.accountByKey.balance.liquid)
+                    balanceData?.accountByKey?.balance?.liquid
+                      ? toMINA(balanceData.accountByKey.balance.liquid)
                       : 0
                   } Mina`}
                 >
-                  {renderBalance(balance.data,balance.loading,userBalance)}
+                  {renderBalance({balanceData,balanceLoading,userBalance})}
                 </h5>
               </div>
             </Col>
@@ -173,7 +173,7 @@ const Wallet = () => {
                     Apx value
                   </h6>
                   <h5 className="full-width-align-center">
-                    {renderAverageValue(ticker.data,ticker.loading,userBalance)}
+                    {userBalanceToBTCValue({tickerData,tickerLoading,userBalance})}
                   </h5>
                 </span>
               </div>
@@ -185,4 +185,4 @@ const Wallet = () => {
   );
 }
 
-export default Wallet;
+export default Balance;
