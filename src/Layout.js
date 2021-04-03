@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "./components/UI/sidebar/Sidebar";
 import { Col, Container, Row } from "react-bootstrap";
 import Routes from "./Routes";
-import { clearSession, readSession, storeNetworkData } from "./tools/auth";
+import { clearSession, readSession, storeNetworkData } from "./tools/db";
 import Spinner from "./components/UI/Spinner";
 import { useHistory } from "react-router-dom";
 import UpdateUserID from "./components/UI/UpdateUserID";
@@ -17,7 +17,7 @@ import TermsAndConditions from "./components/modals/TermsAndConditions";
 import { BalanceContextProvider } from "./context/balance/BalanceContext";
 
 const Layout = () => {
-  const [sessionData, setSessionData] = useState(undefined);
+  const [sessionData, setSessionData] = useState({});
   const [showLoader, setShowLoader] = useState(false);
   const { setLedgerContext } = useContext(LedgerContext);
   const history = useHistory();
@@ -30,28 +30,43 @@ const Layout = () => {
   });
 
   const goToHome = () => {
-    history.push("/");
+    history.push("/overview");
   };
 
-  readSession((data) => {
-    if (!sessionData) {
-      setSessionData(data);
-      if(setLedgerContext){
-        setLedgerContext({
-          ledger:data.ledger,
-          ledgerAccount: data.ledgerAccount
-        })
+  useEffect(() => {
+    const readAndSetSession = async () => {
+      const data = await readSession();
+      if(data) {
+        setSessionData(data);
+        if(setLedgerContext){
+          setLedgerContext({
+            ledger:data.ledger,
+            ledgerAccount: data.ledgerAccount
+          })
+        }
+        goToHome();
       }
+      setShowLoader(false);
     }
-  }, goToHome);
 
-  const setLoader = () => {
-    setSessionData(undefined);
+    if(showLoader){
+      readAndSetSession()
+    }
+  })
+
+
+  const toggleLoader = (state) => {
+    setShowLoader(state?state:!showLoader);
   };
+
+  const clearSessionData = () => {
+    setSessionData({})
+    setShowLoader(true);
+  }
 
   window.onbeforeunload = () => {
     clearSession();
-    setSessionData(undefined);
+    setSessionData({});
   };
 
   return (
@@ -61,7 +76,7 @@ const Layout = () => {
         <Row>
           {sessionData && !isEmptyObject(sessionData) && sessionData.address && (
             <Col md={3} lg={3} xl={2} id="sidebar-wrapper">
-              <Sidebar setLoader={setLoader} network={network.data} />
+              <Sidebar toggleLoader={toggleLoader} network={network.data} clearSessionData={clearSessionData}/>
             </Col>
           )}
           {}
@@ -74,15 +89,14 @@ const Layout = () => {
           >
             <Container className="contentWrapper animate__animated animate__fadeIn">
               <BalanceContextProvider>
-                <Spinner show={!sessionData || showLoader}>
+                <Spinner show={showLoader}>
                   {sessionData &&
                     !isEmptyObject(sessionData) &&
                     sessionData.address && <Balance />}
                   <Routes
                     sessionData={sessionData}
-                    setLoader={setLoader}
+                    toggleLoader={toggleLoader}
                     network={network.data}
-                    toggleLoader={setShowLoader}
                   />
                 </Spinner>
               </BalanceContextProvider>

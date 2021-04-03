@@ -2,7 +2,7 @@ import { useState, useEffect,useContext } from "react";
 import { Row, Col } from "react-bootstrap";
 import Button from "../Button";
 import { Copy } from "react-feather";
-import { getAddress } from "../../../tools";
+import { readSession } from "../../../tools";
 import { useQuery } from "@apollo/client";
 import Avatar from "../../../tools/avatar";
 import { copyToClipboard, toMINA } from "../../../tools/utils";
@@ -34,8 +34,10 @@ const Balance = () => {
 
   // Get sender public key
   const getAndSetAddress = async () => {
-    const walletAddress = await getAddress();
-    setAddress(walletAddress.address);
+    const walletAddress = await readSession();
+    if(walletAddress){
+      setAddress(walletAddress.address);
+    }
   }
 
   useEffect(() => {

@@ -9,11 +9,11 @@ import { INetworkData } from "../../../models/NetworkData";
 
 interface IProps{
   network:INetworkData,
-  setLoader:()=>void
+  clearSessionData:()=>void
 }
 
 const Sidebar = (props:IProps) => {
-  const {network,setLoader} = props;
+  const {network,clearSessionData} = props;
   const history = useHistory();
   const statusDot = network?.nodeInfo ? <span className="green-dot" /> : <span className="red-dot" />
 
@@ -21,9 +21,9 @@ const Sidebar = (props:IProps) => {
    * Clear session data and go back to splashscreen
    */
   const logout = () => {
-    setLoader();
     clearSession();
-    history.push("/overview");
+    history.replace("/");
+    clearSessionData();
   };
 
 

@@ -4,7 +4,7 @@ import StakeTable from "../components/stake/stakeTable/StakeTable";
 import Hoc from "../components/UI/Hoc";
 import ModalContainer from "../components/modals/ModalContainer";
 import { useQuery, useMutation } from "@apollo/client";
-import { getAddress } from "../tools";
+import { readSession } from "../tools";
 import { useEffect } from "react";
 import PrivateKeyModal from "../components/modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
@@ -86,7 +86,7 @@ export default (props) => {
 
   // Get sender public key
   const getAndSetAddress = async () => {
-    const walletAddress = await getAddress();
+    const walletAddress = await readSession();
     setAddress(walletAddress.address);
   }
 

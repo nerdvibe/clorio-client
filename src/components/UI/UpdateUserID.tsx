@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
-import { getWalletData, updateUser } from "../../tools/auth";
+import { readSession, updateUser } from "../../tools/db";
 import { GET_ID } from "../../graphql/query";
 import { IWalletData } from "../../models/WalletData";
 
@@ -20,7 +20,7 @@ const UpdateUserID = (props:IProps) => {
    * Set wallet address inside component state 
    */
   const setUserId = async () => {
-    const walletData:IWalletData = await getWalletData();
+    const walletData:IWalletData = await readSession();
     if (walletData?.id === -1) {
       if (sessionData?.address) {
         setAddress(sessionData.address);
