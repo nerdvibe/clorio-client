@@ -13,6 +13,7 @@ import ReactTooltip from "react-tooltip";
 import HelpHint from "../UI/HelpHint";
 import { toast } from "react-toastify";
 import { IProps } from "./LedgerLoginProps";
+import { TIME_DELAY,MINIMUM_LEDGER_ACCOUNT_NUMBER,MAXIMUM_LEDGER_ACCOUNT_NUMBER } from "../../tools";
 
 const LedgerConnect = (props:IProps) =>  {
   const [isAvailable, setIsAvailable] = useState(false);
@@ -21,7 +22,7 @@ const LedgerConnect = (props:IProps) =>  {
   const [proceedToLedger, setProceedToLedger] = useState(false);
   const [browserIncompatible, setBrowserIncompatible] = useState(false);
 
-  const check = async () => {
+  const checkLedgerMinaAppOpen = async () => {
     try {
       const open = await isMinaAppOpen();
       setIsAvailable(open);
@@ -34,22 +35,22 @@ const LedgerConnect = (props:IProps) =>  {
   };
 
   useEffect(() => {
-    let timerCheck = setInterval(() => check(), 2 * 1000);
+    let timerCheck = setInterval(() => checkLedgerMinaAppOpen(), TIME_DELAY);
     return () => {
       clearInterval(timerCheck);
     };
   }, []);
 
   const accountNumberHandler = (event:React.ChangeEvent<HTMLInputElement>) => {
-    const number = +event.target.value || 0;
+    const number = +event.target.value || MINIMUM_LEDGER_ACCOUNT_NUMBER;
     setAccountNumber(number);
   }
 
   const verifyAccountNumber = () => {
-    if (+accountNumber >= 0 && +accountNumber <= 10000) {
+    if (+accountNumber >= MINIMUM_LEDGER_ACCOUNT_NUMBER && +accountNumber <= MAXIMUM_LEDGER_ACCOUNT_NUMBER) {
       setProceedToLedger(true);
     } else {
-      toast.error("Account number should be between 0 and 10000");
+      toast.error(`Account number should be between ${MINIMUM_LEDGER_ACCOUNT_NUMBER} and ${MAXIMUM_LEDGER_ACCOUNT_NUMBER}`);
     }
   }
 

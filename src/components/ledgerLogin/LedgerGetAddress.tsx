@@ -12,6 +12,7 @@ import { GET_ID } from "../../graphql/query";
 import { getPublicKey } from "../../tools/ledger";
 import { toast } from "react-toastify";
 import { IProps } from "./LedgerLoginProps";
+import LedgerConfirmAddress from "./LedgerConfirmAddress";
 
 
 const LedgerGetAddress = (props:IProps) => {
@@ -64,41 +65,6 @@ const LedgerGetAddress = (props:IProps) => {
     }
   };
 
-  /**
-   * Render Ledger confirmation screen
-   * @returns HTMLElement
-   */
-  function renderAddressConfirm() {
-    if (publicKey) {
-      return (
-        <div>
-          <h5 className="full-width-align-center">This is your public key</h5>
-          <h5 className="full-width-align-center">
-            Please confirm your address on ledger{" "}
-          </h5>
-          <div className="v-spacer" />
-          <h6 className="full-width-align-center">{publicKey}</h6>
-          <div className="v-spacer" />
-          <div className="v-spacer" />
-          <Row>
-            <Col md={6}>
-              <Link to="/">
-                <Button className="link-button mx-auto" text="Go back" />
-              </Link>
-            </Col>
-            <Col md={6}>
-              <Button
-                className="lightGreenButton__fullMono mx-auto"
-                onClick={setSession}
-                text="Access wallet"
-              />
-            </Col>
-          </Row>
-        </div>
-      );
-    }
-  }
-
   return (
     <Hoc>
       <div className="block-container real-full-page-container center">
@@ -129,7 +95,9 @@ const LedgerGetAddress = (props:IProps) => {
                   </Link>
                 </div>
               ) : (
-                renderAddressConfirm()
+                <LedgerConfirmAddress 
+                  publicKey={publicKey}
+                  setSession={setSession} />
               )}
             </Col>
           </Row>

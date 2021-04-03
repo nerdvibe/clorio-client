@@ -1,5 +1,5 @@
 
-export interface ITransactionData{
+export interface ITransactionQueryData{
   type:string,
   publicKeyBySourceId:{
     value:string
@@ -20,7 +20,7 @@ export interface IBlockUserCommands{
   }
 }
 
-export interface IMempoolTransactionData{
+export interface IMempoolQueryData{
   amount:string,
   source:{
     publicKey:string
@@ -45,10 +45,22 @@ export interface ITransactionTableProps{
   setOffset:(page:number) => void
 }
 
+export interface ITransactionRowData{
+  id:string,
+  amount:string,
+  sender:string,
+  receiver:string,
+  isSelf:boolean,
+  fee:string,
+  memo:string,
+  type:string,
+  timestamp?:number
+}
+
 export interface ITransactionQueryResult{
-  user_commands:ITransactionData[]  
+  user_commands:ITransactionQueryData[]  
 }
 
 export interface IMempoolQueryResult{
-  mempool:IMempoolTransactionData[]  
+  mempool:IMempoolQueryData[]  
 }
