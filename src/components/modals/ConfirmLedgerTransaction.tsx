@@ -1,6 +1,6 @@
 import { Row, Col } from "react-bootstrap";
 import { ITransactionData } from "../../models/TransactionData";
-import { toLongMINA } from "../../tools/utils";
+import { toLongMINA } from "../../tools";
 
 const ConfirmLedgerTransaction = (props:ITransactionData) => {
   const { amount, fee, receiverAddress, memo } = props;

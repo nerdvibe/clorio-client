@@ -16,7 +16,7 @@ import {
   isMinaAppOpen,
   signTransaction,
 } from "../tools/ledger/ledger";
-import { getDefaultValidUntilField, toNanoMINA } from "../tools/utils";
+import { getDefaultValidUntilField, toNanoMINA } from "../tools";
 import LedgerLoader from "../components/UI/LedgerLoader";
 import CustomNonce from "../components/modals/CustomNonce";
 import Button from "../components/UI/Button";

@@ -99,6 +99,7 @@
     }
   },
   "devDependencies": {
+    "@types/big.js": "^6.0.2",
     "@types/react-router-dom": "5.1.7",
     "babel-eslint": "10.1.0",
     "electron": "11.2.0",

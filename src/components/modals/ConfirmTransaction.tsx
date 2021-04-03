@@ -1,6 +1,6 @@
 import { Row, Col } from "react-bootstrap";
 import { ITransactionData } from "../../models/TransactionData";
-import { toLongMINA } from "../../tools/utils";
+import { toLongMINA } from "../../tools";
 import Button from "../UI/Button";
 
 interface IProps{

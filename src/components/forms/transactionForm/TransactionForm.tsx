@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Row, Col } from "react-bootstrap";
-import { toMINA, toNanoMINA } from "../../../tools/utils";
+import { toMINA, toNanoMINA } from "../../../tools";
 import Button from "../../UI/Button";
 import Input from "../../UI/input/Input";
 import { toast } from 'react-toastify';
@@ -17,8 +17,8 @@ interface IProps{
 
 const TransactionForm = (props:IProps) => {
   const {transactionData,defaultFee,fastFee,setData,nextStep} = props;
-  const [amount, setAmount] = useState(toMINA(transactionData.amount));
-  const [fee, setFee] = useState(toMINA(transactionData.fee));
+  const [amount, setAmount] = useState<string|number>(toMINA(transactionData.amount));
+  const [fee, setFee] = useState<string|number>(toMINA(transactionData.fee));
 
   const setDefaultFee = () => {
     const fee = defaultFee;
