@@ -9,7 +9,7 @@ import UpdateUserID from "./components/general/UpdateUserID";
 import { useQuery } from "@apollo/client";
 import { isEmptyObject } from "./tools/utils";
 import Alert from "./components/general/Alert";
-import Wallet from "./components/general/wallet/Wallet";
+import Balance from "./components/general/balance/Balance";
 import { GET_NETWORK } from "./graphql/query";
 import { useContext } from "react";
 import { LedgerContext } from "./context/ledger/LedgerContext";
@@ -77,7 +77,7 @@ const Layout = () => {
                 <Spinner show={!sessionData || showLoader}>
                   {sessionData &&
                     !isEmptyObject(sessionData) &&
-                    sessionData.address && <Wallet />}
+                    sessionData.address && <Balance />}
                   <Routes
                     sessionData={sessionData}
                     setLoader={setLoader}

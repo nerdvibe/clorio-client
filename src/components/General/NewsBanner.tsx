@@ -3,7 +3,7 @@ import { INewsData } from "../../models/NewsData";
 import { isEmptyObject } from "../../tools/utils";
 import Button from "./Button";
 
-export const Banner = (props:INewsData) => {
+const NewsBanner = (props:INewsData) => {
   const { title, subtitle, link, cta, cta_color } = props;
 
   /**
@@ -49,3 +49,5 @@ export const Banner = (props:INewsData) => {
     <></>
   );
 };
+
+export default NewsBanner;

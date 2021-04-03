@@ -33,6 +33,14 @@ export const toMINA = (amount) => {
   return Big(amount).mul(1e-9).toFixed(3);
 };
 
+export function toLongMINA(amount) {
+  return Big(amount).mul(1e-9).toFixed(9);
+}
+
+export function toBTC(amount) {
+  return Big(amount).mul(1e-9).toFixed(3);
+}
+
 export const getDefaultValidUntilField = () => {
   return "4294967295";
 };
@@ -60,10 +68,6 @@ export const getTotalPages = (totalItems = 0) => {
 export const getPageFromOffset = (offset = 0) => {
   return offset / ITEMS_PER_PAGE + 1;
 };
-
-export function toLongMINA(amount) {
-  return Big(amount).mul(1e-9).toFixed(9);
-}
 
 export const downloadPaperWalletPDF = (keypair) => {
   const doc = new jsPDF();
