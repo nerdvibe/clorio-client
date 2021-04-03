@@ -13,7 +13,7 @@ interface IProps{
   network:INetworkData
 }
 
-export default function Register(props:IProps) {
+const Register = (props:IProps) => {
   const { setLoader,network } = props;
   const [validation, setValidation] = useState(false);
   const [validationText, setValidationText] = useState("");
@@ -43,14 +43,14 @@ export default function Register(props:IProps) {
    * If input text is equal to given private key in the previous state, unlock the Button
    * @returns boolean
    */
-  function checkButtonState() {
+  const checkButtonState = () => {
     return validationText !== keys.privateKey;
   }
 
   /**
    * Save public key inside the storage
    */
-  function setAuthorization() {
+  const setAuthorization = () => {
     setLoader();
     storeSession(keys.publicKey, -1, false, 0).then((success) => {
       if (success) {
@@ -62,14 +62,14 @@ export default function Register(props:IProps) {
   /**
    * Generate new key pair
    */
-  function generateNew() {
+  const generateNew = () => {
     setKeys(genKeys());
   }
 
   /**
    * Go back to data screen
    */
-  function stepBackwards() {
+  const stepBackwards = () => {
     setValidationText("");
     setValidation(false);
   } 
@@ -93,3 +93,5 @@ export default function Register(props:IProps) {
     </Hoc>
   );
 }
+
+export default Register;

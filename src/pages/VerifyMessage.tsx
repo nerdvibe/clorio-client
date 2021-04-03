@@ -4,7 +4,7 @@ import { verifyMessage } from "@o1labs/client-sdk";
 import { toast } from "react-toastify";
 import {IMessageToVerify} from "../models/MessageToVerify";
 
-export default function VerifyMessage() {
+const VerifyMessage = () => {
   /**
    * Using CodaSDK check if input message is valid
    */
@@ -39,3 +39,5 @@ export default function VerifyMessage() {
     </Hoc>
   );
 }
+
+export default VerifyMessage;

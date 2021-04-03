@@ -20,10 +20,10 @@ interface IProps {
   register:()=>void
 }
 
-export default function Login(props:IProps) {
+const Login = (props:IProps) => {
   const {register} = props;
   const [publicKey, setPublicKey] = useState("");
-  const [privateKey, setPrivatekey] = useState("");
+  const [privateKey, setPrivateKey] = useState("");
   const [loader, setLoader] = useState(false);
   const history = useHistory();
   const userID = useQuery(GET_ID, {
@@ -34,7 +34,7 @@ export default function Login(props:IProps) {
   // Clean component state on component dismount
   useEffect(() => {
     return () => {
-      setPrivatekey("");
+      setPrivateKey("");
       setPublicKey("");
     };
   }, []);
@@ -61,18 +61,18 @@ export default function Login(props:IProps) {
    * Set text from input inside component state
    * @param {event} e Input text
    */
-  function inputHandler(e:React.FormEvent<HTMLInputElement>) {
-    setPrivatekey(e.currentTarget.value);
+  const inputHandler = (e:React.FormEvent<HTMLInputElement>) => {
+    setPrivateKey(e.currentTarget.value);
   }
 
   /**
    * Uses CodaSDK to check if private key from input is valid
    */
-  function checkCredentials() {
+  const checkCredentials = async () => {
     try {
       const derivedPublicKey = derivePublicKey(privateKey);
       setPublicKey(derivedPublicKey);
-      userID.refetch({ publicKey: derivedPublicKey });
+      await userID.refetch({ publicKey: derivedPublicKey });
       setLoader(true);
     } catch (e) {
       toast.error("Private key not valid, please try again.");
@@ -83,7 +83,7 @@ export default function Login(props:IProps) {
    * If private key is not set or empty, disable button
    * @returns boolean
    */
-  function disableButton() {
+  const disableButton = () => {
     return !privateKey || privateKey === "";
   }
 
@@ -152,3 +152,5 @@ export default function Login(props:IProps) {
     </Hoc>
   );
 }
+
+export default Login;

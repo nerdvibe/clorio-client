@@ -29,7 +29,7 @@ const Entropy = () => {
               <div className="v-spacer" />
               <h4 className="full-width-align-center strong">
                 Here we go! <br />
-                Move your mouse aroud to create random Bytes.
+                Move your mouse around to create random Bytes.
               </h4>
               <ProgressBar progress={progress} text={generateRandomHex(progress)} />
               <div className="v-spacer" />
