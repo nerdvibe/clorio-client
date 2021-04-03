@@ -12,11 +12,10 @@ export const copyToClipboard = (content = "") => {
 };
 
 export const loadErrorMessage = () => {
-  document.getElementsByClassName("show-on-load")[0].style = "";
   document.getElementsByClassName("show-on-load")[0].className = "show-mob";
 };
 
-export const isEmptyObject = (objectToCheck) => {
+export const isEmptyObject = (objectToCheck:any) => {
   return (
     objectToCheck &&
     Object.entries(objectToCheck).length === 0 &&
@@ -24,7 +23,7 @@ export const isEmptyObject = (objectToCheck) => {
   );
 };
 
-export function toBTC(amount) {
+export function toBTC(amount:number) {
   return Big(amount).mul(1e-9).toFixed(3);
 }
 
@@ -56,7 +55,7 @@ export const getPageFromOffset = (offset = 0) => {
   return offset / ITEMS_PER_PAGE + 1;
 };
 
-export const feeGreaterThanMinimum = (fee) => {
+export const feeGreaterThanMinimum = (fee:number) => {
   if (fee) {
     const feeToSend = toNanoMINA(fee);
     const feeMinusMinimum = +Big(feeToSend).sub(MINIMUM_FEE);

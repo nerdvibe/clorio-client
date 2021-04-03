@@ -17,7 +17,7 @@ const DelegationFee = (props:IProps) => {
   const {proceedHandler,fees} = props;
   const averageFee = feeOrDefault(fees?.estimatedFee?.txFees?.average || 0);
   const fastFee = feeOrDefault(fees?.estimatedFee?.txFees?.fast || 0);
-  const [fee, setFee] = useState<string|number>(feeOrDefault(averageFee));
+  const [fee, setFee] = useState<number>(feeOrDefault(averageFee));
 
   /**
    * If the selected fee is less than the minimum show an error alert, otherwise close the modal
