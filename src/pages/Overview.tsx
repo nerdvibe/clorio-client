@@ -10,7 +10,7 @@ import { getPageFromOffset } from "../tools/utils";
 import { GET_MEMPOOL, GET_TRANSACTIONS, GET_HOME_NEWS } from "../graphql/query";
 import NewsBanner from "../components/UI/NewsBanner";
 import { IWalletData } from "../models/WalletData";
-import { ITransactionQueryResult,IMempoolQueryResult } from "../components/transactionsTable/Transactions";
+import { ITransactionQueryResult,IMempoolQueryResult } from "../components/transactionsTable/TransactionsTypes";
 
 interface IProps{
   sessionData:IWalletData

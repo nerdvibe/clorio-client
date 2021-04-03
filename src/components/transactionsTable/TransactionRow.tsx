@@ -1,21 +1,21 @@
 import { formatDistance } from "date-fns";
-import { ITransactionData } from "./Transactions";
-import { toMINA } from "../../tools";
-import { decodeB58 } from "../../tools/base58";
-import TransactionOrDelegationIcon from "./TransactionDelegationIcon";
+import TransactionIcon from "./TransactionIcon";
+import { ITransactionRowData } from "./TransactionsTypes";
 
-const TransactionRow = (row:ITransactionData, index:number, userAddress:string) => {
-  const { timestamp } = row.blocks_user_commands[0].block;
-  const amount = row.amount ? toMINA(row.amount) : 0;
-  const sender = row.publicKeyBySourceId.value;
-  const receiver = row.publicKeyByReceiverId.value;
-  const fee = "Fee : " + (row.fee ? toMINA(row.fee) : 0) + " Mina";
-  const type = row.type;
-  const timeDistance = formatDistance(timestamp, new Date(), {
+const TransactionRow = (
+  { timestamp,amount,sender,receiver,fee,memo,id,type }:ITransactionRowData, 
+  index:number, 
+  userAddress:string,
+  isMempool:boolean
+  ) => {
+  const timeDistance = (!isMempool && timestamp)  ? 
+  formatDistance(timestamp, new Date(), {
     includeSeconds: true,
     addSuffix: true,
-  });
-  const timeISOString = new Date(timestamp).toISOString();
+  }) :
+  ("Waiting for confirmation");
+  
+  const timeISOString = (!isMempool && timestamp) ? new Date(timestamp).toISOString() : "";
   const isOutgoing = userAddress === sender;
   const isSelf = receiver === sender;
   const humanAmount = isOutgoing
@@ -28,24 +28,26 @@ const TransactionRow = (row:ITransactionData, index:number, userAddress:string) 
       ? ""
       : "red"
     : "green";
-  const memo = decodeB58(row.memo);
+  
+  const urlPath = isMempool ? "payment" : "transaction"
+
 
   return (
     <tr key={index}>
       <td className="table-element table-icon">
         {" "}
-        {TransactionOrDelegationIcon(type, sender, receiver, userAddress)}{" "}
+        {TransactionIcon(type, sender, receiver, userAddress)}{" "}
       </td>
       <td
         className="table-element table-hash"
         data-tip={memo ? `Memo: ${memo}` : null}
       >
         <a
-          href={`${process.env.REACT_APP_EXPLORER_URL}/transaction/${row.hash}`}
+          href={`${process.env.REACT_APP_EXPLORER_URL}/${urlPath}/${id}`}
           target="_blank"
           rel="noreferrer"
         >
-          {row.hash}
+          {id}
         </a>
       </td>
       <td className="table-element" data-tip={timeISOString}>

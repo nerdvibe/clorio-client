@@ -1,6 +1,6 @@
 import { Check, ChevronRight, ChevronsDown, ChevronsUp } from "react-feather";
 
-const TransactionOrDelegationIcon = (txType:string, sender:string, receiver:string, userAddress:string) => {
+const TransactionIcon = (txType:string, sender:string, receiver:string, userAddress:string) => {
   if (txType === "delegation") {
     return <Check data-tip="Delegation TX" />;
   } else {
@@ -16,4 +16,4 @@ const TransactionOrDelegationIcon = (txType:string, sender:string, receiver:stri
   }
 }
 
-export default TransactionOrDelegationIcon;
+export default TransactionIcon;
