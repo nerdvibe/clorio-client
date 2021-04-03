@@ -1,5 +1,5 @@
 import { Row, Col } from "react-bootstrap";
-import Button from "../general/Button";
+import Button from "../UI/Button";
 
 interface IProps{
   confirmDelegate: () => void,

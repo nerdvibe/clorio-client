@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Hoc from "../general/Hoc";
-import Input from "../general/input/Input";
+import Hoc from "../UI/Hoc";
+import Input from "../UI/input/Input";
 import { isMinaAppOpen } from "../../tools/ledger";
 import { Row, Col } from "react-bootstrap";
-import Logo from "../general/Logo";
-import LedgerLoader from "../general/LedgerLoader";
-import Footer from "../general/Footer";
-import Button from "../general/Button";
+import Logo from "../UI/Logo";
+import LedgerLoader from "../UI/LedgerLoader";
+import Footer from "../UI/Footer";
+import Button from "../UI/Button";
 import LedgerGetAddress from "./LedgerGetAddress";
 import ReactTooltip from "react-tooltip";
-import HelpHint from "../general/HelpHint";
+import HelpHint from "../UI/HelpHint";
 import { toast } from "react-toastify";
 import { IProps } from "./LedgerLoginProps";
 

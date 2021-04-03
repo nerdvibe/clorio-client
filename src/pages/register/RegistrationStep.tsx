@@ -1,8 +1,8 @@
 import { Col, Row } from "react-bootstrap";
 import { Copy } from "react-feather";
 import { Link } from "react-router-dom";
-import Button from "../../components/general/Button";
-import Logo from "../../components/general/Logo";
+import Button from "../../components/UI/Button";
+import Logo from "../../components/UI/Logo";
 import { IKeypair } from "../../models/Keypair";
 import { copyToClipboard, downloadPaperWalletPDF } from "../../tools";
 

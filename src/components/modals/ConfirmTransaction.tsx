@@ -1,7 +1,7 @@
 import { Row, Col } from "react-bootstrap";
 import { ITransactionData } from "../../models/TransactionData";
 import { toLongMINA } from "../../tools/utils";
-import Button from "../general/Button";
+import Button from "../UI/Button";
 
 interface IProps{
   transactionData:ITransactionData,

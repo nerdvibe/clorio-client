@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import Footer from "../components/general/Footer";
-import Hoc from "../components/general/Hoc";
-import Homepage from "../components/general/Homepage";
+import Footer from "../components/UI/Footer";
+import Hoc from "../components/UI/Hoc";
+import Homepage from "../components/UI/Homepage";
 import { INetworkData } from "../models/NetworkData";
 import { clearSession } from "../tools";
 

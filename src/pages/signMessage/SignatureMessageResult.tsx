@@ -1,5 +1,5 @@
 import SignMessageResult from "../../components/forms/signMessage/SignMessageResult";
-import Hoc from "../../components/general/Hoc";
+import Hoc from "../../components/UI/Hoc";
 import { ISignMessage } from "./SignMessageInterface";
 
 interface IProps{

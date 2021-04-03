@@ -6,7 +6,7 @@ const SplashScreen = React.lazy(() => import("./pages/SplashScreen"));
 const Login = React.lazy(() => import("./pages/Login"));
 const Register = React.lazy(() => import("./pages/register/Register"));
 import { Route, Redirect, Switch } from "react-router-dom";
-import Spinner from "./components/general/Spinner";
+import Spinner from "./components/UI/Spinner";
 const LedgerLogin = React.lazy(() => import("./pages/LedgerLogin"));
 const SignMessage = React.lazy(() => import("./pages/signMessage/SignMessage"));
 const NotFound = React.lazy(() => import("./pages/404"));

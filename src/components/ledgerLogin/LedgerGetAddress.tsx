@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
-import Button from "../general/Button";
-import Hoc from "../general/Hoc";
-import Logo from "../general/Logo";
-import Footer from "../general/Footer";
+import Button from "../UI/Button";
+import Hoc from "../UI/Hoc";
+import Logo from "../UI/Logo";
+import Footer from "../UI/Footer";
 import { useQuery } from "@apollo/client";
 import { storeSession } from "../../tools";
-import LedgerLoader from "../general/LedgerLoader";
+import LedgerLoader from "../UI/LedgerLoader";
 import { GET_ID } from "../../graphql/query";
 import { getPublicKey } from "../../tools/ledger";
 import { toast } from "react-toastify";
