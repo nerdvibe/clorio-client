@@ -3,7 +3,7 @@ import TransactionForm from "../components/forms/transactionForm/TransactionForm
 import ConfirmTransaction from "../components/modals/ConfirmTransaction";
 import ConfirmLedgerTransaction from "../components/modals/ConfirmLedgerTransaction";
 import Hoc from "../components/UI/Hoc";
-import { getAddress } from "../tools";
+import { readSession } from "../tools";
 import ModalContainer from "../components/modals/ModalContainer";
 import BroadcastTransaction from "../components/modals/BroadcastTransaction";
 import { useQuery, useMutation } from "@apollo/client";
@@ -90,7 +90,7 @@ export default function SendTX(props) {
 
   // Get sender public key
   const getAndSetAddress = async () => {
-    const walletAddress = await getAddress();
+    const walletAddress = await readSession();
     setSenderAddress(walletAddress.address);
   }
 

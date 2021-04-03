@@ -21,7 +21,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
         if (
           rest.sessionData &&
           !isEmptyObject(rest.sessionData) &&
-          rest.sessionData.address
+          rest.sessionData?.address
         ) {
           return (
             <Component {...props} {...rest} sessionData={rest.sessionData} />

@@ -36,7 +36,7 @@ const LedgerGetAddress = (props:IProps) => {
    */
   const setSession = () => {
     if (userID.data && !!publicKey) {
-      props.setLoader();
+      props.toggleLoader();
       const id =
         userID.data?.public_keys?.length > 0
           ? userID.data.public_keys[0].id

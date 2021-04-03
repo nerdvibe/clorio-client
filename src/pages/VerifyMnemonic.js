@@ -3,7 +3,7 @@ import Hoc from "../components/UI/Hoc";
 import Logo from "../components/UI/Logo";
 import { Row, Col } from "react-bootstrap";
 import Button from "../components/UI/Button";
-import { storeSession } from "../tools/auth";
+import { storeSession } from "../tools/db";
 import Footer from "../components/UI/Footer";
 import { useHistory } from "react-router-dom";
 

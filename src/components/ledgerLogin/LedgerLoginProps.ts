@@ -2,6 +2,6 @@ import { INetworkData } from "../../models/NetworkData";
 
 export interface IProps {
   accountNumber?:number,
-  setLoader:()=>void,
+  toggleLoader:()=>void,
   network?:INetworkData
 }

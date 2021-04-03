@@ -15,13 +15,13 @@ import { INetworkData } from "../models/NetworkData";
 import Spinner from "../components/UI/Spinner";
 
 interface IProps {
-  setLoader:()=>void,
+  toggleLoader:(state:boolean)=>void,
   network:INetworkData,
   register:()=>void
 }
 
 const Login = (props:IProps) => {
-  const {register} = props;
+  const {register,toggleLoader} = props;
   const [publicKey, setPublicKey] = useState("");
   const [privateKey, setPrivateKey] = useState("");
   const [loader, setLoader] = useState(false);
@@ -47,13 +47,14 @@ const Login = (props:IProps) => {
       const success = await storeSession(publicKey, id, false, 0)
       if(success){
         history.push("/overview");
+        toggleLoader(false);
       }
     }
     if (publicKey && publicKey !== "" && !userID.loading) {
+      toggleLoader(true);
       const id = userID.data?.public_keys?.length > 0
         ? userID.data.public_keys[0].id
         : -1;
-      props.setLoader();
       storeSessionAndRedirect(publicKey,id);
     }
   }, [userID]);

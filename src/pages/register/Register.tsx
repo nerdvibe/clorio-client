@@ -9,12 +9,12 @@ import RegisterStep from "./RegistrationStep";
 import ValidationStep from "./ValidationStep";
 
 interface IProps{
-  setLoader:()=>void,
+  toggleLoader:()=>void,
   network:INetworkData
 }
 
 const Register = (props:IProps) => {
-  const { setLoader,network } = props;
+  const { toggleLoader,network } = props;
   const [validation, setValidation] = useState(false);
   const [validationText, setValidationText] = useState("");
   const [keys, setKeys] = useState({
@@ -51,7 +51,7 @@ const Register = (props:IProps) => {
    * Save public key inside the storage
    */
   const setAuthorization = () => {
-    setLoader();
+    toggleLoader();
     storeSession(keys.publicKey, -1, false, 0).then((success) => {
       if (success) {
         history.push("/overview");
