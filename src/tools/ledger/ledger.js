@@ -104,12 +104,12 @@ export const emojiToUnicode = (str) => {
 };
 
 
-export const createAndSignLedgerTransaction = async (
+export const createAndSignLedgerTransaction = async ({
   senderAccount,
   senderAddress,
   transactionData,
   nonce
-) => {
+}) => {
   const { receiverAddress, fee, amount, memo } = transactionData;
   // For now mina-ledger-js doesn't support emojis
   const cleanMemo = escapeUnicode(emojiToUnicode(memo));
@@ -158,13 +158,13 @@ export const createLedgerPaymentInputFromPayload = (
   };
 };
 
-export const createLedgerDelegationTransaction = (
+export const createLedgerDelegationTransaction = ({
   senderAccount,
   senderAddress,
   receiverAddress,
   averageFee,
   nonce
-) => {
+}) => {
   return {
     senderAccount,
     senderAddress,

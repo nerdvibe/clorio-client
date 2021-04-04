@@ -3,8 +3,14 @@ import { signPayment } from "@o1labs/client-sdk";
 import { IKeypair } from "../models/Keypair";
 import { ITransactionPayload } from '../models/TransactionPayload';
 
-// TODO : Fix props
-export const signTransaction = (transactionData:any, keypair:IKeypair, sender:string, actualNonce:number) => {
+interface ISignTransaction{
+  transactionData:any, 
+  keypair:IKeypair, 
+  sender:string, 
+  actualNonce:number
+}
+
+export const signTransaction = ({transactionData, keypair, sender, actualNonce}:ISignTransaction) => {
   const { fee, amount, receiverAddress, memo } = transactionData;
   const signedPayment = signPayment(
     {
