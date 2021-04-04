@@ -1,54 +1,54 @@
 import React, { useState } from "react";
-import NewsBanner from "../components/UI/NewsBanner";
-import StakeTable from "../components/stake/stakeTable/StakeTable";
-import Hoc from "../components/UI/Hoc";
-import ModalContainer from "../components/modals/ModalContainer";
+import NewsBanner from "../../components/UI/NewsBanner";
+import StakeTable from "../../components/stake/stakeTable/StakeTable";
+import Hoc from "../../components/UI/Hoc";
+import ModalContainer from "../../components/modals/ModalContainer";
 import { useQuery, useMutation } from "@apollo/client";
-import { readSession } from "../tools";
+import { isEmptyObject, readSession } from "../../tools";
 import { useEffect } from "react";
-import PrivateKeyModal from "../components/modals/PrivateKeyModal";
+import PrivateKeyModal from "../../components/modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
-import ConfirmDelegation from "../components/modals/ConfirmDelegation";
-import CustomDelegation from "../components/modals/CustomDelegation";
-import DelegationFee from "../components/modals/DelegationFee";
+import ConfirmDelegation from "../../components/modals/ConfirmDelegation";
+import CustomDelegation from "../../components/modals/CustomDelegation";
+import DelegationFee from "../../components/modals/DelegationFee";
 import {
   createLedgerDelegationTransaction,
   isMinaAppOpen,
   signTransaction,
-} from "../tools/ledger/ledger";
-import { getDefaultValidUntilField, toNanoMINA } from "../tools";
-import LedgerLoader from "../components/UI/LedgerLoader";
-import CustomNonce from "../components/modals/CustomNonce";
-import Button from "../components/UI/Button";
-import { DEFAULT_INTERVAL, ITEMS_PER_PAGE } from "../tools/const";
+} from "../../tools/ledger/ledger";
+import { getDefaultValidUntilField, toNanoMINA } from "../../tools";
+import LedgerLoader from "../../components/UI/LedgerLoader";
+import CustomNonce from "../../components/modals/CustomNonce";
+import Button from "../../components/UI/Button";
+import { DEFAULT_INTERVAL, ITEMS_PER_PAGE, MINIMUM_FEE, MINIMUM_NONCE } from "../../tools/const";
 import {
   BROADCAST_DELEGATION,
   GET_VALIDATORS,
   GET_AVERAGE_FEE,
   GET_VALIDATORS_NEWS,
   GET_NONCE_AND_DELEGATE,
-} from "../graphql/query";
+} from "../../graphql/query";
 import {
   createDelegationPaymentInputFromPayload,
   createSignatureInputFromSignature,
-} from "../tools/transactions";
+} from "../../tools/transactions";
 import { derivePublicKey, signStakeDelegation } from "@o1labs/client-sdk";
-import { feeOrDefault } from "../tools/fees";
+import { feeOrDefault } from "../../tools/fees";
 import { toast } from "react-toastify";
-import { LedgerContext } from "../context/ledger/LedgerContext";
+import { LedgerContext } from "../../context/ledger/LedgerContext";
 import { useContext } from "react";
-import { BalanceContext } from "../context/balance/BalanceContext";
+import { BalanceContext } from "../../context/balance/BalanceContext";
 import Big from "big.js";
+import { initialDelegateData, ModalStates } from "./StakeHelper";
+import { IValidatorData } from "../../components/stake/stakeTableRow/ValidatorDataInterface";
+import { IWalletData } from "../../models/WalletData";
 
-export default (props) => {
-  const ModalStates = Object.freeze({
-    PASSPHRASE: "passphrase",
-    CONFIRM_DELEGATION: "confirm",
-    CUSTOM_DELEGATION: "custom",
-    NONCE: "nonce",
-    FEE: "fee",
-  });
-  const [delegateData, setDelegate] = useState({});
+interface IProps {
+  sessionData:IWalletData
+}
+
+export default ({sessionData}:IProps) => {
+  const [delegateData, setDelegate] = useState<IValidatorData>(initialDelegateData);
   const [currentDelegate, setCurrentDelegate] = useState("");
   const [currentDelegateName, setCurrentDelegateName] = useState("");
   const [showModal, setShowModal] = useState("");
@@ -56,11 +56,11 @@ export default (props) => {
   const [privateKey, setPrivateKey] = useState("");
   const [customDelegate, setCustomDelegate] = useState("");
   const [offset, setOffset] = useState(0);
-  const [customNonce, setCustomNonce] = useState(undefined);
-  const [selectedFee, setSelectedFee] = useState(toNanoMINA(0.001));
+  const [customNonce, setCustomNonce] = useState(MINIMUM_NONCE);
+  const [selectedFee, setSelectedFee] = useState(toNanoMINA(MINIMUM_FEE));
   const [sendTransactionFlag, setSendTransactionFlag] = useState(false);
-  const { isLedgerEnabled } = useContext(LedgerContext);
-  const { balance, setShouldBalanceUpdate } = useContext(BalanceContext);
+  const { isLedgerEnabled }:any = useContext(LedgerContext);
+  const { balance, setShouldBalanceUpdate }:any = useContext(BalanceContext);
   const {
     data: validatorsData,
     error: validatorsError,
@@ -69,26 +69,19 @@ export default (props) => {
   const fee = useQuery(GET_AVERAGE_FEE);
   const news = useQuery(GET_VALIDATORS_NEWS);
   const nonceAndDelegate = useQuery(GET_NONCE_AND_DELEGATE, {
-    variables: { publicKey: props.sessionData.address },
+    variables: { publicKey: sessionData.address },
     fetchPolicy: "network-only",
     pollInterval: DEFAULT_INTERVAL,
   });
   const history = useHistory();
   const [ledgerTransactionData, setLedgerTransactionData] = useState(undefined);
-  const latestNews =
-    news.data?.news_validators.length > 0 ? news.data?.news_validators[0] : {};
+  const latestNews = news.data?.news_validators.length > 0 ? news.data?.news_validators[0] : {};
   const [broadcastDelegation] = useMutation(BROADCAST_DELEGATION, {
     onError: (error) => {
       toast.error(error.message);
       return clearState();
     },
   });
-
-  // Get sender public key
-  const getAndSetAddress = async () => {
-    const walletAddress = await readSession();
-    setAddress(walletAddress.address);
-  }
 
   useEffect(() => {
     if(address===""){
@@ -122,47 +115,58 @@ export default (props) => {
     if (isLedgerEnabled && !ledgerTransactionData) {
       if (showModal === ModalStates.PASSPHRASE) {
         const transactionListener = signLedgerTransaction();
+        // @ts-ignore
         return transactionListener.unsubscribe;
       }
     }
   }, [ledgerTransactionData, showModal]);
 
   useEffect(() => {
-    if (ledgerTransactionData) {
-      const actualNonce = getNonce();
-      const SignatureInput = {
-        rawSignature: ledgerTransactionData,
-      };
-      const SendPaymentInput = {
-        nonce: actualNonce.toString(),
-        memo: "",
-        fee: selectedFee.toString(),
-        to: delegateData.publicKey,
-        from: address,
-        validUntil: getDefaultValidUntilField(),
-      };
-      broadcastDelegation({
-        variables: { input: SendPaymentInput, signature: SignatureInput },
-      });
-      setSendTransactionFlag(true);
-    }
-  }, [ledgerTransactionData]);
-
-  useEffect(() => {
     if (sendTransactionFlag) {
       clearState();
       setShouldBalanceUpdate(true);
-      nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
+      nonceAndDelegate.refetch({ publicKey: sessionData.address });
       toast.success("Delegation successfully broadcasted");
       history.push("/stake");
     }
+    broadcastLedgerTransaction()
   }, [sendTransactionFlag]);
+
+  // Get sender public key
+  const getAndSetAddress = async () => {
+    const walletAddress = await readSession();
+    setAddress(walletAddress.address);
+  }
+
+  const broadcastLedgerTransaction = () => {
+    try{
+      if (ledgerTransactionData && !sendTransactionFlag) {
+        const actualNonce = getNonce();
+        const publicKey = delegateData?.publicKey;
+        const SignatureInput = {rawSignature: ledgerTransactionData};
+        const SendPaymentInput = {
+          nonce: actualNonce.toString(),
+          memo: "",
+          fee: selectedFee.toString(),
+          to: publicKey,
+          from: address,
+          validUntil: getDefaultValidUntilField(),
+        };
+        broadcastDelegation({
+          variables: { input: SendPaymentInput, signature: SignatureInput },
+        });
+        setSendTransactionFlag(true);
+      }
+    } catch (e) {
+      toast.error(e.message)
+    }
+  }
 
   /**
    * Throw error if the fee is greater than the balance
    * @param {number} transactionFee
    */
-  const checkBalance = (transactionFee) => {
+  const checkBalance = (transactionFee:number) => {
     const available = balance.liquidUnconfirmed;
     const balanceAfterTransaction = Big(available)
       .minus(transactionFee)
@@ -222,7 +226,7 @@ export default (props) => {
    * Set delegate private key on component state, open confirmation modal
    * @param {string} delegate Delegate private key
    */
-  function openModal(delegate) {
+  function openModal(delegate:IValidatorData) {
     setDelegate(delegate);
     setShowModal(ModalStates.CONFIRM_DELEGATION);
   }
@@ -239,8 +243,8 @@ export default (props) => {
    */
   function closeModal() {
     setShowModal("");
-    setCustomNonce(undefined);
-    setCustomDelegate(undefined);
+    setCustomNonce(MINIMUM_NONCE);
+    setCustomDelegate("");
   }
 
   /**
@@ -251,11 +255,11 @@ export default (props) => {
       if ((!nonceAndDelegate || !nonceAndDelegate.data) && !customNonce) {
         setShowModal(ModalStates.NONCE);
       } else if (customDelegate) {
-        nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
+        nonceAndDelegate.refetch({ publicKey: sessionData.address });
         setShowModal(ModalStates.FEE);
         setDelegate({ publicKey: customDelegate });
       } else {
-        nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
+        nonceAndDelegate.refetch({ publicKey: sessionData.address });
         setShowModal(ModalStates.FEE);
       }
     } catch (e) {
@@ -267,9 +271,9 @@ export default (props) => {
    * User confirmed delegate public key, proceeds to private key insertion
    * @param {string} delegate Delegate private key
    */
-  function confirmCustomDelegate(delegate) {
+  function confirmCustomDelegate(delegate:string) {
     try {
-      nonceAndDelegate.refetch({ publicKey: props.sessionData.address });
+      nonceAndDelegate.refetch({ publicKey: sessionData.address });
       setShowModal(ModalStates.FEE);
       setDelegate({ publicKey: delegate });
     } catch (e) {
@@ -282,7 +286,7 @@ export default (props) => {
    */
   function closeNonceModal() {
     setShowModal("");
-    setCustomNonce(undefined);
+    setCustomNonce(MINIMUM_NONCE);
   }
 
   /**
@@ -290,9 +294,9 @@ export default (props) => {
    */
   function clearState() {
     setShowModal("");
-    setDelegate({});
+    setDelegate(initialDelegateData);
     setSendTransactionFlag(false);
-    setCustomNonce(undefined);
+    setCustomNonce(MINIMUM_NONCE);
     setPrivateKey("")
     setCustomDelegate("");
     setLedgerTransactionData(undefined);
@@ -303,12 +307,12 @@ export default (props) => {
    * Set query offset based on selected page
    * @param {number} page Page number
    */
-  function changeOffset(page) {
+  function changeOffset(page:number) {
     const data = (page - 1) * ITEMS_PER_PAGE;
     setOffset(data);
   }
 
-  const setFee = (value) => {
+  const setFee = (value:number) => {
     setSelectedFee(value);
     setShowModal(ModalStates.PASSPHRASE);
   };
@@ -325,15 +329,15 @@ export default (props) => {
       await isMinaAppOpen();
       checkBalance(selectedFee);
       const actualNonce = getNonce();
-      const senderAccount = props.sessionData?.ledgerAccount || 0;
+      const senderAccount = sessionData?.ledgerAccount || 0;
       const receiverAddress = delegateData?.publicKey;
-      const transactionToSend = createLedgerDelegationTransaction(
+      const transactionToSend = createLedgerDelegationTransaction({
         senderAccount,
-        address,
+        senderAddress:address,
         receiverAddress,
-        +selectedFee,
-        actualNonce
-      );
+        fee:+selectedFee,
+        nonce:actualNonce
+      });
       const signature = await signTransaction(transactionToSend);
       setShowModal(ModalStates.BROADCASTING);
       setLedgerTransactionData(signature.signature);
@@ -341,7 +345,7 @@ export default (props) => {
       toast.error(
         e.message || "An error occurred while loading hardware wallet"
       );
-      setShowModal(undefined);
+      setShowModal("");
     }
   };
 
@@ -379,7 +383,7 @@ export default (props) => {
         close={closeModal}
       >
         <ConfirmDelegation
-          name={delegateData.name}
+          name={delegateData?.name}
           closeModal={closeModal}
           confirmDelegate={confirmDelegate}
         />

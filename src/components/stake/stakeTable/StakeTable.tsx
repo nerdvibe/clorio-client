@@ -3,8 +3,6 @@ import Button from "../../UI/Button";
 import StakeTableRow from "../stakeTableRow/StakeTableRow";
 import { Row, Col, Table } from "react-bootstrap";
 import StakeStatus from "../StakeStatus";
-import { useQuery } from "@apollo/client";
-import { GET_VALIDATORS_TOTAL } from "../../../graphql/query";
 import ReactTooltip from "react-tooltip";
 import {IValidatorData} from "../stakeTableRow/ValidatorDataInterface";
 import StakeTableError from "./StakeTableError";
@@ -13,17 +11,17 @@ import Spinner from "../../UI/Spinner";
 interface IProps{
   error:any,
   validators:IValidatorData[],
-  toggleModal:()=>void,
+  toggleModal:(element:IValidatorData)=>void,
   openCustomDelegateModal:()=>void,
   currentDelegate:string,
   currentDelegateName:string,
-  loading:boolean
+  loading:boolean,
+  page:number,
+  setOffset:(page:number)=>void
 }
 
-const StakeTable = (props:IProps) => {
-  const {error,validators,toggleModal,openCustomDelegateModal,currentDelegate,currentDelegateName,loading} = props;
+const StakeTable = ({error,validators,toggleModal,openCustomDelegateModal,currentDelegate,currentDelegateName,loading}:IProps) => {
   const [searchBox, setSearchBox] = useState("");
-  const total = useQuery(GET_VALIDATORS_TOTAL);
 
   /**
    * Store search text inside component state
@@ -40,7 +38,7 @@ const StakeTable = (props:IProps) => {
   const tableBody = () => {
     if (validators) {
       const filteredValidators = validators.filter((el) =>
-        el.name.toLowerCase().includes(searchBox)
+        el?.name?.toLowerCase().includes(searchBox)
       );
       return (
         <tbody>

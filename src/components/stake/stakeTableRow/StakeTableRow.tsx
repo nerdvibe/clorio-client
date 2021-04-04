@@ -51,7 +51,7 @@ const StakeTableRow = (props:IProps) => {
       <StakeTableValue
         className="table-element"
         header={"Staked"}
-        text={`${parseInt(element.stakedSum)} Mina`}
+        text={`${parseInt(element?.stakedSum || "0")} Mina`}
       />
       <StakeTableValue
         className="table-element"
