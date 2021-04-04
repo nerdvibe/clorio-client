@@ -4,7 +4,7 @@ import Button from "../UI/Button";
 interface IProps{
   confirmDelegate: () => void,
   closeModal: () => void,
-  name:string
+  name?:string
 }
 
 const ConfirmDelegation = (props:IProps) => {

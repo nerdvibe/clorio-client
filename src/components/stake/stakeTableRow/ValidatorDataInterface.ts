@@ -1,9 +1,9 @@
 export interface IValidatorData{
-  priority:number,
+  priority?:number,
   image?:string,
   publicKey:string,
-  name:string
-  fee:number,
-  stakedSum:string,
+  name?:string
+  fee?:number,
+  stakedSum?:string,
   website?:string
 }

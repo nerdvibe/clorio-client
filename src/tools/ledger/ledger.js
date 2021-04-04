@@ -162,14 +162,14 @@ export const createLedgerDelegationTransaction = ({
   senderAccount,
   senderAddress,
   receiverAddress,
-  averageFee,
+  fee,
   nonce
 }) => {
   return {
     senderAccount,
     senderAddress,
     receiverAddress,
-    fee: +toNanoMINA(feeOrDefault(averageFee)),
+    fee: +toNanoMINA(feeOrDefault(fee)),
     amount: 0,
     nonce,
     // TODO: FIX HARDCODING!

@@ -8,6 +8,7 @@ import Input from "../UI/input/Input";
 import {IEstimatedFee} from "../../models/Fee" 
 interface IProps{
   proceedHandler:(fee:number)=>void,
+  closeModal:()=>void,
   fees?:{
     estimatedFee:IEstimatedFee
   }

@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 const Overview = React.lazy(() => import("./pages/Overview"));
 const SendTX = React.lazy(() => import("./pages/sendTX/SendTX"));
-const Stake = React.lazy(() => import("./pages/Stake"));
+const Stake = React.lazy(() => import("./pages/stake/Stake"));
 const SplashScreen = React.lazy(() => import("./pages/SplashScreen"));
 const Login = React.lazy(() => import("./pages/Login"));
 const Register = React.lazy(() => import("./pages/register/Register"));
