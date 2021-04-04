@@ -3,7 +3,7 @@ import Button from "../UI/Button";
 import Input from "../UI/input/Input";
 
 interface IProps{
-  subtitle:string,
+  subtitle?:string,
   setPrivateKey:(privateKey:string)=>void,
   closeModal:()=>void,
   confirmPrivateKey:()=>void

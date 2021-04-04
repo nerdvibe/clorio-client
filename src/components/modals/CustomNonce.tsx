@@ -3,7 +3,7 @@ import Input from "../UI/input/Input";
 
 interface IProps{
   proceedHandler:() => void;
-  setCustomNonce:(customNonce:string) => void;
+  setCustomNonce:(customNonce:number) => void;
 }
 
 const CustomNonce = (props:IProps) => {
@@ -20,7 +20,7 @@ const CustomNonce = (props:IProps) => {
         <div className="v-spacer" />
         <Input
           type="number"
-          inputHandler={(e) => setCustomNonce(e.target.value)}
+          inputHandler={(e) => setCustomNonce(+e.target.value)}
         />
         <div className="v-spacer" />
         <Button

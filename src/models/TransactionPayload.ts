@@ -1,9 +1,11 @@
+import { uint32, uint64 } from "@o1labs/client-sdk/src/TSTypes";
+
 export interface ITransactionPayload{
-  nonce: number,
+  nonce: uint32,
   memo?: string,
-  fee: number,
-  amount: number,
+  fee: uint64,
+  amount: uint64,
   to: string,
   from: string,
-  validUntil?: number,
+  validUntil?: uint32
 }
