@@ -1,8 +1,8 @@
 import { useHistory } from "react-router";
 import Button from "../UI/Button";
-import ModalContainer from "./ModalContainer";
 import { Check } from "react-feather";
 import Logo from "../UI/Logo";
+import ModalContainer from "./ModalContainer";
 
 const TermsAndConditions = () => {
   const session = sessionStorage.getItem("terms-and-conditions");
@@ -23,19 +23,27 @@ const TermsAndConditions = () => {
         <h2 className="align-center mx-auto">👋 Welcome to Clorio Wallet</h2>
         <hr />
         <div className="terms">
+          {" "}
           <p>
             ~Clorio lets you use the Mina Protocol currency. You are the
             custodian of your own private keys, this comes with the big
             responsibility that you have to safe-keep your keys. Never ever
-            disclose your private key to anyone, prefer desktop wallets over web
-            wallets, and follow the best security practices such as using a
-            hardware wallet.
+            disclose your private key to anyone, and follow the best security
+            practices such as using a hardware wallet.
           </p>
           <p>
             Only use ~Clorio if you accept that you alone are responsible for
             any loss incurred. This wallet is open source, you should audit the
             source code before using this software and you are invited to run
-            your own infrastructure.
+            your own infrastructure. This is an early beta of ~Clorio, please
+            report any issue on{" "}
+            <a
+              href="https://discord.gg/4GnkRqwsDK"
+              target="_blank"
+              rel="noreferrer">
+              WeStake.Club&apos;s discord
+            </a>
+            .
           </p>
           <p>
             By using ~Clorio Wallet you agree to the{" "}
