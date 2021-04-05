@@ -16,8 +16,10 @@ const initialBalance = {
 };
 
 export const BalanceContextProvider = (props: IProps) => {
-  const [shouldBalanceUpdate, setShouldBalanceUpdate] = useState(false);
-  const [balance, setBalanceData] = useState(initialBalance);
+  const [shouldBalanceUpdate, setShouldBalanceUpdate] = useState<boolean>(
+    false,
+  );
+  const [balance, setBalanceData] = useState<IBalanceData>(initialBalance);
 
   const setBalanceContext = (data: IBalanceData) => {
     if (data) {

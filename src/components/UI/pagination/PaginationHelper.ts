@@ -1,11 +1,18 @@
-export const indexToRender = (
-  page: number,
-  indexes: number[],
-  maxPages: number,
-) => {
+/**
+ * Generate the array containing the pages based on the current page
+ * eg. page: 1 maxPages: 1 => [1]
+ * eg. page: 2 maxPages: 3 => [1,2,3]
+ * eg. page: 1 maxPages: 8 => [1,2,3,4,5]
+ * eg. page: 4 maxPages: 8 => [2,3,4,5,6]
+ * eg. page: 6 maxPages: 8 => [4,5,6,7,8]
+ * @param page number current page
+ * @param maxPages number
+ * @returns number[]
+ */
+export const indexToRender = (page: number, maxPages: number) => {
   const indexToReturn = [];
   let count = 0;
-  if (page > 2 && page < indexes.length - 2) {
+  if (page > 2 && page < maxPages - 2) {
     const tmpIndex = page - 2;
     while (count < 5) {
       indexToReturn.push(tmpIndex + count);
@@ -19,13 +26,13 @@ export const indexToRender = (
     }
   } else {
     if (maxPages <= 5) {
-      const tmpFirstIndex = indexes.length - (maxPages - 1);
+      const tmpFirstIndex = maxPages - (maxPages - 1);
       while (count < maxPages) {
         indexToReturn.push(tmpFirstIndex + count);
         count++;
       }
     } else {
-      const tmpFirstIndex = indexes.length - 4;
+      const tmpFirstIndex = maxPages - 4;
       while (count < 5) {
         indexToReturn.push(tmpFirstIndex + count);
         count++;

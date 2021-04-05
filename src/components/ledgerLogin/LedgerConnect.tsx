@@ -20,12 +20,28 @@ import {
 } from "../../tools";
 
 const LedgerConnect = (props: IProps) => {
-  const [isAvailable, setIsAvailable] = useState(false);
-  const [customAccount, setCustomAccount] = useState(false);
-  const [accountNumber, setAccountNumber] = useState(0);
-  const [proceedToLedger, setProceedToLedger] = useState(false);
-  const [browserIncompatible, setBrowserIncompatible] = useState(false);
+  const [isAvailable, setIsAvailable] = useState<boolean>(false);
+  const [customAccount, setCustomAccount] = useState<boolean>(false);
+  const [accountNumber, setAccountNumber] = useState<number>(0);
+  const [proceedToLedger, setProceedToLedger] = useState<boolean>(false);
+  const [browserIncompatible, setBrowserIncompatible] = useState<boolean>(
+    false,
+  );
 
+  /**
+   * On component load check for the Ledger Mina app on the connected Ledger
+   * On component dismount clear the time interval
+   */
+  useEffect(() => {
+    let timerCheck = setInterval(() => checkLedgerMinaAppOpen(), TIME_DELAY);
+    return () => {
+      clearInterval(timerCheck);
+    };
+  }, []);
+
+  /**
+   * Check if Ledger Mina app is open on the connected Ledger
+   */
   const checkLedgerMinaAppOpen = async () => {
     try {
       const open = await isMinaAppOpen();
@@ -38,18 +54,18 @@ const LedgerConnect = (props: IProps) => {
     }
   };
 
-  useEffect(() => {
-    let timerCheck = setInterval(() => checkLedgerMinaAppOpen(), TIME_DELAY);
-    return () => {
-      clearInterval(timerCheck);
-    };
-  }, []);
-
+  /**
+   * Set account number inside the component state
+   * @param event input text
+   */
   const accountNumberHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const number = +event.target.value || MINIMUM_LEDGER_ACCOUNT_NUMBER;
     setAccountNumber(number);
   };
 
+  /**
+   * Check if the selected account number is between the minimum and the maximum
+   */
   const verifyAccountNumber = () => {
     if (
       +accountNumber >= MINIMUM_LEDGER_ACCOUNT_NUMBER &&

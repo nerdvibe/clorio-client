@@ -9,8 +9,12 @@ interface IProps {
   reset: () => void;
 }
 
-const SignMessageResult = (props: IProps) => {
-  const { publicKey, payload, signature, reset } = props;
+const SignMessageResult = ({
+  publicKey,
+  payload,
+  signature,
+  reset,
+}: IProps) => {
   const { field, scalar } = signature;
   return (
     <div className="mx-auto">

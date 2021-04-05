@@ -29,7 +29,7 @@ const StakeTable = ({
   currentDelegateName,
   loading,
 }: IProps) => {
-  const [searchBox, setSearchBox] = useState("");
+  const [searchBox, setSearchBox] = useState<string>("");
 
   /**
    * Store search text inside component state
@@ -39,10 +39,6 @@ const StakeTable = ({
     setSearchBox(search.toLowerCase());
   };
 
-  /**
-   * Store search text inside component state
-   * @param search string Search text
-   */
   const tableBody = () => {
     if (validators) {
       const filteredValidators = validators.filter(el =>

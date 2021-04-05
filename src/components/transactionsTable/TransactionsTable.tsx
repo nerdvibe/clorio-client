@@ -8,6 +8,7 @@ import { GET_TRANSACTIONS_TOTAL } from "../../graphql/query";
 import {
   ITransactionRowData,
   ITransactionTableProps,
+  ITransactionTotalQueryResult,
 } from "./TransactionsTypes";
 import TransactionRow from "./TransactionRow";
 import TransactionsTableError from "./TransactionsTableError";
@@ -16,23 +17,25 @@ import {
   transactionQueryRowToTableRow,
 } from "./TransactionsHelper";
 
-const TransactionsTable = (props: ITransactionTableProps) => {
-  const {
-    transactions,
-    error,
-    mempool,
-    loading,
-    userId,
-    userAddress,
-    page,
-    setOffset,
-    balance,
-  } = props;
-  const { data: totalData } = useQuery(GET_TRANSACTIONS_TOTAL, {
-    variables: { user: userId },
-    skip: !userId,
-    fetchPolicy: "network-only",
-  });
+const TransactionsTable = ({
+  transactions,
+  error,
+  mempool,
+  loading,
+  userId,
+  userAddress,
+  page,
+  setOffset,
+  balance,
+}: ITransactionTableProps) => {
+  const { data: totalData } = useQuery<ITransactionTotalQueryResult>(
+    GET_TRANSACTIONS_TOTAL,
+    {
+      variables: { user: userId },
+      skip: !userId,
+      fetchPolicy: "network-only",
+    },
+  );
   if (error) {
     return TransactionsTableError(balance, true);
   }

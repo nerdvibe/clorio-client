@@ -11,6 +11,7 @@ import {
 import Button from "../UI/Button";
 import Input from "../UI/input/Input";
 import { IEstimatedFee } from "../../models/Fee";
+
 interface IProps {
   proceedHandler: (fee: number) => void;
   closeModal: () => void;
@@ -19,8 +20,7 @@ interface IProps {
   };
 }
 
-const DelegationFee = (props: IProps) => {
-  const { proceedHandler, fees } = props;
+const DelegationFee = ({ proceedHandler, fees }: IProps) => {
   const averageFee = feeOrDefault(fees?.estimatedFee?.txFees?.average || 0);
   const fastFee = feeOrDefault(fees?.estimatedFee?.txFees?.fast || 0);
   const [fee, setFee] = useState<number>(feeOrDefault(averageFee));

@@ -5,8 +5,7 @@ interface IProps {
   hint: string;
 }
 
-const HelpHint = (props: IProps) => {
-  const { hint } = props;
+const HelpHint = ({ hint }: IProps) => {
   return (
     <>
       <HelpCircle data-tip={hint} />

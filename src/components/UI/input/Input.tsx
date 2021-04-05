@@ -1,7 +1,12 @@
 import { IInputProps } from "./InputProps";
 
-const Input = (props: IInputProps) => {
-  const { type, value, inputHandler, placeholder, small } = props;
+const Input = ({
+  type,
+  value,
+  inputHandler,
+  placeholder,
+  small,
+}: IInputProps) => {
   return (
     <div
       className={

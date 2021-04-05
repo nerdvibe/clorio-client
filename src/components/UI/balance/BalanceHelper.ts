@@ -1,20 +1,31 @@
-import { IBalanceData } from "../../../context/balance/BalanceInterfaces";
 import { toMINA, toBTC } from "../../../tools";
 
-interface ITicker {
+export interface ITicker {
   ticker: {
     BTCMINA: number | null;
   };
 }
 
+export interface IBalanceQueryResult {
+  accountByKey: {
+    balance: {
+      total: number;
+      liquid: number;
+      locked: number;
+      liquidUnconfirmed: number;
+      unconfirmedTotal: number;
+    };
+  };
+}
+
 interface IUserBalance {
-  balanceData: IBalanceData;
+  balanceData?: IBalanceQueryResult;
   balanceLoading: boolean;
   userBalance: number;
 }
 
 interface IUserBalanceToBTC {
-  tickerData: ITicker;
+  tickerData?: ITicker;
   tickerLoading: boolean;
   userBalance: number;
 }

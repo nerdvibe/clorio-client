@@ -2,6 +2,11 @@ import { MINIMUM_AMOUNT, MINIMUM_FEE, toMINA } from "../../../tools";
 import { ITransactionData } from "../../../models/TransactionData";
 import { toast } from "react-toastify";
 
+/**
+ * Check if all the mandatory fields inside the transaction data block are valid
+ * @param transactionData
+ * @param nextStep
+ */
 export const checkFieldsAndProceed = (
   transactionData: ITransactionData,
   nextStep: () => void,
@@ -22,5 +27,5 @@ export const checkFieldsAndProceed = (
   if (receiverAddress === "") {
     return toast.error("Please insert a recipient");
   }
-  return nextStep();
+  nextStep();
 };

@@ -8,13 +8,22 @@ interface IProps {
   submitHandler: (data: any) => void;
 }
 
-const SignMessageForm = (props: IProps) => {
-  const { submitHandler } = props;
-  const [message, setMessage] = useState("");
-  const [privateKey, setPrivateKey] = useState("");
+const SignMessageForm = ({ submitHandler }: IProps) => {
+  const [message, setMessage] = useState<string>("");
+  const [privateKey, setPrivateKey] = useState<string>("");
 
   /**
-   * Check if message, private key and public key are not empty
+   * Clean component state on component dismount
+   */
+  useEffect(() => {
+    return () => {
+      setMessage("");
+      setPrivateKey("");
+    };
+  }, []);
+
+  /**
+   * Check if message and private key are not empty
    * @returns boolean
    */
   const signButtonStateHandler = () => {
@@ -22,6 +31,9 @@ const SignMessageForm = (props: IProps) => {
     return checkCondition;
   };
 
+  /**
+   * Create the object to be signed and sign it
+   */
   const createObjectAndSign = () => {
     const messageToSign = {
       message,
@@ -29,13 +41,6 @@ const SignMessageForm = (props: IProps) => {
     };
     submitHandler(messageToSign);
   };
-
-  useEffect(() => {
-    return () => {
-      setMessage("");
-      setPrivateKey("");
-    };
-  }, []);
 
   return (
     <div className="mx-auto">

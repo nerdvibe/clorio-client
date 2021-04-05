@@ -7,8 +7,7 @@ interface IProps {
   className?: string;
 }
 
-const ModalContainer = (props: IProps) => {
-  const { close, children, show, className = "" } = props;
+const ModalContainer = ({ close, children, show, className = "" }: IProps) => {
   return show ? (
     <Hoc className="mx-auto first-place  animate__animated animate__fadeIn">
       <div className="modal-background " onClick={close} />

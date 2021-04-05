@@ -2,6 +2,11 @@ import { toMINA } from "../../tools";
 import { decodeB58 } from "../../tools/base58";
 import { IMempoolQueryData, ITransactionQueryData } from "./TransactionsTypes";
 
+/**
+ * Take the mempool query result object and convert it to a table row object
+ * @param mempoolRow
+ * @returns ITransactionRowData
+ */
 export const mempoolQueryRowToTableRow = (mempoolRow: IMempoolQueryData) => {
   const id = mempoolRow.id;
   const amount = mempoolRow.amount ? toMINA(mempoolRow.amount) : 0;
@@ -24,6 +29,11 @@ export const mempoolQueryRowToTableRow = (mempoolRow: IMempoolQueryData) => {
   };
 };
 
+/**
+ * Take the transactions query result object and convert it to a table row object
+ * @param transactionRow
+ * @returns ITransactionRowData
+ */
 export const transactionQueryRowToTableRow = (
   transactionRow: ITransactionQueryData,
 ) => {

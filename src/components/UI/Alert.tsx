@@ -1,7 +1,6 @@
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-const TOAST_TIMEOUT = 5000;
+import { TOAST_TIMEOUT } from "../../tools";
 
 const Alert = () => {
   return (

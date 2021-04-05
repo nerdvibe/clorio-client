@@ -9,12 +9,11 @@ interface IProps {
   verifyMessage: (messageToVerify: IMessageToVerify) => void;
 }
 
-const VerifyForm = (props: IProps) => {
-  const { verifyMessage } = props;
-  const [message, setMessage] = useState("");
-  const [address, setAddress] = useState("");
-  const [field, setField] = useState("");
-  const [scalar, setScalar] = useState("");
+const VerifyForm = ({ verifyMessage }: IProps) => {
+  const [message, setMessage] = useState<string>("");
+  const [address, setAddress] = useState<string>("");
+  const [field, setField] = useState<string>("");
+  const [scalar, setScalar] = useState<string>("");
 
   /**
    * If one between address,message,field or scalar is empty button is disabled
@@ -24,6 +23,9 @@ const VerifyForm = (props: IProps) => {
     return address === "" || message === "" || field === "" || scalar === "";
   };
 
+  /**
+   * Create the object containing the message to be verified and verify it
+   */
   const createDataObjectAndVerify = () => {
     const messageToVerify = {
       message,

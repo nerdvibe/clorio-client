@@ -9,9 +9,12 @@ interface IProps {
   stepBackward: () => void;
 }
 
-const ConfirmTransaction = (props: IProps) => {
-  const { amount, fee, receiverAddress, memo } = props.transactionData;
-  const { stepBackward, sendTransaction } = props;
+const ConfirmTransaction = ({
+  stepBackward,
+  sendTransaction,
+  transactionData,
+}: IProps) => {
+  const { amount, fee, receiverAddress, memo } = transactionData;
   return (
     <div className="mx-auto  ">
       <div className="block-container full-page-container">

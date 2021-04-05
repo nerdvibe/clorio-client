@@ -4,8 +4,7 @@ interface IProps {
   children: JSX.Element;
 }
 
-const Spinner = (props: IProps) => {
-  const { show, className, children } = props;
+const Spinner = ({ show, className, children }: IProps) => {
   return show ? (
     <div className={"spinner-container center " + className}>
       <div className="show">

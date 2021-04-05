@@ -3,15 +3,15 @@ import { useQuery } from "@apollo/client";
 import { readSession, updateUser } from "../../tools/db";
 import { GET_ID } from "../../graphql/query";
 import { IWalletData } from "../../models/WalletData";
+import { IWalletIdData } from "../../models/WalletIdData";
 
 interface IProps {
   sessionData: IWalletData;
 }
 
-const UpdateUserID = (props: IProps) => {
-  const { sessionData } = props;
-  const [address, setAddress] = useState("");
-  const userID = useQuery(GET_ID, {
+const UpdateUserID = ({ sessionData }: IProps) => {
+  const [address, setAddress] = useState<string>("");
+  const { data: userID } = useQuery<IWalletIdData>(GET_ID, {
     variables: { publicKey: address },
     skip: address === "",
   });
@@ -30,8 +30,8 @@ const UpdateUserID = (props: IProps) => {
 
   useEffect(() => {
     setUserId();
-    if (userID.data?.public_key?.length > 0) {
-      updateUser(address, userID.data.public_key[0].id);
+    if (userID?.public_keys && userID?.public_keys?.length > 0) {
+      updateUser(address, userID.public_keys[0].id);
       setAddress("");
     }
   });

@@ -5,7 +5,6 @@ import Button from "./Button";
 
 const NewsBanner = (props: INewsData) => {
   const { title, subtitle, link, cta, cta_color } = props;
-
   /**
    * Returns the style based on cta_color prop
    * @returns string Classname
