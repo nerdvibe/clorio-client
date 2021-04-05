@@ -23,7 +23,7 @@ export const isEmptyObject = (objectToCheck:any) => {
   );
 };
 
-export function toBTC(amount:number) {
+export const toBTC = (amount:number) => {
   return Big(amount).mul(1e-9).toFixed(3);
 }
 
