@@ -8,7 +8,7 @@ import BroadcastTransaction from "../../components/modals/BroadcastTransaction";
 import { useQuery, useMutation } from "@apollo/client";
 import PrivateKeyModal from "../../components/modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
-import { createAndSignLedgerTransaction,createLedgerPaymentInputFromPayload,emojiToUnicode,escapeUnicode,isMinaAppOpen } from "../../tools/ledger";
+import { createAndSignLedgerTransaction,createLedgerPaymentInputFromPayload,isMinaAppOpen } from "../../tools/ledger";
 import { toNanoMINA,createPaymentInputFromPayload,createSignatureInputFromSignature,signTransaction,MINIMUM_NONCE, readSession } from "../../tools";
 import CustomNonce from "../../components/modals/CustomNonce";
 import { BalanceContext } from "../../context/balance/BalanceContext";
@@ -33,7 +33,7 @@ const SendTX = (props:IProps) => {
   const [senderAddress, setSenderAddress] = useState("");
   const [customNonce, setCustomNonce] = useState(MINIMUM_NONCE);
   const [showLoader, setShowLoader] = useState(true);
-  const [ledgerTransactionData, setLedgerTransactionData] = useState(undefined);
+  const [ledgerTransactionData, setLedgerTransactionData] = useState<string>("");
   const { isLedgerEnabled }:any = useContext(LedgerContext);
   const { balance, setShouldBalanceUpdate }:any = useContext(BalanceContext);
   const [transactionData, setTransactionData] = useState<ITransactionData>(initialTransactionData);
@@ -215,7 +215,7 @@ const SendTX = (props:IProps) => {
     setShowModal("");
     setCustomNonce(MINIMUM_NONCE);
     setTransactionData(initialTransactionData);
-    setLedgerTransactionData(undefined);
+    setLedgerTransactionData("");
     setSendTransactionFlag(false);
   }
 

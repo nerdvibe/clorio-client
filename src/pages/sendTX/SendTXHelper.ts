@@ -25,10 +25,10 @@ export const initialTransactionData = {
 };
 
 
-  /**
-   * Check if nonce is not empty
-   * @returns number Wallet usable nonce
-   */
+/**
+ * Check if nonce is not empty
+ * @returns number Wallet usable nonce
+ */
 export const checkNonce = (nonceQuery:any) => {
   return (
     nonceQuery.data?.accountByKey?.usableNonce ||

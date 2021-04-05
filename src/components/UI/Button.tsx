@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
 
-interface IProps{
-  className?:string,
-  onClick?:()=>void,
-  text?:string,
-  icon?:React.ReactNode,
-  disabled?:boolean,
-  link?:string
+interface IProps {
+  className?: string;
+  onClick?: () => void;
+  text?: string;
+  icon?: React.ReactNode;
+  disabled?: boolean;
+  link?: string;
 }
 
-const Button = (props:IProps) => {
+const Button = (props: IProps) => {
   const { className, onClick, text, icon, disabled, link } = props;
   const button = (
     <div className={className + " button"} onClick={onClick}>
@@ -25,6 +25,6 @@ const Button = (props:IProps) => {
     return disabledButton;
   }
   return link ? <Link to={link}> {button} </Link> : button;
-}
+};
 
 export default Button;

@@ -36,33 +36,32 @@ const Layout = () => {
   useEffect(() => {
     const readAndSetSession = async () => {
       const data = await readSession();
-      if(data) {
+      if (data) {
         setSessionData(data);
-        if(setLedgerContext){
+        if (setLedgerContext) {
           setLedgerContext({
-            ledger:data.ledger,
-            ledgerAccount: data.ledgerAccount
-          })
+            ledger: data.ledger,
+            ledgerAccount: data.ledgerAccount,
+          });
         }
         goToHome();
       }
       setShowLoader(false);
-    }
+    };
 
-    if(showLoader){
-      readAndSetSession()
+    if (showLoader) {
+      readAndSetSession();
     }
-  })
-
+  });
 
   const toggleLoader = (state) => {
-    setShowLoader(state?state:!showLoader);
+    setShowLoader(state ? state : !showLoader);
   };
 
   const clearSessionData = () => {
-    setSessionData({})
+    setSessionData({});
     setShowLoader(true);
-  }
+  };
 
   window.onbeforeunload = () => {
     clearSession();
@@ -76,7 +75,11 @@ const Layout = () => {
         <Row>
           {sessionData && !isEmptyObject(sessionData) && sessionData.address && (
             <Col md={3} lg={3} xl={2} id="sidebar-wrapper">
-              <Sidebar toggleLoader={toggleLoader} network={network.data} clearSessionData={clearSessionData}/>
+              <Sidebar
+                toggleLoader={toggleLoader}
+                network={network.data}
+                clearSessionData={clearSessionData}
+              />
             </Col>
           )}
           {}
@@ -108,6 +111,6 @@ const Layout = () => {
       </Container>
     </div>
   );
-}
+};
 
 export default Layout;
