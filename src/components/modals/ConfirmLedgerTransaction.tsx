@@ -2,7 +2,7 @@ import { Row, Col } from "react-bootstrap";
 import { ITransactionData } from "../../models/TransactionData";
 import { toLongMINA } from "../../tools";
 
-const ConfirmLedgerTransaction = (props:ITransactionData) => {
+const ConfirmLedgerTransaction = (props: ITransactionData) => {
   const { amount, fee, receiverAddress, memo } = props;
   return (
     <div className="mx-auto  ">
@@ -41,6 +41,6 @@ const ConfirmLedgerTransaction = (props:ITransactionData) => {
       </div>
     </div>
   );
-}
+};
 
 export default ConfirmLedgerTransaction;

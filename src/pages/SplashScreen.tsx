@@ -5,12 +5,11 @@ import Homepage from "../components/UI/Homepage";
 import { INetworkData } from "../models/NetworkData";
 import { clearSession } from "../tools";
 
-interface IProps{
-  network:INetworkData
+interface IProps {
+  network: INetworkData;
 }
 
-const SplashScreen = (props:IProps) => {
-  
+const SplashScreen = (props: IProps) => {
   /**
    * If splashscreen is loaded, clear session data
    */

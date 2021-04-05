@@ -15,13 +15,13 @@ import { INetworkData } from "../models/NetworkData";
 import Spinner from "../components/UI/Spinner";
 
 interface IProps {
-  toggleLoader:(state:boolean)=>void,
-  network:INetworkData,
-  register:()=>void
+  toggleLoader: (state: boolean) => void;
+  network: INetworkData;
+  register: () => void;
 }
 
-const Login = (props:IProps) => {
-  const {register,toggleLoader} = props;
+const Login = (props: IProps) => {
+  const { register, toggleLoader } = props;
   const [publicKey, setPublicKey] = useState("");
   const [privateKey, setPrivateKey] = useState("");
   const [loader, setLoader] = useState(false);
@@ -43,19 +43,20 @@ const Login = (props:IProps) => {
    * If Public key has been derived, show loader and set session data
    */
   useEffect(() => {
-    const storeSessionAndRedirect = async (publicKey:string,id:number) => {
-      const success = await storeSession(publicKey, id, false, 0)
-      if(success){
+    const storeSessionAndRedirect = async (publicKey: string, id: number) => {
+      const success = await storeSession(publicKey, id, false, 0);
+      if (success) {
         history.push("/overview");
         toggleLoader(false);
       }
-    }
+    };
     if (publicKey && publicKey !== "" && !userID.loading) {
       toggleLoader(true);
-      const id = userID.data?.public_keys?.length > 0
-        ? userID.data.public_keys[0].id
-        : -1;
-      storeSessionAndRedirect(publicKey,id);
+      const id =
+        userID.data?.public_keys?.length > 0
+          ? userID.data.public_keys[0].id
+          : -1;
+      storeSessionAndRedirect(publicKey, id);
     }
   }, [userID]);
 
@@ -63,9 +64,9 @@ const Login = (props:IProps) => {
    * Set text from input inside component state
    * @param {event} e Input text
    */
-  const inputHandler = (e:React.FormEvent<HTMLInputElement>) => {
+  const inputHandler = (e: React.FormEvent<HTMLInputElement>) => {
     setPrivateKey(e.currentTarget.value);
-  }
+  };
 
   /**
    * Uses CodaSDK to check if private key from input is valid
@@ -79,7 +80,7 @@ const Login = (props:IProps) => {
     } catch (e) {
       toast.error("Private key not valid, please try again.");
     }
-  }
+  };
 
   /**
    * If private key is not set or empty, disable button
@@ -87,7 +88,7 @@ const Login = (props:IProps) => {
    */
   const disableButton = () => {
     return !privateKey || privateKey === "";
-  }
+  };
 
   return (
     <Hoc>
@@ -100,8 +101,7 @@ const Login = (props:IProps) => {
                   md={12}
                   lg={10}
                   xl={6}
-                  className="offset-lg-1 offset-xl-3 text-center"
-                >
+                  className="offset-lg-1 offset-xl-3 text-center">
                   <div className="mx-auto fit-content">
                     <Logo big={true} />
                   </div>
@@ -153,6 +153,6 @@ const Login = (props:IProps) => {
       </Spinner>
     </Hoc>
   );
-}
+};
 
 export default Login;

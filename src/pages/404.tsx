@@ -23,6 +23,6 @@ const NotFound = () => {
       </div>
     </Hoc>
   );
-}
+};
 
 export default NotFound;

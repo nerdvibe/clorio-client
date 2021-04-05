@@ -4,12 +4,12 @@ import Button from "../../UI/Button";
 import HelpHint from "../../UI/HelpHint";
 import Input from "../../UI/input/Input";
 
-interface IProps{
-  submitHandler:(data:any) => void;
+interface IProps {
+  submitHandler: (data: any) => void;
 }
 
-const SignMessageForm = (props:IProps) => {
-  const {submitHandler} = props;
+const SignMessageForm = (props: IProps) => {
+  const { submitHandler } = props;
   const [message, setMessage] = useState("");
   const [privateKey, setPrivateKey] = useState("");
 
@@ -18,25 +18,24 @@ const SignMessageForm = (props:IProps) => {
    * @returns boolean
    */
   const signButtonStateHandler = () => {
-    const checkCondition =
-      message === "" || privateKey === "";
+    const checkCondition = message === "" || privateKey === "";
     return checkCondition;
-  }
-  
+  };
+
   const createObjectAndSign = () => {
     const messageToSign = {
       message,
-      privateKey
-    }
-    submitHandler(messageToSign)
-  }
+      privateKey,
+    };
+    submitHandler(messageToSign);
+  };
 
   useEffect(() => {
     return () => {
       setMessage("");
       setPrivateKey("");
-    }
-  }, [])
+    };
+  }, []);
 
   return (
     <div className="mx-auto">
@@ -58,8 +57,7 @@ const SignMessageForm = (props:IProps) => {
               <h3>Message</h3>
               <div
                 className="wrap-input1 validate-input"
-                data-validate="Name is required"
-              >
+                data-validate="Name is required">
                 <span className="icon" />
                 <Input
                   className="input1"
@@ -67,21 +65,20 @@ const SignMessageForm = (props:IProps) => {
                   name="message"
                   value={message}
                   placeholder="Message "
-                  inputHandler={(e) => setMessage(e.currentTarget.value)}
+                  inputHandler={e => setMessage(e.currentTarget.value)}
                 />
               </div>
               <h3>Private key</h3>
               <div
                 className="wrap-input1 validate-input"
-                data-validate="Name is required"
-              >
+                data-validate="Name is required">
                 <span className="icon" />
                 <Input
                   type="text"
                   name="privateKey"
                   value={privateKey}
                   placeholder="Private key"
-                  inputHandler={(e) => setPrivateKey(e.currentTarget.value)}
+                  inputHandler={e => setPrivateKey(e.currentTarget.value)}
                 />
               </div>
               <div className="v-spacer" />
@@ -97,6 +94,6 @@ const SignMessageForm = (props:IProps) => {
       </div>
     </div>
   );
-}
+};
 
-export default SignMessageForm
+export default SignMessageForm;

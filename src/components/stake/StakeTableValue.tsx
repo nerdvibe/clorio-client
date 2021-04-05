@@ -3,16 +3,16 @@ import { Row, Col } from "react-bootstrap";
 import appendQuery from "append-query";
 import React from "react";
 
-interface IProps{
-  avatar?: React.ReactNode,
-  className?: string,
-  header: string,
-  text?: string,
-  website?: string
+interface IProps {
+  avatar?: React.ReactNode;
+  className?: string;
+  header: string;
+  text?: string;
+  website?: string;
 }
 
-const StakeTableValue = (props:IProps) => {
-  const {avatar,className,header,text,website} = props;
+const StakeTableValue = (props: IProps) => {
+  const { avatar, className, header, text, website } = props;
   if (avatar) {
     return (
       <td className={className}>
@@ -42,8 +42,7 @@ const StakeTableValue = (props:IProps) => {
                 <a
                   href={appendQuery(website, { ref: "clorio" })}
                   target="_blank"
-                  rel="noreferrer"
-                >
+                  rel="noreferrer">
                   {text}
                 </a>
               ) : null}
@@ -66,6 +65,6 @@ const StakeTableValue = (props:IProps) => {
       </div>
     </td>
   );
-}
+};
 
 export default StakeTableValue;

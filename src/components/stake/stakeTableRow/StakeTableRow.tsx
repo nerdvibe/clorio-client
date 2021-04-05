@@ -3,14 +3,14 @@ import StakeTableValue from "../StakeTableValue";
 import Avatar from "../../../tools/avatar";
 import { IValidatorData } from "./ValidatorDataInterface";
 
-interface IProps{
-  index:number,
-  element:IValidatorData, 
-  toggleModal:(element:IValidatorData)=>void
+interface IProps {
+  index: number;
+  element: IValidatorData;
+  toggleModal: (element: IValidatorData) => void;
 }
 
-const StakeTableRow = (props:IProps) => {
-  const {element,index,toggleModal} = props
+const StakeTableRow = (props: IProps) => {
+  const { element, index, toggleModal } = props;
   let supportTooltip = "";
   let boostedClassName = "";
   if (element.priority === 1) {
@@ -23,8 +23,7 @@ const StakeTableRow = (props:IProps) => {
     <tr
       key={index}
       className={`stake-table-row ${boostedClassName}`}
-      data-tip={supportTooltip}
-    >
+      data-tip={supportTooltip}>
       <StakeTableValue
         avatar={
           <div className="walletImageContainer small-image inline-element">
@@ -68,6 +67,6 @@ const StakeTableRow = (props:IProps) => {
       </td>
     </tr>
   );
-}
+};
 
 export default StakeTableRow;

@@ -1,11 +1,11 @@
-interface IProps{
-  show?:boolean,
-  className?:string,
-  children: JSX.Element
+interface IProps {
+  show?: boolean;
+  className?: string;
+  children: JSX.Element;
 }
 
-const Spinner = (props:IProps) => {
-  const {show,className,children} = props;
+const Spinner = (props: IProps) => {
+  const { show, className, children } = props;
   return show ? (
     <div className={"spinner-container center " + className}>
       <div className="show">
@@ -24,6 +24,6 @@ const Spinner = (props:IProps) => {
   ) : (
     children
   );
-}
+};
 
 export default Spinner;

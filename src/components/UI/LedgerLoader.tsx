@@ -9,6 +9,6 @@ const LedgerLoader = () => {
       </div>
     </div>
   );
-}
+};
 
 export default LedgerLoader;

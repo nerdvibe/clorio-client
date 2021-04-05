@@ -13,9 +13,13 @@ import ReactTooltip from "react-tooltip";
 import HelpHint from "../UI/HelpHint";
 import { toast } from "react-toastify";
 import { IProps } from "./LedgerLoginProps";
-import { TIME_DELAY,MINIMUM_LEDGER_ACCOUNT_NUMBER,MAXIMUM_LEDGER_ACCOUNT_NUMBER } from "../../tools";
+import {
+  TIME_DELAY,
+  MINIMUM_LEDGER_ACCOUNT_NUMBER,
+  MAXIMUM_LEDGER_ACCOUNT_NUMBER,
+} from "../../tools";
 
-const LedgerConnect = (props:IProps) =>  {
+const LedgerConnect = (props: IProps) => {
   const [isAvailable, setIsAvailable] = useState(false);
   const [customAccount, setCustomAccount] = useState(false);
   const [accountNumber, setAccountNumber] = useState(0);
@@ -41,18 +45,23 @@ const LedgerConnect = (props:IProps) =>  {
     };
   }, []);
 
-  const accountNumberHandler = (event:React.ChangeEvent<HTMLInputElement>) => {
+  const accountNumberHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const number = +event.target.value || MINIMUM_LEDGER_ACCOUNT_NUMBER;
     setAccountNumber(number);
-  }
+  };
 
   const verifyAccountNumber = () => {
-    if (+accountNumber >= MINIMUM_LEDGER_ACCOUNT_NUMBER && +accountNumber <= MAXIMUM_LEDGER_ACCOUNT_NUMBER) {
+    if (
+      +accountNumber >= MINIMUM_LEDGER_ACCOUNT_NUMBER &&
+      +accountNumber <= MAXIMUM_LEDGER_ACCOUNT_NUMBER
+    ) {
       setProceedToLedger(true);
     } else {
-      toast.error(`Account number should be between ${MINIMUM_LEDGER_ACCOUNT_NUMBER} and ${MAXIMUM_LEDGER_ACCOUNT_NUMBER}`);
+      toast.error(
+        `Account number should be between ${MINIMUM_LEDGER_ACCOUNT_NUMBER} and ${MAXIMUM_LEDGER_ACCOUNT_NUMBER}`,
+      );
     }
-  }
+  };
 
   const renderLookingForLedger = (
     <div>
@@ -169,6 +178,6 @@ const LedgerConnect = (props:IProps) =>  {
       <Footer network={props.network} />
     </Hoc>
   );
-}
+};
 
 export default LedgerConnect;

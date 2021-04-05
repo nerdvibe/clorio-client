@@ -3,7 +3,7 @@ import { INewsData } from "../../models/NewsData";
 import { isEmptyObject } from "../../tools/utils";
 import Button from "./Button";
 
-const NewsBanner = (props:INewsData) => {
+const NewsBanner = (props: INewsData) => {
   const { title, subtitle, link, cta, cta_color } = props;
 
   /**
@@ -31,7 +31,7 @@ const NewsBanner = (props:INewsData) => {
         <Col className="align-end ml-auto " style={{ paddingTop: "20px" }}>
           {link ? (
             <a href={link} target="_blank" rel="noreferrer">
-              <Button 
+              <Button
                 className={`${buttonStyle} mx-auto`}
                 text={cta || "Learn more"}
               />

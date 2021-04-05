@@ -1,13 +1,13 @@
 import { Row, Col } from "react-bootstrap";
 import Button from "../UI/Button";
 
-interface IProps{
-  confirmDelegate: () => void,
-  closeModal: () => void,
-  name?:string
+interface IProps {
+  confirmDelegate: () => void;
+  closeModal: () => void;
+  name?: string;
 }
 
-const ConfirmDelegation = (props:IProps) => {
+const ConfirmDelegation = (props: IProps) => {
   const { name, closeModal, confirmDelegate } = props;
   return (
     <div className="mx-auto">
@@ -32,6 +32,6 @@ const ConfirmDelegation = (props:IProps) => {
       </Row>
     </div>
   );
-}
+};
 
 export default ConfirmDelegation;

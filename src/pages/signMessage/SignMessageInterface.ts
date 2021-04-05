@@ -1,8 +1,8 @@
 export interface ISignMessage {
-  payload: string,
+  payload: string;
   signature: {
-    scalar: string,
-    field: string,
-  },
-  publicKey: string,
+    scalar: string;
+    field: string;
+  };
+  publicKey: string;
 }

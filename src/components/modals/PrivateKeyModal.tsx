@@ -2,15 +2,15 @@ import { Col, Row } from "react-bootstrap";
 import Button from "../UI/Button";
 import Input from "../UI/input/Input";
 
-interface IProps{
-  subtitle?:string,
-  setPrivateKey:(privateKey:string)=>void,
-  closeModal:()=>void,
-  confirmPrivateKey:()=>void
+interface IProps {
+  subtitle?: string;
+  setPrivateKey: (privateKey: string) => void;
+  closeModal: () => void;
+  confirmPrivateKey: () => void;
 }
 
-const PrivateKeyModal = (props:IProps) => {
-  const {subtitle,setPrivateKey,closeModal,confirmPrivateKey} = props
+const PrivateKeyModal = (props: IProps) => {
+  const { subtitle, setPrivateKey, closeModal, confirmPrivateKey } = props;
   return (
     <div className="mx-auto">
       <h2>Insert Private Key</h2>
@@ -22,17 +22,13 @@ const PrivateKeyModal = (props:IProps) => {
       </h5>
       <div className="v-spacer" />
       <Input
-        inputHandler={(e) => setPrivateKey(e.currentTarget.value)}
+        inputHandler={e => setPrivateKey(e.currentTarget.value)}
         placeholder="Insert your private key"
       />
       <div className="v-spacer" />
       <Row>
         <Col xs={6}>
-          <Button
-            onClick={closeModal}
-            className="link-button"
-            text="Cancel"
-          />
+          <Button onClick={closeModal} className="link-button" text="Cancel" />
         </Col>
         <Col xs={6}>
           <Button
@@ -44,6 +40,6 @@ const PrivateKeyModal = (props:IProps) => {
       </Row>
     </div>
   );
-}
+};
 
 export default PrivateKeyModal;

@@ -4,30 +4,38 @@ import StakeTableRow from "../stakeTableRow/StakeTableRow";
 import { Row, Col, Table } from "react-bootstrap";
 import StakeStatus from "../StakeStatus";
 import ReactTooltip from "react-tooltip";
-import {IValidatorData} from "../stakeTableRow/ValidatorDataInterface";
+import { IValidatorData } from "../stakeTableRow/ValidatorDataInterface";
 import StakeTableError from "./StakeTableError";
 import Spinner from "../../UI/Spinner";
 
-interface IProps{
-  error:any,
-  validators:IValidatorData[],
-  toggleModal:(element:IValidatorData)=>void,
-  openCustomDelegateModal:()=>void,
-  currentDelegate:string,
-  currentDelegateName:string,
-  loading:boolean,
-  page:number,
-  setOffset:(page:number)=>void
+interface IProps {
+  error: any;
+  validators: IValidatorData[];
+  toggleModal: (element: IValidatorData) => void;
+  openCustomDelegateModal: () => void;
+  currentDelegate: string;
+  currentDelegateName: string;
+  loading: boolean;
+  page: number;
+  setOffset: (page: number) => void;
 }
 
-const StakeTable = ({error,validators,toggleModal,openCustomDelegateModal,currentDelegate,currentDelegateName,loading}:IProps) => {
+const StakeTable = ({
+  error,
+  validators,
+  toggleModal,
+  openCustomDelegateModal,
+  currentDelegate,
+  currentDelegateName,
+  loading,
+}: IProps) => {
   const [searchBox, setSearchBox] = useState("");
 
   /**
    * Store search text inside component state
    * @param search string Search text
    */
-  const searchBoxHandler = (search:string) => {
+  const searchBoxHandler = (search: string) => {
     setSearchBox(search.toLowerCase());
   };
 
@@ -37,12 +45,12 @@ const StakeTable = ({error,validators,toggleModal,openCustomDelegateModal,curren
    */
   const tableBody = () => {
     if (validators) {
-      const filteredValidators = validators.filter((el) =>
-        el?.name?.toLowerCase().includes(searchBox)
+      const filteredValidators = validators.filter(el =>
+        el?.name?.toLowerCase().includes(searchBox),
       );
       return (
         <tbody>
-          {filteredValidators.map((el, index:number) => {
+          {filteredValidators.map((el, index: number) => {
             return (
               <StakeTableRow
                 key={index}
@@ -59,7 +67,7 @@ const StakeTable = ({error,validators,toggleModal,openCustomDelegateModal,curren
   };
 
   if (error) {
-    return <StakeTableError />
+    return <StakeTableError />;
   }
 
   return (
@@ -77,8 +85,7 @@ const StakeTable = ({error,validators,toggleModal,openCustomDelegateModal,curren
               md={5}
               lg={4}
               xl={3}
-              className="align-end small-screen-align-left"
-            >
+              className="align-end small-screen-align-left">
               <Button
                 className="link-button custom-delegate-button"
                 text="Custom delegation"
@@ -101,9 +108,7 @@ const StakeTable = ({error,validators,toggleModal,openCustomDelegateModal,curren
                         className="table-searchbar"
                         placeholder={"Filter..."}
                         value={searchBox}
-                        onChange={(e) =>
-                          searchBoxHandler(e.currentTarget.value)
-                        }
+                        onChange={e => searchBoxHandler(e.currentTarget.value)}
                         autoComplete="off"
                       />
                     </th>
@@ -112,13 +117,13 @@ const StakeTable = ({error,validators,toggleModal,openCustomDelegateModal,curren
                 {tableBody()}
                 <ReactTooltip multiline={true} />
               </Table>
-                &nbsp;
+              &nbsp;
             </div>
           </Spinner>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default StakeTable;

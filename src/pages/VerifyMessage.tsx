@@ -2,14 +2,14 @@ import Hoc from "../components/UI/Hoc";
 import VerifyForm from "../components/forms/verifyMessage/VerifyMessageForm";
 import { verifyMessage } from "@o1labs/client-sdk";
 import { toast } from "react-toastify";
-import {IMessageToVerify} from "../models/MessageToVerify";
+import { IMessageToVerify } from "../models/MessageToVerify";
 
 const VerifyMessage = () => {
   /**
    * Using CodaSDK check if input message is valid
    */
-  const verifySignedMessage = (messageToVerify:IMessageToVerify) => {
-    const {address,message,field,scalar} = messageToVerify;
+  const verifySignedMessage = (messageToVerify: IMessageToVerify) => {
+    const { address, message, field, scalar } = messageToVerify;
     try {
       if (message && message !== "") {
         const signedMessage = {
@@ -29,15 +29,13 @@ const VerifyMessage = () => {
     } catch (e) {
       toast.error("Message is not valid");
     }
-  }
+  };
 
   return (
     <Hoc>
-      <VerifyForm
-        verifyMessage={verifySignedMessage}
-      />
+      <VerifyForm verifyMessage={verifySignedMessage} />
     </Hoc>
   );
-}
+};
 
 export default VerifyMessage;

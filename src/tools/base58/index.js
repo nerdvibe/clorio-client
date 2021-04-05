@@ -7,7 +7,7 @@ const NULL_VALUE_REGEX = /\0[\s\S]*$/g;
  * @param msg {string}
  * @returns {string}
  */
-export const decodeB58 = (msg) => {
+export const decodeB58 = msg => {
   if (!msg) {
     return "";
   }

@@ -6,6 +6,6 @@ const StakeTableError = () => (
       <img src={ErrorImage} />
     </div>
   </div>
-)
+);
 
 export default StakeTableError;

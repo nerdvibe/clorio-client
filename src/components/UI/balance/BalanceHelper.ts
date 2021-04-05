@@ -1,25 +1,29 @@
-import { IBalanceData } from '../../../context/balance/BalanceInterfaces';
-import { toMINA,toBTC } from "../../../tools";
+import { IBalanceData } from "../../../context/balance/BalanceInterfaces";
+import { toMINA, toBTC } from "../../../tools";
 
-interface ITicker{
-  ticker:{
-    BTCMINA: number|null
-  }
+interface ITicker {
+  ticker: {
+    BTCMINA: number | null;
+  };
 }
 
 interface IUserBalance {
-  balanceData:IBalanceData,
-  balanceLoading:boolean,
-  userBalance:number
+  balanceData: IBalanceData;
+  balanceLoading: boolean;
+  userBalance: number;
 }
 
 interface IUserBalanceToBTC {
-  tickerData:ITicker,
-  tickerLoading:boolean,
-  userBalance:number
+  tickerData: ITicker;
+  tickerLoading: boolean;
+  userBalance: number;
 }
 
-export const renderBalance = ({balanceData,balanceLoading,userBalance}:IUserBalance) => {
+export const renderBalance = ({
+  balanceData,
+  balanceLoading,
+  userBalance,
+}: IUserBalance) => {
   if (balanceLoading) {
     return "Loading ";
   }
@@ -31,14 +35,18 @@ export const renderBalance = ({balanceData,balanceLoading,userBalance}:IUserBala
     }
   }
   return "Not available";
-}
+};
 
 /**
  * Convert user's Mina balance to BTC
  * @param object
  * @returns string
  */
-export const userBalanceToBTCValue = ({tickerData,tickerLoading,userBalance}:IUserBalanceToBTC) => {
+export const userBalanceToBTCValue = ({
+  tickerData,
+  tickerLoading,
+  userBalance,
+}: IUserBalanceToBTC) => {
   if (tickerLoading) {
     return "Loading ";
   }
@@ -46,9 +54,9 @@ export const userBalanceToBTCValue = ({tickerData,tickerLoading,userBalance}:IUs
     if (tickerData.ticker.BTCMINA === null) {
       return "Not available";
     } else {
-      const amount = userBalance * tickerData.ticker.BTCMINA
+      const amount = userBalance * tickerData.ticker.BTCMINA;
       return toBTC(amount) + " BTC";
     }
   }
   return "Not available";
-}
+};

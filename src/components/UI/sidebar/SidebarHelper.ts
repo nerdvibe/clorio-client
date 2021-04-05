@@ -6,22 +6,20 @@ import { INodeInfo } from "../../../models/NetworkData";
  * @param route string
  * @returns string
  */
-export const isRouteActiveClass = (route:string) => {
+export const isRouteActiveClass = (route: string) => {
   const location = useLocation();
   const currentRoute = location.pathname.toLowerCase();
-  return currentRoute.includes(route)
-    ? " sidebar-item-container-active"
-    : " ";
+  return currentRoute.includes(route) ? " sidebar-item-container-active" : " ";
 };
 
 /**
  * If network data available, return a string containing the network details.
- * @param networkData 
+ * @param networkData
  * @returns string
  */
-export const renderNetworkLabel = (networkData?:INodeInfo) => {
+export const renderNetworkLabel = (networkData?: INodeInfo) => {
   if (networkData) {
-    return `${networkData.name} | ${networkData.network}`
+    return `${networkData.name} | ${networkData.network}`;
   }
   return "Network unavailable";
 };

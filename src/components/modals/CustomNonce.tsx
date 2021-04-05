@@ -1,14 +1,14 @@
 import Button from "../UI/Button";
 import Input from "../UI/input/Input";
 
-interface IProps{
-  proceedHandler:() => void;
-  setCustomNonce:(customNonce:number) => void;
+interface IProps {
+  proceedHandler: () => void;
+  setCustomNonce: (customNonce: number) => void;
 }
 
-const CustomNonce = (props:IProps) => {
-  const {proceedHandler,setCustomNonce} = props;
-  
+const CustomNonce = (props: IProps) => {
+  const { proceedHandler, setCustomNonce } = props;
+
   return (
     <div className="mx-auto">
       <h2>Insert nonce</h2>
@@ -20,7 +20,7 @@ const CustomNonce = (props:IProps) => {
         <div className="v-spacer" />
         <Input
           type="number"
-          inputHandler={(e) => setCustomNonce(+e.target.value)}
+          inputHandler={e => setCustomNonce(+e.target.value)}
         />
         <div className="v-spacer" />
         <Button
@@ -31,6 +31,6 @@ const CustomNonce = (props:IProps) => {
       </div>
     </div>
   );
-}
+};
 
 export default CustomNonce;

@@ -2,12 +2,12 @@ import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Button from "../UI/Button";
 
-interface IProps{
-  publicKey: string,
-  setSession: ()=>void;
+interface IProps {
+  publicKey: string;
+  setSession: () => void;
 }
 
-const LedgerConfirmAddress = ({publicKey,setSession}:IProps) => {
+const LedgerConfirmAddress = ({ publicKey, setSession }: IProps) => {
   return publicKey ? (
     <div>
       <h5 className="full-width-align-center">This is your public key</h5>
@@ -33,7 +33,9 @@ const LedgerConfirmAddress = ({publicKey,setSession}:IProps) => {
         </Col>
       </Row>
     </div>
-  ) : (<></>);
+  ) : (
+    <></>
+  );
 };
 
 export default LedgerConfirmAddress;

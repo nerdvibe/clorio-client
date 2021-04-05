@@ -14,8 +14,7 @@ import { toast } from "react-toastify";
 import { IProps } from "./LedgerLoginProps";
 import LedgerConfirmAddress from "./LedgerConfirmAddress";
 
-
-const LedgerGetAddress = (props:IProps) => {
+const LedgerGetAddress = (props: IProps) => {
   const [publicKey, setPublicKey] = useState("");
   const [ledgerAccount] = useState(props.accountNumber || 0);
   const history = useHistory();
@@ -27,7 +26,7 @@ const LedgerGetAddress = (props:IProps) => {
   useEffect(() => {
     const deviceListener = getWallet();
     // To be checked with ledger tests
-    // @ts-ignore 
+    // @ts-ignore
     return deviceListener.unsubscribe;
   }, []);
 
@@ -41,13 +40,13 @@ const LedgerGetAddress = (props:IProps) => {
         userID.data?.public_keys?.length > 0
           ? userID.data.public_keys[0].id
           : -1;
-      storeSession(publicKey, id, true, ledgerAccount).then((success) => {
+      storeSession(publicKey, id, true, ledgerAccount).then(success => {
         if (success) {
           history.push("/overview");
         }
       });
     }
-  }
+  };
 
   /**
    * Listen for ledger action
@@ -59,7 +58,7 @@ const LedgerGetAddress = (props:IProps) => {
     } catch (e) {
       console.log(e);
       toast.error(
-        e.message || "An error occurred while loading hardware wallet"
+        e.message || "An error occurred while loading hardware wallet",
       );
       history.push("/");
     }
@@ -95,9 +94,10 @@ const LedgerGetAddress = (props:IProps) => {
                   </Link>
                 </div>
               ) : (
-                <LedgerConfirmAddress 
+                <LedgerConfirmAddress
                   publicKey={publicKey}
-                  setSession={setSession} />
+                  setSession={setSession}
+                />
               )}
             </Col>
           </Row>
@@ -106,6 +106,6 @@ const LedgerGetAddress = (props:IProps) => {
       <Footer network={props.network} />
     </Hoc>
   );
-}
+};
 
 export default LedgerGetAddress;

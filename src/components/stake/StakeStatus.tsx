@@ -1,11 +1,11 @@
-interface IProps{
-  currentDelegate:string,
-  currentDelegateName:string
+interface IProps {
+  currentDelegate: string;
+  currentDelegateName: string;
 }
 
-const StakeStatus = (props:IProps) => {
-  const {currentDelegate,currentDelegateName} = props;
-  if ( currentDelegate === "") {
+const StakeStatus = (props: IProps) => {
+  const { currentDelegate, currentDelegateName } = props;
+  if (currentDelegate === "") {
     return (
       <div>
         <h4>Validators:</h4>
@@ -25,9 +25,7 @@ const StakeStatus = (props:IProps) => {
     );
   }
 
-  const name = currentDelegateName
-    ? `(${currentDelegateName})`
-    : "";
+  const name = currentDelegateName ? `(${currentDelegateName})` : "";
   return (
     <div>
       <h4>Validators:</h4>
@@ -39,6 +37,6 @@ const StakeStatus = (props:IProps) => {
       </h6>
     </div>
   );
-}
+};
 
 export default StakeStatus;

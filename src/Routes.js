@@ -17,7 +17,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={(props) => {
+      render={props => {
         if (
           rest.sessionData &&
           !isEmptyObject(rest.sessionData) &&

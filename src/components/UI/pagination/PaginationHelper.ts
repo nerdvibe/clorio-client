@@ -1,4 +1,8 @@
-export const indexToRender = (page:number,indexes:number[],maxPages:number) => {
+export const indexToRender = (
+  page: number,
+  indexes: number[],
+  maxPages: number,
+) => {
   const indexToReturn = [];
   let count = 0;
   if (page > 2 && page < indexes.length - 2) {
@@ -29,16 +33,16 @@ export const indexToRender = (page:number,indexes:number[],maxPages:number) => {
     }
   }
   return indexToReturn;
-}
+};
 
 /**
  * Creates an array of numbers from 1 to n
  * maxPages 10 -> return [1,2,...10]
  */
-export const createIndexesArray = (maxPages:number) => {
-  const indexes = []
+export const createIndexesArray = (maxPages: number) => {
+  const indexes = [];
   for (let i = 1; i <= maxPages; i++) {
     indexes.push(i);
   }
   return indexes;
-}
+};

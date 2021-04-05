@@ -5,23 +5,39 @@ import { useQuery } from "@apollo/client";
 import Pagination from "../UI/pagination/Pagination";
 import ReactTooltip from "react-tooltip";
 import { GET_TRANSACTIONS_TOTAL } from "../../graphql/query";
-import { ITransactionRowData, ITransactionTableProps } from "./TransactionsTypes";
+import {
+  ITransactionRowData,
+  ITransactionTableProps,
+} from "./TransactionsTypes";
 import TransactionRow from "./TransactionRow";
 import TransactionsTableError from "./TransactionsTableError";
-import { mempoolQueryRowToTableRow, transactionQueryRowToTableRow } from "./TransactionsHelper";
+import {
+  mempoolQueryRowToTableRow,
+  transactionQueryRowToTableRow,
+} from "./TransactionsHelper";
 
-const TransactionsTable = (props:ITransactionTableProps) => {
-  const { transactions, error, mempool, loading, userId, userAddress, page, setOffset, balance } = props;
-  const {data:totalData} = useQuery(GET_TRANSACTIONS_TOTAL, {
+const TransactionsTable = (props: ITransactionTableProps) => {
+  const {
+    transactions,
+    error,
+    mempool,
+    loading,
+    userId,
+    userAddress,
+    page,
+    setOffset,
+    balance,
+  } = props;
+  const { data: totalData } = useQuery(GET_TRANSACTIONS_TOTAL, {
     variables: { user: userId },
     skip: !userId,
     fetchPolicy: "network-only",
   });
   if (error) {
-    return TransactionsTableError(balance,true);
+    return TransactionsTableError(balance, true);
   }
   if (!transactions || transactions.user_commands.length === 0) {
-    return TransactionsTableError(balance,false);
+    return TransactionsTableError(balance, false);
   }
 
   /**
@@ -39,7 +55,7 @@ const TransactionsTable = (props:ITransactionTableProps) => {
         <th className="th-last-item">Amount</th>
       </tr>
     );
-  }
+  };
 
   /**
    * Render table body content
@@ -49,16 +65,18 @@ const TransactionsTable = (props:ITransactionTableProps) => {
     return (
       <tbody>
         {mempool?.mempool?.map((row, index) => {
-          const rowData:ITransactionRowData = mempoolQueryRowToTableRow(row);
-          return TransactionRow(rowData, index,userAddress,true);
+          const rowData: ITransactionRowData = mempoolQueryRowToTableRow(row);
+          return TransactionRow(rowData, index, userAddress, true);
         })}
         {transactions?.user_commands?.map((row, index) => {
-          const rowData:ITransactionRowData = transactionQueryRowToTableRow(row);
-          return TransactionRow(rowData, index, userAddress,false);
+          const rowData: ITransactionRowData = transactionQueryRowToTableRow(
+            row,
+          );
+          return TransactionRow(rowData, index, userAddress, false);
         })}
       </tbody>
     );
-  }
+  };
 
   return (
     <div className="block-container">
@@ -68,8 +86,7 @@ const TransactionsTable = (props:ITransactionTableProps) => {
           <div id="transaction-table">
             <Table
               className="animate__animated animate__fadeIn"
-              id="rwd-table-large"
-            >
+              id="rwd-table-large">
               <thead>{renderTableHeader()}</thead>
               {renderTableBody()}
             </Table>
@@ -79,13 +96,13 @@ const TransactionsTable = (props:ITransactionTableProps) => {
             setOffset={setOffset}
             user={userId}
             total={getTotalPages(
-              totalData?.user_commands_aggregate?.aggregate?.count || 0
+              totalData?.user_commands_aggregate?.aggregate?.count || 0,
             )}
           />
         </div>
       </Spinner>
     </div>
   );
-}
+};
 
 export default TransactionsTable;

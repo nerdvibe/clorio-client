@@ -14,13 +14,13 @@ export const isMinaAppOpen = async () => {
   }
   return await ipcRenderer.invoke("ledger-get-name-version");
 };
-export const getPublicKey = async (account) => {
+export const getPublicKey = async account => {
   if (!isElectron()) {
     throw new Error("Wrong environment");
   }
   return await ipcRenderer.invoke("ledger-get-address", account);
 };
-export const signTransaction = async (transaction) => {
+export const signTransaction = async transaction => {
   if (!isElectron()) {
     throw new Error("Wrong environment");
   }

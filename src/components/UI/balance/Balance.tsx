@@ -1,4 +1,4 @@
-import { useState, useEffect,useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Row, Col } from "react-bootstrap";
 import Button from "../Button";
 import { Copy } from "react-feather";
@@ -15,9 +15,17 @@ import { renderBalance, userBalanceToBTCValue } from "./BalanceHelper";
 const Balance = () => {
   const [address, setAddress] = useState<string>("");
   const [userBalance, setUserBalance] = useState(0);
-  const {setBalanceContext,shouldBalanceUpdate,setShouldBalanceUpdate}:any = useContext(BalanceContext);
-  const {data:tickerData,loading:tickerLoading} = useQuery(GET_TICKER);
-  const {data:balanceData,loading:balanceLoading,refetch:balanceRefetch} = useQuery(GET_BALANCE, {
+  const {
+    setBalanceContext,
+    shouldBalanceUpdate,
+    setShouldBalanceUpdate,
+  }: any = useContext(BalanceContext);
+  const { data: tickerData, loading: tickerLoading } = useQuery(GET_TICKER);
+  const {
+    data: balanceData,
+    loading: balanceLoading,
+    refetch: balanceRefetch,
+  } = useQuery(GET_BALANCE, {
     variables: {
       publicKey: address,
       notifyOnNetworkStatusChange: true,
@@ -25,7 +33,7 @@ const Balance = () => {
     fetchPolicy: "network-only",
     skip: !address || address === "",
     pollInterval: DEFAULT_INTERVAL,
-    onCompleted: (data) => {
+    onCompleted: data => {
       if (setBalanceContext) {
         setBalanceContext(data?.accountByKey?.balance || {});
       }
@@ -35,14 +43,14 @@ const Balance = () => {
   // Get sender public key
   const getAndSetAddress = async () => {
     const walletAddress = await readSession();
-    if(walletAddress){
+    if (walletAddress) {
       setAddress(walletAddress.address);
     }
-  }
+  };
 
   useEffect(() => {
     if (!address) {
-      getAndSetAddress()
+      getAndSetAddress();
     }
   }, [address]);
 
@@ -98,9 +106,8 @@ const Balance = () => {
                     balanceData?.accountByKey?.balance?.liquid
                       ? toMINA(balanceData.accountByKey.balance.liquid)
                       : 0
-                  } Mina`}
-                >
-                  {renderBalance({balanceData,balanceLoading,userBalance})}
+                  } Mina`}>
+                  {renderBalance({ balanceData, balanceLoading, userBalance })}
                 </h5>
               </div>
               <div className="inline-block-element">
@@ -109,7 +116,13 @@ const Balance = () => {
               <div className="inline-block-element">
                 <span>
                   <h6 className="secondaryText">BTC Apx. value</h6>
-                  <h5>{userBalanceToBTCValue({tickerData,tickerLoading,userBalance})} </h5>
+                  <h5>
+                    {userBalanceToBTCValue({
+                      tickerData,
+                      tickerLoading,
+                      userBalance,
+                    })}{" "}
+                  </h5>
                 </span>
               </div>
             </Col>
@@ -141,8 +154,7 @@ const Balance = () => {
           <Row>
             <Col
               md={5}
-              className="full-width-align-center small-screen-wallet-value"
-            >
+              className="full-width-align-center small-screen-wallet-value">
               <div className="inline-block-element full-width-align-center">
                 <h6 className="secondaryText full-width-align-center">
                   Your balance
@@ -157,9 +169,8 @@ const Balance = () => {
                     balanceData?.accountByKey?.balance?.liquid
                       ? toMINA(balanceData.accountByKey.balance.liquid)
                       : 0
-                  } Mina`}
-                >
-                  {renderBalance({balanceData,balanceLoading,userBalance})}
+                  } Mina`}>
+                  {renderBalance({ balanceData, balanceLoading, userBalance })}
                 </h5>
               </div>
             </Col>
@@ -175,7 +186,11 @@ const Balance = () => {
                     Apx value
                   </h6>
                   <h5 className="full-width-align-center">
-                    {userBalanceToBTCValue({tickerData,tickerLoading,userBalance})}
+                    {userBalanceToBTCValue({
+                      tickerData,
+                      tickerLoading,
+                      userBalance,
+                    })}
                   </h5>
                 </span>
               </div>
@@ -185,6 +200,6 @@ const Balance = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Balance;

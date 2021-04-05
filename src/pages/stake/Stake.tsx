@@ -54,7 +54,7 @@ interface IProps {
 
 export default ({ sessionData }: IProps) => {
   const [delegateData, setDelegate] = useState<IValidatorData>(
-    initialDelegateData
+    initialDelegateData,
   );
   const [currentDelegate, setCurrentDelegate] = useState("");
   const [currentDelegateName, setCurrentDelegateName] = useState("");
@@ -82,12 +82,12 @@ export default ({ sessionData }: IProps) => {
   });
   const history = useHistory();
   const [ledgerTransactionData, setLedgerTransactionData] = useState<string>(
-    ""
+    "",
   );
   const latestNews =
     news.data?.news_validators.length > 0 ? news.data?.news_validators[0] : {};
   const [broadcastDelegation] = useMutation(BROADCAST_DELEGATION, {
-    onError: (error) => {
+    onError: error => {
       toast.error(error.message);
       return clearState();
     },
@@ -115,7 +115,7 @@ export default ({ sessionData }: IProps) => {
   useEffect(() => {
     if (nonceAndDelegate.data?.accountByKey?.delegate?.publicKey) {
       setCurrentDelegate(
-        nonceAndDelegate.data?.accountByKey.delegate.publicKey
+        nonceAndDelegate.data?.accountByKey.delegate.publicKey,
       );
       setCurrentDelegateName(nonceAndDelegate.data.accountByKey.delegate.name);
     }
@@ -210,10 +210,10 @@ export default ({ sessionData }: IProps) => {
       const signStake = signStakeDelegation(stakeDelegation, keypair);
       if (signStake) {
         const SignatureInput = createSignatureInputFromSignature(
-          signStake.signature
+          signStake.signature,
         );
         const SendPaymentInput = createDelegationPaymentInputFromPayload(
-          signStake.payload
+          signStake.payload,
         );
         broadcastDelegation({
           variables: {
@@ -227,10 +227,10 @@ export default ({ sessionData }: IProps) => {
     } catch (e) {
       toast.error(
         e.message ||
-          "There was an error processing your delegation, please try again later."
+          "There was an error processing your delegation, please try again later.",
       );
     }
-  }
+  };
 
   /**
    * Set delegate private key on component state, open confirmation modal
@@ -239,14 +239,14 @@ export default ({ sessionData }: IProps) => {
   const openModal = (delegate: IValidatorData) => {
     setDelegate(delegate);
     setShowModal(ModalStates.CONFIRM_DELEGATION);
-  }
+  };
 
   /**
    * Open modal for custom private key insertion
    */
   const openCustomDelegateModal = () => {
     setShowModal(ModalStates.CUSTOM_DELEGATION);
-  }
+  };
 
   /**
    * Close every modal and clear component custom nonce and custom delegate
@@ -255,7 +255,7 @@ export default ({ sessionData }: IProps) => {
     setShowModal("");
     setCustomNonce(MINIMUM_NONCE);
     setCustomDelegate("");
-  }
+  };
 
   /**
    * If nonce is not available and no custom nonce has already been asked, ask user for a custom nonce. Otherwise proceeds to private key insertion modal
@@ -275,7 +275,7 @@ export default ({ sessionData }: IProps) => {
     } catch (e) {
       setShowModal(ModalStates.FEE);
     }
-  }
+  };
 
   /**
    * User confirmed delegate public key, proceeds to private key insertion
@@ -289,7 +289,7 @@ export default ({ sessionData }: IProps) => {
     } catch (e) {
       setShowModal(ModalStates.FEE);
     }
-  }
+  };
 
   /**
    * Close all modals, clears custom nonce state
@@ -297,7 +297,7 @@ export default ({ sessionData }: IProps) => {
   const closeNonceModal = () => {
     setShowModal("");
     setCustomNonce(MINIMUM_NONCE);
-  }
+  };
 
   /**
    * Clear component state
@@ -311,7 +311,7 @@ export default ({ sessionData }: IProps) => {
     setCustomDelegate("");
     setLedgerTransactionData("");
     setSelectedFee(feeOrDefault());
-  }
+  };
 
   /**
    * Set query offset based on selected page
@@ -320,7 +320,7 @@ export default ({ sessionData }: IProps) => {
   const changeOffset = (page: number) => {
     const data = (page - 1) * ITEMS_PER_PAGE;
     setOffset(data);
-  }
+  };
 
   const setFee = (value: number) => {
     setSelectedFee(value);
@@ -352,7 +352,7 @@ export default ({ sessionData }: IProps) => {
       setLedgerTransactionData(signature.signature);
     } catch (e) {
       toast.error(
-        e.message || "An error occurred while loading hardware wallet"
+        e.message || "An error occurred while loading hardware wallet",
       );
       setShowModal("");
     }
@@ -369,7 +369,7 @@ export default ({ sessionData }: IProps) => {
       return 0;
     }
     return customNonce;
-  }
+  };
 
   return (
     <Hoc className="main-container">
@@ -389,8 +389,7 @@ export default ({ sessionData }: IProps) => {
       </div>
       <ModalContainer
         show={showModal === ModalStates.CONFIRM_DELEGATION}
-        close={closeModal}
-      >
+        close={closeModal}>
         <ConfirmDelegation
           name={delegateData?.name}
           closeModal={closeModal}
@@ -399,8 +398,7 @@ export default ({ sessionData }: IProps) => {
       </ModalContainer>
       <ModalContainer
         show={showModal === ModalStates.NONCE}
-        close={closeNonceModal}
-      >
+        close={closeNonceModal}>
         <CustomNonce
           proceedHandler={confirmDelegate}
           setCustomNonce={setCustomNonce}
@@ -408,8 +406,7 @@ export default ({ sessionData }: IProps) => {
       </ModalContainer>
       <ModalContainer
         show={showModal === ModalStates.PASSPHRASE}
-        close={closeModal}
-      >
+        close={closeModal}>
         {isLedgerEnabled ? (
           <div className="mx-auto">
             <h2>Please confirm transaction </h2>
@@ -439,8 +436,7 @@ export default ({ sessionData }: IProps) => {
       </ModalContainer>
       <ModalContainer
         show={showModal === ModalStates.CUSTOM_DELEGATION}
-        close={closeModal}
-      >
+        close={closeModal}>
         <CustomDelegation
           closeModal={closeModal}
           confirmCustomDelegate={confirmCustomDelegate}

@@ -14,6 +14,6 @@ const SignMessageLedgerScreen = () => (
       </div>
     </div>
   </Hoc>
-)
+);
 
 export default SignMessageLedgerScreen;

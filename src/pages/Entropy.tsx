@@ -14,7 +14,7 @@ const Entropy = () => {
    * @param size number
    * @returns string
    */
-  const generateRandomHex = (size:number) =>
+  const generateRandomHex = (size: number) =>
     [...Array(size)]
       .map(() => Math.floor(Math.random() * 16).toString(16))
       .join("");
@@ -31,7 +31,10 @@ const Entropy = () => {
                 Here we go! <br />
                 Move your mouse around to create random Bytes.
               </h4>
-              <ProgressBar progress={progress} text={generateRandomHex(progress)} />
+              <ProgressBar
+                progress={progress}
+                text={generateRandomHex(progress)}
+              />
               <div className="v-spacer" />
               <Row>
                 <Col>
@@ -52,6 +55,6 @@ const Entropy = () => {
       <Footer />
     </Hoc>
   );
-}
+};
 
 export default Entropy;
