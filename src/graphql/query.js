@@ -4,7 +4,7 @@ import { ITEMS_PER_PAGE } from "../tools/const";
 export const GET_FEE = gql`
   query GetFees {
     estimatedFee {
-      txFees{
+      txFees {
         fast
         average
       }
@@ -53,18 +53,18 @@ export const GET_AVERAGE_FEE = gql`
 `;
 
 export const GET_VALIDATORS = gql`
-query validators($offset: Int!) {
-  validators(limit: 100, offset: $offset, order_by: {priority: asc}) {
-    fee
-    id
-    image
-    name
-    publicKey
-    website
-    stakedSum
-    priority
+  query validators($offset: Int!) {
+    validators(limit: 100, offset: $offset, order_by: { priority: asc }) {
+      fee
+      id
+      image
+      name
+      publicKey
+      website
+      stakedSum
+      priority
+    }
   }
-}
 `;
 
 export const GET_VALIDATORS_NEWS = gql`
@@ -84,7 +84,7 @@ export const GET_NONCE_AND_DELEGATE = gql`
     accountByKey(publicKey: $publicKey) {
       delegate {
         publicKey
-          name
+        name
       }
       usableNonce
     }
@@ -222,4 +222,3 @@ export const GET_HOME_NEWS = gql`
     }
   }
 `;
-

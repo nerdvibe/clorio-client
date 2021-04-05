@@ -1,9 +1,10 @@
-import {isDevnet} from "../utils";
+/* eslint-disable no-control-regex */
+import { isDevnet } from "../utils";
 
 let ledgerAPI;
 import isElectron from "is-electron";
 import { feeOrDefault } from "../fees";
-import { getDefaultValidUntilField} from "../utils";
+import { getDefaultValidUntilField } from "../utils";
 import { toNanoMINA } from "../mina";
 
 // Because of compatibility we need to use 2 transporters, one for Electron, one for the browser.
@@ -37,7 +38,7 @@ export const isMinaAppOpen = async () => {
     }
     if (ledgerNameVersion.name !== "Mina") {
       throw new Error(
-        "Please make sure that you have the Mina app open on the Ledger device"
+        "Please make sure that you have the Mina app open on the Ledger device",
       );
     }
 
@@ -53,7 +54,7 @@ export const isMinaAppOpen = async () => {
  * @param {number} account
  * @returns {Promise<{publicKey}|any>}
  */
-export const getPublicKey = async (account) => {
+export const getPublicKey = async account => {
   const ledgerPublicKey = await ledgerAPI.getPublicKey(account);
   // In case the user doesn't accept the address on the device
   if (ledgerPublicKey.returnCode === "27013") {
@@ -71,7 +72,7 @@ export const getPublicKey = async (account) => {
  * @param transaction
  * @returns {Promise<{signature}|any>}
  */
-export const signTransaction = async (transaction) => {
+export const signTransaction = async transaction => {
   const ledgerTransaction = await ledgerAPI.signTransaction(transaction);
   // In case the user doesn't accept the transaction on the device
   if (ledgerTransaction.returnCode === "27013") {
@@ -89,7 +90,7 @@ export const signTransaction = async (transaction) => {
  * @param str
  * @returns str {*}
  */
-export const emojiToUnicode = (str) => {
+export const emojiToUnicode = str => {
   return str.replace(
     /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
     function (e) {
@@ -99,16 +100,15 @@ export const emojiToUnicode = (str) => {
         "\\u" +
         e.charCodeAt(1).toString(16)
       );
-    }
+    },
   );
 };
-
 
 export const createAndSignLedgerTransaction = async ({
   senderAccount,
   senderAddress,
   transactionData,
-  nonce
+  nonce,
 }) => {
   const { receiverAddress, fee, amount, memo } = transactionData;
   // For now mina-ledger-js doesn't support emojis
@@ -134,7 +134,7 @@ export const createAndSignLedgerTransaction = async ({
   return await signTransaction(transactionToSend);
 };
 
-export const createLedgerSignatureInputFromSignature = (signature) => {
+export const createLedgerSignatureInputFromSignature = signature => {
   return {
     scalar: signature.scalar,
     field: signature.field,
@@ -145,7 +145,7 @@ export const createLedgerPaymentInputFromPayload = (
   transactionData,
   fee,
   amount,
-  senderAddress
+  senderAddress,
 ) => {
   const { nonce, memo, receiverAddress } = transactionData;
   return {
@@ -163,7 +163,7 @@ export const createLedgerDelegationTransaction = ({
   senderAddress,
   receiverAddress,
   fee,
-  nonce
+  nonce,
 }) => {
   return {
     senderAccount,
@@ -185,10 +185,19 @@ export const createLedgerDelegationTransaction = ({
  * @param str
  * @returns {string}
  */
-export const escapeUnicode = (str) => {
-  return [...str].map(c => /^[\x00-\x7F]$/.test(c) ? c : c.split("").map(a => "\\u" + a.charCodeAt().toString(16).padStart(4, "0")).join("")).join("");
-}
+export const escapeUnicode = str => {
+  return [...str]
+    .map(c =>
+      /^[\x00-\x7F]$/.test(c)
+        ? c
+        : c
+            .split("")
+            .map(a => "\\u" + a.charCodeAt().toString(16).padStart(4, "0"))
+            .join(""),
+    )
+    .join("");
+};
 
 export const ledgerNetworkId = () => {
-  return isDevnet() ? NETWORK.DEVNET : NETWORK.MAINNET
-}
+  return isDevnet() ? NETWORK.DEVNET : NETWORK.MAINNET;
+};

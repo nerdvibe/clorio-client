@@ -1,5 +1,9 @@
 import Big from "big.js";
-import { DEFAULT_VALID_UNTIL_FIELD, ITEMS_PER_PAGE, MINIMUM_FEE } from "./const";
+import {
+  DEFAULT_VALID_UNTIL_FIELD,
+  ITEMS_PER_PAGE,
+  MINIMUM_FEE,
+} from "./const";
 import { toNanoMINA } from "./mina";
 
 export const copyToClipboard = (content = "") => {
@@ -15,7 +19,7 @@ export const loadErrorMessage = () => {
   document.getElementsByClassName("show-on-load")[0].className = "show-mob";
 };
 
-export const isEmptyObject = (objectToCheck:any) => {
+export const isEmptyObject = (objectToCheck: any) => {
   return (
     objectToCheck &&
     Object.entries(objectToCheck).length === 0 &&
@@ -23,16 +27,16 @@ export const isEmptyObject = (objectToCheck:any) => {
   );
 };
 
-export const toBTC = (amount:number) => {
+export const toBTC = (amount: number) => {
   return Big(amount).mul(1e-9).toFixed(3);
-}
+};
 
 export const getDefaultValidUntilField = () => {
   return DEFAULT_VALID_UNTIL_FIELD;
 };
 
 /**
- * Get the number of the table pages based on the total number of elements 
+ * Get the number of the table pages based on the total number of elements
  * @returns Number
  */
 export const getTotalPages = (totalItems = 0) => {
@@ -55,7 +59,7 @@ export const getPageFromOffset = (offset = 0) => {
   return offset / ITEMS_PER_PAGE + 1;
 };
 
-export const feeGreaterThanMinimum = (fee:number) => {
+export const feeGreaterThanMinimum = (fee: number) => {
   if (fee) {
     const feeToSend = toNanoMINA(fee);
     const feeMinusMinimum = +Big(feeToSend).sub(MINIMUM_FEE);

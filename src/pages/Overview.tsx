@@ -10,39 +10,43 @@ import { getPageFromOffset } from "../tools/utils";
 import { GET_MEMPOOL, GET_TRANSACTIONS, GET_HOME_NEWS } from "../graphql/query";
 import NewsBanner from "../components/UI/NewsBanner";
 import { IWalletData } from "../models/WalletData";
-import { ITransactionQueryResult,IMempoolQueryResult } from "../components/transactionsTable/TransactionsTypes";
+import {
+  ITransactionQueryResult,
+  IMempoolQueryResult,
+} from "../components/transactionsTable/TransactionsTypes";
 
-interface IProps{
-  sessionData:IWalletData
+interface IProps {
+  sessionData: IWalletData;
 }
 
-const Overview = (props:IProps) => {
-  const {sessionData} = props;
-  const { balance }:any = useContext(BalanceContext);
+const Overview = (props: IProps) => {
+  const { sessionData } = props;
+  const { balance }: any = useContext(BalanceContext);
   const [offset, setOffset] = useState(0);
   const news = useQuery(GET_HOME_NEWS);
-  const latestNews = news.data?.news_home.length > 0 ? news.data?.news_home[0] : {};
+  const latestNews =
+    news.data?.news_home.length > 0 ? news.data?.news_home[0] : {};
   const transactions = useQuery<ITransactionQueryResult>(GET_TRANSACTIONS, {
-    variables: { user:sessionData.id, offset },
+    variables: { user: sessionData.id, offset },
     fetchPolicy: "network-only",
     skip: !sessionData.id,
-    pollInterval: DEFAULT_INTERVAL
+    pollInterval: DEFAULT_INTERVAL,
   });
   const mempool = useQuery<IMempoolQueryResult>(GET_MEMPOOL, {
     variables: { publicKey: sessionData.address },
     skip: !sessionData.address,
     fetchPolicy: "network-only",
-    pollInterval: DEFAULT_INTERVAL
+    pollInterval: DEFAULT_INTERVAL,
   });
 
   /**
    * Set query offset param based on selected table page
    * @param {number} page Page number
    */
-  const changeOffset = (page:number) => {
+  const changeOffset = (page: number) => {
     const data = (page - 1) * ITEMS_PER_PAGE;
     setOffset(data);
-  }
+  };
 
   return (
     <Hoc className="main-container">
@@ -64,6 +68,6 @@ const Overview = (props:IProps) => {
       </Spinner>
     </Hoc>
   );
-}
+};
 
 export default Overview;

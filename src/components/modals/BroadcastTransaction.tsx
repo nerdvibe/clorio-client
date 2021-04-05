@@ -9,6 +9,6 @@ const BroadcastTransaction = () => {
       <div className="v-spacer" />
     </div>
   );
-}
+};
 
 export default BroadcastTransaction;

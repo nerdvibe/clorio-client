@@ -7,15 +7,19 @@ import { clearSession } from "../../../tools";
 import { isRouteActiveClass, renderNetworkLabel } from "./SidebarHelper";
 import { INetworkData } from "../../../models/NetworkData";
 
-interface IProps{
-  network:INetworkData,
-  clearSessionData:()=>void
+interface IProps {
+  network: INetworkData;
+  clearSessionData: () => void;
 }
 
-const Sidebar = (props:IProps) => {
-  const {network,clearSessionData} = props;
+const Sidebar = (props: IProps) => {
+  const { network, clearSessionData } = props;
   const history = useHistory();
-  const statusDot = network?.nodeInfo ? <span className="green-dot" /> : <span className="red-dot" />
+  const statusDot = network?.nodeInfo ? (
+    <span className="green-dot" />
+  ) : (
+    <span className="red-dot" />
+  );
 
   /**
    * Clear session data and go back to splashscreen
@@ -26,21 +30,20 @@ const Sidebar = (props:IProps) => {
     clearSessionData();
   };
 
-
   return (
     <div style={{ padding: "5px" }}>
       <Nav
         className="col-md-12 d-none d-md-block sidebar level-zero"
         activeKey="/home"
-        onSelect={(selectedKey) => alert(`selected ${selectedKey}`)}
-      >
+        onSelect={selectedKey => alert(`selected ${selectedKey}`)}>
         <div className="sidebar-sticky" style={{ margin: "0 auto" }}>
           <Logo />
         </div>
         <hr />
         <Nav.Item
-          className={"sidebar-item-container " + isRouteActiveClass("overview")}
-        >
+          className={
+            "sidebar-item-container " + isRouteActiveClass("overview")
+          }>
           <Link to="/overview" className="sidebar-item selected-item">
             {" "}
             <span>
@@ -48,7 +51,8 @@ const Sidebar = (props:IProps) => {
             </span>
           </Link>
         </Nav.Item>
-        <Nav.Item className={"sidebar-item-container " + isRouteActiveClass("send-tx")}>
+        <Nav.Item
+          className={"sidebar-item-container " + isRouteActiveClass("send-tx")}>
           <Link to="/send-tx" className="sidebar-item">
             {" "}
             <span>
@@ -56,7 +60,8 @@ const Sidebar = (props:IProps) => {
             </span>
           </Link>
         </Nav.Item>
-        <Nav.Item className={"sidebar-item-container " + isRouteActiveClass("stake")}>
+        <Nav.Item
+          className={"sidebar-item-container " + isRouteActiveClass("stake")}>
           <Link to="/stake" className="sidebar-item">
             {" "}
             <span>
@@ -65,8 +70,9 @@ const Sidebar = (props:IProps) => {
           </Link>
         </Nav.Item>
         <Nav.Item
-          className={"sidebar-item-container " + isRouteActiveClass("sign-message")}
-        >
+          className={
+            "sidebar-item-container " + isRouteActiveClass("sign-message")
+          }>
           <Link to="/sign-message" className="sidebar-item">
             {" "}
             <span>
@@ -75,8 +81,9 @@ const Sidebar = (props:IProps) => {
           </Link>
         </Nav.Item>
         <Nav.Item
-          className={"sidebar-item-container " + isRouteActiveClass("verify-message")}
-        >
+          className={
+            "sidebar-item-container " + isRouteActiveClass("verify-message")
+          }>
           <Link to="/verify-message" className="sidebar-item">
             {" "}
             <span>
@@ -101,6 +108,6 @@ const Sidebar = (props:IProps) => {
       </Nav>
     </div>
   );
-}
+};
 
 export default Sidebar;

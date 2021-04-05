@@ -3,22 +3,24 @@ import { Row, Col } from "react-bootstrap";
 import { toMINA, toNanoMINA } from "../../../tools";
 import Button from "../../UI/Button";
 import Input from "../../UI/input/Input";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import { ITransactionData } from "../../../models/TransactionData";
 import { checkFieldsAndProceed } from "./TransactionFormHelper";
 
-interface IProps{
-  transactionData:ITransactionData,
-  defaultFee:number,
-  fastFee:number,
-  setData:(transactionData:ITransactionData) => void,
-  nextStep:() => void,
+interface IProps {
+  transactionData: ITransactionData;
+  defaultFee: number;
+  fastFee: number;
+  setData: (transactionData: ITransactionData) => void;
+  nextStep: () => void;
 }
 
-const TransactionForm = (props:IProps) => {
-  const {transactionData,defaultFee,fastFee,setData,nextStep} = props;
-  const [amount, setAmount] = useState<string|number>(toMINA(transactionData.amount));
-  const [fee, setFee] = useState<string|number>(toMINA(transactionData.fee));
+const TransactionForm = (props: IProps) => {
+  const { transactionData, defaultFee, fastFee, setData, nextStep } = props;
+  const [amount, setAmount] = useState<string | number>(
+    toMINA(transactionData.amount),
+  );
+  const [fee, setFee] = useState<string | number>(toMINA(transactionData.fee));
 
   const setDefaultFee = () => {
     const fee = defaultFee;
@@ -35,8 +37,8 @@ const TransactionForm = (props:IProps) => {
         fee: toNanoMINA(0.1),
       });
     }
-  }
-  
+  };
+
   const setFastFee = () => {
     const fee = fastFee;
     if (fee) {
@@ -52,16 +54,16 @@ const TransactionForm = (props:IProps) => {
         fee: toNanoMINA(0.1),
       });
     }
-  }
-  
-  const addressHandler = (receiverAddress:string) => {
+  };
+
+  const addressHandler = (receiverAddress: string) => {
     setData({
       ...transactionData,
       receiverAddress,
     });
-  }
-  
-  const amountHandler = (amount:string) => {
+  };
+
+  const amountHandler = (amount: string) => {
     setAmount(amount);
     if (amount) {
       return setData({
@@ -73,9 +75,9 @@ const TransactionForm = (props:IProps) => {
       ...transactionData,
       amount: toNanoMINA(0),
     });
-  }
-  
-  const feeHandler = (fee:string) => {
+  };
+
+  const feeHandler = (fee: string) => {
     setFee(fee);
     if (fee) {
       return setData({
@@ -87,18 +89,18 @@ const TransactionForm = (props:IProps) => {
       ...transactionData,
       fee: toNanoMINA(0),
     });
-  }
-  
-  const memoHandler = (memo:string) => {
+  };
+
+  const memoHandler = (memo: string) => {
     if (memo.length > 32) {
-      toast.error("Memo is limited to 32 characters")
+      toast.error("Memo is limited to 32 characters");
     } else {
       return setData({
         ...transactionData,
         memo,
       });
     }
-  }
+  };
 
   return (
     <div className="mx-auto  ">
@@ -116,13 +118,13 @@ const TransactionForm = (props:IProps) => {
               <Input
                 value={transactionData.receiverAddress}
                 placeholder="Enter address "
-                inputHandler={(e) => addressHandler(e.currentTarget.value)}
+                inputHandler={e => addressHandler(e.currentTarget.value)}
               />
               <h3>Memo</h3>
               <Input
                 value={transactionData.memo}
                 placeholder="Enter memo "
-                inputHandler={(e) => memoHandler(e.currentTarget.value)}
+                inputHandler={e => memoHandler(e.currentTarget.value)}
               />
               <Row>
                 <Col md={12} xl={6}>
@@ -130,7 +132,7 @@ const TransactionForm = (props:IProps) => {
                   <Input
                     placeholder="Enter an amount "
                     value={amount}
-                    inputHandler={(e) => amountHandler(e.target.value)}
+                    inputHandler={e => amountHandler(e.target.value)}
                     type="number"
                   />
                 </Col>
@@ -157,7 +159,7 @@ const TransactionForm = (props:IProps) => {
                   <Input
                     placeholder="Enter a fee "
                     value={fee}
-                    inputHandler={(e) => feeHandler(e.target.value)}
+                    inputHandler={e => feeHandler(e.target.value)}
                     type="number"
                   />
                 </Col>
@@ -165,7 +167,7 @@ const TransactionForm = (props:IProps) => {
               <div className="v-spacer" />
               <Button
                 className="lightGreenButton__fullMono mx-auto"
-                onClick={() => checkFieldsAndProceed(transactionData,nextStep)}
+                onClick={() => checkFieldsAndProceed(transactionData, nextStep)}
                 text="Preview"
               />
             </Col>
@@ -174,6 +176,6 @@ const TransactionForm = (props:IProps) => {
       </div>
     </div>
   );
-}
+};
 
 export default TransactionForm;

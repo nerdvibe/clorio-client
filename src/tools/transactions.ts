@@ -1,16 +1,21 @@
-import { ISignature } from '../models/Signature';
+import { ISignature } from "../models/Signature";
 import { signPayment } from "@o1labs/client-sdk";
 import { IKeypair } from "../models/Keypair";
-import { ITransactionPayload } from '../models/TransactionPayload';
+import { ITransactionPayload } from "../models/TransactionPayload";
 
-interface ISignTransaction{
-  transactionData:any, 
-  keypair:IKeypair, 
-  sender:string, 
-  actualNonce:number
+interface ISignTransaction {
+  transactionData: any;
+  keypair: IKeypair;
+  sender: string;
+  actualNonce: number;
 }
 
-export const signTransaction = ({transactionData, keypair, sender, actualNonce}:ISignTransaction) => {
+export const signTransaction = ({
+  transactionData,
+  keypair,
+  sender,
+  actualNonce,
+}: ISignTransaction) => {
   const { fee, amount, receiverAddress, memo } = transactionData;
   const signedPayment = signPayment(
     {
@@ -21,19 +26,19 @@ export const signTransaction = ({transactionData, keypair, sender, actualNonce}:
       nonce: actualNonce,
       memo,
     },
-    keypair
+    keypair,
   );
   return signedPayment;
-}
+};
 
-export const createSignatureInputFromSignature = (signature:ISignature) => {
+export const createSignatureInputFromSignature = (signature: ISignature) => {
   return {
     scalar: signature.scalar,
     field: signature.field,
   };
-}
+};
 
-export const createPaymentInputFromPayload = (payload:ITransactionPayload) => {
+export const createPaymentInputFromPayload = (payload: ITransactionPayload) => {
   return {
     nonce: payload.nonce,
     memo: payload.memo,
@@ -42,9 +47,11 @@ export const createPaymentInputFromPayload = (payload:ITransactionPayload) => {
     to: payload.to,
     from: payload.from,
   };
-}
+};
 
-export const createDelegationPaymentInputFromPayload = (payload:ITransactionPayload) => {
+export const createDelegationPaymentInputFromPayload = (
+  payload: ITransactionPayload,
+) => {
   return {
     nonce: payload.nonce,
     fee: payload.fee,
@@ -52,4 +59,4 @@ export const createDelegationPaymentInputFromPayload = (payload:ITransactionPayl
     to: payload.to,
     from: payload.from,
   };
-}
+};

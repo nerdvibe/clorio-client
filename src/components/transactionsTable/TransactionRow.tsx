@@ -3,19 +3,30 @@ import TransactionIcon from "./TransactionIcon";
 import { ITransactionRowData } from "./TransactionsTypes";
 
 const TransactionRow = (
-  { timestamp,amount,sender,receiver,fee,memo,id,type }:ITransactionRowData, 
-  index:number, 
-  userAddress:string,
-  isMempool:boolean
-  ) => {
-  const timeDistance = (!isMempool && timestamp)  ? 
-  formatDistance(timestamp, new Date(), {
-    includeSeconds: true,
-    addSuffix: true,
-  }) :
-  ("Waiting for confirmation");
-  
-  const timeISOString = (!isMempool && timestamp) ? new Date(timestamp).toISOString() : "";
+  {
+    timestamp,
+    amount,
+    sender,
+    receiver,
+    fee,
+    memo,
+    id,
+    type,
+  }: ITransactionRowData,
+  index: number,
+  userAddress: string,
+  isMempool: boolean,
+) => {
+  const timeDistance =
+    !isMempool && timestamp
+      ? formatDistance(timestamp, new Date(), {
+          includeSeconds: true,
+          addSuffix: true,
+        })
+      : "Waiting for confirmation";
+
+  const timeISOString =
+    !isMempool && timestamp ? new Date(timestamp).toISOString() : "";
   const isOutgoing = userAddress === sender;
   const isSelf = receiver === sender;
   const humanAmount = isOutgoing
@@ -28,9 +39,8 @@ const TransactionRow = (
       ? ""
       : "red"
     : "green";
-  
-  const urlPath = isMempool ? "payment" : "transaction"
 
+  const urlPath = isMempool ? "payment" : "transaction";
 
   return (
     <tr key={index}>
@@ -40,13 +50,11 @@ const TransactionRow = (
       </td>
       <td
         className="table-element table-hash"
-        data-tip={memo ? `Memo: ${memo}` : null}
-      >
+        data-tip={memo ? `Memo: ${memo}` : null}>
         <a
           href={`${process.env.REACT_APP_EXPLORER_URL}/${urlPath}/${id}`}
           target="_blank"
-          rel="noreferrer"
-        >
+          rel="noreferrer">
           {id}
         </a>
       </td>
@@ -62,12 +70,11 @@ const TransactionRow = (
       <td
         className="table-element"
         style={{ color: amountColor }}
-        data-tip={fee}
-      >
+        data-tip={fee}>
         {humanAmount} Mina
       </td>
     </tr>
   );
-}
+};
 
 export default TransactionRow;

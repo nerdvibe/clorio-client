@@ -3,7 +3,7 @@ import NoTransactionsOrNotAvailableImage from "../../assets/NoTransactionsOrNotA
 import TxHistoryNotAvailableImage from "../../assets/TxHistoryNotAvailable.svg";
 import NoTransactions from "../../assets/NoTransactions.svg";
 
-const TransactionsTableError = (balance:number, hasErrors:boolean) => {
+const TransactionsTableError = (balance: number, hasErrors: boolean) => {
   let imageToRender = hasErrors ? ErrorImage : NoTransactions;
   if (balance === 0) {
     imageToRender = NoTransactionsOrNotAvailableImage;
@@ -20,6 +20,6 @@ const TransactionsTableError = (balance:number, hasErrors:boolean) => {
       </div>
     </div>
   );
-}
+};
 
 export default TransactionsTableError;

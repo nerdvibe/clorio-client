@@ -1,11 +1,11 @@
-import CSS from 'csstype';
+import CSS from "csstype";
 
-interface IProps{
-  text:string,
-  progress:number
+interface IProps {
+  text: string;
+  progress: number;
 }
 
-const ProgressBar = (props:IProps) => {
+const ProgressBar = (props: IProps) => {
   const { text, progress } = props;
 
   /**
@@ -30,18 +30,18 @@ const ProgressBar = (props:IProps) => {
     margin: 50,
   };
 
-  const fillerStyles:CSS.Properties = {
+  const fillerStyles: CSS.Properties = {
     height: "100%",
     width: `${progress}%`,
     backgroundColor: progressColor(),
     borderRadius: "inherit",
     textAlign: "right",
-    padding: '10px',
+    padding: "10px",
     transition: "1s",
     maxWidth: "100%",
   };
 
-  const labelStyles:CSS.Properties = {
+  const labelStyles: CSS.Properties = {
     padding: "5 px",
     color: "white",
     fontWeight: "bold",

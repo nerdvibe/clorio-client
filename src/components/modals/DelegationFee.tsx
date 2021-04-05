@@ -2,20 +2,25 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { feeOrDefault } from "../../tools/fees";
-import { toMINA, toNanoMINA, feeGreaterThanMinimum, MINIMUM_FEE } from "../../tools";
+import {
+  toMINA,
+  toNanoMINA,
+  feeGreaterThanMinimum,
+  MINIMUM_FEE,
+} from "../../tools";
 import Button from "../UI/Button";
 import Input from "../UI/input/Input";
-import {IEstimatedFee} from "../../models/Fee" 
-interface IProps{
-  proceedHandler:(fee:number)=>void,
-  closeModal:()=>void,
-  fees?:{
-    estimatedFee:IEstimatedFee
-  }
+import { IEstimatedFee } from "../../models/Fee";
+interface IProps {
+  proceedHandler: (fee: number) => void;
+  closeModal: () => void;
+  fees?: {
+    estimatedFee: IEstimatedFee;
+  };
 }
 
-const DelegationFee = (props:IProps) => {
-  const {proceedHandler,fees} = props;
+const DelegationFee = (props: IProps) => {
+  const { proceedHandler, fees } = props;
   const averageFee = feeOrDefault(fees?.estimatedFee?.txFees?.average || 0);
   const fastFee = feeOrDefault(fees?.estimatedFee?.txFees?.fast || 0);
   const [fee, setFee] = useState<number>(feeOrDefault(averageFee));
@@ -27,9 +32,11 @@ const DelegationFee = (props:IProps) => {
     if (feeGreaterThanMinimum(fee)) {
       const feeToSend = toNanoMINA(fee);
       proceedHandler(feeToSend);
-      return 
+      return;
     }
-    const message = `Fee ${fee} is less than the minimum fee (${toMINA(MINIMUM_FEE)})`;
+    const message = `Fee ${fee} is less than the minimum fee (${toMINA(
+      MINIMUM_FEE,
+    )})`;
     toast.error(message);
   };
 
@@ -60,7 +67,7 @@ const DelegationFee = (props:IProps) => {
         <Input
           placeholder="Enter a fee "
           value={fee}
-          inputHandler={(e) => setFee(+e.target.value)}
+          inputHandler={e => setFee(+e.target.value)}
           type="number"
         />
       </div>

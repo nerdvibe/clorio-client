@@ -3,12 +3,12 @@ import { Row, Col } from "react-bootstrap";
 import Button from "../UI/Button";
 import Input from "../UI/input/Input";
 
-interface IProps{
-  closeModal: () => void,
-  confirmCustomDelegate: (customDelegate:string) => void
+interface IProps {
+  closeModal: () => void;
+  confirmCustomDelegate: (customDelegate: string) => void;
 }
 
-const ConfirmDelegation = (props:IProps) => {
+const ConfirmDelegation = (props: IProps) => {
   const { closeModal, confirmCustomDelegate } = props;
   const [customDelegate, setCustomDelegate] = useState("");
   return (
@@ -18,7 +18,7 @@ const ConfirmDelegation = (props:IProps) => {
       <h6 className="full-width">Insert Public key</h6>
       <div className="v-spacer" />
       <Input
-        inputHandler={(e) => {
+        inputHandler={e => {
           setCustomDelegate(e.currentTarget.value);
         }}
         placeholder="Insert public key"
@@ -39,6 +39,6 @@ const ConfirmDelegation = (props:IProps) => {
       </Row>
     </div>
   );
-}
+};
 
 export default ConfirmDelegation;

@@ -1,23 +1,26 @@
-import { MINIMUM_AMOUNT, MINIMUM_FEE, toMINA } from '../../../tools';
-import { ITransactionData } from '../../../models/TransactionData';
-import { toast } from 'react-toastify';
+import { MINIMUM_AMOUNT, MINIMUM_FEE, toMINA } from "../../../tools";
+import { ITransactionData } from "../../../models/TransactionData";
+import { toast } from "react-toastify";
 
-export const checkFieldsAndProceed = (transactionData:ITransactionData,nextStep:()=>void) => {
+export const checkFieldsAndProceed = (
+  transactionData: ITransactionData,
+  nextStep: () => void,
+) => {
   const { amount, fee, receiverAddress } = transactionData;
   if (amount < MINIMUM_AMOUNT || amount === 0) {
     const message = `Amount ${toMINA(
-      amount
+      amount,
     )} is less than the minimum amount (${toMINA(MINIMUM_AMOUNT)})`;
-    return toast.error(message)
+    return toast.error(message);
   }
   if (fee < MINIMUM_FEE) {
-    const message = `Fee ${toMINA(
-      fee
-    )} is less than the minimum fee (${toMINA(MINIMUM_FEE)})`;
-    return toast.error(message)
+    const message = `Fee ${toMINA(fee)} is less than the minimum fee (${toMINA(
+      MINIMUM_FEE,
+    )})`;
+    return toast.error(message);
   }
   if (receiverAddress === "") {
-    return toast.error("Please insert a recipient")
+    return toast.error("Please insert a recipient");
   }
   return nextStep();
-}
+};

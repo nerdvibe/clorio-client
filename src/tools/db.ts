@@ -4,9 +4,9 @@ const Datastore = require("nedb-promises");
 const db = Datastore.create();
 
 export const storeSession = async (
-  address:string,
-  id:number,
-  isLedgerEnabled:boolean,
+  address: string,
+  id: number,
+  isLedgerEnabled: boolean,
   ledgerAccount = 0,
 ) => {
   const wallet = {
@@ -20,7 +20,7 @@ export const storeSession = async (
   return db.insert(wallet);
 };
 
-export const storeNetworkData = async (networkData:INodeInfo) => {
+export const storeNetworkData = async (networkData: INodeInfo) => {
   const network = {
     type: "network",
     ...networkData,
@@ -40,7 +40,7 @@ export const clearSession = async () => {
   await db.remove({ type: "wallet" });
 };
 
-export const updateUser = async (address:string, id:number) => {
+export const updateUser = async (address: string, id: number) => {
   const walletData = await readSession();
   await db.remove({ type: "wallet" });
   const wallet = {

@@ -40,6 +40,6 @@ const Homepage = () => {
       </Row>
     </div>
   );
-}
+};
 
 export default Homepage;

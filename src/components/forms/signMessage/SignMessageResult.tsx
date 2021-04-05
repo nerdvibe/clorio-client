@@ -1,17 +1,17 @@
-import { Col, Row } from "react-bootstrap"
-import { ISignature } from "../../../models/Signature"
-import Button from "../../UI/Button"
+import { Col, Row } from "react-bootstrap";
+import { ISignature } from "../../../models/Signature";
+import Button from "../../UI/Button";
 
-interface IProps{
-  signature:ISignature,
-  publicKey:string,
-  payload:string,
-  reset:()=>void
+interface IProps {
+  signature: ISignature;
+  publicKey: string;
+  payload: string;
+  reset: () => void;
 }
 
-const SignMessageResult = (props:IProps) => {
-  const {publicKey,payload,signature,reset} = props
-  const {field,scalar} = signature
+const SignMessageResult = (props: IProps) => {
+  const { publicKey, payload, signature, reset } = props;
+  const { field, scalar } = signature;
   return (
     <div className="mx-auto">
       <div className="block-container fit-content-container">
@@ -45,7 +45,7 @@ const SignMessageResult = (props:IProps) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SignMessageResult
+export default SignMessageResult;

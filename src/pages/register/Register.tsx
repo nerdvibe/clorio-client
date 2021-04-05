@@ -8,13 +8,13 @@ import { INetworkData } from "../../models/NetworkData";
 import RegisterStep from "./RegistrationStep";
 import ValidationStep from "./ValidationStep";
 
-interface IProps{
-  toggleLoader:()=>void,
-  network:INetworkData
+interface IProps {
+  toggleLoader: () => void;
+  network: INetworkData;
 }
 
-const Register = (props:IProps) => {
-  const { toggleLoader,network } = props;
+const Register = (props: IProps) => {
+  const { toggleLoader, network } = props;
   const [validation, setValidation] = useState(false);
   const [validationText, setValidationText] = useState("");
   const [keys, setKeys] = useState({
@@ -45,26 +45,26 @@ const Register = (props:IProps) => {
    */
   const checkButtonState = () => {
     return validationText !== keys.privateKey;
-  }
+  };
 
   /**
    * Save public key inside the storage
    */
   const setAuthorization = () => {
     toggleLoader();
-    storeSession(keys.publicKey, -1, false, 0).then((success) => {
+    storeSession(keys.publicKey, -1, false, 0).then(success => {
       if (success) {
         history.push("/overview");
       }
     });
-  }
+  };
 
   /**
    * Generate new key pair
    */
   const generateNew = () => {
     setKeys(genKeys());
-  }
+  };
 
   /**
    * Go back to data screen
@@ -72,26 +72,29 @@ const Register = (props:IProps) => {
   const stepBackwards = () => {
     setValidationText("");
     setValidation(false);
-  } 
+  };
 
   return (
     <Hoc className="main-container register">
       <div className="block-container no-bg real-full-page-container center ">
-        {validation ? 
-          <ValidationStep 
-            stepBackwards={stepBackwards} 
-            setAuthorization={setAuthorization} 
-            checkButtonState={checkButtonState} 
-            setValidationText={setValidationText} /> : 
-          <RegisterStep 
-            keys={keys} 
-            generateNew={generateNew} 
-            setValidation={setValidation} />
-        }
+        {validation ? (
+          <ValidationStep
+            stepBackwards={stepBackwards}
+            setAuthorization={setAuthorization}
+            checkButtonState={checkButtonState}
+            setValidationText={setValidationText}
+          />
+        ) : (
+          <RegisterStep
+            keys={keys}
+            generateNew={generateNew}
+            setValidation={setValidation}
+          />
+        )}
         <Footer network={network} />
       </div>
     </Hoc>
   );
-}
+};
 
 export default Register;

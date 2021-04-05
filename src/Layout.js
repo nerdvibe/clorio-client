@@ -22,7 +22,7 @@ const Layout = () => {
   const { setLedgerContext } = useContext(LedgerContext);
   const history = useHistory();
   const network = useQuery(GET_NETWORK, {
-    onCompleted: async (data) => {
+    onCompleted: async data => {
       if (data?.nodeInfo) {
         await storeNetworkData(data?.nodeInfo);
       }
@@ -54,7 +54,7 @@ const Layout = () => {
     }
   });
 
-  const toggleLoader = (state) => {
+  const toggleLoader = state => {
     setShowLoader(state ? state : !showLoader);
   };
 
@@ -88,8 +88,7 @@ const Layout = () => {
               isEmptyObject(sessionData)
                 ? "page-content-wrapper"
                 : "page-content-wrapper-scrollable"
-            }
-          >
+            }>
             <Container className="contentWrapper animate__animated animate__fadeIn">
               <BalanceContextProvider>
                 <Spinner show={showLoader}>

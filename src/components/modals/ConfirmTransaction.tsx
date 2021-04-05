@@ -3,13 +3,13 @@ import { ITransactionData } from "../../models/TransactionData";
 import { toLongMINA } from "../../tools";
 import Button from "../UI/Button";
 
-interface IProps{
-  transactionData:ITransactionData,
-  sendTransaction: () => void,
-  stepBackward: () => void
+interface IProps {
+  transactionData: ITransactionData;
+  sendTransaction: () => void;
+  stepBackward: () => void;
 }
 
-const ConfirmTransaction = (props:IProps) => {
+const ConfirmTransaction = (props: IProps) => {
   const { amount, fee, receiverAddress, memo } = props.transactionData;
   const { stepBackward, sendTransaction } = props;
   return (
@@ -28,7 +28,11 @@ const ConfirmTransaction = (props:IProps) => {
               <br />
               with a fee of <strong>{toLongMINA(fee)} Mina</strong> <br />
               to <strong>{receiverAddress}</strong> <br />
-              {memo ? <>with memo <strong>{memo}</strong></> : null}
+              {memo ? (
+                <>
+                  with memo <strong>{memo}</strong>
+                </>
+              ) : null}
               <div className="v-spacer" />
               <div className="mx-auto">
                 <Row>
@@ -54,6 +58,6 @@ const ConfirmTransaction = (props:IProps) => {
       </div>
     </div>
   );
-}
+};
 
 export default ConfirmTransaction;

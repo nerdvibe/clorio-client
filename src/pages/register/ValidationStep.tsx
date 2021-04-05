@@ -3,15 +3,20 @@ import Button from "../../components/UI/Button";
 import Input from "../../components/UI/input/Input";
 import Logo from "../../components/UI/Logo";
 
-interface IProps{
-  setValidationText:(text:string)=>void,
-  stepBackwards:()=>void,
-  setAuthorization:()=>void,
-  checkButtonState:()=>boolean,
+interface IProps {
+  setValidationText: (text: string) => void;
+  stepBackwards: () => void;
+  setAuthorization: () => void;
+  checkButtonState: () => boolean;
 }
 
-const ValidationStep = (props:IProps) => {
-  const {setValidationText,stepBackwards,setAuthorization,checkButtonState} = props;
+const ValidationStep = (props: IProps) => {
+  const {
+    setValidationText,
+    stepBackwards,
+    setAuthorization,
+    checkButtonState,
+  } = props;
   return (
     <div className="full-width">
       <div className="mx-auto medium-size-box">
@@ -25,7 +30,7 @@ const ValidationStep = (props:IProps) => {
         <div className="wrap-input1 validate-input">
           <h5 className="full-width-align-center">
             <Input
-              inputHandler={(e) => setValidationText(e.currentTarget.value)}
+              inputHandler={e => setValidationText(e.currentTarget.value)}
               placeholder="Private key"
             />
           </h5>
@@ -52,6 +57,6 @@ const ValidationStep = (props:IProps) => {
       </div>
     </div>
   );
-}
+};
 
 export default ValidationStep;

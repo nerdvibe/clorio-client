@@ -19,14 +19,14 @@ const SignMessage = () => {
     },
     publicKey: "",
   });
-  const { isLedgerEnabled }:any = useContext(LedgerContext);
+  const { isLedgerEnabled }: any = useContext(LedgerContext);
 
   /**
    * If fields are not empty, sign message and set result to component state
    */
-  const submitHandler = (messageToSign:IMessageToSign) => {
+  const submitHandler = (messageToSign: IMessageToSign) => {
     try {
-      const publicKey = derivePublicKey(messageToSign.privateKey)
+      const publicKey = derivePublicKey(messageToSign.privateKey);
       const keypair = {
         publicKey,
         privateKey: messageToSign.privateKey,
@@ -36,7 +36,7 @@ const SignMessage = () => {
     } catch (e) {
       toast.error("Please check private key");
     }
-  }
+  };
 
   /**
    * Clear form data from state
@@ -51,27 +51,23 @@ const SignMessage = () => {
       publicKey: "",
     });
     setShowResult(false);
-  }
+  };
 
   if (isLedgerEnabled) {
     return <SignMessageLedgerScreen />;
   }
 
   if (showResult) {
-    return <SignatureMessageResult 
-      result={result} 
-      resetForm={resetForm} />
+    return <SignatureMessageResult result={result} resetForm={resetForm} />;
   }
 
   return (
     <Hoc>
       <div className="animate__animated animate__fadeIn">
-        <SignMessageForm
-          submitHandler={submitHandler}
-        />
+        <SignMessageForm submitHandler={submitHandler} />
       </div>
     </Hoc>
   );
-}
+};
 
 export default SignMessage;

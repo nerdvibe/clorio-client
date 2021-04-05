@@ -1,6 +1,6 @@
 import { IInputProps } from "./InputProps";
 
-const Input = (props:IInputProps) => {
+const Input = (props: IInputProps) => {
   const { type, value, inputHandler, placeholder, small } = props;
   return (
     <div
@@ -9,8 +9,7 @@ const Input = (props:IInputProps) => {
           ? "small-wrap-input1 validate-input "
           : "wrap-input1 validate-input"
       }
-      data-validate="Name is required"
-    >
+      data-validate="Name is required">
       <span className="icon" />
       <input
         className="input1"
@@ -24,6 +23,6 @@ const Input = (props:IInputProps) => {
       <span className="shadow-input1"></span>
     </div>
   );
-}
+};
 
 export default Input;
