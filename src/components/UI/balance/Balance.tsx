@@ -10,22 +10,29 @@ import ReactTooltip from "react-tooltip";
 import { BalanceContext } from "../../../context/balance/BalanceContext";
 import { GET_TICKER, GET_BALANCE } from "../../../graphql/query";
 import { DEFAULT_INTERVAL } from "../../../tools/const";
-import { renderBalance, userBalanceToBTCValue } from "./BalanceHelper";
+import {
+  renderBalance,
+  userBalanceToBTCValue,
+  ITicker,
+  IBalanceQueryResult,
+} from "./BalanceHelper";
 
 const Balance = () => {
   const [address, setAddress] = useState<string>("");
-  const [userBalance, setUserBalance] = useState(0);
+  const [userBalance, setUserBalance] = useState<number>(0);
   const {
     setBalanceContext,
     shouldBalanceUpdate,
     setShouldBalanceUpdate,
   }: any = useContext(BalanceContext);
-  const { data: tickerData, loading: tickerLoading } = useQuery(GET_TICKER);
+  const { data: tickerData, loading: tickerLoading } = useQuery<ITicker>(
+    GET_TICKER,
+  );
   const {
     data: balanceData,
     loading: balanceLoading,
     refetch: balanceRefetch,
-  } = useQuery(GET_BALANCE, {
+  } = useQuery<IBalanceQueryResult>(GET_BALANCE, {
     variables: {
       publicKey: address,
       notifyOnNetworkStatusChange: true,
@@ -39,14 +46,6 @@ const Balance = () => {
       }
     },
   });
-
-  // Get sender public key
-  const getAndSetAddress = async () => {
-    const walletAddress = await readSession();
-    if (walletAddress) {
-      setAddress(walletAddress.address);
-    }
-  };
 
   useEffect(() => {
     if (!address) {
@@ -65,6 +64,16 @@ const Balance = () => {
       setBalanceContext(balanceData.accountByKey.balance);
     }
   }, [shouldBalanceUpdate, balanceData]);
+
+  /**
+   * Get current wallet public key
+   */
+  const getAndSetAddress = async () => {
+    const walletAddress = await readSession();
+    if (walletAddress) {
+      setAddress(walletAddress.address);
+    }
+  };
 
   if (address === "") {
     return <div />;

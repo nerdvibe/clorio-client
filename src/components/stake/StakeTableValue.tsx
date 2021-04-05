@@ -11,8 +11,13 @@ interface IProps {
   website?: string;
 }
 
-const StakeTableValue = (props: IProps) => {
-  const { avatar, className, header, text, website } = props;
+const StakeTableValue = ({
+  avatar,
+  className,
+  header,
+  text,
+  website,
+}: IProps) => {
   if (avatar) {
     return (
       <td className={className}>

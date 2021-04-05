@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
 import Button from "../UI/Button";
@@ -13,19 +13,23 @@ import { getPublicKey } from "../../tools/ledger";
 import { toast } from "react-toastify";
 import { IProps } from "./LedgerLoginProps";
 import LedgerConfirmAddress from "./LedgerConfirmAddress";
+import { IWalletIdData } from "../../models/WalletIdData";
 
-const LedgerGetAddress = (props: IProps) => {
+const LedgerGetAddress = ({ accountNumber, toggleLoader, network }: IProps) => {
   const [publicKey, setPublicKey] = useState("");
-  const [ledgerAccount] = useState(props.accountNumber || 0);
+  const [ledgerAccount] = useState<number>(accountNumber || 0);
   const history = useHistory();
-  const userID = useQuery(GET_ID, {
+  const { data: walletIdData } = useQuery<IWalletIdData>(GET_ID, {
     variables: { publicKey: publicKey },
     skip: !publicKey,
   });
 
+  /**
+   * On component load get the wallet data from the Ledger
+   */
   useEffect(() => {
     const deviceListener = getWallet();
-    // To be checked with ledger tests
+    // TODO : To be checked with ledger tests
     // @ts-ignore
     return deviceListener.unsubscribe;
   }, []);
@@ -33,23 +37,23 @@ const LedgerGetAddress = (props: IProps) => {
   /**
    * Set public key that arrived from Ledger inside the storage
    */
-  const setSession = () => {
-    if (userID.data && !!publicKey) {
-      props.toggleLoader();
+  const setSession = async () => {
+    if (walletIdData && !!publicKey) {
+      toggleLoader();
       const id =
-        userID.data?.public_keys?.length > 0
-          ? userID.data.public_keys[0].id
+        walletIdData?.public_keys?.length > 0
+          ? walletIdData.public_keys[0].id
           : -1;
-      storeSession(publicKey, id, true, ledgerAccount).then(success => {
-        if (success) {
-          history.push("/overview");
-        }
-      });
+      const success = await storeSession(publicKey, id, true, ledgerAccount);
+      if (success) {
+        history.push("/overview");
+      }
     }
   };
 
   /**
-   * Listen for ledger action
+   * Listen for ledger action.
+   * On error go back to the splashscreen
    */
   const getWallet = async () => {
     try {
@@ -103,7 +107,7 @@ const LedgerGetAddress = (props: IProps) => {
           </Row>
         </div>
       </div>
-      <Footer network={props.network} />
+      <Footer network={network} />
     </Hoc>
   );
 };

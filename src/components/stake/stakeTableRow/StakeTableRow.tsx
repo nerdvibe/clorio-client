@@ -9,8 +9,7 @@ interface IProps {
   toggleModal: (element: IValidatorData) => void;
 }
 
-const StakeTableRow = (props: IProps) => {
-  const { element, index, toggleModal } = props;
+const StakeTableRow = ({ element, index, toggleModal }: IProps) => {
   let supportTooltip = "";
   let boostedClassName = "";
   if (element.priority === 1) {

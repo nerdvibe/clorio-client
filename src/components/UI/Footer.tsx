@@ -4,8 +4,7 @@ interface IProps {
   network?: INetworkData;
 }
 
-const Footer = (props: IProps) => {
-  const { network } = props;
+const Footer = ({ network }: IProps) => {
   const renderNetwork = network?.nodeInfo
     ? `${network.nodeInfo.name} | ${network.nodeInfo.network}`
     : "Network unavailable";

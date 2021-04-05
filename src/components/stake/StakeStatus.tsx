@@ -3,8 +3,7 @@ interface IProps {
   currentDelegateName: string;
 }
 
-const StakeStatus = (props: IProps) => {
-  const { currentDelegate, currentDelegateName } = props;
+const StakeStatus = ({ currentDelegate, currentDelegateName }: IProps) => {
   if (currentDelegate === "") {
     return (
       <div>

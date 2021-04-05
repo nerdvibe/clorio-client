@@ -303,7 +303,7 @@ const SendTX = (props: IProps) => {
           <div className="animate__animated animate__fadeIn">
             {step === 0 ? (
               <TransactionForm
-                defaultFee={feeQuery?.data?.estimatedFee?.txFees?.average || 0}
+                averageFee={feeQuery?.data?.estimatedFee?.txFees?.average || 0}
                 fastFee={feeQuery?.data?.estimatedFee?.txFees?.fast || 0}
                 nextStep={openConfirmationModal}
                 transactionData={transactionData}

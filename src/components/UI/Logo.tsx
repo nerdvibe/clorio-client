@@ -4,8 +4,7 @@ interface IProps {
   big?: boolean;
 }
 
-const Logo = (props: IProps) => {
-  const { big } = props;
+const Logo = ({ big }: IProps) => {
   const className = big ? "big-logo" : "logo-image";
   return (
     <div>

@@ -5,9 +5,7 @@ interface IProps {
   progress: number;
 }
 
-const ProgressBar = (props: IProps) => {
-  const { text, progress } = props;
-
+const ProgressBar = ({ text, progress }: IProps) => {
   /**
    * Set progressbar color based on progress percentage
    * @returns color

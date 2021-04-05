@@ -9,8 +9,7 @@ interface IProps {
   link?: string;
 }
 
-const Button = (props: IProps) => {
-  const { className, onClick, text, icon, disabled, link } = props;
+const Button = ({ className, onClick, text, icon, disabled, link }: IProps) => {
   const button = (
     <div className={className + " button"} onClick={onClick}>
       {icon}&nbsp;{text}

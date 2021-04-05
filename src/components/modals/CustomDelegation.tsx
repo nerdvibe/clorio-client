@@ -8,9 +8,8 @@ interface IProps {
   confirmCustomDelegate: (customDelegate: string) => void;
 }
 
-const ConfirmDelegation = (props: IProps) => {
-  const { closeModal, confirmCustomDelegate } = props;
-  const [customDelegate, setCustomDelegate] = useState("");
+const ConfirmDelegation = ({ closeModal, confirmCustomDelegate }: IProps) => {
+  const [customDelegate, setCustomDelegate] = useState<string>("");
   return (
     <div className="mx-auto">
       <h2>Custom delegation</h2>

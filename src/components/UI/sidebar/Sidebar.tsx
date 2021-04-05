@@ -12,8 +12,7 @@ interface IProps {
   clearSessionData: () => void;
 }
 
-const Sidebar = (props: IProps) => {
-  const { network, clearSessionData } = props;
+const Sidebar = ({ network, clearSessionData }: IProps) => {
   const history = useHistory();
   const statusDot = network?.nodeInfo ? (
     <span className="green-dot" />

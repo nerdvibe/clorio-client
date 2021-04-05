@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { Row, Col } from "react-bootstrap";
-import { toMINA, toNanoMINA } from "../../../tools";
+import {
+  DEFAULT_FEE,
+  DEFAULT_AMOUNT,
+  toMINA,
+  toNanoMINA,
+} from "../../../tools";
 import Button from "../../UI/Button";
 import Input from "../../UI/input/Input";
 import { toast } from "react-toastify";
@@ -9,53 +14,69 @@ import { checkFieldsAndProceed } from "./TransactionFormHelper";
 
 interface IProps {
   transactionData: ITransactionData;
-  defaultFee: number;
+  averageFee: number;
   fastFee: number;
   setData: (transactionData: ITransactionData) => void;
   nextStep: () => void;
 }
 
-const TransactionForm = (props: IProps) => {
-  const { transactionData, defaultFee, fastFee, setData, nextStep } = props;
+const TransactionForm = ({
+  transactionData,
+  averageFee,
+  fastFee,
+  setData,
+  nextStep,
+}: IProps) => {
   const [amount, setAmount] = useState<string | number>(
     toMINA(transactionData.amount),
   );
   const [fee, setFee] = useState<string | number>(toMINA(transactionData.fee));
 
-  const setDefaultFee = () => {
-    const fee = defaultFee;
-    if (defaultFee) {
+  /**
+   * Set the average fee returned from the query
+   */
+  const setAverageFee = () => {
+    if (averageFee) {
       setFee(fee);
       setData({
         ...transactionData,
-        fee: toNanoMINA(defaultFee),
+        fee: toNanoMINA(averageFee),
       });
     } else {
-      setFee(0.1);
-      setData({
-        ...transactionData,
-        fee: toNanoMINA(0.1),
-      });
+      setDefaultFee();
     }
   };
 
+  /**
+   * Set the fast fee returned from the query
+   */
   const setFastFee = () => {
-    const fee = fastFee;
-    if (fee) {
-      setFee(fee);
+    if (fastFee) {
+      setFee(fastFee);
       setData({
         ...transactionData,
-        fee: toNanoMINA(fee),
+        fee: toNanoMINA(fastFee),
       });
     } else {
-      setFee(0.1);
-      setData({
-        ...transactionData,
-        fee: toNanoMINA(0.1),
-      });
+      setDefaultFee();
     }
   };
 
+  /**
+   * Set the default fee
+   */
+  const setDefaultFee = () => {
+    setFee(DEFAULT_FEE);
+    setData({
+      ...transactionData,
+      fee: toNanoMINA(DEFAULT_FEE),
+    });
+  };
+
+  /**
+   * Set the receiver address inside the transaction data block
+   * @param receiverAddress string
+   */
   const addressHandler = (receiverAddress: string) => {
     setData({
       ...transactionData,
@@ -63,20 +84,29 @@ const TransactionForm = (props: IProps) => {
     });
   };
 
+  /**
+   * Set the amount inside the transaction data block
+   * @param amount string
+   */
   const amountHandler = (amount: string) => {
     setAmount(amount);
     if (amount) {
-      return setData({
+      setData({
         ...transactionData,
         amount: toNanoMINA(amount),
       });
+    } else {
+      setData({
+        ...transactionData,
+        amount: toNanoMINA(DEFAULT_AMOUNT),
+      });
     }
-    return setData({
-      ...transactionData,
-      amount: toNanoMINA(0),
-    });
   };
 
+  /**
+   * Set the fee inside the transaction data block
+   * @param fee string
+   */
   const feeHandler = (fee: string) => {
     setFee(fee);
     if (fee) {
@@ -91,11 +121,15 @@ const TransactionForm = (props: IProps) => {
     });
   };
 
+  /**
+   * Set the memo inside the transaction data block
+   * @param memo string
+   */
   const memoHandler = (memo: string) => {
     if (memo.length > 32) {
       toast.error("Memo is limited to 32 characters");
     } else {
-      return setData({
+      setData({
         ...transactionData,
         memo,
       });
@@ -145,7 +179,7 @@ const TransactionForm = (props: IProps) => {
                       <Button
                         className="link-button align-end  no-padding"
                         text="Average"
-                        onClick={setDefaultFee}
+                        onClick={setAverageFee}
                       />
                     </Col>
                     <Col className="fee-label">

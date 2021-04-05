@@ -17,7 +17,9 @@ const initLedgerData: ILedgerContextData = {
 };
 
 export const LedgerContextProvider = (props: IProps) => {
-  const [ledgerData, setLedgerData] = useState(initLedgerData);
+  const [ledgerData, setLedgerData] = useState<ILedgerContextData>(
+    initLedgerData,
+  );
 
   const setLedgerContext = (data: ILedgerContextData) => {
     setLedgerData(data);

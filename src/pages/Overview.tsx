@@ -14,18 +14,20 @@ import {
   ITransactionQueryResult,
   IMempoolQueryResult,
 } from "../components/transactionsTable/TransactionsTypes";
+import { IHomeNewsQuery } from "../models/NewsData";
 
 interface IProps {
   sessionData: IWalletData;
 }
 
-const Overview = (props: IProps) => {
-  const { sessionData } = props;
+const Overview = ({ sessionData }: IProps) => {
   const { balance }: any = useContext(BalanceContext);
-  const [offset, setOffset] = useState(0);
-  const news = useQuery(GET_HOME_NEWS);
+  const [offset, setOffset] = useState<number>(0);
+  const news = useQuery<IHomeNewsQuery>(GET_HOME_NEWS);
   const latestNews =
-    news.data?.news_home.length > 0 ? news.data?.news_home[0] : {};
+    news.data?.news_home && news.data?.news_home.length > 0
+      ? news.data?.news_home[0]
+      : {};
   const transactions = useQuery<ITransactionQueryResult>(GET_TRANSACTIONS, {
     variables: { user: sessionData.id, offset },
     fetchPolicy: "network-only",

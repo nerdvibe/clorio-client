@@ -63,3 +63,11 @@ export interface ITransactionQueryResult {
 export interface IMempoolQueryResult {
   mempool: IMempoolQueryData[];
 }
+
+export interface ITransactionTotalQueryResult {
+  user_commands_aggregate: {
+    aggregate: {
+      count: number;
+    };
+  };
+}
