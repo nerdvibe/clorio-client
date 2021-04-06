@@ -13,6 +13,7 @@ import Input from "../components/UI/input/Input";
 import Logo from "../components/UI/Logo";
 import { INetworkData } from "../models/NetworkData";
 import Spinner from "../components/UI/Spinner";
+import { IWalletIdData } from "../models/WalletIdData";
 
 interface IProps {
   toggleLoader: (state: boolean) => void;
@@ -20,18 +21,23 @@ interface IProps {
   register: () => void;
 }
 
-const Login = (props: IProps) => {
-  const { register, toggleLoader } = props;
-  const [publicKey, setPublicKey] = useState("");
-  const [privateKey, setPrivateKey] = useState("");
-  const [loader, setLoader] = useState(false);
+const Login = ({ register, toggleLoader, network }: IProps) => {
+  const [publicKey, setPublicKey] = useState<string>("");
+  const [privateKey, setPrivateKey] = useState<string>("");
+  const [loader, setLoader] = useState<boolean>(false);
   const history = useHistory();
-  const userID = useQuery(GET_ID, {
+  const {
+    data: userIdData,
+    loading: userIdLoading,
+    refetch: userIdRefetch,
+  } = useQuery<IWalletIdData>(GET_ID, {
     variables: { publicKey },
     skip: publicKey === "",
   });
 
-  // Clean component state on component dismount
+  /**
+   * Clean component state on component dismount
+   */
   useEffect(() => {
     return () => {
       setPrivateKey("");
@@ -40,7 +46,7 @@ const Login = (props: IProps) => {
   }, []);
 
   /**
-   * If Public key has been derived, show loader and set session data
+   * If Public key has been derived from CodaSDK, show loader and set session data
    */
   useEffect(() => {
     const storeSessionAndRedirect = async (publicKey: string, id: number) => {
@@ -50,15 +56,13 @@ const Login = (props: IProps) => {
         toggleLoader(false);
       }
     };
-    if (publicKey && publicKey !== "" && !userID.loading) {
+    if (publicKey && publicKey !== "" && !userIdLoading && userIdData) {
       toggleLoader(true);
       const id =
-        userID.data?.public_keys?.length > 0
-          ? userID.data.public_keys[0].id
-          : -1;
+        userIdData?.public_keys?.length > 0 ? userIdData.public_keys[0].id : -1;
       storeSessionAndRedirect(publicKey, id);
     }
-  }, [userID]);
+  }, [userIdData]);
 
   /**
    * Set text from input inside component state
@@ -75,7 +79,7 @@ const Login = (props: IProps) => {
     try {
       const derivedPublicKey = derivePublicKey(privateKey);
       setPublicKey(derivedPublicKey);
-      await userID.refetch({ publicKey: derivedPublicKey });
+      await userIdRefetch({ publicKey: derivedPublicKey });
       setLoader(true);
     } catch (e) {
       toast.error("Private key not valid, please try again.");
@@ -128,7 +132,7 @@ const Login = (props: IProps) => {
                       <Link to="/">
                         <Button
                           className="link-button mx-auto"
-                          onClick={props.register}
+                          onClick={register}
                           text="Cancel"
                         />
                       </Link>
@@ -148,7 +152,7 @@ const Login = (props: IProps) => {
               </Row>
             </div>
           </div>
-          <Footer network={props.network} />
+          <Footer network={network} />
         </div>
       </Spinner>
     </Hoc>

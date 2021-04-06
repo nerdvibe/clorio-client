@@ -5,13 +5,11 @@ interface IProps {
   hint: string;
 }
 
-const HelpHint = ({ hint }: IProps) => {
-  return (
-    <>
-      <HelpCircle data-tip={hint} />
-      <ReactTooltip multiline={true} />
-    </>
-  );
-};
+const HelpHint = ({ hint }: IProps) => (
+  <>
+    <HelpCircle data-tip={hint} />
+    <ReactTooltip multiline={true} />
+  </>
+);
 
 export default HelpHint;

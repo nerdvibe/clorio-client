@@ -58,6 +58,7 @@ const Balance = () => {
       balanceRefetch({ publicKey: address });
       setShouldBalanceUpdate(false);
     }
+    // If balance is available set it inside the component state and the balance context
     if (balanceData?.accountByKey?.balance) {
       const { unconfirmedTotal } = balanceData.accountByKey.balance;
       setUserBalance(unconfirmedTotal);

@@ -1,48 +1,43 @@
 import { useState } from "react";
-import { createIndexesArray, indexToRender } from "./PaginationHelper";
+import { useEffect } from "react";
+import { indexToRender } from "./PaginationHelper";
 
 interface IProps {
   page: number;
   total: number | string;
-  user?: number;
   setOffset: (index: number) => void;
 }
 
-const Pagination = (props: IProps) => {
-  const [page, setPage] = useState<number>(props.page);
-  const maxPages = props.total;
-  const indexes: number[] = createIndexesArray(+maxPages);
+const Pagination = ({ page, total, setOffset }: IProps) => {
+  const [pagesToRender, setPagesToRender] = useState<number[]>([1]);
+  const maxPages = total;
+
+  useEffect(() => {
+    setPagesToRender(indexToRender(page, +maxPages));
+  }, [page, maxPages]);
 
   /**
    * Change page
-   * @param index Number of the selected page
+   * @param index Number of the selected props.page
    */
   const changePage = (index: number) => {
-    const lastIndex = indexes.length - 1;
-    if (index > 0 && index <= indexes[lastIndex]) {
-      setPage(index);
-      props.setOffset(index);
+    if (index > 0 && index <= maxPages) {
+      setOffset(index);
     }
   };
-
-  /**
-   * Array with pagination elements
-   */
-  const elements = indexToRender(page, +maxPages).map((index: number) => {
-    return (
-      <p
-        key={index}
-        onClick={() => changePage(index)}
-        className={page === index ? "active" : ""}>
-        {index}
-      </p>
-    );
-  });
 
   return (
     <div className="pagination">
       <p onClick={() => changePage(page - 1)}>&laquo;</p>
-      {elements}
+      {pagesToRender.map((index: number) => (
+        <p
+          key={index}
+          onClick={() => changePage(index)}
+          className={page === index ? "active" : ""}>
+          {index}
+        </p>
+      ))}
+
       <p onClick={() => changePage(page + 1)}>&raquo;</p>
     </div>
   );

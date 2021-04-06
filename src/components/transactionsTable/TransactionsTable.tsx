@@ -83,9 +83,9 @@ const TransactionsTable = ({
 
   return (
     <div className="block-container">
-      <Spinner className={"full-width"} show={loading}>
-        <div>
-          <ReactTooltip multiline={true} />
+      <div>
+        <ReactTooltip multiline={true} />
+        <Spinner className={"full-width"} show={loading}>
           <div id="transaction-table">
             <Table
               className="animate__animated animate__fadeIn"
@@ -94,16 +94,15 @@ const TransactionsTable = ({
               {renderTableBody()}
             </Table>
           </div>
-          <Pagination
-            page={page}
-            setOffset={setOffset}
-            user={userId}
-            total={getTotalPages(
-              totalData?.user_commands_aggregate?.aggregate?.count || 0,
-            )}
-          />
-        </div>
-      </Spinner>
+        </Spinner>
+        <Pagination
+          page={page}
+          setOffset={setOffset}
+          total={getTotalPages(
+            totalData?.user_commands_aggregate?.aggregate?.count || 0,
+          )}
+        />
+      </div>
     </div>
   );
 };
