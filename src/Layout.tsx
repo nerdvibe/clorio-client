@@ -15,11 +15,23 @@ import { useContext } from "react";
 import { LedgerContext } from "./context/ledger/LedgerContext";
 import TermsAndConditions from "./components/modals/TermsAndConditions";
 import { BalanceContextProvider } from "./context/balance/BalanceContext";
+import { IWalletData } from "./models/WalletData";
+
+const initialSessionData = {
+  address: "",
+  coins: 0,
+  id: -1,
+  ledger: false,
+  ledgerAccount: 0,
+  type: "wallet",
+};
 
 const Layout = () => {
-  const [sessionData, setSessionData] = useState({});
+  const [sessionData, setSessionData] = useState<IWalletData>(
+    initialSessionData,
+  );
   const [showLoader, setShowLoader] = useState(false);
-  const { setLedgerContext } = useContext(LedgerContext);
+  const { setLedgerContext }: any = useContext(LedgerContext);
   const history = useHistory();
   const network = useQuery(GET_NETWORK, {
     onCompleted: async data => {
@@ -54,18 +66,18 @@ const Layout = () => {
     }
   });
 
-  const toggleLoader = state => {
+  const toggleLoader = (state?: boolean) => {
     setShowLoader(state ? state : !showLoader);
   };
 
   const clearSessionData = () => {
-    setSessionData({});
+    setSessionData(initialSessionData);
     setShowLoader(true);
   };
 
   window.onbeforeunload = () => {
     clearSession();
-    setSessionData({});
+    setSessionData(initialSessionData);
   };
 
   return (
@@ -92,14 +104,16 @@ const Layout = () => {
             <Container className="contentWrapper animate__animated animate__fadeIn">
               <BalanceContextProvider>
                 <Spinner show={showLoader}>
-                  {sessionData &&
-                    !isEmptyObject(sessionData) &&
-                    sessionData.address && <Balance />}
-                  <Routes
-                    sessionData={sessionData}
-                    toggleLoader={toggleLoader}
-                    network={network.data}
-                  />
+                  <div>
+                    {sessionData &&
+                      !isEmptyObject(sessionData) &&
+                      sessionData.address && <Balance />}
+                    <Routes
+                      sessionData={sessionData}
+                      toggleLoader={toggleLoader}
+                      network={network.data}
+                    />
+                  </div>
                 </Spinner>
               </BalanceContextProvider>
             </Container>

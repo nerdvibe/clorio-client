@@ -10,6 +10,7 @@ import { INetworkData } from "../../../models/NetworkData";
 interface IProps {
   network: INetworkData;
   clearSessionData: () => void;
+  toggleLoader: (state?: boolean) => void;
 }
 
 const Sidebar = ({ network, clearSessionData }: IProps) => {
