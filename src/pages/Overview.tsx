@@ -1,7 +1,6 @@
 import TransactionsTable from "../components/transactionsTable/TransactionsTable";
 import Hoc from "../components/UI/Hoc";
 import { useQuery } from "@apollo/client";
-import Spinner from "../components/UI/Spinner";
 import { useState } from "react";
 import { useContext } from "react";
 import { BalanceContext } from "../context/balance/BalanceContext";
@@ -23,18 +22,25 @@ interface IProps {
 const Overview = ({ sessionData }: IProps) => {
   const { balance }: any = useContext(BalanceContext);
   const [offset, setOffset] = useState<number>(0);
-  const news = useQuery<IHomeNewsQuery>(GET_HOME_NEWS);
+  const { data: newsData } = useQuery<IHomeNewsQuery>(GET_HOME_NEWS);
   const latestNews =
-    news.data?.news_home && news.data?.news_home.length > 0
-      ? news.data?.news_home[0]
+    newsData?.news_home && newsData?.news_home.length > 0
+      ? newsData?.news_home[0]
       : {};
-  const transactions = useQuery<ITransactionQueryResult>(GET_TRANSACTIONS, {
+  const {
+    data: transactionsData,
+    loading: transactionsLoading,
+    error: transactionsError,
+  } = useQuery<ITransactionQueryResult>(GET_TRANSACTIONS, {
     variables: { user: sessionData.id, offset },
     fetchPolicy: "network-only",
     skip: !sessionData.id,
     pollInterval: DEFAULT_INTERVAL,
   });
-  const mempool = useQuery<IMempoolQueryResult>(GET_MEMPOOL, {
+  const {
+    data: mempoolData,
+    loading: mempoolLoading,
+  } = useQuery<IMempoolQueryResult>(GET_MEMPOOL, {
     variables: { publicKey: sessionData.address },
     skip: !sessionData.address,
     fetchPolicy: "network-only",
@@ -52,22 +58,20 @@ const Overview = ({ sessionData }: IProps) => {
 
   return (
     <Hoc className="main-container">
-      <Spinner show={transactions.loading}>
-        <div>
-          <NewsBanner {...latestNews} />
-          <TransactionsTable
-            transactions={transactions.data}
-            mempool={mempool.data}
-            error={transactions.error}
-            loading={transactions.loading || mempool.loading}
-            balance={balance.total}
-            setOffset={changeOffset}
-            page={getPageFromOffset(offset)}
-            userId={sessionData.id}
-            userAddress={sessionData.address}
-          />
-        </div>
-      </Spinner>
+      <div>
+        <NewsBanner {...latestNews} />
+        <TransactionsTable
+          transactions={transactionsData}
+          mempool={mempoolData}
+          error={transactionsError}
+          loading={transactionsLoading || mempoolLoading}
+          balance={balance.total}
+          setOffset={changeOffset}
+          page={getPageFromOffset(offset)}
+          userId={sessionData.id}
+          userAddress={sessionData.address}
+        />
+      </div>
     </Hoc>
   );
 };

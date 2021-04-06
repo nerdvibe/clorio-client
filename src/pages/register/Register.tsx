@@ -7,17 +7,17 @@ import { genKeys } from "@o1labs/client-sdk";
 import { INetworkData } from "../../models/NetworkData";
 import RegisterStep from "./RegistrationStep";
 import ValidationStep from "./ValidationStep";
+import { IKeypair } from "../../models/Keypair";
 
 interface IProps {
   toggleLoader: () => void;
   network: INetworkData;
 }
 
-const Register = (props: IProps) => {
-  const { toggleLoader, network } = props;
-  const [validation, setValidation] = useState(false);
-  const [validationText, setValidationText] = useState("");
-  const [keys, setKeys] = useState({
+const Register = ({ toggleLoader, network }: IProps) => {
+  const [validation, setValidation] = useState<boolean>(false);
+  const [validationText, setValidationText] = useState<string>("");
+  const [keys, setKeys] = useState<IKeypair>({
     privateKey: "",
     publicKey: "",
   });

@@ -1,12 +1,10 @@
 import { IProps } from "../components/ledgerLogin/LedgerLoginProps";
 import LedgerConnect from "../components/ledgerLogin/LedgerConnect";
 
-const LedgerLogin = (props: IProps) => {
-  return (
-    <div className="animate__animated animate__fadeIn">
-      <LedgerConnect {...props} />
-    </div>
-  );
-};
+const LedgerLogin = (props: IProps) => (
+  <div className="animate__animated animate__fadeIn">
+    <LedgerConnect {...props} />
+  </div>
+);
 
 export default LedgerLogin;

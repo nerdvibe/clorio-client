@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Hoc from "../../components/UI/Hoc";
 import SignMessageForm from "../../components/forms/signMessage/SignMessageForm";
-import { derivePublicKey, signMessage } from "@o1labs/client-sdk";
+import { derivePublicKey, signed, signMessage } from "@o1labs/client-sdk";
 import { toast } from "react-toastify";
 import { LedgerContext } from "../../context/ledger/LedgerContext";
 import { useContext } from "react";
@@ -10,8 +10,8 @@ import SignatureMessageResult from "./SignatureMessageResult";
 import SignMessageLedgerScreen from "./SignMessageLedgerScreen";
 
 const SignMessage = () => {
-  const [showResult, setShowResult] = useState(false);
-  const [result, setResult] = useState({
+  const [showResult, setShowResult] = useState<boolean>(false);
+  const [result, setResult] = useState<signed<string>>({
     payload: "",
     signature: {
       scalar: "",

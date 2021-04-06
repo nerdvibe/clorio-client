@@ -24,12 +24,11 @@ interface IUserBalance {
   userBalance: number;
 }
 
-interface IUserBalanceToBTC {
-  tickerData?: ITicker;
-  tickerLoading: boolean;
-  userBalance: number;
-}
-
+/**
+ * If balance data is available from the query, return the amount
+ * @param object
+ * @returns string
+ */
 export const renderBalance = ({
   balanceData,
   balanceLoading,
@@ -47,6 +46,12 @@ export const renderBalance = ({
   }
   return "Not available";
 };
+
+interface IUserBalanceToBTC {
+  tickerData?: ITicker;
+  tickerLoading: boolean;
+  userBalance: number;
+}
 
 /**
  * Convert user's Mina balance to BTC

@@ -17,7 +17,7 @@ const UpdateUserID = ({ sessionData }: IProps) => {
   });
 
   /**
-   * Set wallet address inside component state
+   * If wallet id is not available, set address inside the state and refetch
    */
   const setUserId = async () => {
     const walletData: IWalletData = await readSession();
@@ -30,6 +30,7 @@ const UpdateUserID = ({ sessionData }: IProps) => {
 
   useEffect(() => {
     setUserId();
+    // If query returns the wallet id, set it inside the storage and clear the address inside the state.
     if (userID?.public_keys && userID?.public_keys?.length > 0) {
       updateUser(address, userID.public_keys[0].id);
       setAddress("");

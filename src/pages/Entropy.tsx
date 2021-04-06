@@ -7,7 +7,7 @@ import Footer from "../components/UI/Footer";
 import ProgressBar from "../components/UI/ProgressBar";
 
 const Entropy = () => {
-  const [progress] = useState(20);
+  const [progress] = useState<number>(20);
 
   /**
    * Generate a random hexadecimal string
