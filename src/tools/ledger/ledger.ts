@@ -1,11 +1,13 @@
+import { ITransactionData } from "./../../models/TransactionData";
 /* eslint-disable no-control-regex */
 import { isDevnet } from "../utils";
 
-let ledgerAPI;
+let ledgerAPI: any;
 import isElectron from "is-electron";
 import { feeOrDefault } from "../fees";
 import { getDefaultValidUntilField } from "../utils";
 import { toNanoMINA } from "../mina";
+import { ILedgerTransaction } from "../../models/LedgerDelegationTransaction";
 
 // Because of compatibility we need to use 2 transporters, one for Electron, one for the browser.
 // For the Electron, we use node-hid transporter by the ipcRenderer (node). For the browser @ledgerhq/hw-transport-webhid.
@@ -54,7 +56,7 @@ export const isMinaAppOpen = async () => {
  * @param {number} account
  * @returns {Promise<{publicKey}|any>}
  */
-export const getPublicKey = async account => {
+export const getPublicKey = async (account: number) => {
   const ledgerPublicKey = await ledgerAPI.getPublicKey(account);
   // In case the user doesn't accept the address on the device
   if (ledgerPublicKey.returnCode === "27013") {
@@ -72,7 +74,7 @@ export const getPublicKey = async account => {
  * @param transaction
  * @returns {Promise<{signature}|any>}
  */
-export const signTransaction = async transaction => {
+export const signTransaction = async (transaction: ILedgerTransaction) => {
   const ledgerTransaction = await ledgerAPI.signTransaction(transaction);
   // In case the user doesn't accept the transaction on the device
   if (ledgerTransaction.returnCode === "27013") {
@@ -90,7 +92,7 @@ export const signTransaction = async transaction => {
  * @param str
  * @returns str {*}
  */
-export const emojiToUnicode = str => {
+export const emojiToUnicode = (str: string) => {
   return str.replace(
     /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
     function (e) {
@@ -104,15 +106,22 @@ export const emojiToUnicode = str => {
   );
 };
 
+interface ICreateAndSignLedgerTransaction {
+  senderAccount: number;
+  senderAddress: string;
+  transactionData: ITransactionData;
+  nonce: number;
+}
+
 export const createAndSignLedgerTransaction = async ({
   senderAccount,
   senderAddress,
   transactionData,
   nonce,
-}) => {
+}: ICreateAndSignLedgerTransaction) => {
   const { receiverAddress, fee, amount, memo } = transactionData;
   // For now mina-ledger-js doesn't support emojis
-  const cleanMemo = escapeUnicode(emojiToUnicode(memo));
+  const cleanMemo = escapeUnicode(emojiToUnicode(memo || ""));
   await isMinaAppOpen();
   if (cleanMemo.length > 32) {
     throw new Error("Memo field too long");
@@ -134,29 +143,53 @@ export const createAndSignLedgerTransaction = async ({
   return await signTransaction(transactionToSend);
 };
 
-export const createLedgerSignatureInputFromSignature = signature => {
+interface ISignture {
+  scalar: string;
+  field: string;
+}
+
+export const createLedgerSignatureInputFromSignature = (
+  signature: ISignture,
+) => {
   return {
     scalar: signature.scalar,
     field: signature.field,
   };
 };
 
-export const createLedgerPaymentInputFromPayload = (
+interface ICreateLedgerPaymentInputFromPayload {
+  senderAddress: string;
+  transactionData: ITransactionData;
+  amount: number;
+  fee: number;
+}
+
+export const createLedgerPaymentInputFromPayload = ({
   transactionData,
   fee,
   amount,
   senderAddress,
-) => {
+}: ICreateLedgerPaymentInputFromPayload) => {
   const { nonce, memo, receiverAddress } = transactionData;
-  return {
-    nonce,
-    memo,
-    fee: fee.toString(),
-    amount: amount.toString(),
-    to: receiverAddress,
-    from: senderAddress,
-  };
+  if (fee && amount) {
+    return {
+      nonce,
+      memo,
+      fee: fee.toString(),
+      amount: amount.toString(),
+      to: receiverAddress,
+      from: senderAddress,
+    };
+  }
 };
+
+interface ICreateLedgerDelegationTransaction {
+  senderAccount: number;
+  senderAddress: string;
+  receiverAddress: string;
+  nonce: number;
+  fee: number;
+}
 
 export const createLedgerDelegationTransaction = ({
   senderAccount,
@@ -164,7 +197,7 @@ export const createLedgerDelegationTransaction = ({
   receiverAddress,
   fee,
   nonce,
-}) => {
+}: ICreateLedgerDelegationTransaction) => {
   return {
     senderAccount,
     senderAddress,
@@ -185,14 +218,17 @@ export const createLedgerDelegationTransaction = ({
  * @param str
  * @returns {string}
  */
-export const escapeUnicode = str => {
+export const escapeUnicode = (str: string) => {
+  // @ts-expect-error
   return [...str]
     .map(c =>
       /^[\x00-\x7F]$/.test(c)
         ? c
         : c
             .split("")
-            .map(a => "\\u" + a.charCodeAt().toString(16).padStart(4, "0"))
+            .map(
+              (a: any) => "\\u" + a.charCodeAt().toString(16).padStart(4, "0"),
+            )
             .join(""),
     )
     .join("");

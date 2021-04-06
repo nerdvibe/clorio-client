@@ -69,7 +69,7 @@ export const checkTransactionFields = (transactionData: ITransactionData) => {
 
 export const checkMemoLength = (transactionData: ITransactionData) => {
   // For now mina-ledger-js doesn't support emojis
-  const memo = escapeUnicode(emojiToUnicode(transactionData.memo));
+  const memo = escapeUnicode(emojiToUnicode(transactionData.memo || ""));
   if (memo.length > 32) {
     throw new Error("Memo field too long");
   }
