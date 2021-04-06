@@ -10,6 +10,11 @@ interface ISignTransaction {
   actualNonce: number;
 }
 
+/**
+ * Sign transaction through CodaSDK
+ * @param object
+ * @returns
+ */
 export const signTransaction = ({
   transactionData,
   keypair,

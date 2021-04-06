@@ -15,10 +15,18 @@ export const copyToClipboard = (content = "") => {
   document.body.removeChild(el);
 };
 
+/**
+ * Set the class to show the error message "Smaller screen support is coming soon"
+ */
 export const loadErrorMessage = () => {
   document.getElementsByClassName("show-on-load")[0].className = "show-mob";
 };
 
+/**
+ * Check if the object is empty
+ * @param object
+ * @returns boolean
+ */
 export const isEmptyObject = (objectToCheck: any) => {
   return (
     objectToCheck &&
@@ -59,6 +67,11 @@ export const getPageFromOffset = (offset = 0) => {
   return offset / ITEMS_PER_PAGE + 1;
 };
 
+/**
+ * Check if the fee is greater than the minimum
+ * @param fee number
+ * @returns boolean
+ */
 export const feeGreaterThanMinimum = (fee: number) => {
   if (fee) {
     const feeToSend = toNanoMINA(fee);

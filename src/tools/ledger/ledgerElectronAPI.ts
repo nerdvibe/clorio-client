@@ -1,5 +1,6 @@
-let ipcRenderer;
+let ipcRenderer: any;
 import isElectron from "is-electron";
+import { ILedgerTransaction } from "../../models/LedgerDelegationTransaction";
 
 // Wrapped Electron API for Ledger Devices
 
@@ -14,13 +15,13 @@ export const isMinaAppOpen = async () => {
   }
   return await ipcRenderer.invoke("ledger-get-name-version");
 };
-export const getPublicKey = async account => {
+export const getPublicKey = async (account: number) => {
   if (!isElectron()) {
     throw new Error("Wrong environment");
   }
   return await ipcRenderer.invoke("ledger-get-address", account);
 };
-export const signTransaction = async transaction => {
+export const signTransaction = async (transaction: ILedgerTransaction) => {
   if (!isElectron()) {
     throw new Error("Wrong environment");
   }
