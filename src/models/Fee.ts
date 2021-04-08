@@ -6,3 +6,7 @@ export interface ITxFees{
 export interface IEstimatedFee{
   txFees?:ITxFees
 }
+
+export interface IFeeQuery{
+  estimatedFee:IEstimatedFee
+}

@@ -36,9 +36,11 @@ import {
   checkNonce,
   checkTransactionFields,
   initialTransactionData,
+  INonceQueryResult,
   ModalStates,
   SendTXPageSteps,
 } from "./SendTXHelper";
+import { IFeeQuery } from "../../models/Fee";
 
 interface IProps {
   sessionData: IWalletData;
@@ -61,12 +63,15 @@ const SendTX = (props: IProps) => {
     initialTransactionData,
   );
   const history = useHistory();
-  const nonceQuery = useQuery(GET_NONCE, {
+  const {
+    data: nonceData,
+    refetch: nonceRefetch,
+  } = useQuery<INonceQueryResult>(GET_NONCE, {
     variables: { publicKey: senderAddress },
     skip: senderAddress === "",
     fetchPolicy: "network-only",
   });
-  const feeQuery = useQuery(GET_FEE, {
+  const feeQuery = useQuery<IFeeQuery>(GET_FEE, {
     onCompleted: data => {
       if (data?.estimatedFee?.txFees?.average) {
         setTransactionData({
@@ -90,10 +95,12 @@ const SendTX = (props: IProps) => {
     },
   );
 
-  // Listen for ledger action
+  /**
+   * Listen for ledger action
+   */
   useEffect(() => {
     if (isLedgerEnabled && !ledgerTransactionData) {
-      if (step === 1) {
+      if (step === SendTXPageSteps.CONFIRMATION) {
         const transactionListener = sendLedgerTransaction();
         // To be checked with ledger tests
         // @ts-ignore
@@ -105,13 +112,13 @@ const SendTX = (props: IProps) => {
 
   /**
    * If address is not stored inside component state, fetch it and save it.
-   * If broadcasted successfully return to initial page state
+   * If the transaction has been broadcasted successfully return to initial page state
    */
   useEffect(() => {
     getAndSetAddress();
     if (showModal && broadcastResult?.data && sendTransactionFlag) {
       clearState();
-      nonceQuery.refetch({ publicKey: senderAddress });
+      nonceRefetch({ publicKey: senderAddress });
       setShouldBalanceUpdate(true);
       toast.success("Transaction successfully broadcasted");
       history.replace("/send-tx");
@@ -128,7 +135,7 @@ const SendTX = (props: IProps) => {
   }, []);
 
   /**
-   * Ledger data arrived, broadcast transaction
+   * Ledger data arrived, broadcast the transaction
    */
   const broadcastLedgerTransaction = () => {
     try {
@@ -152,19 +159,20 @@ const SendTX = (props: IProps) => {
   };
 
   /**
-   * Check if nonce is available, if not asks user for custom nonce. After nonce is set proceeds with data verification and private key verification
+   * Check if nonce is available, if not ask the user for a custom nonce.
+   * After the nonce is set, proceed with transaction data verification and private key verification
    */
   const openConfirmationModal = () => {
     try {
-      if ((!nonceQuery || !nonceQuery.data) && !customNonce) {
+      if (!nonceData && !customNonce) {
         return setShowModal(ModalStates.NONCE);
       }
       checkBalanceAfterTransaction({ balance, transactionData });
       checkTransactionFields(transactionData);
-      if (!isLedgerEnabled) {
-        setShowModal(ModalStates.PASSPHRASE);
-      } else {
+      if (isLedgerEnabled) {
         setStep(SendTXPageSteps.CONFIRMATION);
+      } else {
+        setShowModal(ModalStates.PASSPHRASE);
       }
     } catch (e) {
       toast.error(e.message);
@@ -199,8 +207,8 @@ const SendTX = (props: IProps) => {
    * @returns number Nonce
    */
   const getNonce = () => {
-    return checkNonce(nonceQuery)
-      ? parseInt(nonceQuery.data.accountByKey.usableNonce)
+    return checkNonce(nonceData) && nonceData
+      ? nonceData?.accountByKey.usableNonce
       : customNonce;
   };
 
@@ -209,7 +217,7 @@ const SendTX = (props: IProps) => {
    */
   const sendTransaction = () => {
     setShowModal(ModalStates.BROADCASTING);
-    if (nonceQuery) {
+    if (nonceData) {
       try {
         const actualNonce = getNonce();
         const publicKey = derivePublicKey(privateKey);
@@ -243,7 +251,7 @@ const SendTX = (props: IProps) => {
   };
 
   /**
-   * Get sender public key from the session data
+   * Get sender public key from the session data and store it inside the component state
    */
   const getAndSetAddress = async () => {
     const walletAddress = await readSession();
