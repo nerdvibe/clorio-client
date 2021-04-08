@@ -20,6 +20,12 @@ export enum SendTXPageSteps {
   CONFIRMATION = 1,
 }
 
+export interface INonceQueryResult {
+  accountByKey: {
+    usableNonce: number;
+  };
+}
+
 export const initialTransactionData = {
   amount: toNanoMINA(INITIAL_TRANSACTION_AMOUNT),
   receiverAddress: "",
@@ -32,10 +38,10 @@ export const initialTransactionData = {
  * Check if nonce is not empty
  * @returns number Wallet usable nonce
  */
-export const checkNonce = (nonceQuery: any) => {
+export const checkNonce = (nonceData?: INonceQueryResult) => {
   return (
-    nonceQuery.data?.accountByKey?.usableNonce ||
-    nonceQuery.data?.accountByKey?.usableNonce === 0
+    nonceData?.accountByKey?.usableNonce ||
+    nonceData?.accountByKey?.usableNonce === 0
   );
 };
 
@@ -61,6 +67,10 @@ export const checkBalanceAfterTransaction = ({
   }
 };
 
+/**
+ * Check if the receiver and the amount are not empty
+ * @param transactionData
+ */
 export const checkTransactionFields = (transactionData: ITransactionData) => {
   if (transactionData.receiverAddress === "" || transactionData.amount === 0) {
     throw new Error("Please insert an address and an amount");

@@ -1,3 +1,5 @@
+import { Big } from "big.js";
+import { IBalanceData } from "./../../context/balance/BalanceInterfaces";
 import { IValidatorData } from "./../../components/stake/stakeTableRow/ValidatorDataInterface";
 export enum ModalStates {
   PASSPHRASE = "passphrase",
@@ -8,6 +10,30 @@ export enum ModalStates {
   BROADCASTING = "broadcasting",
 }
 
+export interface INonceDelegateQueryResult {
+  accountByKey: {
+    delegate: {
+      publicKey: string;
+      name: string;
+    };
+    usableNonce: number;
+  };
+}
+
 export const initialDelegateData: IValidatorData = {
   publicKey: "",
+};
+
+/**
+ * Throw error if the fee is greater than the balance
+ * @param {number} transactionFee
+ */
+export const checkBalance = (transactionFee: number, balance: IBalanceData) => {
+  const available = balance.liquidUnconfirmed;
+  const balanceAfterTransaction = Big(available)
+    .minus(transactionFee)
+    .toNumber();
+  if (balanceAfterTransaction < 0) {
+    throw new Error("You don't have enough funds");
+  }
 };

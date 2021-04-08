@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import NewsBanner from "../../components/UI/NewsBanner";
 import StakeTable from "../../components/stake/stakeTable/StakeTable";
 import Hoc from "../../components/UI/Hoc";
@@ -43,10 +43,16 @@ import { toast } from "react-toastify";
 import { LedgerContext } from "../../context/ledger/LedgerContext";
 import { useContext } from "react";
 import { BalanceContext } from "../../context/balance/BalanceContext";
-import Big from "big.js";
-import { initialDelegateData, ModalStates } from "./StakeHelper";
+import {
+  checkBalance,
+  initialDelegateData,
+  INonceDelegateQueryResult,
+  ModalStates,
+} from "./StakeHelper";
 import { IValidatorData } from "../../components/stake/stakeTableRow/ValidatorDataInterface";
 import { IWalletData } from "../../models/WalletData";
+import { IValidatorsNewsQuery } from "../../models/NewsData";
+import { IFeeQuery } from "../../models/Fee";
 
 interface IProps {
   sessionData: IWalletData;
@@ -56,16 +62,24 @@ export default ({ sessionData }: IProps) => {
   const [delegateData, setDelegate] = useState<IValidatorData>(
     initialDelegateData,
   );
-  const [currentDelegate, setCurrentDelegate] = useState("");
-  const [currentDelegateName, setCurrentDelegateName] = useState("");
-  const [showModal, setShowModal] = useState("");
-  const [address, setAddress] = useState("");
-  const [privateKey, setPrivateKey] = useState("");
-  const [customDelegate, setCustomDelegate] = useState("");
-  const [offset, setOffset] = useState(0);
-  const [customNonce, setCustomNonce] = useState(MINIMUM_NONCE);
-  const [selectedFee, setSelectedFee] = useState(toNanoMINA(MINIMUM_FEE));
-  const [sendTransactionFlag, setSendTransactionFlag] = useState(false);
+  const [currentDelegate, setCurrentDelegate] = useState<string>("");
+  const [currentDelegateName, setCurrentDelegateName] = useState<string>("");
+  const [showModal, setShowModal] = useState<string>("");
+  const [address, setAddress] = useState<string>("");
+  const [privateKey, setPrivateKey] = useState<string>("");
+  const [customDelegate, setCustomDelegate] = useState<string>("");
+  const [offset, setOffset] = useState<number>(0);
+  const [customNonce, setCustomNonce] = useState<number>(MINIMUM_NONCE);
+  const [selectedFee, setSelectedFee] = useState<number>(
+    toNanoMINA(MINIMUM_FEE),
+  );
+  const history = useHistory();
+  const [ledgerTransactionData, setLedgerTransactionData] = useState<string>(
+    "",
+  );
+  const [sendTransactionFlag, setSendTransactionFlag] = useState<boolean>(
+    false,
+  );
   const { isLedgerEnabled }: any = useContext(LedgerContext);
   const { balance, setShouldBalanceUpdate }: any = useContext(BalanceContext);
   const {
@@ -73,19 +87,22 @@ export default ({ sessionData }: IProps) => {
     error: validatorsError,
     loading: validatorsLoading,
   } = useQuery(GET_VALIDATORS, { variables: { offset } });
-  const fee = useQuery(GET_AVERAGE_FEE);
-  const news = useQuery(GET_VALIDATORS_NEWS);
-  const nonceAndDelegate = useQuery(GET_NONCE_AND_DELEGATE, {
+  const { data: feeData } = useQuery<IFeeQuery>(GET_AVERAGE_FEE);
+  const { data: newsData } = useQuery<IValidatorsNewsQuery>(
+    GET_VALIDATORS_NEWS,
+  );
+  const {
+    data: nonceAndDelegateData,
+    refetch: nonceAndDelegateRefetch,
+  } = useQuery<INonceDelegateQueryResult>(GET_NONCE_AND_DELEGATE, {
     variables: { publicKey: sessionData.address },
     fetchPolicy: "network-only",
     pollInterval: DEFAULT_INTERVAL,
   });
-  const history = useHistory();
-  const [ledgerTransactionData, setLedgerTransactionData] = useState<string>(
-    "",
-  );
   const latestNews =
-    news.data?.news_validators.length > 0 ? news.data?.news_validators[0] : {};
+    newsData && newsData?.news_validators.length > 0
+      ? newsData?.news_validators[0]
+      : {};
   const [broadcastDelegation] = useMutation(BROADCAST_DELEGATION, {
     onError: error => {
       toast.error(error.message);
@@ -112,15 +129,19 @@ export default ({ sessionData }: IProps) => {
   //   readNetworkFromStorage();
   // }, []);
 
+  /**
+   * If current delegate data arrived from the back-end, set it into the component state
+   */
   useEffect(() => {
-    if (nonceAndDelegate.data?.accountByKey?.delegate?.publicKey) {
-      setCurrentDelegate(
-        nonceAndDelegate.data?.accountByKey.delegate.publicKey,
-      );
-      setCurrentDelegateName(nonceAndDelegate.data.accountByKey.delegate.name);
+    if (nonceAndDelegateData?.accountByKey?.delegate?.publicKey) {
+      setCurrentDelegate(nonceAndDelegateData?.accountByKey.delegate.publicKey);
+      setCurrentDelegateName(nonceAndDelegateData.accountByKey.delegate.name);
     }
-  }, [nonceAndDelegate.data]);
+  }, [nonceAndDelegateData]);
 
+  /**
+   * Wait for the ledger to sign the transaction
+   */
   useEffect(() => {
     if (isLedgerEnabled && !ledgerTransactionData) {
       if (showModal === ModalStates.PASSPHRASE) {
@@ -131,18 +152,23 @@ export default ({ sessionData }: IProps) => {
     }
   }, [ledgerTransactionData, showModal]);
 
+  /**
+   * If a transaction has been broadcasted, show a success alert and clear the component state
+   */
   useEffect(() => {
     if (sendTransactionFlag) {
       clearState();
       setShouldBalanceUpdate(true);
-      nonceAndDelegate.refetch({ publicKey: sessionData.address });
+      nonceAndDelegateRefetch({ publicKey: sessionData.address });
       toast.success("Delegation successfully broadcasted");
       history.push("/stake");
     }
     broadcastLedgerTransaction();
   }, [sendTransactionFlag]);
 
-  // Get sender public key
+  /**
+   * Get sender public key and set it inside the component state
+   */
   const getAndSetAddress = async () => {
     const walletAddress = await readSession();
     setAddress(walletAddress.address);
@@ -173,20 +199,6 @@ export default ({ sessionData }: IProps) => {
   };
 
   /**
-   * Throw error if the fee is greater than the balance
-   * @param {number} transactionFee
-   */
-  const checkBalance = (transactionFee: number) => {
-    const available = balance.liquidUnconfirmed;
-    const balanceAfterTransaction = Big(available)
-      .minus(transactionFee)
-      .toNumber();
-    if (balanceAfterTransaction < 0) {
-      throw new Error("You don't have enough funds");
-    }
-  };
-
-  /**
    * Sign stake delegation using Coda SDK through private key
    */
   const signStakeDelegate = () => {
@@ -195,7 +207,7 @@ export default ({ sessionData }: IProps) => {
         throw new Error("The Public key of the selected delegate is missing");
       }
       const actualNonce = getNonce();
-      checkBalance(selectedFee);
+      checkBalance(selectedFee, balance);
       const publicKey = derivePublicKey(privateKey);
       const keypair = {
         privateKey: privateKey,
@@ -233,7 +245,7 @@ export default ({ sessionData }: IProps) => {
   };
 
   /**
-   * Set delegate private key on component state, open confirmation modal
+   * Set delegate public key on component state, open confirmation modal
    * @param {string} delegate Delegate private key
    */
   const openModal = (delegate: IValidatorData) => {
@@ -242,7 +254,7 @@ export default ({ sessionData }: IProps) => {
   };
 
   /**
-   * Open modal for custom private key insertion
+   * Open modal for the custom delegate insertion
    */
   const openCustomDelegateModal = () => {
     setShowModal(ModalStates.CUSTOM_DELEGATION);
@@ -258,18 +270,17 @@ export default ({ sessionData }: IProps) => {
   };
 
   /**
-   * If nonce is not available and no custom nonce has already been asked, ask user for a custom nonce. Otherwise proceeds to private key insertion modal
+   * If nonce is not available from the back-end and no custom nonce has already been asked, ask user for a custom nonce.
+   * Otherwise proceeds to private key insertion modal
    */
   const confirmDelegate = () => {
     try {
-      if ((!nonceAndDelegate || !nonceAndDelegate.data) && !customNonce) {
+      if (!nonceAndDelegateData && !customNonce) {
         setShowModal(ModalStates.NONCE);
       } else if (customDelegate) {
-        nonceAndDelegate.refetch({ publicKey: sessionData.address });
         setShowModal(ModalStates.FEE);
         setDelegate({ publicKey: customDelegate });
       } else {
-        nonceAndDelegate.refetch({ publicKey: sessionData.address });
         setShowModal(ModalStates.FEE);
       }
     } catch (e) {
@@ -278,12 +289,12 @@ export default ({ sessionData }: IProps) => {
   };
 
   /**
-   * User confirmed delegate public key, proceeds to private key insertion
-   * @param {string} delegate Delegate private key
+   * User confirmed delegate public key, proceeds to the fee insertion
+   * @param {string} delegate Delegate public key
    */
   const confirmCustomDelegate = (delegate: string) => {
     try {
-      nonceAndDelegate.refetch({ publicKey: sessionData.address });
+      nonceAndDelegateRefetch({ publicKey: sessionData.address });
       setShowModal(ModalStates.FEE);
       setDelegate({ publicKey: delegate });
     } catch (e) {
@@ -314,7 +325,7 @@ export default ({ sessionData }: IProps) => {
   };
 
   /**
-   * Set query offset based on selected page
+   * Set the query offset based on selected page
    * @param {number} page Page number
    */
   const changeOffset = (page: number) => {
@@ -322,8 +333,12 @@ export default ({ sessionData }: IProps) => {
     setOffset(data);
   };
 
-  const setFee = (value: number) => {
-    setSelectedFee(value);
+  /**
+   * Set the selected fee inside the component state and show the private key modal
+   * @param selectedFee number
+   */
+  const setFee = (selectedFee: number) => {
+    setSelectedFee(selectedFee);
     setShowModal(ModalStates.PASSPHRASE);
   };
 
@@ -335,8 +350,9 @@ export default ({ sessionData }: IProps) => {
       if (!delegateData || delegateData?.publicKey) {
         throw new Error("Recipient Public key is not defined");
       }
+      // Check if the mina app is open
       await isMinaAppOpen();
-      checkBalance(selectedFee);
+      checkBalance(selectedFee, balance);
       const actualNonce = getNonce();
       const senderAccount = sessionData?.ledgerAccount || 0;
       const receiverAddress = delegateData?.publicKey;
@@ -359,13 +375,13 @@ export default ({ sessionData }: IProps) => {
   };
 
   /**
-   * If nonce is available from query, returns it, otherwise custom nonce is returned
-   * @returns number Nonce number
+   * If nonce is available from the query, return it, otherwise custom the nonce is returned
+   * @returns number Nonce
    */
   const getNonce = () => {
-    if (nonceAndDelegate.data?.accountByKey?.usableNonce) {
-      return parseInt(nonceAndDelegate.data.accountByKey.usableNonce);
-    } else if (nonceAndDelegate.data?.accountByKey?.usableNonce === 0) {
+    if (nonceAndDelegateData?.accountByKey?.usableNonce) {
+      return nonceAndDelegateData.accountByKey.usableNonce;
+    } else if (nonceAndDelegateData?.accountByKey?.usableNonce === 0) {
       return 0;
     }
     return customNonce;
@@ -445,7 +461,7 @@ export default ({ sessionData }: IProps) => {
       <ModalContainer show={showModal === ModalStates.FEE} close={closeModal}>
         <DelegationFee
           closeModal={closeModal}
-          fees={fee?.data}
+          fees={feeData}
           proceedHandler={setFee}
         />
       </ModalContainer>
