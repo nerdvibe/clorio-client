@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
-import { IBalanceData } from "./BalanceTypes";
+import { IBalanceContext, IBalanceData } from "./BalanceTypes";
 
-export const BalanceContext = createContext({});
+export const BalanceContext = createContext<Partial<IBalanceContext>>({});
 
 interface IProps {
   children: React.ReactChild;

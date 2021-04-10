@@ -1,14 +1,14 @@
 export interface IBalanceData {
-  liquid: string;
-  liquidUnconfirmed: string;
-  locked: string;
-  total: string;
-  unconfirmedTotal: string;
+  liquid: string|number;
+  liquidUnconfirmed: string|number;
+  locked: string|number;
+  total: string|number;
+  unconfirmedTotal: string|number;
 }
 
 export interface IBalanceContext {
   shouldBalanceUpdate: boolean;
-  balance: IBalanceContext;
-  setBalanceContext: (data: IBalanceContext) => void;
+  balance: IBalanceData;
+  setBalanceContext: (data: IBalanceData) => void;
   setShouldBalanceUpdate: (shouldUpdate: boolean) => void;
 }
