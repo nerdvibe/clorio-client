@@ -16,7 +16,7 @@ import LedgerConfirmAddress from "./LedgerConfirmAddress";
 import { IWalletIdData } from "../../types/WalletIdData";
 
 const LedgerGetAddress = ({ accountNumber, toggleLoader, network }: IProps) => {
-  const [publicKey, setPublicKey] = useState("");
+  const [publicKey, setPublicKey] = useState<string>("");
   const [ledgerAccount] = useState<number>(accountNumber || 0);
   const history = useHistory();
   const { data: walletIdData } = useQuery<IWalletIdData>(GET_ID, {

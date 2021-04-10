@@ -13,7 +13,7 @@ import { useHistory } from "react-router-dom";
 import UpdateUserID from "./components/UI/UpdateUserID";
 import { useQuery } from "@apollo/client";
 import Alert from "./components/UI/Alert";
-import Balance from "./components/UI/balance/Balance";
+import Balance from "./components/balance/Balance";
 import { GET_NETWORK } from "./graphql/query";
 import { useContext } from "react";
 import { LedgerContext } from "./context/ledger/LedgerContext";

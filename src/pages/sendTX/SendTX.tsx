@@ -49,13 +49,15 @@ interface IProps {
 }
 
 const SendTX = (props: IProps) => {
-  const [privateKey, setPrivateKey] = useState("");
-  const [sendTransactionFlag, setSendTransactionFlag] = useState(false);
-  const [step, setStep] = useState(SendTXPageSteps.FORM);
-  const [showModal, setShowModal] = useState("");
-  const [senderAddress, setSenderAddress] = useState("");
-  const [customNonce, setCustomNonce] = useState(MINIMUM_NONCE);
-  const [showLoader, setShowLoader] = useState(true);
+  const [privateKey, setPrivateKey] = useState<string>("");
+  const [sendTransactionFlag, setSendTransactionFlag] = useState<boolean>(
+    false,
+  );
+  const [step, setStep] = useState<number>(SendTXPageSteps.FORM);
+  const [showModal, setShowModal] = useState<string>("");
+  const [senderAddress, setSenderAddress] = useState<string>("");
+  const [customNonce, setCustomNonce] = useState<number>(MINIMUM_NONCE);
+  const [showLoader, setShowLoader] = useState<boolean>(true);
   const [ledgerTransactionData, setLedgerTransactionData] = useState<string>(
     "",
   );

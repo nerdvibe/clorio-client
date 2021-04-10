@@ -1,22 +1,22 @@
 import { useState, useEffect, useContext } from "react";
 import { Row, Col } from "react-bootstrap";
-import Button from "../Button";
+import Button from "../UI/Button";
 import { Copy } from "react-feather";
-import { readSession } from "../../../tools";
+import { readSession } from "../../tools";
 import { useQuery } from "@apollo/client";
-import Avatar from "../../../tools/avatar/avatar";
-import { copyToClipboard, toMINA } from "../../../tools";
+import Avatar from "../../tools/avatar/avatar";
+import { copyToClipboard, toMINA } from "../../tools";
 import ReactTooltip from "react-tooltip";
-import { BalanceContext } from "../../../context/balance/BalanceContext";
-import { GET_TICKER, GET_BALANCE } from "../../../graphql/query";
-import { DEFAULT_QUERY_REFRESH_INTERVAL } from "../../../tools";
+import { BalanceContext } from "../../context/balance/BalanceContext";
+import { GET_TICKER, GET_BALANCE } from "../../graphql/query";
+import { DEFAULT_QUERY_REFRESH_INTERVAL } from "../../tools";
 import {
   renderBalance,
   userBalanceToBTCValue,
   ITicker,
   IBalanceQueryResult,
 } from "./BalanceHelper";
-import { IBalanceContext } from "../../../context/balance/BalanceTypes";
+import { IBalanceContext } from "../../context/balance/BalanceTypes";
 
 const Balance = () => {
   const [address, setAddress] = useState<string>("");
