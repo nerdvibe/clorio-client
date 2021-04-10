@@ -14,13 +14,14 @@ import {
   IMempoolQueryResult,
 } from "../components/transactionsTable/TransactionsTypes";
 import { IHomeNewsQuery } from "../types/NewsData";
+import { IBalanceContext } from "../context/balance/BalanceTypes";
 
 interface IProps {
   sessionData: IWalletData;
 }
 
 const Overview = ({ sessionData }: IProps) => {
-  const { balance }: any = useContext(BalanceContext);
+  const { balance } = useContext<Partial<IBalanceContext>>(BalanceContext);
   const [offset, setOffset] = useState<number>(0);
   const { data: newsData } = useQuery<IHomeNewsQuery>(GET_HOME_NEWS);
   const latestNews =
@@ -65,7 +66,7 @@ const Overview = ({ sessionData }: IProps) => {
           mempool={mempoolData}
           error={transactionsError}
           loading={transactionsLoading || mempoolLoading}
-          balance={balance.total}
+          balance={+(balance?.total || 0)}
           setOffset={changeOffset}
           page={getPageFromOffset(offset)}
           userId={sessionData.id}

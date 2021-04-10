@@ -53,6 +53,7 @@ import { IValidatorData } from "../../components/stake/stakeTableRow/ValidatorDa
 import { IWalletData } from "../../types/WalletData";
 import { IValidatorsNewsQuery } from "../../types/NewsData";
 import { IFeeQuery } from "../../types/Fee";
+import { IBalanceContext } from "../../context/balance/BalanceTypes";
 
 interface IProps {
   sessionData: IWalletData;
@@ -81,7 +82,9 @@ export default ({ sessionData }: IProps) => {
     false,
   );
   const { isLedgerEnabled }: any = useContext(LedgerContext);
-  const { balance, setShouldBalanceUpdate }: any = useContext(BalanceContext);
+  const { balance, setShouldBalanceUpdate } = useContext<
+    Partial<IBalanceContext>
+  >(BalanceContext);
   const {
     data: validatorsData,
     error: validatorsError,
@@ -158,7 +161,9 @@ export default ({ sessionData }: IProps) => {
   useEffect(() => {
     if (sendTransactionFlag) {
       clearState();
-      setShouldBalanceUpdate(true);
+      if (setShouldBalanceUpdate) {
+        setShouldBalanceUpdate(true);
+      }
       nonceAndDelegateRefetch({ publicKey: sessionData.address });
       toast.success("Delegation successfully broadcasted");
       history.push("/stake");

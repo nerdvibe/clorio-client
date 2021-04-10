@@ -41,6 +41,7 @@ import {
   SendTXPageSteps,
 } from "./SendTXHelper";
 import { IFeeQuery } from "../../types/Fee";
+import { IBalanceContext } from "../../context/balance/BalanceTypes";
 
 interface IProps {
   sessionData: IWalletData;
@@ -58,7 +59,9 @@ const SendTX = (props: IProps) => {
     "",
   );
   const { isLedgerEnabled }: any = useContext(LedgerContext);
-  const { balance, setShouldBalanceUpdate }: any = useContext(BalanceContext);
+  const { balance, setShouldBalanceUpdate } = useContext<
+    Partial<IBalanceContext>
+  >(BalanceContext);
   const [transactionData, setTransactionData] = useState<ITransactionData>(
     initialTransactionData,
   );
@@ -119,7 +122,9 @@ const SendTX = (props: IProps) => {
     if (showModal && broadcastResult?.data && sendTransactionFlag) {
       clearState();
       nonceRefetch({ publicKey: senderAddress });
-      setShouldBalanceUpdate(true);
+      if (setShouldBalanceUpdate) {
+        setShouldBalanceUpdate(true);
+      }
       toast.success("Transaction successfully broadcasted");
       history.replace("/send-tx");
     }

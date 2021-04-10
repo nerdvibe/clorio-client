@@ -28,8 +28,11 @@ export const initialDelegateData: IValidatorData = {
  * Throw error if the fee is greater than the balance
  * @param {number} transactionFee
  */
-export const checkBalance = (transactionFee: number, balance: IBalanceData) => {
-  const available = balance.liquidUnconfirmed;
+export const checkBalance = (
+  transactionFee: number,
+  balance?: IBalanceData,
+) => {
+  const available = balance?.liquidUnconfirmed || 0;
   const balanceAfterTransaction = Big(available)
     .minus(transactionFee)
     .toNumber();

@@ -16,6 +16,7 @@ import {
   ITicker,
   IBalanceQueryResult,
 } from "./BalanceHelper";
+import { IBalanceContext } from "../../../context/balance/BalanceTypes";
 
 const Balance = () => {
   const [address, setAddress] = useState<string>("");
@@ -24,7 +25,7 @@ const Balance = () => {
     setBalanceContext,
     shouldBalanceUpdate,
     setShouldBalanceUpdate,
-  }: any = useContext(BalanceContext);
+  } = useContext<Partial<IBalanceContext>>(BalanceContext);
   const { data: tickerData, loading: tickerLoading } = useQuery<ITicker>(
     GET_TICKER,
   );
@@ -56,13 +57,17 @@ const Balance = () => {
   useEffect(() => {
     if (shouldBalanceUpdate) {
       balanceRefetch({ publicKey: address });
-      setShouldBalanceUpdate(false);
+      if (setShouldBalanceUpdate) {
+        setShouldBalanceUpdate(false);
+      }
     }
     // If balance is available set it inside the component state and the balance context
     if (balanceData?.accountByKey?.balance) {
       const { unconfirmedTotal } = balanceData.accountByKey.balance;
       setUserBalance(unconfirmedTotal);
-      setBalanceContext(balanceData.accountByKey.balance);
+      if (setBalanceContext) {
+        setBalanceContext(balanceData?.accountByKey?.balance);
+      }
     }
   }, [shouldBalanceUpdate, balanceData]);
 

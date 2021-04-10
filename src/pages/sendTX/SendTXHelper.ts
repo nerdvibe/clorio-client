@@ -46,7 +46,7 @@ export const checkNonce = (nonceData?: INonceQueryResult) => {
 };
 
 interface IBalanceBeforeTransaction {
-  balance: IBalanceData;
+  balance?: IBalanceData;
   transactionData: ITransactionData;
 }
 
@@ -55,7 +55,7 @@ export const checkBalanceAfterTransaction = ({
   transactionData,
 }: IBalanceBeforeTransaction) => {
   const { fee, amount } = transactionData;
-  const available = balance.liquidUnconfirmed;
+  const available = balance?.liquidUnconfirmed || 0;
   const balanceAfterTransaction = Big(available)
     .minus(fee)
     .minus(amount)
