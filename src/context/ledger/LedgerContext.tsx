@@ -1,14 +1,10 @@
 import { createContext, useState } from "react";
 import { MINIMUM_LEDGER_ACCOUNT_NUMBER } from "../../tools";
-export const LedgerContext = createContext({});
+import { ILedgerContext, ILedgerContextData } from "./LedgerTypes";
+export const LedgerContext = createContext<Partial<ILedgerContext>>({});
 
 interface IProps {
   children: React.ReactChild;
-}
-
-interface ILedgerContextData {
-  ledger: boolean;
-  ledgerAccount: number;
 }
 
 const initLedgerData: ILedgerContextData = {

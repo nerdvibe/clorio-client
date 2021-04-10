@@ -8,6 +8,7 @@ import { useContext } from "react";
 import { IMessageToSign } from "../../types/MessageToSign";
 import SignatureMessageResult from "./SignatureMessageResult";
 import SignMessageLedgerScreen from "./SignMessageLedgerScreen";
+import { ILedgerContext } from "../../context/ledger/LedgerTypes";
 
 const SignMessage = () => {
   const [showResult, setShowResult] = useState<boolean>(false);
@@ -19,7 +20,9 @@ const SignMessage = () => {
     },
     publicKey: "",
   });
-  const { isLedgerEnabled }: any = useContext(LedgerContext);
+  const { isLedgerEnabled } = useContext<Partial<ILedgerContext>>(
+    LedgerContext,
+  );
 
   /**
    * If fields are not empty, sign message and set result to component state

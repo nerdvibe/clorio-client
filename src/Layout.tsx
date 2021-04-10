@@ -16,6 +16,7 @@ import { LedgerContext } from "./context/ledger/LedgerContext";
 import TermsAndConditions from "./components/modals/TermsAndConditions";
 import { BalanceContextProvider } from "./context/balance/BalanceContext";
 import { IWalletData } from "./types/WalletData";
+import { ILedgerContext } from "./context/ledger/LedgerTypes";
 
 const initialSessionData = {
   address: "",
@@ -30,8 +31,10 @@ const Layout = () => {
   const [sessionData, setSessionData] = useState<IWalletData>(
     initialSessionData,
   );
-  const [showLoader, setShowLoader] = useState(false);
-  const { setLedgerContext }: any = useContext(LedgerContext);
+  const [showLoader, setShowLoader] = useState<boolean>(false);
+  const { setLedgerContext } = useContext<Partial<ILedgerContext>>(
+    LedgerContext,
+  );
   const history = useHistory();
   const network = useQuery(GET_NETWORK, {
     onCompleted: async data => {

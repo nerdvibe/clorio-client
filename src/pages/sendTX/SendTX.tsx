@@ -42,6 +42,7 @@ import {
 } from "./SendTXHelper";
 import { IFeeQuery } from "../../types/Fee";
 import { IBalanceContext } from "../../context/balance/BalanceTypes";
+import { ILedgerContext } from "../../context/ledger/LedgerTypes";
 
 interface IProps {
   sessionData: IWalletData;
@@ -58,7 +59,9 @@ const SendTX = (props: IProps) => {
   const [ledgerTransactionData, setLedgerTransactionData] = useState<string>(
     "",
   );
-  const { isLedgerEnabled }: any = useContext(LedgerContext);
+  const { isLedgerEnabled } = useContext<Partial<ILedgerContext>>(
+    LedgerContext,
+  );
   const { balance, setShouldBalanceUpdate } = useContext<
     Partial<IBalanceContext>
   >(BalanceContext);
