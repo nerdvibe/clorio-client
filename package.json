@@ -109,6 +109,7 @@
   "devDependencies": {
     "@types/big.js": "^6.0.2",
     "@types/react-router-dom": "5.1.7",
+    "@typescript-eslint/parser": "^4.21.0",
     "babel-eslint": "10.1.0",
     "electron": "11.2.0",
     "electron-builder": "22.10.5",

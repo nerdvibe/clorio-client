@@ -4,7 +4,7 @@ interface IProps {
 }
 
 const StakeStatus = ({ currentDelegate, currentDelegateName }: IProps) => {
-  if (currentDelegate === "") {
+  if (!currentDelegate) {
     return (
       <div>
         <h4>Validators:</h4>
@@ -13,7 +13,8 @@ const StakeStatus = ({ currentDelegate, currentDelegateName }: IProps) => {
         </h6>
       </div>
     );
-  } else if (!currentDelegate) {
+  }
+  if (!currentDelegate) {
     return (
       <div>
         <h4>Validators:</h4>

@@ -24,11 +24,11 @@ const Register = ({ toggleLoader, network }: IProps) => {
   const history = useHistory();
 
   /**
-   * Generate key pair with CodaSDK
+   * Generate key pair with MinaSDK
    * @return Clean component state on dismount
    */
   useEffect(() => {
-    if (keys.publicKey === "" && keys.privateKey === "") {
+    if (!keys.publicKey && !keys.privateKey) {
       setKeys(genKeys());
     }
     return () => {

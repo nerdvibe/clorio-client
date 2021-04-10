@@ -12,8 +12,24 @@ const SignMessage = React.lazy(() => import("./pages/signMessage/SignMessage"));
 const NotFound = React.lazy(() => import("./pages/404"));
 const VerifyMessage = React.lazy(() => import("./pages/VerifyMessage"));
 import { isEmptyObject } from "./tools/utils";
+import { INetworkData } from "./types/NetworkData";
+import { IWalletData } from "./types/WalletData";
 
-const ProtectedRoute = ({ component: Component, ...rest }) => {
+interface IProtectedRouteProps {
+  component: React.FC<any>;
+  [key: string]: any;
+}
+
+interface IRoutesProps {
+  sessionData: IWalletData;
+  network: INetworkData;
+  toggleLoader: (state?: boolean) => void;
+}
+
+const ProtectedRoute = ({
+  component: Component,
+  ...rest
+}: IProtectedRouteProps) => {
   return (
     <Route
       {...rest}
@@ -43,8 +59,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
   );
 };
 
-function Routes(props) {
-  const { sessionData } = props;
+const Routes = (props: IRoutesProps) => {
   return (
     <Suspense fallback={<Spinner show={true} />}>
       <Switch>
@@ -52,35 +67,20 @@ function Routes(props) {
           exact
           path="/overview"
           component={Overview}
-          sessionData={sessionData}
           {...props}
         />
-        <ProtectedRoute
-          exact
-          path="/send-tx"
-          component={SendTX}
-          sessionData={sessionData}
-          {...props}
-        />
-        <ProtectedRoute
-          exact
-          path="/stake"
-          component={Stake}
-          sessionData={sessionData}
-          {...props}
-        />
+        <ProtectedRoute exact path="/send-tx" component={SendTX} {...props} />
+        <ProtectedRoute exact path="/stake" component={Stake} {...props} />
         <ProtectedRoute
           exact
           path="/sign-message"
           component={SignMessage}
-          sessionData={sessionData}
           {...props}
         />
         <ProtectedRoute
           exact
           path="/verify-message"
           component={VerifyMessage}
-          sessionData={sessionData}
           {...props}
         />
         <Route path="/login" exact>
@@ -105,6 +105,6 @@ function Routes(props) {
       </Switch>
     </Suspense>
   );
-}
+};
 
 export default Routes;

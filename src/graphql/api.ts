@@ -1,9 +1,11 @@
-/* eslint-disable no-undef */
 import { ApolloLink } from "apollo-link";
 import { onError } from "apollo-link-error";
 import { HttpLink } from "apollo-link-http";
-import { ApolloClient } from "apollo-client";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import {
+  ApolloClient,
+  InMemoryCache,
+  NormalizedCacheObject,
+} from "@apollo/client";
 
 console.log(
   process.env.REACT_APP_GQL_SERVER,
@@ -36,8 +38,7 @@ const httpLink = ApolloLink.from([
   }),
 ]);
 
-export const apolloClient = new ApolloClient({
-  // link,
-  link: httpLink,
+export const apolloClient = new ApolloClient<NormalizedCacheObject>({
+  link: httpLink as any,
   cache: new InMemoryCache(),
 });

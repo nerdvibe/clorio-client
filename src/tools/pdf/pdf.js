@@ -1,5 +1,5 @@
 import { jsPDF } from "jspdf";
-import ClorioLogoB64 from "../assets/ClorioLogoB64.json";
+import ClorioLogoB64 from "./ClorioLogoB64.json";
 
 export const downloadPaperWalletPDF = keypair => {
   const doc = new jsPDF();
