@@ -54,6 +54,7 @@ import { IWalletData } from "../../types/WalletData";
 import { IValidatorsNewsQuery } from "../../types/NewsData";
 import { IFeeQuery } from "../../types/Fee";
 import { IBalanceContext } from "../../context/balance/BalanceTypes";
+import { ILedgerContext } from "../../context/ledger/LedgerTypes";
 
 interface IProps {
   sessionData: IWalletData;
@@ -81,7 +82,9 @@ export default ({ sessionData }: IProps) => {
   const [sendTransactionFlag, setSendTransactionFlag] = useState<boolean>(
     false,
   );
-  const { isLedgerEnabled }: any = useContext(LedgerContext);
+  const { isLedgerEnabled } = useContext<Partial<ILedgerContext>>(
+    LedgerContext,
+  );
   const { balance, setShouldBalanceUpdate } = useContext<
     Partial<IBalanceContext>
   >(BalanceContext);
