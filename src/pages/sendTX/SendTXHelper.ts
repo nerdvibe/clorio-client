@@ -5,7 +5,7 @@ import {
   DEFAULT_FEE,
   INITIAL_TRANSACTION_AMOUNT,
   MINIMUM_NONCE,
-} from "./../../tools/const";
+} from "../../tools";
 import { toNanoMINA } from "../../tools";
 import { emojiToUnicode, escapeUnicode } from "../../tools/ledger";
 

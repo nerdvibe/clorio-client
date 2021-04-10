@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { ITEMS_PER_PAGE } from "../tools/const";
+import { TRANSACTIONS_TABLE_ITEMS_PER_PAGE } from "../tools/const";
 
 export const GET_FEE = gql`
   query GetFees {
@@ -163,7 +163,7 @@ export const GET_TRANSACTIONS = gql`
         _or: [{ receiver_id: { _eq: $user } }, { source_id: { _eq: $user } }]
       }
       order_by: { id: desc }
-      limit: ${ITEMS_PER_PAGE}
+      limit: ${TRANSACTIONS_TABLE_ITEMS_PER_PAGE}
       offset: $offset
     ) {
       amount

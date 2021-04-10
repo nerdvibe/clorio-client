@@ -2,12 +2,16 @@ import { useEffect, useState } from "react";
 import Sidebar from "./components/UI/sidebar/Sidebar";
 import { Col, Container, Row } from "react-bootstrap";
 import Routes from "./Routes";
-import { clearSession, readSession, storeNetworkData } from "./tools/db";
+import {
+  clearSession,
+  readSession,
+  storeNetworkData,
+  isEmptyObject,
+} from "./tools";
 import Spinner from "./components/UI/Spinner";
 import { useHistory } from "react-router-dom";
 import UpdateUserID from "./components/UI/UpdateUserID";
 import { useQuery } from "@apollo/client";
-import { isEmptyObject } from "./tools/utils";
 import Alert from "./components/UI/Alert";
 import Balance from "./components/UI/balance/Balance";
 import { GET_NETWORK } from "./graphql/query";

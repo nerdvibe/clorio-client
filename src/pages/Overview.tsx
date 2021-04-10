@@ -4,8 +4,11 @@ import { useQuery } from "@apollo/client";
 import { useState } from "react";
 import { useContext } from "react";
 import { BalanceContext } from "../context/balance/BalanceContext";
-import { ITEMS_PER_PAGE, DEFAULT_INTERVAL } from "../tools/const";
-import { getPageFromOffset } from "../tools/utils";
+import {
+  getPageFromOffset,
+  TRANSACTIONS_TABLE_ITEMS_PER_PAGE,
+  DEFAULT_QUERY_REFRESH_INTERVAL,
+} from "../tools";
 import { GET_MEMPOOL, GET_TRANSACTIONS, GET_HOME_NEWS } from "../graphql/query";
 import NewsBanner from "../components/UI/NewsBanner";
 import { IWalletData } from "../types/WalletData";
@@ -36,7 +39,7 @@ const Overview = ({ sessionData }: IProps) => {
     variables: { user: sessionData.id, offset },
     fetchPolicy: "network-only",
     skip: !sessionData.id,
-    pollInterval: DEFAULT_INTERVAL,
+    pollInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
   });
   const {
     data: mempoolData,
@@ -45,7 +48,7 @@ const Overview = ({ sessionData }: IProps) => {
     variables: { publicKey: sessionData.address },
     skip: !sessionData.address,
     fetchPolicy: "network-only",
-    pollInterval: DEFAULT_INTERVAL,
+    pollInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
   });
 
   /**
@@ -53,7 +56,7 @@ const Overview = ({ sessionData }: IProps) => {
    * @param {number} page Page number
    */
   const changeOffset = (page: number) => {
-    const data = (page - 1) * ITEMS_PER_PAGE;
+    const data = (page - 1) * TRANSACTIONS_TABLE_ITEMS_PER_PAGE;
     setOffset(data);
   };
 
