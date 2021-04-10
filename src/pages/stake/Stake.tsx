@@ -111,7 +111,7 @@ export default ({ sessionData }: IProps) => {
   });
 
   useEffect(() => {
-    if (address === "") {
+    if (!address) {
       getAndSetAddress();
     }
   });
@@ -199,11 +199,11 @@ export default ({ sessionData }: IProps) => {
   };
 
   /**
-   * Sign stake delegation using Coda SDK through private key
+   * Sign stake delegation using MinaSDK through private key
    */
   const signStakeDelegate = () => {
     try {
-      if (!delegateData?.publicKey || delegateData.publicKey === "") {
+      if (!delegateData?.publicKey) {
         throw new Error("The Public key of the selected delegate is missing");
       }
       const actualNonce = getNonce();

@@ -18,10 +18,9 @@ import { IWalletIdData } from "../types/WalletIdData";
 interface IProps {
   toggleLoader: (state: boolean) => void;
   network: INetworkData;
-  register: () => void;
 }
 
-const Login = ({ register, toggleLoader, network }: IProps) => {
+const Login = ({ toggleLoader, network }: IProps) => {
   const [publicKey, setPublicKey] = useState<string>("");
   const [privateKey, setPrivateKey] = useState<string>("");
   const [loader, setLoader] = useState<boolean>(false);
@@ -32,7 +31,7 @@ const Login = ({ register, toggleLoader, network }: IProps) => {
     refetch: userIdRefetch,
   } = useQuery<IWalletIdData>(GET_ID, {
     variables: { publicKey },
-    skip: publicKey === "",
+    skip: !publicKey,
   });
 
   /**
@@ -46,7 +45,7 @@ const Login = ({ register, toggleLoader, network }: IProps) => {
   }, []);
 
   /**
-   * If Public key has been derived from CodaSDK, show loader and set session data
+   * If Public key has been derived from MinaSDK, show loader and set session data
    */
   useEffect(() => {
     const storeSessionAndRedirect = async (publicKey: string, id: number) => {
@@ -73,7 +72,7 @@ const Login = ({ register, toggleLoader, network }: IProps) => {
   };
 
   /**
-   * Uses CodaSDK to check if private key from input is valid
+   * Uses MinaSDK to check if private key from input is valid
    */
   const checkCredentials = async () => {
     try {
@@ -91,7 +90,7 @@ const Login = ({ register, toggleLoader, network }: IProps) => {
    * @returns boolean
    */
   const disableButton = () => {
-    return !privateKey || privateKey === "";
+    return !privateKey;
   };
 
   return (
@@ -118,7 +117,6 @@ const Login = ({ register, toggleLoader, network }: IProps) => {
                     <Link to="/register">
                       <Button
                         className="link-button inline-element"
-                        onClick={register}
                         text="Create one"
                       />
                     </Link>
@@ -130,11 +128,7 @@ const Login = ({ register, toggleLoader, network }: IProps) => {
                   <Row>
                     <Col xs={6}>
                       <Link to="/">
-                        <Button
-                          className="link-button mx-auto"
-                          onClick={register}
-                          text="Cancel"
-                        />
+                        <Button className="link-button mx-auto" text="Cancel" />
                       </Link>
                     </Col>
                     <Col xs={6}>

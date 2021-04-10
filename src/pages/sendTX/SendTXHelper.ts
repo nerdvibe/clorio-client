@@ -72,7 +72,7 @@ export const checkBalanceAfterTransaction = ({
  * @param transactionData
  */
 export const checkTransactionFields = (transactionData: ITransactionData) => {
-  if (transactionData.receiverAddress === "" || transactionData.amount === 0) {
+  if (!transactionData.receiverAddress || transactionData.amount === 0) {
     throw new Error("Please insert an address and an amount");
   }
 };

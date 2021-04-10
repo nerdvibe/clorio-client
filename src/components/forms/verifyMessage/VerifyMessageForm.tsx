@@ -20,7 +20,7 @@ const VerifyForm = ({ verifyMessage }: IProps) => {
    * @returns boolean
    */
   const disableButton = () => {
-    return address === "" || message === "" || field === "" || scalar === "";
+    return !address || !message || !field || !scalar;
   };
 
   /**

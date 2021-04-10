@@ -11,7 +11,7 @@ interface ISignTransaction {
 }
 
 /**
- * Sign transaction through CodaSDK
+ * Sign transaction through MinaSDK
  * @param object
  * @returns
  */

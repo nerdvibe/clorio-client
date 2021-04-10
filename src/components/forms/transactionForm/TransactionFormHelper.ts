@@ -24,7 +24,7 @@ export const checkFieldsAndProceed = (
     )})`;
     return toast.error(message);
   }
-  if (receiverAddress === "") {
+  if (!receiverAddress) {
     return toast.error("Please insert a recipient");
   }
   nextStep();

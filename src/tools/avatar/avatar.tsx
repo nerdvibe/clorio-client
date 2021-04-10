@@ -1,12 +1,20 @@
-const BigNumber = require("bignumber.js");
-const React = require("react");
-const sha256 = require("js-sha256");
+// @ts-nocheck
+// Types to be defined
+import BigNumber from "bignumber.js";
+import React from "react";
+import sha256 from "js-sha256";
 import colors from "./colors.json";
 import coordinates from "./coordinates.json";
 
-const Circle = props => <circle {...props} />;
+const Circle = (props: any) => <circle {...props} />;
 
-const getShape = (chunk, size, gradient, sizeScale = 1, boxSize) => {
+const getShape = (
+  chunk: any,
+  size: any,
+  gradient: any,
+  sizeScale = 1,
+  boxSize: any,
+) => {
   const sizes = [1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1].map(
     x => x * size * sizeScale,
   );
@@ -30,7 +38,7 @@ const getShape = (chunk, size, gradient, sizeScale = 1, boxSize) => {
   };
 };
 
-const getBackgroundCircle = (size, gradient) => ({
+const getBackgroundCircle = (size: any, gradient: any) => ({
   component: Circle,
   props: {
     cx: size / 2,
@@ -40,15 +48,15 @@ const getBackgroundCircle = (size, gradient) => ({
   },
 });
 
-const getHashChunks = address => {
+const getHashChunks = (address: any) => {
   const addressHash = new BigNumber(`0x${sha256(address)}`)
     .toString()
     .substr(3);
   return addressHash.match(/\d{5}/g);
 };
 
-export default class Avatar extends React.Component {
-  shouldComponentUpdate(nextProps) {
+export default class Avatar extends React.Component<any> {
+  shouldComponentUpdate(nextProps: any) {
     return nextProps.address !== this.props.address;
   }
 

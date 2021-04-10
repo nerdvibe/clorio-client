@@ -13,7 +13,7 @@ const UpdateUserID = ({ sessionData }: IProps) => {
   const [address, setAddress] = useState<string>("");
   const { data: userID } = useQuery<IWalletIdData>(GET_ID, {
     variables: { publicKey: address },
-    skip: address === "",
+    skip: !address,
   });
 
   /**

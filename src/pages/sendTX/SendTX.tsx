@@ -68,7 +68,7 @@ const SendTX = (props: IProps) => {
     refetch: nonceRefetch,
   } = useQuery<INonceQueryResult>(GET_NONCE, {
     variables: { publicKey: senderAddress },
-    skip: senderAddress === "",
+    skip: !senderAddress,
     fetchPolicy: "network-only",
   });
   const feeQuery = useQuery<IFeeQuery>(GET_FEE, {
@@ -187,7 +187,7 @@ const SendTX = (props: IProps) => {
    *  Check if private key is not empty
    */
   const confirmPrivateKey = () => {
-    if (privateKey === "") {
+    if (!privateKey) {
       toast.error("Please insert a private key");
     } else {
       closeModal();

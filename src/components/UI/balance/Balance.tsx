@@ -4,7 +4,7 @@ import Button from "../Button";
 import { Copy } from "react-feather";
 import { readSession } from "../../../tools";
 import { useQuery } from "@apollo/client";
-import Avatar from "../../../tools/avatar";
+import Avatar from "../../../tools/avatar/avatar";
 import { copyToClipboard, toMINA } from "../../../tools";
 import ReactTooltip from "react-tooltip";
 import { BalanceContext } from "../../../context/balance/BalanceContext";
@@ -38,7 +38,7 @@ const Balance = () => {
       notifyOnNetworkStatusChange: true,
     },
     fetchPolicy: "network-only",
-    skip: !address || address === "",
+    skip: !address,
     pollInterval: DEFAULT_INTERVAL,
     onCompleted: data => {
       if (setBalanceContext) {
@@ -76,7 +76,7 @@ const Balance = () => {
     }
   };
 
-  if (address === "") {
+  if (!address) {
     return <div />;
   }
 

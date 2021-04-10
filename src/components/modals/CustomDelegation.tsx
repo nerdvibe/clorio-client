@@ -32,7 +32,7 @@ const ConfirmDelegation = ({ closeModal, confirmCustomDelegate }: IProps) => {
             onClick={() => confirmCustomDelegate(customDelegate)}
             className="lightGreenButton__fullMono mx-auto"
             text="Confirm"
-            disabled={customDelegate === ""}
+            disabled={!customDelegate}
           />
         </Col>
       </Row>

@@ -14,8 +14,8 @@ const NotFound = () => (
           <div className="v-spacer" />
           <div className="big-text">Something went wrong</div>
           <h3 style={{ textAlign: "center", width: "100%" }}>
-            Better go back to a{" "}
-            <Button className="inline-element" link="/" text="safe place" />
+            Better go back to the{" "}
+            <Button className="inline-element" link="/" text="home page" />
           </h3>
         </Col>
       </Row>

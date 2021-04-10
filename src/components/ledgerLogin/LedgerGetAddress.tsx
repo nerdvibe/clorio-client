@@ -11,7 +11,7 @@ import LedgerLoader from "../UI/LedgerLoader";
 import { GET_ID } from "../../graphql/query";
 import { getPublicKey } from "../../tools/ledger";
 import { toast } from "react-toastify";
-import { IProps } from "./LedgerLoginProps";
+import { IProps } from "./LedgerLoginTypes";
 import LedgerConfirmAddress from "./LedgerConfirmAddress";
 import { IWalletIdData } from "../../types/WalletIdData";
 

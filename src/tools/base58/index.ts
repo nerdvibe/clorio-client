@@ -3,7 +3,7 @@ const BASE58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 const NULL_VALUE_REGEX = /\0[\s\S]*$/g;
 
 /**
- * Decodes Base58 strings into strings. Used for Memo fields in TXs
+ * Decodes Base58 strings into utf-8 strings. Used for Memo fields in TXs
  * @param msg {string}
  * @returns {string}
  */

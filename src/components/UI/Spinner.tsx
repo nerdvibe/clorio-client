@@ -1,7 +1,7 @@
 interface IProps {
   show?: boolean;
   className?: string;
-  children: JSX.Element;
+  children?: JSX.Element;
 }
 
 const Spinner = ({ show, className, children }: IProps) => {
@@ -21,7 +21,7 @@ const Spinner = ({ show, className, children }: IProps) => {
       </div>
     </div>
   ) : (
-    children
+    children || <></>
   );
 };
 

@@ -12,7 +12,7 @@ import LedgerGetAddress from "./LedgerGetAddress";
 import ReactTooltip from "react-tooltip";
 import HelpHint from "../UI/HelpHint";
 import { toast } from "react-toastify";
-import { IProps } from "./LedgerLoginProps";
+import { IProps } from "./LedgerLoginTypes";
 import {
   TIME_DELAY,
   MINIMUM_LEDGER_ACCOUNT_NUMBER,
@@ -33,7 +33,7 @@ const LedgerConnect = (props: IProps) => {
    * On component dismount clear the time interval
    */
   useEffect(() => {
-    let timerCheck = setInterval(() => checkLedgerMinaAppOpen(), TIME_DELAY);
+    const timerCheck = setInterval(() => checkLedgerMinaAppOpen(), TIME_DELAY);
     return () => {
       clearInterval(timerCheck);
     };

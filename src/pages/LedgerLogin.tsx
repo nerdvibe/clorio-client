@@ -1,4 +1,4 @@
-import { IProps } from "../components/ledgerLogin/LedgerLoginProps";
+import { IProps } from "../components/ledgerLogin/LedgerLoginTypes";
 import LedgerConnect from "../components/ledgerLogin/LedgerConnect";
 
 const LedgerLogin = (props: IProps) => (
