@@ -1,5 +1,5 @@
 import { useLocation } from "react-router";
-import { INodeInfo } from "../../../models/NetworkData";
+import { INodeInfo } from "../../../types/NetworkData";
 
 /**
  * Return active sidebar item css class if the current label is the same of route

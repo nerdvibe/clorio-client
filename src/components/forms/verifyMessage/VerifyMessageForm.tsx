@@ -3,7 +3,7 @@ import { Row, Col } from "react-bootstrap";
 import Button from "../../UI/Button";
 import HelpHint from "../../UI/HelpHint";
 import Input from "../../UI/input/Input";
-import { IMessageToVerify } from "../../../models/MessageToVerify";
+import { IMessageToVerify } from "../../../types/MessageToVerify";
 
 interface IProps {
   verifyMessage: (messageToVerify: IMessageToVerify) => void;

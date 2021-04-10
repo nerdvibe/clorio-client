@@ -1,5 +1,5 @@
 import { Big } from "big.js";
-import { IBalanceData } from "./../../context/balance/BalanceInterfaces";
+import { IBalanceData } from "../../context/balance/BalanceTypes";
 import { IValidatorData } from "./../../components/stake/stakeTableRow/ValidatorDataInterface";
 export enum ModalStates {
   PASSPHRASE = "passphrase",

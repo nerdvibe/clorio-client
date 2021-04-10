@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { readSession, updateUser } from "../../tools/db";
 import { GET_ID } from "../../graphql/query";
-import { IWalletData } from "../../models/WalletData";
-import { IWalletIdData } from "../../models/WalletIdData";
+import { IWalletData } from "../../types/WalletData";
+import { IWalletIdData } from "../../types/WalletIdData";
 
 interface IProps {
   sessionData: IWalletData;

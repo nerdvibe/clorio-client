@@ -5,7 +5,7 @@ import { Cpu, LogIn, TrendingUp, Edit3, Check } from "react-feather";
 import Logo from "../Logo";
 import { clearSession } from "../../../tools";
 import { isRouteActiveClass, renderNetworkLabel } from "./SidebarHelper";
-import { INetworkData } from "../../../models/NetworkData";
+import { INetworkData } from "../../../types/NetworkData";
 
 interface IProps {
   network: INetworkData;

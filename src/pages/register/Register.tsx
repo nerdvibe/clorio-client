@@ -4,10 +4,10 @@ import Hoc from "../../components/UI/Hoc";
 import Footer from "../../components/UI/Footer";
 import { storeSession } from "../../tools";
 import { genKeys } from "@o1labs/client-sdk";
-import { INetworkData } from "../../models/NetworkData";
+import { INetworkData } from "../../types/NetworkData";
 import RegisterStep from "./RegistrationStep";
 import ValidationStep from "./ValidationStep";
-import { IKeypair } from "../../models/Keypair";
+import { IKeypair } from "../../types/Keypair";
 
 interface IProps {
   toggleLoader: () => void;

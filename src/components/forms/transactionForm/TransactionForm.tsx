@@ -9,7 +9,7 @@ import {
 import Button from "../../UI/Button";
 import Input from "../../UI/input/Input";
 import { toast } from "react-toastify";
-import { ITransactionData } from "../../../models/TransactionData";
+import { ITransactionData } from "../../../types/TransactionData";
 import { checkFieldsAndProceed } from "./TransactionFormHelper";
 
 interface IProps {

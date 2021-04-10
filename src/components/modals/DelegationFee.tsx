@@ -10,7 +10,7 @@ import {
 } from "../../tools";
 import Button from "../UI/Button";
 import Input from "../UI/input/Input";
-import { IEstimatedFee } from "../../models/Fee";
+import { IEstimatedFee } from "../../types/Fee";
 
 interface IProps {
   proceedHandler: (fee: number) => void;

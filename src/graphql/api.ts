@@ -23,7 +23,7 @@ const httpLink = ApolloLink.from([
   new HttpLink({
     uri: process.env.REACT_APP_GQL_SERVER,
     credentials: "same-origin",
-    options: {
+    fetchOptions: {
       reconnect: true,
       connectionParams: async () => {
         return {

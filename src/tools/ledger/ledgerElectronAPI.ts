@@ -1,6 +1,6 @@
 let ipcRenderer: any;
 import isElectron from "is-electron";
-import { ILedgerTransaction } from "../../models/LedgerDelegationTransaction";
+import { ILedgerTransaction } from "../../types/LedgerDelegationTransaction";
 
 // Wrapped Electron API for Ledger Devices
 

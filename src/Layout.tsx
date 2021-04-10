@@ -15,7 +15,7 @@ import { useContext } from "react";
 import { LedgerContext } from "./context/ledger/LedgerContext";
 import TermsAndConditions from "./components/modals/TermsAndConditions";
 import { BalanceContextProvider } from "./context/balance/BalanceContext";
-import { IWalletData } from "./models/WalletData";
+import { IWalletData } from "./types/WalletData";
 
 const initialSessionData = {
   address: "",

@@ -1,5 +1,5 @@
 import { Row, Col } from "react-bootstrap";
-import { ITransactionData } from "../../models/TransactionData";
+import { ITransactionData } from "../../types/TransactionData";
 import { toLongMINA } from "../../tools";
 
 const ConfirmLedgerTransaction = ({

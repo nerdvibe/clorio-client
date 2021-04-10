@@ -1,7 +1,7 @@
 import { signPayment } from "@o1labs/client-sdk";
-import { IKeypair } from "../models/Keypair";
-import { ISignature } from "../models/Signature";
-import { ITransactionPayload } from "../models/TransactionPayload";
+import { IKeypair } from "../types/Keypair";
+import { ISignature } from "../types/Signature";
+import { ITransactionPayload } from "../types/TransactionPayload";
 
 interface ISignTransaction {
   transactionData: any;

@@ -13,7 +13,7 @@ import { getPublicKey } from "../../tools/ledger";
 import { toast } from "react-toastify";
 import { IProps } from "./LedgerLoginProps";
 import LedgerConfirmAddress from "./LedgerConfirmAddress";
-import { IWalletIdData } from "../../models/WalletIdData";
+import { IWalletIdData } from "../../types/WalletIdData";
 
 const LedgerGetAddress = ({ accountNumber, toggleLoader, network }: IProps) => {
   const [publicKey, setPublicKey] = useState("");

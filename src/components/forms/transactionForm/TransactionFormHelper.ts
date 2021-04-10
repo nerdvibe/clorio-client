@@ -1,5 +1,5 @@
 import { MINIMUM_AMOUNT, MINIMUM_FEE, toMINA } from "../../../tools";
-import { ITransactionData } from "../../../models/TransactionData";
+import { ITransactionData } from "../../../types/TransactionData";
 import { toast } from "react-toastify";
 
 /**

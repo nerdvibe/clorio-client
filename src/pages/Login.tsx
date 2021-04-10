@@ -11,9 +11,9 @@ import { toast } from "react-toastify";
 import Button from "../components/UI/Button";
 import Input from "../components/UI/input/Input";
 import Logo from "../components/UI/Logo";
-import { INetworkData } from "../models/NetworkData";
+import { INetworkData } from "../types/NetworkData";
 import Spinner from "../components/UI/Spinner";
-import { IWalletIdData } from "../models/WalletIdData";
+import { IWalletIdData } from "../types/WalletIdData";
 
 interface IProps {
   toggleLoader: (state: boolean) => void;

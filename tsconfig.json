@@ -9,10 +9,7 @@
     "moduleResolution": "node",
     "outDir": "dist",
     "allowSyntheticDefaultImports": true,
-    "lib": [
-      "es2020",
-      "dom"
-    ],
+    "lib": ["es2020", "dom"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -23,10 +20,6 @@
     "noEmit": true,
     "forceConsistentCasingInFileNames": true
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "src"
-  ]
+  "exclude": ["node_modules"],
+  "include": ["src"]
 }
