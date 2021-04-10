@@ -8,12 +8,12 @@ import { ITEMS_PER_PAGE, DEFAULT_INTERVAL } from "../tools/const";
 import { getPageFromOffset } from "../tools/utils";
 import { GET_MEMPOOL, GET_TRANSACTIONS, GET_HOME_NEWS } from "../graphql/query";
 import NewsBanner from "../components/UI/NewsBanner";
-import { IWalletData } from "../models/WalletData";
+import { IWalletData } from "../types/WalletData";
 import {
   ITransactionQueryResult,
   IMempoolQueryResult,
 } from "../components/transactionsTable/TransactionsTypes";
-import { IHomeNewsQuery } from "../models/NewsData";
+import { IHomeNewsQuery } from "../types/NewsData";
 
 interface IProps {
   sessionData: IWalletData;

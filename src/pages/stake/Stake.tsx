@@ -50,9 +50,9 @@ import {
   ModalStates,
 } from "./StakeHelper";
 import { IValidatorData } from "../../components/stake/stakeTableRow/ValidatorDataInterface";
-import { IWalletData } from "../../models/WalletData";
-import { IValidatorsNewsQuery } from "../../models/NewsData";
-import { IFeeQuery } from "../../models/Fee";
+import { IWalletData } from "../../types/WalletData";
+import { IValidatorsNewsQuery } from "../../types/NewsData";
+import { IFeeQuery } from "../../types/Fee";
 
 interface IProps {
   sessionData: IWalletData;

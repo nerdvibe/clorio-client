@@ -5,7 +5,7 @@ import { derivePublicKey, signed, signMessage } from "@o1labs/client-sdk";
 import { toast } from "react-toastify";
 import { LedgerContext } from "../../context/ledger/LedgerContext";
 import { useContext } from "react";
-import { IMessageToSign } from "../../models/MessageToSign";
+import { IMessageToSign } from "../../types/MessageToSign";
 import SignatureMessageResult from "./SignatureMessageResult";
 import SignMessageLedgerScreen from "./SignMessageLedgerScreen";
 

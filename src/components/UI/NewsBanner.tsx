@@ -1,5 +1,5 @@
 import { Row, Col } from "react-bootstrap";
-import { INewsData } from "../../models/NewsData";
+import { INewsData } from "../../types/NewsData";
 import { isEmptyObject } from "../../tools/utils";
 import Button from "./Button";
 

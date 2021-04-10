@@ -1,6 +1,6 @@
 import { Big } from "big.js";
-import { IBalanceData } from "./../../context/balance/BalanceInterfaces";
-import { ITransactionData } from "./../../models/TransactionData";
+import { IBalanceData } from "../../context/balance/BalanceTypes";
+import { ITransactionData } from "./../../types/TransactionData";
 import {
   DEFAULT_FEE,
   INITIAL_TRANSACTION_AMOUNT,

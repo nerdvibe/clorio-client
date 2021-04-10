@@ -28,8 +28,8 @@ import { derivePublicKey } from "@o1labs/client-sdk";
 import { BROADCAST_TRANSACTION, GET_FEE, GET_NONCE } from "../../graphql/query";
 import { toast } from "react-toastify";
 import { LedgerContext } from "../../context/ledger/LedgerContext";
-import { IWalletData } from "../../models/WalletData";
-import { ITransactionData } from "../../models/TransactionData";
+import { IWalletData } from "../../types/WalletData";
+import { ITransactionData } from "../../types/TransactionData";
 import {
   checkBalanceAfterTransaction,
   checkMemoLength,
@@ -40,7 +40,7 @@ import {
   ModalStates,
   SendTXPageSteps,
 } from "./SendTXHelper";
-import { IFeeQuery } from "../../models/Fee";
+import { IFeeQuery } from "../../types/Fee";
 
 interface IProps {
   sessionData: IWalletData;

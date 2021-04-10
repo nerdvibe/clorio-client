@@ -2,7 +2,7 @@ import Hoc from "../components/UI/Hoc";
 import VerifyForm from "../components/forms/verifyMessage/VerifyMessageForm";
 import { verifyMessage } from "@o1labs/client-sdk";
 import { toast } from "react-toastify";
-import { IMessageToVerify } from "../models/MessageToVerify";
+import { IMessageToVerify } from "../types/MessageToVerify";
 
 const VerifyMessage = () => {
   /**
