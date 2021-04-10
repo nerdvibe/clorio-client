@@ -1,7 +1,7 @@
 import Big from "big.js";
 import {
   DEFAULT_VALID_UNTIL_FIELD,
-  ITEMS_PER_PAGE,
+  TRANSACTIONS_TABLE_ITEMS_PER_PAGE,
   MINIMUM_FEE,
 } from "./const";
 import { toNanoMINA } from "./mina";
@@ -49,8 +49,11 @@ export const getDefaultValidUntilField = () => {
  */
 export const getTotalPages = (totalItems = 0) => {
   if (totalItems) {
-    const pages = (totalItems / ITEMS_PER_PAGE).toFixed(0);
-    if (totalItems % ITEMS_PER_PAGE < 5 && totalItems % ITEMS_PER_PAGE !== 0) {
+    const pages = (totalItems / TRANSACTIONS_TABLE_ITEMS_PER_PAGE).toFixed(0);
+    if (
+      totalItems % TRANSACTIONS_TABLE_ITEMS_PER_PAGE < 5 &&
+      totalItems % TRANSACTIONS_TABLE_ITEMS_PER_PAGE !== 0
+    ) {
       return parseInt(pages) === 0 ? 1 : parseInt(pages) + 1;
     }
     return parseInt(pages) === 0 ? 1 : pages;
@@ -64,7 +67,7 @@ export const getTotalPages = (totalItems = 0) => {
  * @returns number
  */
 export const getPageFromOffset = (offset = 0) => {
-  return offset / ITEMS_PER_PAGE + 1;
+  return offset / TRANSACTIONS_TABLE_ITEMS_PER_PAGE + 1;
 };
 
 /**

@@ -9,7 +9,7 @@ import { copyToClipboard, toMINA } from "../../../tools";
 import ReactTooltip from "react-tooltip";
 import { BalanceContext } from "../../../context/balance/BalanceContext";
 import { GET_TICKER, GET_BALANCE } from "../../../graphql/query";
-import { DEFAULT_INTERVAL } from "../../../tools/const";
+import { DEFAULT_QUERY_REFRESH_INTERVAL } from "../../../tools";
 import {
   renderBalance,
   userBalanceToBTCValue,
@@ -40,7 +40,7 @@ const Balance = () => {
     },
     fetchPolicy: "network-only",
     skip: !address,
-    pollInterval: DEFAULT_INTERVAL,
+    pollInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
     onCompleted: data => {
       if (setBalanceContext) {
         setBalanceContext(data?.accountByKey?.balance || {});

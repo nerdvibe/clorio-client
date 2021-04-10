@@ -4,7 +4,6 @@ import StakeTable from "../../components/stake/stakeTable/StakeTable";
 import Hoc from "../../components/UI/Hoc";
 import ModalContainer from "../../components/modals/ModalContainer";
 import { useQuery, useMutation } from "@apollo/client";
-import { readSession } from "../../tools";
 import { useEffect } from "react";
 import PrivateKeyModal from "../../components/modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
@@ -16,16 +15,21 @@ import {
   isMinaAppOpen,
   signTransaction,
 } from "../../tools/ledger/ledger";
-import { getDefaultValidUntilField, toNanoMINA } from "../../tools";
+import {
+  getDefaultValidUntilField,
+  toNanoMINA,
+  DEFAULT_QUERY_REFRESH_INTERVAL,
+  TRANSACTIONS_TABLE_ITEMS_PER_PAGE,
+  MINIMUM_FEE,
+  MINIMUM_NONCE,
+  readSession,
+  createDelegationPaymentInputFromPayload,
+  createSignatureInputFromSignature,
+  feeOrDefault,
+} from "../../tools";
 import LedgerLoader from "../../components/UI/LedgerLoader";
 import CustomNonce from "../../components/modals/CustomNonce";
 import Button from "../../components/UI/Button";
-import {
-  DEFAULT_INTERVAL,
-  ITEMS_PER_PAGE,
-  MINIMUM_FEE,
-  MINIMUM_NONCE,
-} from "../../tools/const";
 import {
   BROADCAST_DELEGATION,
   GET_VALIDATORS,
@@ -33,12 +37,7 @@ import {
   GET_VALIDATORS_NEWS,
   GET_NONCE_AND_DELEGATE,
 } from "../../graphql/query";
-import {
-  createDelegationPaymentInputFromPayload,
-  createSignatureInputFromSignature,
-} from "../../tools/transactions";
 import { derivePublicKey, signStakeDelegation } from "@o1labs/client-sdk";
-import { feeOrDefault } from "../../tools/fees";
 import { toast } from "react-toastify";
 import { LedgerContext } from "../../context/ledger/LedgerContext";
 import { useContext } from "react";
@@ -99,7 +98,7 @@ export default ({ sessionData }: IProps) => {
   } = useQuery<INonceDelegateQueryResult>(GET_NONCE_AND_DELEGATE, {
     variables: { publicKey: sessionData.address },
     fetchPolicy: "network-only",
-    pollInterval: DEFAULT_INTERVAL,
+    pollInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
   });
   const latestNews =
     newsData && newsData?.news_validators.length > 0
@@ -333,7 +332,7 @@ export default ({ sessionData }: IProps) => {
    * @param {number} page Page number
    */
   const changeOffset = (page: number) => {
-    const data = (page - 1) * ITEMS_PER_PAGE;
+    const data = (page - 1) * TRANSACTIONS_TABLE_ITEMS_PER_PAGE;
     setOffset(data);
   };
 
@@ -404,7 +403,7 @@ export default ({ sessionData }: IProps) => {
           currentDelegateName={currentDelegateName}
           openCustomDelegateModal={openCustomDelegateModal}
           setOffset={changeOffset}
-          page={offset / ITEMS_PER_PAGE + 1}
+          page={offset / TRANSACTIONS_TABLE_ITEMS_PER_PAGE + 1}
         />
       </div>
       <ModalContainer
