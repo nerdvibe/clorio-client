@@ -4,7 +4,7 @@ import Hoc from "../UI/Hoc";
 import Input from "../UI/input/Input";
 import { isMinaAppOpen } from "../../tools/ledger";
 import { Row, Col } from "react-bootstrap";
-import Logo from "../UI/Logo";
+import Logo from "../UI/logo/Logo";
 import LedgerLoader from "../UI/LedgerLoader";
 import Footer from "../UI/Footer";
 import Button from "../UI/Button";

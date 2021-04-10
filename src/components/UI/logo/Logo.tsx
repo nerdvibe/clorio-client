@@ -1,4 +1,4 @@
-import LogoImage from "../../assets/Logo.svg";
+import LogoImage from "./assets/logo.svg";
 
 interface IProps {
   big?: boolean;

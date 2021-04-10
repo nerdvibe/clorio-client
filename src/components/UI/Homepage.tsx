@@ -1,7 +1,7 @@
 import { Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Button from "./Button";
-import Logo from "./Logo";
+import Logo from "./logo/Logo";
 
 const Homepage = () => (
   <div className="block-container no-bg real-full-page-container center no-margin">

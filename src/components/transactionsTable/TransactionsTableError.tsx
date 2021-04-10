@@ -1,7 +1,7 @@
-import ErrorImage from "../../assets/Error.png";
-import NoTransactionsOrNotAvailableImage from "../../assets/NoTransactionsOrNotAvailable.svg";
-import TxHistoryNotAvailableImage from "../../assets/TxHistoryNotAvailable.svg";
-import NoTransactions from "../../assets/NoTransactions.svg";
+import ErrorImage from "./assets/error.png";
+import NoTransactionsOrNotAvailableImage from "./assets/noTransactionsOrNotAvailable.svg";
+import TxHistoryNotAvailableImage from "./assets/txHistoryNotAvailable.svg";
+import NoTransactions from "./assets/noTransactions.svg";
 
 const TransactionsTableError = (balance: number, hasErrors: boolean) => {
   let imageToRender = hasErrors ? ErrorImage : NoTransactions;

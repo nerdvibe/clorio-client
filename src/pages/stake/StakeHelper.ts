@@ -10,16 +10,6 @@ export enum ModalStates {
   BROADCASTING = "broadcasting",
 }
 
-export interface INonceDelegateQueryResult {
-  accountByKey: {
-    delegate: {
-      publicKey: string;
-      name: string;
-    };
-    usableNonce: number;
-  };
-}
-
 export const initialDelegateData: IValidatorData = {
   publicKey: "",
 };

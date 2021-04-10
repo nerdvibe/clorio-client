@@ -2,7 +2,7 @@ import { Col, Row } from "react-bootstrap";
 import { Copy } from "react-feather";
 import { Link } from "react-router-dom";
 import Button from "../../components/UI/Button";
-import Logo from "../../components/UI/Logo";
+import Logo from "../../components/UI/logo/Logo";
 import { IKeypair } from "../../types/Keypair";
 import { copyToClipboard, downloadPaperWalletPDF } from "../../tools";
 

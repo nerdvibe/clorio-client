@@ -1,4 +1,4 @@
-import ErrorImage from "../../../assets/Error.svg";
+import ErrorImage from "./assets/error.svg";
 
 const StakeTableError = () => (
   <div className="block-container">
