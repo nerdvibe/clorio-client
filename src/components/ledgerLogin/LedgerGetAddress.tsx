@@ -3,7 +3,7 @@ import { Row, Col } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
 import Button from "../UI/Button";
 import Hoc from "../UI/Hoc";
-import Logo from "../UI/Logo";
+import Logo from "../UI/logo/Logo";
 import Footer from "../UI/Footer";
 import { useQuery } from "@apollo/client";
 import { storeSession } from "../../tools";

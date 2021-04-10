@@ -2,7 +2,7 @@ import { Nav } from "react-bootstrap";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { Cpu, LogIn, TrendingUp, Edit3, Check } from "react-feather";
-import Logo from "../Logo";
+import Logo from "../logo/Logo";
 import { clearSession } from "../../../tools";
 import { isRouteActiveClass, renderNetworkLabel } from "./SidebarHelper";
 import { INetworkData } from "../../../types/NetworkData";

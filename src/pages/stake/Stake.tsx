@@ -43,18 +43,14 @@ import { toast } from "react-toastify";
 import { LedgerContext } from "../../context/ledger/LedgerContext";
 import { useContext } from "react";
 import { BalanceContext } from "../../context/balance/BalanceContext";
-import {
-  checkBalance,
-  initialDelegateData,
-  INonceDelegateQueryResult,
-  ModalStates,
-} from "./StakeHelper";
+import { checkBalance, initialDelegateData, ModalStates } from "./StakeHelper";
 import { IValidatorData } from "../../components/stake/stakeTableRow/ValidatorDataInterface";
 import { IWalletData } from "../../types/WalletData";
 import { IValidatorsNewsQuery } from "../../types/NewsData";
 import { IFeeQuery } from "../../types/Fee";
 import { IBalanceContext } from "../../context/balance/BalanceTypes";
 import { ILedgerContext } from "../../context/ledger/LedgerTypes";
+import { INonceDelegateQueryResult } from "./StakeTypes";
 
 interface IProps {
   sessionData: IWalletData;

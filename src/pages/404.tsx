@@ -1,5 +1,5 @@
 import Hoc from "../components/UI/Hoc";
-import Logo from "../components/UI/Logo";
+import Logo from "../components/UI/logo/Logo";
 import { Row, Col } from "react-bootstrap";
 import Button from "../components/UI/Button";
 
