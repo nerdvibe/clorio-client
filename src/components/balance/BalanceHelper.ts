@@ -1,4 +1,4 @@
-import { toMINA, toBTC } from "../../../tools";
+import { toMINA, toBTC } from "../../tools";
 
 export interface ITicker {
   ticker: {
