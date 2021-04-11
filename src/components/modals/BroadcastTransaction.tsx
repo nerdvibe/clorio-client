@@ -1,4 +1,4 @@
-const BroadcastTransaction = () => (
+export const BroadcastTransaction = () => (
   <div className="mx-auto">
     <h2>Broadcasting your transaction</h2>
     <div className="v-spacer" />
@@ -8,5 +8,3 @@ const BroadcastTransaction = () => (
     <div className="v-spacer" />
   </div>
 );
-
-export default BroadcastTransaction;

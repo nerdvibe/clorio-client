@@ -62,7 +62,7 @@ export const getTotalPages = (totalItems = 0) => {
 };
 
 /**
- * Calculate page from offset
+ * Calculate page from the offset
  * @param {number} offset
  * @returns number
  */

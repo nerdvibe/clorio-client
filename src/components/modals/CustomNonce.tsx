@@ -6,7 +6,7 @@ interface IProps {
   setCustomNonce: (customNonce: number) => void;
 }
 
-const CustomNonce = ({ proceedHandler, setCustomNonce }: IProps) => (
+export const CustomNonce = ({ proceedHandler, setCustomNonce }: IProps) => (
   <div className="mx-auto">
     <h2>Insert nonce</h2>
     <div className="v-spacer" />
@@ -28,5 +28,3 @@ const CustomNonce = ({ proceedHandler, setCustomNonce }: IProps) => (
     </div>
   </div>
 );
-
-export default CustomNonce;

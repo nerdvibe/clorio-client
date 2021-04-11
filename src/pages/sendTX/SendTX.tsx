@@ -1,12 +1,14 @@
 import { useState, useEffect, useContext } from "react";
 import TransactionForm from "../../components/forms/transactionForm/TransactionForm";
-import ConfirmTransaction from "../../components/modals/ConfirmTransaction";
-import ConfirmLedgerTransaction from "../../components/modals/ConfirmLedgerTransaction";
+import {
+  ConfirmTransaction,
+  ConfirmLedgerTransaction,
+  CustomNonce,
+} from "../../components/modals";
 import Hoc from "../../components/UI/Hoc";
-import ModalContainer from "../../components/modals/ModalContainer";
-import BroadcastTransaction from "../../components/modals/BroadcastTransaction";
+import { ModalContainer, PrivateKeyModal } from "../../components/modals";
+import { BroadcastTransaction } from "../../components/modals";
 import { useQuery, useMutation } from "@apollo/client";
-import PrivateKeyModal from "../../components/modals/PrivateKeyModal";
 import { useHistory } from "react-router-dom";
 import {
   createAndSignLedgerTransaction,
@@ -21,15 +23,12 @@ import {
   MINIMUM_NONCE,
   readSession,
 } from "../../tools";
-import CustomNonce from "../../components/modals/CustomNonce";
 import { BalanceContext } from "../../context/balance/BalanceContext";
 import Spinner from "../../components/UI/Spinner";
 import { derivePublicKey } from "@o1labs/client-sdk";
 import { BROADCAST_TRANSACTION, GET_FEE, GET_NONCE } from "../../graphql/query";
 import { toast } from "react-toastify";
 import { LedgerContext } from "../../context/ledger/LedgerContext";
-import { IWalletData } from "../../types/WalletData";
-import { ITransactionData } from "../../types/TransactionData";
 import {
   checkBalanceAfterTransaction,
   checkMemoLength,
@@ -40,7 +39,7 @@ import {
   ModalStates,
   SendTXPageSteps,
 } from "./SendTXHelper";
-import { IFeeQuery } from "../../types/Fee";
+import { IFeeQuery, IWalletData, ITransactionData } from "../../types";
 import { IBalanceContext } from "../../context/balance/BalanceTypes";
 import { ILedgerContext } from "../../context/ledger/LedgerTypes";
 
@@ -49,6 +48,7 @@ interface IProps {
 }
 
 const SendTX = (props: IProps) => {
+  const history = useHistory();
   const [privateKey, setPrivateKey] = useState<string>("");
   const [sendTransactionFlag, setSendTransactionFlag] = useState<boolean>(
     false,
@@ -58,6 +58,9 @@ const SendTX = (props: IProps) => {
   const [senderAddress, setSenderAddress] = useState<string>("");
   const [customNonce, setCustomNonce] = useState<number>(MINIMUM_NONCE);
   const [showLoader, setShowLoader] = useState<boolean>(true);
+  const [transactionData, setTransactionData] = useState<ITransactionData>(
+    initialTransactionData,
+  );
   const [ledgerTransactionData, setLedgerTransactionData] = useState<string>(
     "",
   );
@@ -67,10 +70,6 @@ const SendTX = (props: IProps) => {
   const { balance, setShouldBalanceUpdate } = useContext<
     Partial<IBalanceContext>
   >(BalanceContext);
-  const [transactionData, setTransactionData] = useState<ITransactionData>(
-    initialTransactionData,
-  );
-  const history = useHistory();
   const {
     data: nonceData,
     refetch: nonceRefetch,
@@ -213,59 +212,21 @@ const SendTX = (props: IProps) => {
   };
 
   /**
-   * If nonce is available from back-end return it, otherwise return the custom nonce
+   * If nonce is available from the back-end return it, otherwise return the custom nonce
    * @returns number Nonce
    */
   const getNonce = () => {
-    return checkNonce(nonceData) && nonceData
+    return nonceData && checkNonce(nonceData)
       ? nonceData?.accountByKey.usableNonce
       : customNonce;
-  };
-
-  /**
-   * Broadcast transaction for non ledger wallet
-   */
-  const sendTransaction = () => {
-    setShowModal(ModalStates.BROADCASTING);
-    if (nonceData) {
-      try {
-        const actualNonce = getNonce();
-        const publicKey = derivePublicKey(privateKey);
-        const keypair = { privateKey, publicKey };
-        const signedPayment = signTransaction({
-          transactionData,
-          keypair,
-          sender: senderAddress,
-          actualNonce,
-        });
-        if (signedPayment) {
-          const signatureInput = createSignatureInputFromSignature(
-            signedPayment.signature,
-          );
-          const paymentInput = createPaymentInputFromPayload(
-            signedPayment.payload,
-          );
-          broadcastTransaction({
-            variables: { input: paymentInput, signature: signatureInput },
-          });
-          setSendTransactionFlag(true);
-        }
-      } catch (e) {
-        setShowModal("");
-        toast.error(
-          "Check if the receiver address and/or the private key are right",
-        );
-        stepBackwards();
-      }
-    }
   };
 
   /**
    * Get sender public key from the session data and store it inside the component state
    */
   const getAndSetAddress = async () => {
-    const walletAddress = await readSession();
-    setSenderAddress(walletAddress.address);
+    const wallet = await readSession();
+    setSenderAddress(wallet.address);
   };
 
   /**
@@ -309,6 +270,44 @@ const SendTX = (props: IProps) => {
     } catch (e) {
       toast.error(
         e.message || "An error occurred while loading hardware wallet",
+      );
+      stepBackwards();
+    }
+  };
+
+  /**
+   * Broadcast transaction without Ledger
+   */
+  const sendTransaction = () => {
+    setShowModal(ModalStates.BROADCASTING);
+    try {
+      if (nonceData) {
+        const actualNonce = getNonce();
+        const publicKey = derivePublicKey(privateKey);
+        const keypair = { privateKey, publicKey };
+        const signedPayment = signTransaction({
+          transactionData,
+          keypair,
+          sender: senderAddress,
+          actualNonce,
+        });
+        if (signedPayment) {
+          const signatureInput = createSignatureInputFromSignature(
+            signedPayment.signature,
+          );
+          const paymentInput = createPaymentInputFromPayload(
+            signedPayment.payload,
+          );
+          broadcastTransaction({
+            variables: { input: paymentInput, signature: signatureInput },
+          });
+          setSendTransactionFlag(true);
+        }
+      }
+    } catch (e) {
+      setShowModal("");
+      toast.error(
+        "Check if the receiver address and/or the private key are right",
       );
       stepBackwards();
     }

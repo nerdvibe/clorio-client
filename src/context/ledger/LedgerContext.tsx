@@ -1,7 +1,6 @@
 import { createContext, useState } from "react";
 import { MINIMUM_LEDGER_ACCOUNT_NUMBER } from "../../tools";
 import { ILedgerContext, ILedgerContextData } from "./LedgerTypes";
-export const LedgerContext = createContext<Partial<ILedgerContext>>({});
 
 interface IProps {
   children: React.ReactChild;
@@ -11,6 +10,8 @@ const initLedgerData: ILedgerContextData = {
   ledger: false,
   ledgerAccount: MINIMUM_LEDGER_ACCOUNT_NUMBER,
 };
+
+export const LedgerContext = createContext<Partial<ILedgerContext>>({});
 
 export const LedgerContextProvider = (props: IProps) => {
   const [ledgerData, setLedgerData] = useState<ILedgerContextData>(

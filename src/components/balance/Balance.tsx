@@ -2,21 +2,20 @@ import { useState, useEffect, useContext } from "react";
 import { Row, Col } from "react-bootstrap";
 import Button from "../UI/Button";
 import { Copy } from "react-feather";
-import { readSession } from "../../tools";
 import { useQuery } from "@apollo/client";
 import Avatar from "../../tools/avatar/avatar";
-import { copyToClipboard, toMINA } from "../../tools";
+import {
+  copyToClipboard,
+  toMINA,
+  DEFAULT_QUERY_REFRESH_INTERVAL,
+  readSession,
+} from "../../tools";
 import ReactTooltip from "react-tooltip";
 import { BalanceContext } from "../../context/balance/BalanceContext";
 import { GET_TICKER, GET_BALANCE } from "../../graphql/query";
-import { DEFAULT_QUERY_REFRESH_INTERVAL } from "../../tools";
-import {
-  renderBalance,
-  userBalanceToBTCValue,
-  ITicker,
-  IBalanceQueryResult,
-} from "./BalanceHelper";
+import { renderBalance, userBalanceToBTCValue } from "./BalanceHelper";
 import { IBalanceContext } from "../../context/balance/BalanceTypes";
+import { IBalanceQueryResult, ITicker } from "./BalanceTypes";
 
 const Balance = () => {
   const [address, setAddress] = useState<string>("");
@@ -48,19 +47,16 @@ const Balance = () => {
     },
   });
 
+  /**
+   * If the wallet address is empty get it from the store and set it into the component state
+   */
   useEffect(() => {
     if (!address) {
       getAndSetAddress();
     }
   }, [address]);
-
   useEffect(() => {
-    if (shouldBalanceUpdate) {
-      balanceRefetch({ publicKey: address });
-      if (setShouldBalanceUpdate) {
-        setShouldBalanceUpdate(false);
-      }
-    }
+    refetchBalance();
     // If balance is available set it inside the component state and the balance context
     if (balanceData?.accountByKey?.balance) {
       const { unconfirmedTotal } = balanceData.accountByKey.balance;
@@ -70,6 +66,18 @@ const Balance = () => {
       }
     }
   }, [shouldBalanceUpdate, balanceData]);
+
+  /**
+   * If balance update is required (shouldBalanceUpdate) refetch it
+   */
+  const refetchBalance = async () => {
+    if (shouldBalanceUpdate) {
+      await balanceRefetch({ publicKey: address });
+      if (setShouldBalanceUpdate) {
+        setShouldBalanceUpdate(false);
+      }
+    }
+  };
 
   /**
    * Get current wallet public key

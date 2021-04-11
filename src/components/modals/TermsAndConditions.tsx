@@ -2,9 +2,9 @@ import { useHistory } from "react-router";
 import Button from "../UI/Button";
 import { Check } from "react-feather";
 import Logo from "../UI/logo/Logo";
-import ModalContainer from "./ModalContainer";
+import { ModalContainer } from "./ModalContainer";
 
-const TermsAndConditions = () => {
+export const TermsAndConditions = () => {
   const session = sessionStorage.getItem("terms-and-conditions");
   const history = useHistory();
 
@@ -69,5 +69,3 @@ const TermsAndConditions = () => {
     </div>
   );
 };
-
-export default TermsAndConditions;

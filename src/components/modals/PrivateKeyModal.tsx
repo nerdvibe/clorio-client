@@ -9,7 +9,7 @@ interface IProps {
   confirmPrivateKey: () => void;
 }
 
-const PrivateKeyModal = ({
+export const PrivateKeyModal = ({
   subtitle,
   setPrivateKey,
   closeModal,
@@ -43,5 +43,3 @@ const PrivateKeyModal = ({
     </Row>
   </div>
 );
-
-export default PrivateKeyModal;

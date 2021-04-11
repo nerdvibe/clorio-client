@@ -17,7 +17,7 @@ import { IWalletIdData } from "../types/WalletIdData";
 
 interface IProps {
   toggleLoader: (state: boolean) => void;
-  network: INetworkData;
+  network?: INetworkData;
 }
 
 const Login = ({ toggleLoader, network }: IProps) => {
@@ -48,13 +48,6 @@ const Login = ({ toggleLoader, network }: IProps) => {
    * If Public key has been derived from MinaSDK, show loader and set session data
    */
   useEffect(() => {
-    const storeSessionAndRedirect = async (publicKey: string, id: number) => {
-      const success = await storeSession(publicKey, id, false, 0);
-      if (success) {
-        history.push("/overview");
-        toggleLoader(false);
-      }
-    };
     if (publicKey && publicKey !== "" && !userIdLoading && userIdData) {
       toggleLoader(true);
       const id =
@@ -62,6 +55,14 @@ const Login = ({ toggleLoader, network }: IProps) => {
       storeSessionAndRedirect(publicKey, id);
     }
   }, [userIdData]);
+
+  const storeSessionAndRedirect = async (publicKey: string, id: number) => {
+    const success = await storeSession(publicKey, id, false, 0);
+    if (success) {
+      history.push("/overview");
+      toggleLoader(false);
+    }
+  };
 
   /**
    * Set text from input inside component state
@@ -72,7 +73,7 @@ const Login = ({ toggleLoader, network }: IProps) => {
   };
 
   /**
-   * Uses MinaSDK to check if private key from input is valid
+   * Use MinaSDK to check if private key from input is valid
    */
   const checkCredentials = async () => {
     try {
@@ -86,7 +87,7 @@ const Login = ({ toggleLoader, network }: IProps) => {
   };
 
   /**
-   * If private key is not set or empty, disable button
+   * If the private key is empty disable button
    * @returns boolean
    */
   const disableButton = () => {

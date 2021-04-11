@@ -6,7 +6,7 @@ import { IMessageToVerify } from "../types/MessageToVerify";
 
 const VerifyMessage = () => {
   /**
-   * Using MinaSDK check if input message is valid
+   * Using MinaSDK to check if the input message is valid
    */
   const verifySignedMessage = (messageToVerify: IMessageToVerify) => {
     const { address, message, field, scalar } = messageToVerify;

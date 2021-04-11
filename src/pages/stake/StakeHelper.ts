@@ -1,6 +1,7 @@
 import { Big } from "big.js";
 import { IBalanceData } from "../../context/balance/BalanceTypes";
-import { IValidatorData } from "./../../components/stake/stakeTableRow/ValidatorDataInterface";
+import { IValidatorData } from "../../components/stake/stakeTableRow/ValidatorDataTypes";
+
 export enum ModalStates {
   PASSPHRASE = "passphrase",
   CONFIRM_DELEGATION = "confirm",

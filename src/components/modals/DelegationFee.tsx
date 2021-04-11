@@ -20,7 +20,7 @@ interface IProps {
   };
 }
 
-const DelegationFee = ({ proceedHandler, fees }: IProps) => {
+export const DelegationFee = ({ proceedHandler, fees }: IProps) => {
   const averageFee = feeOrDefault(fees?.estimatedFee?.txFees?.average || 0);
   const fastFee = feeOrDefault(fees?.estimatedFee?.txFees?.fast || 0);
   const [fee, setFee] = useState<number>(feeOrDefault(averageFee));
@@ -80,5 +80,3 @@ const DelegationFee = ({ proceedHandler, fees }: IProps) => {
     </div>
   );
 };
-
-export default DelegationFee;

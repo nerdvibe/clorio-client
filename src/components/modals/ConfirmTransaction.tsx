@@ -9,7 +9,7 @@ interface IProps {
   stepBackward: () => void;
 }
 
-const ConfirmTransaction = ({
+export const ConfirmTransaction = ({
   stepBackward,
   sendTransaction,
   transactionData,
@@ -62,5 +62,3 @@ const ConfirmTransaction = ({
     </div>
   );
 };
-
-export default ConfirmTransaction;

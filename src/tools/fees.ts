@@ -1,7 +1,7 @@
 import { DEFAULT_FEE } from "./const";
 
 /**
- * if a fee is 0, returns the default fee
+ * If the fee is 0 return the default fee
  * @param fee
  * @returns {string}
  */

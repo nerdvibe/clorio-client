@@ -7,7 +7,11 @@ interface IProps {
   name?: string;
 }
 
-const ConfirmDelegation = ({ name, closeModal, confirmDelegate }: IProps) => (
+export const ConfirmDelegation = ({
+  name,
+  closeModal,
+  confirmDelegate,
+}: IProps) => (
   <div className="mx-auto">
     <h2>Confirm Delegation</h2>
     <div className="v-spacer" />
@@ -30,5 +34,3 @@ const ConfirmDelegation = ({ name, closeModal, confirmDelegate }: IProps) => (
     </Row>
   </div>
 );
-
-export default ConfirmDelegation;

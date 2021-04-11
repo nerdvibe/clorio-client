@@ -27,49 +27,21 @@ const TransactionForm = ({
   setData,
   nextStep,
 }: IProps) => {
-  const [amount, setAmount] = useState<string | number>(
-    toMINA(transactionData.amount),
-  );
-  const [fee, setFee] = useState<string | number>(toMINA(transactionData.fee));
+  const [amount, setAmount] = useState<number>(toMINA(transactionData.amount));
+  const [fee, setFee] = useState<number>(toMINA(transactionData.fee));
 
   /**
-   * Set the average fee returned from the query
+   * If a fee button has been selected (average or fast) or a fee has been entered from the input
+   * set it inside the transaction data block,
+   * otherwise set the default fee.
+   * @param selectedFee string
    */
-  const setAverageFee = () => {
-    if (averageFee) {
-      setFee(fee);
-      setData({
-        ...transactionData,
-        fee: toNanoMINA(averageFee),
-      });
-    } else {
-      setDefaultFee();
-    }
-  };
-
-  /**
-   * Set the fast fee returned from the query
-   */
-  const setFastFee = () => {
-    if (fastFee) {
-      setFee(fastFee);
-      setData({
-        ...transactionData,
-        fee: toNanoMINA(fastFee),
-      });
-    } else {
-      setDefaultFee();
-    }
-  };
-
-  /**
-   * Set the default fee
-   */
-  const setDefaultFee = () => {
-    setFee(DEFAULT_FEE);
+  const setFeeHandler = (selectedFee: string | number) => {
+    const feeToSet = selectedFee || DEFAULT_FEE;
+    setFee(+feeToSet);
     setData({
       ...transactionData,
-      fee: toNanoMINA(DEFAULT_FEE),
+      fee: toNanoMINA(feeToSet),
     });
   };
 
@@ -89,35 +61,11 @@ const TransactionForm = ({
    * @param amount string
    */
   const amountHandler = (amount: string) => {
-    setAmount(amount);
-    if (amount) {
-      setData({
-        ...transactionData,
-        amount: toNanoMINA(amount),
-      });
-    } else {
-      setData({
-        ...transactionData,
-        amount: toNanoMINA(DEFAULT_AMOUNT),
-      });
-    }
-  };
-
-  /**
-   * Set the fee inside the transaction data block
-   * @param fee string
-   */
-  const feeHandler = (fee: string) => {
-    setFee(fee);
-    if (fee) {
-      return setData({
-        ...transactionData,
-        fee: toNanoMINA(fee),
-      });
-    }
-    return setData({
+    const amountToSet = amount || DEFAULT_AMOUNT;
+    setAmount(+amountToSet);
+    setData({
       ...transactionData,
-      fee: toNanoMINA(0),
+      amount: toNanoMINA(amountToSet),
     });
   };
 
@@ -179,21 +127,21 @@ const TransactionForm = ({
                       <Button
                         className="link-button align-end  no-padding"
                         text="Average"
-                        onClick={setAverageFee}
+                        onClick={() => setFeeHandler(averageFee)}
                       />
                     </Col>
                     <Col className="fee-label">
                       <Button
                         className="link-button align-end  no-padding"
                         text="Fast"
-                        onClick={setFastFee}
+                        onClick={() => setFeeHandler(fastFee)}
                       />
                     </Col>
                   </Row>
                   <Input
                     placeholder="Enter a fee "
                     value={fee}
-                    inputHandler={e => feeHandler(e.target.value)}
+                    inputHandler={e => setFeeHandler(e.target.value)}
                     type="number"
                   />
                 </Col>

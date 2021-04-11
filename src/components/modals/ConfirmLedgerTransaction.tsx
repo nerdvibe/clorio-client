@@ -2,7 +2,7 @@ import { Row, Col } from "react-bootstrap";
 import { ITransactionData } from "../../types/TransactionData";
 import { toLongMINA } from "../../tools";
 
-const ConfirmLedgerTransaction = ({
+export const ConfirmLedgerTransaction = ({
   amount,
   fee,
   receiverAddress,
@@ -44,5 +44,3 @@ const ConfirmLedgerTransaction = ({
     </div>
   </div>
 );
-
-export default ConfirmLedgerTransaction;

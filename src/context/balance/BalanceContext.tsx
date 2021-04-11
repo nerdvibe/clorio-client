@@ -1,8 +1,6 @@
 import { createContext, useState } from "react";
 import { IBalanceContext, IBalanceData } from "./BalanceTypes";
 
-export const BalanceContext = createContext<Partial<IBalanceContext>>({});
-
 interface IProps {
   children: React.ReactChild;
 }
@@ -14,6 +12,8 @@ const initialBalance = {
   total: "0",
   unconfirmedTotal: "0",
 };
+
+export const BalanceContext = createContext<Partial<IBalanceContext>>({});
 
 export const BalanceContextProvider = (props: IProps) => {
   const [shouldBalanceUpdate, setShouldBalanceUpdate] = useState<boolean>(

@@ -1,15 +1,22 @@
-import { useState } from "react";
-import NewsBanner from "../../components/UI/NewsBanner";
-import StakeTable from "../../components/stake/stakeTable/StakeTable";
-import Hoc from "../../components/UI/Hoc";
-import ModalContainer from "../../components/modals/ModalContainer";
-import { useQuery, useMutation } from "@apollo/client";
-import { useEffect } from "react";
-import PrivateKeyModal from "../../components/modals/PrivateKeyModal";
+import { useState, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import ConfirmDelegation from "../../components/modals/ConfirmDelegation";
-import CustomDelegation from "../../components/modals/CustomDelegation";
-import DelegationFee from "../../components/modals/DelegationFee";
+import { derivePublicKey, signStakeDelegation } from "@o1labs/client-sdk";
+import { toast } from "react-toastify";
+import NewsBanner from "../../components/UI/NewsBanner";
+import LedgerLoader from "../../components/UI/LedgerLoader";
+import Hoc from "../../components/UI/Hoc";
+import Button from "../../components/UI/Button";
+import { IValidatorData } from "../../components/stake/stakeTableRow/ValidatorDataTypes";
+import StakeTable from "../../components/stake/stakeTable/StakeTable";
+import {
+  ModalContainer,
+  PrivateKeyModal,
+  ConfirmDelegation,
+  ConfirmCustomDelegation,
+  DelegationFee,
+  CustomNonce,
+} from "../../components/modals";
+import { useQuery, useMutation } from "@apollo/client";
 import {
   createLedgerDelegationTransaction,
   isMinaAppOpen,
@@ -27,9 +34,6 @@ import {
   createSignatureInputFromSignature,
   feeOrDefault,
 } from "../../tools";
-import LedgerLoader from "../../components/UI/LedgerLoader";
-import CustomNonce from "../../components/modals/CustomNonce";
-import Button from "../../components/UI/Button";
 import {
   BROADCAST_DELEGATION,
   GET_VALIDATORS,
@@ -37,18 +41,14 @@ import {
   GET_VALIDATORS_NEWS,
   GET_NONCE_AND_DELEGATE,
 } from "../../graphql/query";
-import { derivePublicKey, signStakeDelegation } from "@o1labs/client-sdk";
-import { toast } from "react-toastify";
 import { LedgerContext } from "../../context/ledger/LedgerContext";
-import { useContext } from "react";
 import { BalanceContext } from "../../context/balance/BalanceContext";
 import { checkBalance, initialDelegateData, ModalStates } from "./StakeHelper";
-import { IValidatorData } from "../../components/stake/stakeTableRow/ValidatorDataInterface";
+import { IBalanceContext } from "../../context/balance/BalanceTypes";
+import { ILedgerContext } from "../../context/ledger/LedgerTypes";
 import { IWalletData } from "../../types/WalletData";
 import { IValidatorsNewsQuery } from "../../types/NewsData";
 import { IFeeQuery } from "../../types/Fee";
-import { IBalanceContext } from "../../context/balance/BalanceTypes";
-import { ILedgerContext } from "../../context/ledger/LedgerTypes";
 import { INonceDelegateQueryResult } from "./StakeTypes";
 
 interface IProps {
@@ -56,6 +56,7 @@ interface IProps {
 }
 
 export default ({ sessionData }: IProps) => {
+  const history = useHistory();
   const [delegateData, setDelegate] = useState<IValidatorData>(
     initialDelegateData,
   );
@@ -70,7 +71,6 @@ export default ({ sessionData }: IProps) => {
   const [selectedFee, setSelectedFee] = useState<number>(
     toNanoMINA(MINIMUM_FEE),
   );
-  const history = useHistory();
   const [ledgerTransactionData, setLedgerTransactionData] = useState<string>(
     "",
   );
@@ -117,19 +117,6 @@ export default ({ sessionData }: IProps) => {
     }
   });
 
-  // TODO : Example - To be removed
-  // const readNetworkFromStorage = async () => {
-  //   const networkData = await readNetworkData();
-  //   console.log(
-  //     "🚀 ~ file: Stake.js ~ line 120 ~ readNetworkFromStorage ~ networkData",
-  //     networkData
-  //   );
-  // };
-
-  // useEffect(() => {
-  //   readNetworkFromStorage();
-  // }, []);
-
   /**
    * If current delegate data arrived from the back-end, set it into the component state
    */
@@ -146,7 +133,7 @@ export default ({ sessionData }: IProps) => {
   useEffect(() => {
     if (isLedgerEnabled && !ledgerTransactionData) {
       if (showModal === ModalStates.PASSPHRASE) {
-        const transactionListener = signLedgerTransaction();
+        const transactionListener = signLedgerDelegation();
         // @ts-ignore
         return transactionListener.unsubscribe;
       }
@@ -173,8 +160,8 @@ export default ({ sessionData }: IProps) => {
    * Get sender public key and set it inside the component state
    */
   const getAndSetAddress = async () => {
-    const walletAddress = await readSession();
-    setAddress(walletAddress.address);
+    const wallet = await readSession();
+    setAddress(wallet.address);
   };
 
   const broadcastLedgerTransaction = () => {
@@ -198,52 +185,6 @@ export default ({ sessionData }: IProps) => {
       }
     } catch (e) {
       toast.error(e.message);
-    }
-  };
-
-  /**
-   * Sign stake delegation using MinaSDK through private key
-   */
-  const signStakeDelegate = () => {
-    try {
-      if (!delegateData?.publicKey) {
-        throw new Error("The Public key of the selected delegate is missing");
-      }
-      const actualNonce = getNonce();
-      checkBalance(selectedFee, balance);
-      const publicKey = derivePublicKey(privateKey);
-      const keypair = {
-        privateKey: privateKey,
-        publicKey: publicKey,
-      };
-      const stakeDelegation = {
-        to: delegateData.publicKey,
-        from: address,
-        fee: selectedFee,
-        nonce: actualNonce,
-      };
-      const signStake = signStakeDelegation(stakeDelegation, keypair);
-      if (signStake) {
-        const SignatureInput = createSignatureInputFromSignature(
-          signStake.signature,
-        );
-        const SendPaymentInput = createDelegationPaymentInputFromPayload(
-          signStake.payload,
-        );
-        broadcastDelegation({
-          variables: {
-            input: SendPaymentInput,
-            signature: SignatureInput,
-          },
-        });
-        setSendTransactionFlag(true);
-        setShowModal("");
-      }
-    } catch (e) {
-      toast.error(
-        e.message ||
-          "There was an error processing your delegation, please try again later.",
-      );
     }
   };
 
@@ -292,7 +233,7 @@ export default ({ sessionData }: IProps) => {
   };
 
   /**
-   * User confirmed delegate public key, proceeds to the fee insertion
+   * User confirmed delegate public key, proceed to the fee insertion
    * @param {string} delegate Delegate public key
    */
   const confirmCustomDelegate = (delegate: string) => {
@@ -346,16 +287,16 @@ export default ({ sessionData }: IProps) => {
   };
 
   /**
-   * Sign delegation through ledger and store the result inside the component state
+   * Sign delegation through the ledger and store the result inside the component state
    */
-  const signLedgerTransaction = async () => {
+  const signLedgerDelegation = async () => {
     try {
       if (!delegateData || delegateData?.publicKey) {
         throw new Error("Recipient Public key is not defined");
       }
+      checkBalance(selectedFee, balance);
       // Check if the mina app is open
       await isMinaAppOpen();
-      checkBalance(selectedFee, balance);
       const actualNonce = getNonce();
       const senderAccount = sessionData?.ledgerAccount || 0;
       const receiverAddress = delegateData?.publicKey;
@@ -378,7 +319,53 @@ export default ({ sessionData }: IProps) => {
   };
 
   /**
-   * If nonce is available from the query, return it, otherwise custom the nonce is returned
+   * Sign stake delegation using MinaSDK through private key
+   */
+  const signDelegation = () => {
+    try {
+      if (!delegateData?.publicKey) {
+        throw new Error("The Public key of the selected delegate is missing");
+      }
+      checkBalance(selectedFee, balance);
+      const actualNonce = getNonce();
+      const publicKey = derivePublicKey(privateKey);
+      const keypair = {
+        privateKey: privateKey,
+        publicKey: publicKey,
+      };
+      const stakeDelegation = {
+        to: delegateData.publicKey,
+        from: address,
+        fee: selectedFee,
+        nonce: actualNonce,
+      };
+      const signedTransaction = signStakeDelegation(stakeDelegation, keypair);
+      if (signedTransaction) {
+        const signatureInput = createSignatureInputFromSignature(
+          signedTransaction.signature,
+        );
+        const sendPaymentInput = createDelegationPaymentInputFromPayload(
+          signedTransaction.payload,
+        );
+        broadcastDelegation({
+          variables: {
+            input: sendPaymentInput,
+            signature: signatureInput,
+          },
+        });
+        setSendTransactionFlag(true);
+        setShowModal("");
+      }
+    } catch (e) {
+      toast.error(
+        e.message ||
+          "There was an error processing your delegation, please try again later.",
+      );
+    }
+  };
+
+  /**
+   * If nonce is available from the query, return it, otherwise  the custom nonce is returned
    * @returns number Nonce
    */
   const getNonce = () => {
@@ -444,7 +431,7 @@ export default ({ sessionData }: IProps) => {
           </div>
         ) : (
           <PrivateKeyModal
-            confirmPrivateKey={signStakeDelegate}
+            confirmPrivateKey={signDelegation}
             closeModal={closeModal}
             setPrivateKey={setPrivateKey}
             subtitle={
@@ -456,7 +443,7 @@ export default ({ sessionData }: IProps) => {
       <ModalContainer
         show={showModal === ModalStates.CUSTOM_DELEGATION}
         close={closeModal}>
-        <CustomDelegation
+        <ConfirmCustomDelegation
           closeModal={closeModal}
           confirmCustomDelegate={confirmCustomDelegate}
         />
