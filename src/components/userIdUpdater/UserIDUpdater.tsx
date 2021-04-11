@@ -4,16 +4,18 @@ import { readSession, updateUser } from "../../tools/db";
 import { GET_ID } from "../../graphql/query";
 import { IWalletData } from "../../types/WalletData";
 import { IWalletIdData } from "../../types/WalletIdData";
+import { DEFAULT_QUERY_REFRESH_INTERVAL } from "../../tools";
 
 interface IProps {
   sessionData: IWalletData;
 }
 
-const UpdateUserID = ({ sessionData }: IProps) => {
+const UserIDUpdater = ({ sessionData }: IProps) => {
   const [address, setAddress] = useState<string>("");
-  const { data: userID } = useQuery<IWalletIdData>(GET_ID, {
+  const { data: userID, stopPolling } = useQuery<IWalletIdData>(GET_ID, {
     variables: { publicKey: address },
     skip: !address,
+    pollInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
   });
 
   /**
@@ -34,10 +36,11 @@ const UpdateUserID = ({ sessionData }: IProps) => {
     if (userID?.public_keys && userID?.public_keys?.length > 0) {
       updateUser(address, userID.public_keys[0].id);
       setAddress("");
+      stopPolling();
     }
   });
 
   return <div />;
 };
 
-export default UpdateUserID;
+export default UserIDUpdater;

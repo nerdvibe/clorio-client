@@ -10,7 +10,7 @@ import {
 } from "./tools";
 import Spinner from "./components/UI/Spinner";
 import { useHistory } from "react-router-dom";
-import UpdateUserID from "./components/UI/UpdateUserID";
+import UserIDUpdater from "./components/userIdUpdater/UserIDUpdater";
 import { useQuery } from "@apollo/client";
 import Alert from "./components/UI/Alert";
 import Balance from "./components/balance/Balance";
@@ -99,6 +99,7 @@ const Layout = () => {
                 network={network.data}
                 clearSessionData={clearSessionData}
               />
+              <UserIDUpdater sessionData={sessionData} />
             </Col>
           )}
           {}
@@ -127,7 +128,6 @@ const Layout = () => {
           </Col>
         </Row>
         <Alert />
-        <UpdateUserID sessionData={sessionData} />
       </Container>
     </div>
   );
