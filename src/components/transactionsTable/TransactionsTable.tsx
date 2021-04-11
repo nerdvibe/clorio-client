@@ -36,11 +36,9 @@ const TransactionsTable = ({
       fetchPolicy: "network-only",
     },
   );
-  if (error) {
-    return TransactionsTableError(balance, true);
-  }
-  if (!transactions || transactions.user_commands.length === 0) {
-    return TransactionsTableError(balance, false);
+
+  if (error || !transactions || transactions.user_commands.length === 0) {
+    return TransactionsTableError(balance, error);
   }
 
   /**

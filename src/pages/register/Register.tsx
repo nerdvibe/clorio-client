@@ -11,7 +11,7 @@ import { IKeypair } from "../../types/Keypair";
 
 interface IProps {
   toggleLoader: () => void;
-  network: INetworkData;
+  network?: INetworkData;
 }
 
 const Register = ({ toggleLoader, network }: IProps) => {

@@ -27,8 +27,7 @@ const SignMessageForm = ({ submitHandler }: IProps) => {
    * @returns boolean
    */
   const signButtonStateHandler = () => {
-    const checkCondition = !message || !privateKey;
-    return checkCondition;
+    return !message || !privateKey;
   };
 
   /**

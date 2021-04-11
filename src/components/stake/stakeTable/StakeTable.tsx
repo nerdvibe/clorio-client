@@ -4,7 +4,7 @@ import StakeTableRow from "../stakeTableRow/StakeTableRow";
 import { Row, Col, Table } from "react-bootstrap";
 import StakeStatus from "../StakeStatus";
 import ReactTooltip from "react-tooltip";
-import { IValidatorData } from "../stakeTableRow/ValidatorDataInterface";
+import { IValidatorData } from "../stakeTableRow/ValidatorDataTypes";
 import StakeTableError from "./StakeTableError";
 import Spinner from "../../UI/Spinner";
 

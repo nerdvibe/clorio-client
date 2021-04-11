@@ -17,10 +17,11 @@ import Balance from "./components/balance/Balance";
 import { GET_NETWORK } from "./graphql/query";
 import { useContext } from "react";
 import { LedgerContext } from "./context/ledger/LedgerContext";
-import TermsAndConditions from "./components/modals/TermsAndConditions";
+import { TermsAndConditions } from "./components/modals";
 import { BalanceContextProvider } from "./context/balance/BalanceContext";
 import { IWalletData } from "./types/WalletData";
 import { ILedgerContext } from "./context/ledger/LedgerTypes";
+import { INetworkData } from "./types";
 
 const initialSessionData = {
   address: "",
@@ -32,15 +33,15 @@ const initialSessionData = {
 };
 
 const Layout = () => {
+  const history = useHistory();
+  const [showLoader, setShowLoader] = useState<boolean>(false);
   const [sessionData, setSessionData] = useState<IWalletData>(
     initialSessionData,
   );
-  const [showLoader, setShowLoader] = useState<boolean>(false);
   const { setLedgerContext } = useContext<Partial<ILedgerContext>>(
     LedgerContext,
   );
-  const history = useHistory();
-  const network = useQuery(GET_NETWORK, {
+  const { data: networkData } = useQuery<INetworkData>(GET_NETWORK, {
     onCompleted: async data => {
       if (data?.nodeInfo) {
         await storeNetworkData(data?.nodeInfo);
@@ -96,7 +97,7 @@ const Layout = () => {
             <Col md={3} lg={3} xl={2} id="sidebar-wrapper">
               <Sidebar
                 toggleLoader={toggleLoader}
-                network={network.data}
+                network={networkData}
                 clearSessionData={clearSessionData}
               />
               <UserIDUpdater sessionData={sessionData} />
@@ -119,7 +120,7 @@ const Layout = () => {
                     <Routes
                       sessionData={sessionData}
                       toggleLoader={toggleLoader}
-                      network={network.data}
+                      network={networkData}
                     />
                   </div>
                 </Spinner>

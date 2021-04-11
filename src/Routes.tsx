@@ -22,7 +22,7 @@ interface IProtectedRouteProps {
 
 interface IRoutesProps {
   sessionData: IWalletData;
-  network: INetworkData;
+  network?: INetworkData;
   toggleLoader: (state?: boolean) => void;
 }
 

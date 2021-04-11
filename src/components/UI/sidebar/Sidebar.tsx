@@ -8,7 +8,7 @@ import { isRouteActiveClass, renderNetworkLabel } from "./SidebarHelper";
 import { INetworkData } from "../../../types/NetworkData";
 
 interface IProps {
-  network: INetworkData;
+  network?: INetworkData;
   clearSessionData: () => void;
   toggleLoader: (state?: boolean) => void;
 }

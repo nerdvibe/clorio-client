@@ -25,7 +25,7 @@ const SignMessage = () => {
   );
 
   /**
-   * If fields are not empty, sign message and set result to component state
+   * If fields are not empty, sign the message and set the result inside the component state
    */
   const submitHandler = (messageToSign: IMessageToSign) => {
     try {

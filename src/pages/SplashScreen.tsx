@@ -6,7 +6,7 @@ import { INetworkData } from "../types/NetworkData";
 import { clearSession } from "../tools";
 
 interface IProps {
-  network: INetworkData;
+  network?: INetworkData;
 }
 
 const SplashScreen = (props: IProps) => {

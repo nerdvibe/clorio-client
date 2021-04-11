@@ -8,7 +8,10 @@ interface IProps {
   confirmCustomDelegate: (customDelegate: string) => void;
 }
 
-const ConfirmDelegation = ({ closeModal, confirmCustomDelegate }: IProps) => {
+export const ConfirmCustomDelegation = ({
+  closeModal,
+  confirmCustomDelegate,
+}: IProps) => {
   const [customDelegate, setCustomDelegate] = useState<string>("");
   return (
     <div className="mx-auto">
@@ -39,5 +42,3 @@ const ConfirmDelegation = ({ closeModal, confirmCustomDelegate }: IProps) => {
     </div>
   );
 };
-
-export default ConfirmDelegation;

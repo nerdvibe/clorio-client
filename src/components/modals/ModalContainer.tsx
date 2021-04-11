@@ -7,7 +7,12 @@ interface IProps {
   className?: string;
 }
 
-const ModalContainer = ({ close, children, show, className = "" }: IProps) => {
+export const ModalContainer = ({
+  close,
+  children,
+  show,
+  className = "",
+}: IProps) => {
   return show ? (
     <Hoc className="mx-auto first-place  animate__animated animate__fadeIn">
       <div className="modal-background " onClick={close} />
@@ -17,5 +22,3 @@ const ModalContainer = ({ close, children, show, className = "" }: IProps) => {
     <></>
   );
 };
-
-export default ModalContainer;
