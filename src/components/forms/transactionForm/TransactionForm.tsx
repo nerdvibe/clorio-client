@@ -3,8 +3,8 @@ import { Row, Col } from "react-bootstrap";
 import {
   DEFAULT_FEE,
   DEFAULT_AMOUNT,
-  toMINA,
   toNanoMINA,
+  toLongMINA,
 } from "../../../tools";
 import Button from "../../UI/Button";
 import Input from "../../UI/input/Input";
@@ -27,8 +27,10 @@ const TransactionForm = ({
   setData,
   nextStep,
 }: IProps) => {
-  const [amount, setAmount] = useState<number>(toMINA(transactionData.amount));
-  const [fee, setFee] = useState<number>(toMINA(transactionData.fee));
+  const [amount, setAmount] = useState<number>(
+    toLongMINA(transactionData.amount),
+  );
+  const [fee, setFee] = useState<number>(toLongMINA(transactionData.fee));
 
   /**
    * If a fee button has been selected (average or fast) or a fee has been entered from the input

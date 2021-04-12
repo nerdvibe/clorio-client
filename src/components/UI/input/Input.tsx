@@ -24,6 +24,7 @@ const Input = ({
         onChange={inputHandler}
         placeholder={placeholder}
         autoComplete="off"
+        min="0"
       />
       <span className="shadow-input1"></span>
     </div>

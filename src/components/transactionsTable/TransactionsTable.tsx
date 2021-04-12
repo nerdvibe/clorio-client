@@ -37,7 +37,10 @@ const TransactionsTable = ({
     },
   );
 
-  if (error || !transactions || transactions.user_commands.length === 0) {
+  if (
+    !loading &&
+    (error || !transactions || transactions.user_commands.length === 0)
+  ) {
     return TransactionsTableError(balance, error);
   }
 
@@ -82,9 +85,9 @@ const TransactionsTable = ({
   return (
     <div className="block-container">
       <div>
-        <ReactTooltip multiline={true} />
         <Spinner className={"full-width"} show={loading}>
           <div id="transaction-table">
+            <ReactTooltip multiline={true} />
             <Table
               className="animate__animated animate__fadeIn"
               id="rwd-table-large">
