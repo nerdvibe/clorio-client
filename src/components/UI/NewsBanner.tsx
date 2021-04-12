@@ -31,13 +31,13 @@ const NewsBanner = (props: INewsData) => {
           {link ? (
             <a href={link} target="_blank" rel="noreferrer">
               <Button
-                className={`${buttonStyle} mx-auto`}
+                className={`${buttonStyle()} mx-auto`}
                 text={cta || "Learn more"}
               />
             </a>
           ) : (
             <Button
-              className={`${buttonStyle} mx-auto`}
+              className={`${buttonStyle()} mx-auto`}
               text={cta || "Learn more"}
             />
           )}
