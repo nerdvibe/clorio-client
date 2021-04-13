@@ -190,6 +190,8 @@ const SendTX = (props: IProps) => {
 
   const closeModal = () => {
     setShowModal("");
+    setCustomNonce(0);
+    setPrivateKey("");
   };
 
   /**
@@ -199,7 +201,7 @@ const SendTX = (props: IProps) => {
     if (!privateKey) {
       toast.error("Please insert a private key");
     } else {
-      closeModal();
+      setShowModal("");
       setStep(SendTXPageSteps.CONFIRMATION);
     }
   };
@@ -209,6 +211,7 @@ const SendTX = (props: IProps) => {
    */
   const stepBackwards = () => {
     setStep(SendTXPageSteps.FORM);
+    setPrivateKey("");
   };
 
   /**
@@ -281,28 +284,26 @@ const SendTX = (props: IProps) => {
   const sendTransaction = () => {
     setShowModal(ModalStates.BROADCASTING);
     try {
-      if (nonceData) {
-        const actualNonce = getNonce();
-        const publicKey = derivePublicKey(privateKey);
-        const keypair = { privateKey, publicKey };
-        const signedPayment = signTransaction({
-          transactionData,
-          keypair,
-          sender: senderAddress,
-          actualNonce,
+      const actualNonce = getNonce();
+      const publicKey = derivePublicKey(privateKey);
+      const keypair = { privateKey, publicKey };
+      const signedPayment = signTransaction({
+        transactionData,
+        keypair,
+        sender: senderAddress,
+        actualNonce,
+      });
+      if (signedPayment) {
+        const signatureInput = createSignatureInputFromSignature(
+          signedPayment.signature,
+        );
+        const paymentInput = createPaymentInputFromPayload(
+          signedPayment.payload,
+        );
+        broadcastTransaction({
+          variables: { input: paymentInput, signature: signatureInput },
         });
-        if (signedPayment) {
-          const signatureInput = createSignatureInputFromSignature(
-            signedPayment.signature,
-          );
-          const paymentInput = createPaymentInputFromPayload(
-            signedPayment.payload,
-          );
-          broadcastTransaction({
-            variables: { input: paymentInput, signature: signatureInput },
-          });
-          setSendTransactionFlag(true);
-        }
+        setSendTransactionFlag(true);
       }
     } catch (e) {
       setShowModal("");

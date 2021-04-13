@@ -104,12 +104,15 @@ export default ({ sessionData }: IProps) => {
     newsData && newsData?.news_validators.length > 0
       ? newsData?.news_validators[0]
       : {};
-  const [broadcastDelegation] = useMutation(BROADCAST_DELEGATION, {
-    onError: error => {
-      toast.error(error.message);
-      return clearState();
+  const [broadcastDelegation, broadcastResult] = useMutation(
+    BROADCAST_DELEGATION,
+    {
+      onError: error => {
+        toast.error(error.message);
+        return clearState();
+      },
     },
-  });
+  );
 
   useEffect(() => {
     if (!address) {
@@ -144,7 +147,7 @@ export default ({ sessionData }: IProps) => {
    * If a transaction has been broadcasted, show a success alert and clear the component state
    */
   useEffect(() => {
-    if (sendTransactionFlag) {
+    if (sendTransactionFlag && broadcastResult?.data) {
       clearState();
       if (setShouldBalanceUpdate) {
         setShouldBalanceUpdate(true);
@@ -154,7 +157,7 @@ export default ({ sessionData }: IProps) => {
       history.push("/stake");
     }
     broadcastLedgerTransaction();
-  }, [sendTransactionFlag]);
+  }, [sendTransactionFlag, broadcastResult]);
 
   /**
    * Get sender public key and set it inside the component state
