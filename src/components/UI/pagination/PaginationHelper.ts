@@ -1,5 +1,6 @@
 /**
- * Generate the array containing the pages based on the current page
+ * Generate the array containing the pages based on the current page.
+ * Returns an array of at the most 5 elements where the current page is in the central position (if possible).
  * eg. page: 1 maxPages: 1 => [1]
  * eg. page: 2 maxPages: 3 => [1,2,3]
  * eg. page: 1 maxPages: 8 => [1,2,3,4,5]

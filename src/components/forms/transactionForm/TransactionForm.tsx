@@ -1,11 +1,6 @@
 import { useState } from "react";
 import { Row, Col } from "react-bootstrap";
-import {
-  DEFAULT_FEE,
-  DEFAULT_AMOUNT,
-  toNanoMINA,
-  toLongMINA,
-} from "../../../tools";
+import { toNanoMINA, toLongMINA } from "../../../tools";
 import Button from "../../UI/Button";
 import Input from "../../UI/input/Input";
 import { toast } from "react-toastify";
@@ -27,10 +22,12 @@ const TransactionForm = ({
   setData,
   nextStep,
 }: IProps) => {
-  const [amount, setAmount] = useState<number>(
+  const [amount, setAmount] = useState<number | string>(
     toLongMINA(transactionData.amount),
   );
-  const [fee, setFee] = useState<number>(toLongMINA(transactionData.fee));
+  const [fee, setFee] = useState<number | string>(
+    toLongMINA(transactionData.fee),
+  );
 
   /**
    * If a fee button has been selected (average or fast) or a fee has been entered from the input
@@ -39,11 +36,10 @@ const TransactionForm = ({
    * @param selectedFee string
    */
   const setFeeHandler = (selectedFee: string | number) => {
-    const feeToSet = selectedFee || DEFAULT_FEE;
-    setFee(+feeToSet);
+    setFee(selectedFee);
     setData({
       ...transactionData,
-      fee: toNanoMINA(feeToSet),
+      fee: toNanoMINA(selectedFee || 0),
     });
   };
 
@@ -63,11 +59,10 @@ const TransactionForm = ({
    * @param amount string
    */
   const amountHandler = (amount: string) => {
-    const amountToSet = amount || DEFAULT_AMOUNT;
-    setAmount(+amountToSet);
+    setAmount(amount);
     setData({
       ...transactionData,
-      amount: toNanoMINA(amountToSet),
+      amount: toNanoMINA(amount || 0),
     });
   };
 
