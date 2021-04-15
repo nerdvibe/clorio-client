@@ -9,7 +9,6 @@ import LedgerLoader from "../UI/LedgerLoader";
 import Footer from "../UI/Footer";
 import Button from "../UI/Button";
 import LedgerGetAddress from "./LedgerGetAddress";
-import ReactTooltip from "react-tooltip";
 import HelpHint from "../UI/HelpHint";
 import { toast } from "react-toastify";
 import { IProps } from "./LedgerLoginTypes";
@@ -138,7 +137,6 @@ const LedgerConnect = (props: IProps) => {
         value={accountNumber}
         inputHandler={accountNumberHandler}
       />
-      <ReactTooltip multiline={true} />
     </div>
   );
 

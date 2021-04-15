@@ -1,16 +1,16 @@
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
-import { feeOrDefault } from "../../tools/fees";
+import { feeOrDefault } from "../../../tools/fees";
 import {
   toMINA,
   toNanoMINA,
   feeGreaterThanMinimum,
   MINIMUM_FEE,
-} from "../../tools";
-import Button from "../UI/Button";
-import Input from "../UI/input/Input";
-import { IEstimatedFee } from "../../types/Fee";
+} from "../../../tools";
+import Button from "../Button";
+import Input from "../input/Input";
+import { IEstimatedFee } from "../../../types/Fee";
 
 interface IProps {
   proceedHandler: (fee: number) => void;

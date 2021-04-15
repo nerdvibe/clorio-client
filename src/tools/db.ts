@@ -16,7 +16,6 @@ export const storeSession = async (
     id: id,
     ledger: isLedgerEnabled,
     ledgerAccount,
-    coins: 0,
   };
   return db.insert(wallet);
 };
@@ -49,7 +48,6 @@ export const updateUser = async (address: string, id: number) => {
     address: address,
     id: id,
     ledger: walletData.ledger,
-    coins: 0,
   };
   await db.insert(wallet);
 };

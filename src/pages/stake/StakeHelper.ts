@@ -1,5 +1,5 @@
 import { Big } from "big.js";
-import { IBalanceData } from "../../context/balance/BalanceTypes";
+import { IBalanceData } from "../../contexts/balance/BalanceTypes";
 import { IValidatorData } from "../../components/stake/stakeTableRow/ValidatorDataTypes";
 
 export enum ModalStates {

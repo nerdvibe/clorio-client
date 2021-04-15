@@ -1,5 +1,5 @@
-import Button from "../UI/Button";
-import Input from "../UI/input/Input";
+import Button from "../Button";
+import Input from "../input/Input";
 
 interface IProps {
   proceedHandler: () => void;

@@ -1,7 +1,7 @@
 import { Col, Row } from "react-bootstrap";
-import Button from "../../components/UI/Button";
-import Input from "../../components/UI/input/Input";
-import Logo from "../../components/UI/logo/Logo";
+import Button from "../Button";
+import Input from "../input/Input";
+import Logo from "../logo/Logo";
 
 interface IProps {
   setValidationText: (text: string) => void;

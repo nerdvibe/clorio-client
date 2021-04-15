@@ -1,6 +1,6 @@
 import { Row, Col } from "react-bootstrap";
-import { ITransactionData } from "../../types/TransactionData";
-import { toLongMINA } from "../../tools";
+import { ITransactionData } from "../../../types/TransactionData";
+import { toLongMINA } from "../../../tools";
 
 export const ConfirmLedgerTransaction = ({
   amount,

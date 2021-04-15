@@ -4,5 +4,4 @@ export interface IWalletData{
   id: number,
   ledger: boolean,
   ledgerAccount:number,
-  coins: number
 }

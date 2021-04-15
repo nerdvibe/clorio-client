@@ -1,4 +1,4 @@
-import Hoc from "../../components/UI/Hoc";
+import Hoc from "../Hoc";
 import imageToRender from "./assets/notAvailableForLedger.svg";
 
 const SignMessageLedgerScreen = () => (

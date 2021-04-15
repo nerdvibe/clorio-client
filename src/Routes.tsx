@@ -4,7 +4,7 @@ const SendTX = React.lazy(() => import("./pages/sendTX/SendTX"));
 const Stake = React.lazy(() => import("./pages/stake/Stake"));
 const SplashScreen = React.lazy(() => import("./pages/SplashScreen"));
 const Login = React.lazy(() => import("./pages/Login"));
-const Register = React.lazy(() => import("./pages/register/Register"));
+const Register = React.lazy(() => import("./pages/registration/Registration"));
 import { Route, Redirect, Switch } from "react-router-dom";
 import Spinner from "./components/UI/Spinner";
 const LedgerLogin = React.lazy(() => import("./pages/LedgerLogin"));

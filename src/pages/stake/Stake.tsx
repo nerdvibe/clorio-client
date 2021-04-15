@@ -15,7 +15,7 @@ import {
   ConfirmCustomDelegation,
   DelegationFee,
   CustomNonce,
-} from "../../components/modals";
+} from "../../components/UI/modals";
 import { useQuery, useMutation } from "@apollo/client";
 import {
   createLedgerDelegationTransaction,
@@ -41,11 +41,11 @@ import {
   GET_VALIDATORS_NEWS,
   GET_NONCE_AND_DELEGATE,
 } from "../../graphql/query";
-import { LedgerContext } from "../../context/ledger/LedgerContext";
-import { BalanceContext } from "../../context/balance/BalanceContext";
+import { LedgerContext } from "../../contexts/ledger/LedgerContext";
+import { BalanceContext } from "../../contexts/balance/BalanceContext";
 import { checkBalance, initialDelegateData, ModalStates } from "./StakeHelper";
-import { IBalanceContext } from "../../context/balance/BalanceTypes";
-import { ILedgerContext } from "../../context/ledger/LedgerTypes";
+import { IBalanceContext } from "../../contexts/balance/BalanceTypes";
+import { ILedgerContext } from "../../contexts/ledger/LedgerTypes";
 import { IWalletData } from "../../types/WalletData";
 import { IValidatorsNewsQuery } from "../../types/NewsData";
 import { IFeeQuery } from "../../types/Fee";
