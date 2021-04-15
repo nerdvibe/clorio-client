@@ -4,7 +4,7 @@ import { jsPDF } from "jspdf";
 import { IKeypair } from "../../types";
 import ClorioLogoB64 from "./ClorioLogoB64.json";
 
-export const downloadPaperWalletPDF = (keypair:IKeypair) => {
+export const downloadPaperWalletPDF = (keypair: IKeypair) => {
   const doc = new jsPDF();
   doc.addImage(ClorioLogoB64, "PNG", 70, 20);
   doc.setFont("Helvetica");
