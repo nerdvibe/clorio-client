@@ -358,8 +358,10 @@ export default ({ sessionData }: IProps) => {
         });
         setSendTransactionFlag(true);
         setShowModal("");
+        setPrivateKey("");
       }
     } catch (e) {
+      setPrivateKey("");
       toast.error(
         e.message ||
           "There was an error processing your delegation, please try again later.",
