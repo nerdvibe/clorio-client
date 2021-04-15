@@ -7,8 +7,8 @@ import { ILedgerContext } from "../../contexts/ledger/LedgerTypes";
 import { LedgerContext } from "../../contexts/ledger/LedgerContext";
 import { useContext } from "react";
 import { IMessageToSign } from "../../types/MessageToSign";
-import SignatureMessageResult from "../../components/UI/sigmMessage/SignatureMessageResult";
-import SignMessageLedgerScreen from "../../components/UI/sigmMessage/SignMessageLedgerScreen";
+import SignatureMessageResult from "../../components/UI/signMessage/SignatureMessageResult";
+import SignMessageLedgerScreen from "../../components/UI/signMessage/SignMessageLedgerScreen";
 
 const SignMessage = () => {
   const [showResult, setShowResult] = useState<boolean>(false);
