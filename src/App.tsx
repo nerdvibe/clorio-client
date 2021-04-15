@@ -4,7 +4,7 @@ import Layout from "./Layout";
 import { ApolloProvider } from "@apollo/client";
 import { apolloClient } from "./graphql/api";
 import { clearSession } from "./tools";
-import { LedgerContextProvider } from "./context/ledger/LedgerContext";
+import { LedgerContextProvider } from "./contexts/ledger/LedgerContext";
 
 function App() {
   clearSession();

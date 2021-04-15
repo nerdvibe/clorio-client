@@ -16,16 +16,15 @@ import Alert from "./components/UI/Alert";
 import Balance from "./components/balance/Balance";
 import { GET_NETWORK } from "./graphql/query";
 import { useContext } from "react";
-import { LedgerContext } from "./context/ledger/LedgerContext";
-import { TermsAndConditions } from "./components/modals";
-import { BalanceContextProvider } from "./context/balance/BalanceContext";
+import { TermsAndConditions } from "./components/UI/modals";
+import { LedgerContext } from "./contexts/ledger/LedgerContext";
+import { ILedgerContext } from "./contexts/ledger/LedgerTypes";
+import { BalanceContextProvider } from "./contexts/balance/BalanceContext";
 import { IWalletData } from "./types/WalletData";
-import { ILedgerContext } from "./context/ledger/LedgerTypes";
 import { INetworkData } from "./types";
 
 const initialSessionData = {
   address: "",
-  coins: 0,
   id: -1,
   ledger: false,
   ledgerAccount: 0,

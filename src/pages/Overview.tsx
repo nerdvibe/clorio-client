@@ -3,7 +3,8 @@ import Hoc from "../components/UI/Hoc";
 import { useQuery } from "@apollo/client";
 import { useState } from "react";
 import { useContext } from "react";
-import { BalanceContext } from "../context/balance/BalanceContext";
+import { BalanceContext } from "../contexts/balance/BalanceContext";
+import { IBalanceContext } from "../contexts/balance/BalanceTypes";
 import {
   getPageFromOffset,
   TRANSACTIONS_TABLE_ITEMS_PER_PAGE,
@@ -17,7 +18,6 @@ import {
   IMempoolQueryResult,
 } from "../components/transactionsTable/TransactionsTypes";
 import { IHomeNewsQuery } from "../types/NewsData";
-import { IBalanceContext } from "../context/balance/BalanceTypes";
 
 interface IProps {
   sessionData: IWalletData;

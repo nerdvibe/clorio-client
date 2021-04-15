@@ -4,10 +4,11 @@ import {
   ConfirmTransaction,
   ConfirmLedgerTransaction,
   CustomNonce,
-} from "../../components/modals";
+  ModalContainer,
+  PrivateKeyModal,
+  BroadcastTransaction,
+} from "../../components/UI/modals";
 import Hoc from "../../components/UI/Hoc";
-import { ModalContainer, PrivateKeyModal } from "../../components/modals";
-import { BroadcastTransaction } from "../../components/modals";
 import { useQuery, useMutation } from "@apollo/client";
 import { useHistory } from "react-router-dom";
 import {
@@ -23,12 +24,10 @@ import {
   MINIMUM_NONCE,
   readSession,
 } from "../../tools";
-import { BalanceContext } from "../../context/balance/BalanceContext";
 import Spinner from "../../components/UI/Spinner";
 import { derivePublicKey } from "@o1labs/client-sdk";
 import { BROADCAST_TRANSACTION, GET_FEE, GET_NONCE } from "../../graphql/query";
 import { toast } from "react-toastify";
-import { LedgerContext } from "../../context/ledger/LedgerContext";
 import {
   checkBalanceAfterTransaction,
   checkMemoLength,
@@ -40,8 +39,10 @@ import {
   SendTXPageSteps,
 } from "./SendTXHelper";
 import { IFeeQuery, IWalletData, ITransactionData } from "../../types";
-import { IBalanceContext } from "../../context/balance/BalanceTypes";
-import { ILedgerContext } from "../../context/ledger/LedgerTypes";
+import { ILedgerContext } from "../../contexts/ledger/LedgerTypes";
+import { LedgerContext } from "../../contexts/ledger/LedgerContext";
+import { IBalanceContext } from "../../contexts/balance/BalanceTypes";
+import { BalanceContext } from "../../contexts/balance/BalanceContext";
 
 interface IProps {
   sessionData: IWalletData;

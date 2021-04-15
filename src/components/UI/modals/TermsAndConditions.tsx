@@ -1,7 +1,7 @@
 import { useHistory } from "react-router";
-import Button from "../UI/Button";
+import Button from "../Button";
 import { Check } from "react-feather";
-import Logo from "../UI/logo/Logo";
+import Logo from "../logo/Logo";
 import { ModalContainer } from "./ModalContainer";
 
 export const TermsAndConditions = () => {

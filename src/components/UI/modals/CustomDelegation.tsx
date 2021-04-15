@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Row, Col } from "react-bootstrap";
-import Button from "../UI/Button";
-import Input from "../UI/input/Input";
+import Button from "../Button";
+import Input from "../input/Input";
 
 interface IProps {
   closeModal: () => void;

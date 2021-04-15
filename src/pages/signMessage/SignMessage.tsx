@@ -3,12 +3,12 @@ import Hoc from "../../components/UI/Hoc";
 import SignMessageForm from "../../components/forms/signMessage/SignMessageForm";
 import { derivePublicKey, signed, signMessage } from "@o1labs/client-sdk";
 import { toast } from "react-toastify";
-import { LedgerContext } from "../../context/ledger/LedgerContext";
+import { ILedgerContext } from "../../contexts/ledger/LedgerTypes";
+import { LedgerContext } from "../../contexts/ledger/LedgerContext";
 import { useContext } from "react";
 import { IMessageToSign } from "../../types/MessageToSign";
-import SignatureMessageResult from "./SignatureMessageResult";
-import SignMessageLedgerScreen from "./SignMessageLedgerScreen";
-import { ILedgerContext } from "../../context/ledger/LedgerTypes";
+import SignatureMessageResult from "../../components/UI/sigmMessage/SignatureMessageResult";
+import SignMessageLedgerScreen from "../../components/UI/sigmMessage/SignMessageLedgerScreen";
 
 const SignMessage = () => {
   const [showResult, setShowResult] = useState<boolean>(false);

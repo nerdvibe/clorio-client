@@ -11,11 +11,11 @@ import {
   readSession,
 } from "../../tools";
 import ReactTooltip from "react-tooltip";
-import { BalanceContext } from "../../context/balance/BalanceContext";
 import { GET_TICKER, GET_BALANCE } from "../../graphql/query";
 import { renderBalance, userBalanceToBTCValue } from "./BalanceHelper";
-import { IBalanceContext } from "../../context/balance/BalanceTypes";
 import { IBalanceQueryResult, ITicker } from "./BalanceTypes";
+import { IBalanceContext } from "../../contexts/balance/BalanceTypes";
+import { BalanceContext } from "../../contexts/balance/BalanceContext";
 
 const Balance = () => {
   const [address, setAddress] = useState<string>("");

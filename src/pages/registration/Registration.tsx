@@ -5,8 +5,8 @@ import Footer from "../../components/UI/Footer";
 import { storeSession } from "../../tools";
 import { genKeys } from "@o1labs/client-sdk";
 import { INetworkData } from "../../types/NetworkData";
-import RegisterStep from "./RegistrationStep";
-import ValidationStep from "./ValidationStep";
+import RegisterStep from "../../components/UI/registration/RegistrationStep";
+import ValidationStep from "../../components/UI/registration/ValidationStep";
 import { IKeypair } from "../../types/Keypair";
 
 interface IProps {
