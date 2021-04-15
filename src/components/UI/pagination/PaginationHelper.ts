@@ -1,3 +1,4 @@
+// TODO : To be cleaned and simplified
 /**
  * Generate the array containing the pages based on the current page.
  * Returns an array of at the most 5 elements where the current page is in the central position (if possible).
