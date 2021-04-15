@@ -304,6 +304,7 @@ const SendTX = (props: IProps) => {
         broadcastTransaction({
           variables: { input: paymentInput, signature: signatureInput },
         });
+        setPrivateKey("");
         setSendTransactionFlag(true);
       }
     } catch (e) {
@@ -312,6 +313,7 @@ const SendTX = (props: IProps) => {
         "Check if the receiver address and/or the private key are right",
       );
       stepBackwards();
+      setPrivateKey("");
     }
   };
 
