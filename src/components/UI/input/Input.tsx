@@ -14,7 +14,8 @@ const Input = ({
           ? "small-wrap-input1 validate-input "
           : "wrap-input1 validate-input"
       }
-      data-validate="Name is required">
+      data-validate="Name is required"
+    >
       <span className="icon" />
       <input
         className="input1"

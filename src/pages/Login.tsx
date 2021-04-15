@@ -105,7 +105,8 @@ const Login = ({ toggleLoader, network }: IProps) => {
                   md={12}
                   lg={10}
                   xl={6}
-                  className="offset-lg-1 offset-xl-3 text-center">
+                  className="offset-lg-1 offset-xl-3 text-center"
+                >
                   <div className="mx-auto fit-content">
                     <Logo big={true} />
                   </div>

@@ -54,7 +54,8 @@ const VerifyForm = ({ verifyMessage }: IProps) => {
               <h3>Message</h3>
               <div
                 className="wrap-input1 validate-input"
-                data-validate="Name is required">
+                data-validate="Name is required"
+              >
                 <span className="icon" />
                 <Input
                   className="input1"
@@ -62,14 +63,15 @@ const VerifyForm = ({ verifyMessage }: IProps) => {
                   name="message"
                   value={message}
                   placeholder="Message "
-                  inputHandler={e => setMessage(e.currentTarget.value)}
+                  inputHandler={(e) => setMessage(e.currentTarget.value)}
                 />
               </div>
               <div className="v-spacer" />
               <h3>Public key</h3>
               <div
                 className="wrap-input1 validate-input"
-                data-validate="Name is required">
+                data-validate="Name is required"
+              >
                 <span className="icon" />
                 <Input
                   className="input1"
@@ -77,14 +79,15 @@ const VerifyForm = ({ verifyMessage }: IProps) => {
                   name="message"
                   value={address}
                   placeholder="Public key "
-                  inputHandler={e => setAddress(e.currentTarget.value)}
+                  inputHandler={(e) => setAddress(e.currentTarget.value)}
                 />
               </div>
               <div className="v-spacer" />
               <h3>Field</h3>
               <div
                 className="wrap-input1 validate-input"
-                data-validate="Name is required">
+                data-validate="Name is required"
+              >
                 <span className="icon" />
                 <Input
                   className="input1"
@@ -92,14 +95,15 @@ const VerifyForm = ({ verifyMessage }: IProps) => {
                   name="message"
                   value={field}
                   placeholder="Field "
-                  inputHandler={e => setField(e.currentTarget.value)}
+                  inputHandler={(e) => setField(e.currentTarget.value)}
                 />
               </div>
               <div className="v-spacer" />
               <h3>Scalar</h3>
               <div
                 className="wrap-input1 validate-input"
-                data-validate="Name is required">
+                data-validate="Name is required"
+              >
                 <span className="icon" />
                 <Input
                   className="input1"
@@ -107,7 +111,7 @@ const VerifyForm = ({ verifyMessage }: IProps) => {
                   name="message"
                   value={scalar}
                   placeholder="Scalar "
-                  inputHandler={e => setScalar(e.currentTarget.value)}
+                  inputHandler={(e) => setScalar(e.currentTarget.value)}
                 />
               </div>
               <div className="v-spacer" />

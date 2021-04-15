@@ -1,5 +1,5 @@
 export interface IWalletIdData {
-  public_keys: IWalletId[]
+  public_keys: IWalletId[];
 }
 
 interface IWalletId {

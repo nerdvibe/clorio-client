@@ -41,8 +41,8 @@ const StakeTable = ({
 
   const tableBody = () => {
     if (validators) {
-      const filteredValidators = validators.filter(el =>
-        el?.name?.toLowerCase().includes(searchBox),
+      const filteredValidators = validators.filter((el) =>
+        el?.name?.toLowerCase().includes(searchBox)
       );
       return (
         <tbody>
@@ -81,7 +81,8 @@ const StakeTable = ({
               md={5}
               lg={4}
               xl={3}
-              className="align-end small-screen-align-left">
+              className="align-end small-screen-align-left"
+            >
               <Button
                 className="link-button custom-delegate-button"
                 text="Custom delegation"
@@ -104,7 +105,9 @@ const StakeTable = ({
                         className="table-searchbar"
                         placeholder={"Filter..."}
                         value={searchBox}
-                        onChange={e => searchBoxHandler(e.currentTarget.value)}
+                        onChange={(e) =>
+                          searchBoxHandler(e.currentTarget.value)
+                        }
                         autoComplete="off"
                       />
                     </th>

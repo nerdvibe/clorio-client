@@ -58,7 +58,7 @@ interface IProps {
 export default ({ sessionData }: IProps) => {
   const history = useHistory();
   const [delegateData, setDelegate] = useState<IValidatorData>(
-    initialDelegateData,
+    initialDelegateData
   );
   const [currentDelegate, setCurrentDelegate] = useState<string>("");
   const [currentDelegateName, setCurrentDelegateName] = useState<string>("");
@@ -69,16 +69,16 @@ export default ({ sessionData }: IProps) => {
   const [offset, setOffset] = useState<number>(0);
   const [customNonce, setCustomNonce] = useState<number>(MINIMUM_NONCE);
   const [selectedFee, setSelectedFee] = useState<number>(
-    toNanoMINA(MINIMUM_FEE),
+    toNanoMINA(MINIMUM_FEE)
   );
   const [ledgerTransactionData, setLedgerTransactionData] = useState<string>(
-    "",
+    ""
   );
   const [sendTransactionFlag, setSendTransactionFlag] = useState<boolean>(
-    false,
+    false
   );
   const { isLedgerEnabled } = useContext<Partial<ILedgerContext>>(
-    LedgerContext,
+    LedgerContext
   );
   const { balance, setShouldBalanceUpdate } = useContext<
     Partial<IBalanceContext>
@@ -90,7 +90,7 @@ export default ({ sessionData }: IProps) => {
   } = useQuery(GET_VALIDATORS, { variables: { offset } });
   const { data: feeData } = useQuery<IFeeQuery>(GET_AVERAGE_FEE);
   const { data: newsData } = useQuery<IValidatorsNewsQuery>(
-    GET_VALIDATORS_NEWS,
+    GET_VALIDATORS_NEWS
   );
   const {
     data: nonceAndDelegateData,
@@ -107,11 +107,11 @@ export default ({ sessionData }: IProps) => {
   const [broadcastDelegation, broadcastResult] = useMutation(
     BROADCAST_DELEGATION,
     {
-      onError: error => {
+      onError: (error) => {
         toast.error(error.message);
         return clearState();
       },
-    },
+    }
   );
 
   useEffect(() => {
@@ -315,7 +315,7 @@ export default ({ sessionData }: IProps) => {
       setLedgerTransactionData(signature.signature);
     } catch (e) {
       toast.error(
-        e.message || "An error occurred while loading hardware wallet",
+        e.message || "An error occurred while loading hardware wallet"
       );
       setShowModal("");
     }
@@ -345,10 +345,10 @@ export default ({ sessionData }: IProps) => {
       const signedTransaction = signStakeDelegation(stakeDelegation, keypair);
       if (signedTransaction) {
         const signatureInput = createSignatureInputFromSignature(
-          signedTransaction.signature,
+          signedTransaction.signature
         );
         const sendPaymentInput = createDelegationPaymentInputFromPayload(
-          signedTransaction.payload,
+          signedTransaction.payload
         );
         broadcastDelegation({
           variables: {
@@ -364,7 +364,7 @@ export default ({ sessionData }: IProps) => {
       setPrivateKey("");
       toast.error(
         e.message ||
-          "There was an error processing your delegation, please try again later.",
+          "There was an error processing your delegation, please try again later."
       );
     }
   };
@@ -400,7 +400,8 @@ export default ({ sessionData }: IProps) => {
       </div>
       <ModalContainer
         show={showModal === ModalStates.CONFIRM_DELEGATION}
-        close={closeModal}>
+        close={closeModal}
+      >
         <ConfirmDelegation
           name={delegateData?.name}
           closeModal={closeModal}
@@ -409,7 +410,8 @@ export default ({ sessionData }: IProps) => {
       </ModalContainer>
       <ModalContainer
         show={showModal === ModalStates.NONCE}
-        close={closeNonceModal}>
+        close={closeNonceModal}
+      >
         <CustomNonce
           proceedHandler={confirmDelegate}
           setCustomNonce={setCustomNonce}
@@ -417,7 +419,8 @@ export default ({ sessionData }: IProps) => {
       </ModalContainer>
       <ModalContainer
         show={showModal === ModalStates.PASSPHRASE}
-        close={closeModal}>
+        close={closeModal}
+      >
         {isLedgerEnabled ? (
           <div className="mx-auto">
             <h2>Please confirm transaction </h2>
@@ -447,7 +450,8 @@ export default ({ sessionData }: IProps) => {
       </ModalContainer>
       <ModalContainer
         show={showModal === ModalStates.CUSTOM_DELEGATION}
-        close={closeModal}>
+        close={closeModal}
+      >
         <ConfirmCustomDelegation
           closeModal={closeModal}
           confirmCustomDelegate={confirmCustomDelegate}

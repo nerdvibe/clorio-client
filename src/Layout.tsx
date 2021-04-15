@@ -35,13 +35,13 @@ const Layout = () => {
   const history = useHistory();
   const [showLoader, setShowLoader] = useState<boolean>(false);
   const [sessionData, setSessionData] = useState<IWalletData>(
-    initialSessionData,
+    initialSessionData
   );
   const { setLedgerContext } = useContext<Partial<ILedgerContext>>(
-    LedgerContext,
+    LedgerContext
   );
   const { data: networkData } = useQuery<INetworkData>(GET_NETWORK, {
-    onCompleted: async data => {
+    onCompleted: async (data) => {
       if (data?.nodeInfo) {
         await storeNetworkData(data?.nodeInfo);
       }
@@ -108,7 +108,8 @@ const Layout = () => {
               isEmptyObject(sessionData)
                 ? "page-content-wrapper"
                 : "page-content-wrapper-scrollable"
-            }>
+            }
+          >
             <Container className="contentWrapper animate__animated animate__fadeIn">
               <BalanceContextProvider>
                 <Spinner show={showLoader}>

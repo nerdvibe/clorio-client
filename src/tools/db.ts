@@ -8,7 +8,7 @@ export const storeSession = async (
   address: string,
   id: number,
   isLedgerEnabled: boolean,
-  ledgerAccount = 0,
+  ledgerAccount = 0
 ) => {
   const wallet = {
     type: "wallet",

@@ -1,9 +1,9 @@
 export interface IBalanceData {
-  liquid: string|number;
-  liquidUnconfirmed: string|number;
-  locked: string|number;
-  total: string|number;
-  unconfirmedTotal: string|number;
+  liquid: string | number;
+  liquidUnconfirmed: string | number;
+  locked: string | number;
+  total: string | number;
+  unconfirmedTotal: string | number;
 }
 
 export interface IBalanceContext {

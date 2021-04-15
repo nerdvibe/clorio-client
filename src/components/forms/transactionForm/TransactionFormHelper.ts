@@ -9,18 +9,18 @@ import { toast } from "react-toastify";
  */
 export const checkFieldsAndProceed = (
   transactionData: ITransactionData,
-  nextStep: () => void,
+  nextStep: () => void
 ) => {
   const { amount, fee, receiverAddress } = transactionData;
   if (amount < MINIMUM_AMOUNT || amount === 0) {
     const message = `Amount ${toLongMINA(
-      amount,
+      amount
     )} is less than the minimum amount (${toLongMINA(MINIMUM_AMOUNT)})`;
     return toast.error(message);
   }
   if (fee < MINIMUM_FEE) {
     const message = `Fee ${toLongMINA(
-      fee,
+      fee
     )} is less than the minimum fee (${toLongMINA(MINIMUM_FEE)})`;
     return toast.error(message);
   }

@@ -47,7 +47,8 @@ const StakeTableValue = ({
                 <a
                   href={appendQuery(website, { ref: "clorio" })}
                   target="_blank"
-                  rel="noreferrer">
+                  rel="noreferrer"
+                >
                   {text}
                 </a>
               ) : null}

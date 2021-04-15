@@ -21,7 +21,7 @@ const SignMessage = () => {
     publicKey: "",
   });
   const { isLedgerEnabled } = useContext<Partial<ILedgerContext>>(
-    LedgerContext,
+    LedgerContext
   );
 
   /**

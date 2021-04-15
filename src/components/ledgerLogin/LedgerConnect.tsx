@@ -24,7 +24,7 @@ const LedgerConnect = (props: IProps) => {
   const [accountNumber, setAccountNumber] = useState<number>(0);
   const [proceedToLedger, setProceedToLedger] = useState<boolean>(false);
   const [browserIncompatible, setBrowserIncompatible] = useState<boolean>(
-    false,
+    false
   );
 
   /**
@@ -34,7 +34,7 @@ const LedgerConnect = (props: IProps) => {
   useEffect(() => {
     const timerCheck = setInterval(
       () => checkLedgerMinaAppOpen(),
-      IS_LEDGER_OPEN_TIME_DELAY,
+      IS_LEDGER_OPEN_TIME_DELAY
     );
     return () => {
       clearInterval(timerCheck);
@@ -76,7 +76,7 @@ const LedgerConnect = (props: IProps) => {
       setProceedToLedger(true);
     } else {
       toast.error(
-        `Account number should be between ${MINIMUM_LEDGER_ACCOUNT_NUMBER} and ${MAXIMUM_LEDGER_ACCOUNT_NUMBER}`,
+        `Account number should be between ${MINIMUM_LEDGER_ACCOUNT_NUMBER} and ${MAXIMUM_LEDGER_ACCOUNT_NUMBER}`
       );
     }
   };

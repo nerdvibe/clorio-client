@@ -1,4 +1,4 @@
-export interface IMessageToSign{
-  message:string,
-  privateKey:string
+export interface IMessageToSign {
+  message: string;
+  privateKey: string;
 }

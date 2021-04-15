@@ -31,7 +31,7 @@ export const signTransaction = ({
       nonce: actualNonce,
       memo,
     },
-    keypair,
+    keypair
   );
   return signedPayment;
 };
@@ -55,7 +55,7 @@ export const createPaymentInputFromPayload = (payload: ITransactionPayload) => {
 };
 
 export const createDelegationPaymentInputFromPayload = (
-  payload: ITransactionPayload,
+  payload: ITransactionPayload
 ) => {
   return {
     nonce: payload.nonce,

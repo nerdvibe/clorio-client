@@ -25,7 +25,7 @@ export const PrivateKeyModal = ({
     </h5>
     <div className="v-spacer" />
     <Input
-      inputHandler={e => setPrivateKey(e.currentTarget.value)}
+      inputHandler={(e) => setPrivateKey(e.currentTarget.value)}
       placeholder="Insert your private key"
     />
     <div className="v-spacer" />

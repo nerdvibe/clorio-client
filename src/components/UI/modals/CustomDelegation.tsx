@@ -20,7 +20,7 @@ export const ConfirmCustomDelegation = ({
       <h6 className="full-width">Insert Public key</h6>
       <div className="v-spacer" />
       <Input
-        inputHandler={e => {
+        inputHandler={(e) => {
           setCustomDelegate(e.currentTarget.value);
         }}
         placeholder="Insert public key"

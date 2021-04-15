@@ -35,15 +35,15 @@ const Sidebar = ({ network, clearSessionData }: IProps) => {
       <Nav
         className="col-md-12 d-none d-md-block sidebar level-zero"
         activeKey="/home"
-        onSelect={selectedKey => alert(`selected ${selectedKey}`)}>
+        onSelect={(selectedKey) => alert(`selected ${selectedKey}`)}
+      >
         <div className="sidebar-sticky" style={{ margin: "0 auto" }}>
           <Logo />
         </div>
         <hr />
         <Nav.Item
-          className={
-            "sidebar-item-container " + isRouteActiveClass("overview")
-          }>
+          className={"sidebar-item-container " + isRouteActiveClass("overview")}
+        >
           <Link to="/overview" className="sidebar-item selected-item">
             {" "}
             <span>
@@ -52,7 +52,8 @@ const Sidebar = ({ network, clearSessionData }: IProps) => {
           </Link>
         </Nav.Item>
         <Nav.Item
-          className={"sidebar-item-container " + isRouteActiveClass("send-tx")}>
+          className={"sidebar-item-container " + isRouteActiveClass("send-tx")}
+        >
           <Link to="/send-tx" className="sidebar-item">
             {" "}
             <span>
@@ -61,7 +62,8 @@ const Sidebar = ({ network, clearSessionData }: IProps) => {
           </Link>
         </Nav.Item>
         <Nav.Item
-          className={"sidebar-item-container " + isRouteActiveClass("stake")}>
+          className={"sidebar-item-container " + isRouteActiveClass("stake")}
+        >
           <Link to="/stake" className="sidebar-item">
             {" "}
             <span>
@@ -72,7 +74,8 @@ const Sidebar = ({ network, clearSessionData }: IProps) => {
         <Nav.Item
           className={
             "sidebar-item-container " + isRouteActiveClass("sign-message")
-          }>
+          }
+        >
           <Link to="/sign-message" className="sidebar-item">
             {" "}
             <span>
@@ -83,7 +86,8 @@ const Sidebar = ({ network, clearSessionData }: IProps) => {
         <Nav.Item
           className={
             "sidebar-item-container " + isRouteActiveClass("verify-message")
-          }>
+          }
+        >
           <Link to="/verify-message" className="sidebar-item">
             {" "}
             <span>
