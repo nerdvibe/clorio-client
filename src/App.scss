@@ -1,17 +1,17 @@
-@import './styles/__vars';
-@import './styles/__typo';
-@import './styles/__buttons';
-@import './styles/__misc';
-@import './styles/__loader';
-@import './styles/__dashboard';
-@import './styles/__table';
+@import "./styles/__vars";
+@import "./styles/__typo";
+@import "./styles/__buttons";
+@import "./styles/__misc";
+@import "./styles/__loader";
+@import "./styles/__dashboard";
+@import "./styles/__table";
 
 .App {
   background: $white;
   background-image: url("./assets/background.png");
-  background-size:     cover;
-  background-repeat:   no-repeat;
-  background-position: center center;  
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
   text-align: center;
   border-radius: 10px;
 }
@@ -51,13 +51,13 @@
   }
 }
 
-html{
+html {
   background: $gradient;
   height: 104vh;
   overflow-y: hidden;
 }
 
-body{
+body {
   background: none !important;
   position: relative;
   left: 1vw;

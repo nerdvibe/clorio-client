@@ -4,316 +4,322 @@ $medium-up: 600px;
 $large-up: 1200px;
 $global-radius: 4px;
 
-
-.th-first-item{
-	border-radius: 10px 0px 0px 0px;
-	width: 10%;
+.th-first-item {
+  border-radius: 10px 0px 0px 0px;
+  width: 10%;
 }
-.stake-th{
-	width: 33%;
-}
-
-.stake-fee-th{
-	width: 10%;
+.stake-th {
+  width: 33%;
 }
 
-.stake-staked-th{
-	width: 25%;
+.stake-fee-th {
+  width: 10%;
 }
 
-.th-last-item{
-	border-radius: 0px 10px 0px 0px;
+.stake-staked-th {
+  width: 20%;
 }
 
-.th-background{
-	background-color: $white;
-	border-top: 0px;
+.th-last-item {
+  border-radius: 0px 10px 0px 0px;
 }
 
-.table-icon{
-	width: 20%;
+.th-background {
+  background-color: $white;
+  border-top: 0px;
+}
+
+.table-icon {
+  width: 20%;
 }
 
 .is-boosted {
-	background: #fffdef;
+  background: #fffdef;
 }
 
-.table-hash{
-	a{
-		max-width: 90%;
-		padding-top: 3px;
-		text-overflow: ellipsis;
-		overflow: hidden;
-	}
-}
-
-th{
-	text-align: center !important;
-}
-
-#transaction-table{
-table {
-	border-collapse: collapse;
-	width: 100%;
-	float: left;
-	margin: 0 0 2em;
-	thead {
-		border-bottom: 3px solid $primary-color;
-		th {
-			padding: 0.35em 0 .35em;
-			font-weight: 400;
-			text-align: left;
-			font-size: 1.25em;
-		}
-		
-	}
-
-	tbody {
-		border-bottom: 3px solid $primary-color;
-		tr {
-			border-bottom: 2px solid #ddd;
-			td {
-				padding: .75em 0;
-
-				a {
-					color: $primary-color;
-					text-decoration: none;
-					display: inline-block;
-					margin: 0 .5em 0 0;
-					&:hover, &:active, &:focus {
-						color: darken($primary-color, 10%);
-						border: none;
-					}
-				}
-			}
-		}
-	}
-
-	tfoot {
-		td {
-			padding: 0.35em 0 .35em;
-
-			text-align: left;
-			font-size: 1.25em;
-		}
-	}
-}
-
-@media screen and (max-width: $large-up) {
-	.table-element {
-    max-width: 50%;
+.table-hash {
+  a {
+    max-width: 90%;
+    padding-top: 3px;
     text-overflow: ellipsis;
     overflow: hidden;
-	}
-
-	.force-right{
-		float: right !important;
-	}
-
-	.table-icon{
-		width: 20% !important;
-	}
-
-	.table-hash{
-		width: 70% !important;
-		max-width: 70% !important;
-		a{
-			max-width: 100%;
-			padding-top: 3px;
-			text-overflow: ellipsis;
-			overflow: hidden;
-		}
-	}
-
-	.stake-table-row{
-		td{
-			height: 80px;
-		}
-	}
-	.small-screen-stake-table-text{
-		margin: 0 auto;
-		text-align: center;
-		p,h5{
-			width: 100%;
-			text-align: center;
-		}
-		.small-walletImage{
-			top: 28px;
-		}
-	}
-
-	.stake-table-button{
-		max-width: 100%;
-		div{
-			text-align: center;
-			width: 100%;
-			margin-left: 0;
-		}
-	}
+  }
 }
 
-///RWD MIXIN BELOW
-@mixin rwd-first {
-	display: block;
-  
+th {
+  text-align: center !important;
+}
 
-  tbody {
-    border: none;
+#transaction-table {
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    float: left;
+    margin: 0 0 2em;
+    thead {
+      border-bottom: 3px solid $primary-color;
+      th {
+        padding: 0.35em 0 0.35em;
+        font-weight: 400;
+        text-align: left;
+        font-size: 1.25em;
+      }
+    }
+
+    tbody {
+      border-bottom: 3px solid $primary-color;
+      tr {
+        border-bottom: 2px solid #ddd;
+        td {
+          padding: 0.75em 0;
+
+          a {
+            color: $primary-color;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0 0.5em 0 0;
+            &:hover,
+            &:active,
+            &:focus {
+              color: darken($primary-color, 10%);
+              border: none;
+            }
+          }
+        }
+      }
+    }
+
+    tfoot {
+      td {
+        padding: 0.35em 0 0.35em;
+
+        text-align: left;
+        font-size: 1.25em;
+      }
+    }
   }
-		tbody, th, td, tr, tfoot {
-			display: block; 
-		}
 
-		thead {
-			display: none;
-		}
-		tr {
+  @media screen and (max-width: $large-up) {
+    .table-element {
+      max-width: 50%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .force-right {
+      float: right !important;
+    }
+
+    .table-icon {
+      width: 20% !important;
+    }
+
+    .table-hash {
+      width: 70% !important;
+      max-width: 70% !important;
+      a {
+        max-width: 100%;
+        padding-top: 3px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+
+    .stake-table-row {
+      td {
+        height: 80px;
+      }
+    }
+    .small-screen-stake-table-text {
+      margin: 0 auto;
+      text-align: center;
+      p,
+      h5 {
+        width: 100%;
+        text-align: center;
+      }
+      .small-walletImage {
+        top: 28px;
+      }
+    }
+
+    .stake-table-button {
+      max-width: 100%;
+      div {
+        text-align: center;
+        width: 100%;
+        margin-left: 0;
+      }
+    }
+  }
+
+  ///RWD MIXIN BELOW
+  @mixin rwd-first {
+    display: block;
+
+    tbody {
+      border: none;
+    }
+    tbody,
+    th,
+    td,
+    tr,
+    tfoot {
+      display: block;
+    }
+
+    thead {
+      display: none;
+    }
+    tr {
       float: left;
       width: 100%;
       margin: 0 0 1em;
-			border: 1px solid $gray-color;
-			box-shadow: 0px 2px 5px 0px $gray-color;
-			border-radius: $global-radius;
-			border-top: 5px solid $primary-color;
+      border: 1px solid $gray-color;
+      box-shadow: 0px 2px 5px 0px $gray-color;
+      border-radius: $global-radius;
+      border-top: 5px solid $primary-color;
 
-			td {
-				padding: .5em .5em .5em 50%;
-				float:left;
-				width: 100%;
-				&:before {
-					width: 100%;
-					display: block;
-					float: left;
-					padding: .5em .5em .5em 0;
-					clear: both;
-					margin: -.5em 0 0 -100%;
-					font-size: 1.125em;
+      td {
+        padding: 0.5em 0.5em 0.5em 50%;
+        float: left;
+        width: 100%;
+        &:before {
+          width: 100%;
+          display: block;
+          float: left;
+          padding: 0.5em 0.5em 0.5em 0;
+          clear: both;
+          margin: -0.5em 0 0 -100%;
+          font-size: 1.125em;
+        }
+      }
+    }
 
-				}
-			}
-		}
-
-		tr:nth-of-type(even) {
-			//background: $gray-color;
-			td {
-				
-				&:before {
-					
-				}
-			}
-		}
-}
-
-@mixin rwd-second {
-	display: table;
-	border: none;
-
-  tbody {
-    border-bottom: 3px solid $primary-color;
+    tr:nth-of-type(even) {
+      //background: $gray-color;
+      td {
+        &:before {
+        }
+      }
+    }
   }
-	th, td {
-		display: table-cell; 
-	}
 
-	tr {
-		display: table-row;
-		border: none;
-		border-bottom: 1px solid #eee;
-    float: none;
-    margin: 0;
-		box-shadow: none;
+  @mixin rwd-second {
+    display: table;
+    border: none;
 
-		td {
-			padding: .75em 0 0.75em .25em;
+    tbody {
+      border-bottom: 3px solid $primary-color;
+    }
+    th,
+    td {
+      display: table-cell;
+    }
+
+    tr {
+      display: table-row;
+      border: none;
+      border-bottom: 1px solid #eee;
       float: none;
-      width: auto;
+      margin: 0;
+      box-shadow: none;
 
-			&:before {
-				padding: 0 !important;
-			}
-		}
-	}
+      td {
+        padding: 0.75em 0 0.75em 0.25em;
+        float: none;
+        width: auto;
 
-	thead {
-		display: table-header-group;
-	}
+        &:before {
+          padding: 0 !important;
+        }
+      }
+    }
 
-	tbody,tfoot {
-		display: table-row-group;
-	}
+    thead {
+      display: table-header-group;
+    }
 
-	tr:nth-of-type(even) {
-		background:none;
-		td {
-			
-			&:before {
-				
-			}
-		}
-	}
-}
+    tbody,
+    tfoot {
+      display: table-row-group;
+    }
 
-%responive-tables {
-	@include rwd-first;
+    tr:nth-of-type(even) {
+      background: none;
+      td {
+        &:before {
+        }
+      }
+    }
+  }
 
-	@media screen and (min-width: $medium-up) { 
-		@include rwd-second;
-		
-	}
-}
+  %responive-tables {
+    @include rwd-first;
 
-%responive-tables-large {
-	@include rwd-first;
+    @media screen and (min-width: $medium-up) {
+      @include rwd-second;
+    }
+  }
 
-	@media screen and (min-width: $large-up) { 
-		@include rwd-second;
-		
-	}
-}
+  %responive-tables-large {
+    @include rwd-first;
 
-@mixin responive-tables($headings...) {
-	$list: $headings;
+    @media screen and (min-width: $large-up) {
+      @include rwd-second;
+    }
+  }
 
-	@each $list-headings in $list {
-		$i: index($list, $list-headings);
-		tbody tr td:nth-of-type(#{$i}):before { 
-			content: $list-headings; 
-		}
-		
-		@media screen and (min-width: $medium-up) { 
-			tbody tr td:nth-of-type(#{$i}):before { 
-				content: ''; 
-			}
-		}
+  @mixin responive-tables($headings...) {
+    $list: $headings;
 
-	}
-}
+    @each $list-headings in $list {
+      $i: index($list, $list-headings);
+      tbody tr td:nth-of-type(#{$i}):before {
+        content: $list-headings;
+      }
 
-@mixin responive-tables-large($headings...) {
-	$list: $headings;
+      @media screen and (min-width: $medium-up) {
+        tbody tr td:nth-of-type(#{$i}):before {
+          content: "";
+        }
+      }
+    }
+  }
 
-	@each $list-headings in $list {
-		$i: index($list, $list-headings);
-		tbody tr td:nth-of-type(#{$i}):before { 
-			content: $list-headings; 
-		}
-		
-		@media screen and (min-width: $large-up) { 
-			tbody tr td:nth-of-type(#{$i}):before { 
-				content: ''; 
-			}
-		}
+  @mixin responive-tables-large($headings...) {
+    $list: $headings;
 
-	}
-}
+    @each $list-headings in $list {
+      $i: index($list, $list-headings);
+      tbody tr td:nth-of-type(#{$i}):before {
+        content: $list-headings;
+      }
 
-#rwd-table {
-	@extend %responive-tables;
-	@include responive-tables('Heading Col 1', 'Heading Col 2', 'Heading Col 3');
-}
+      @media screen and (min-width: $large-up) {
+        tbody tr td:nth-of-type(#{$i}):before {
+          content: "";
+        }
+      }
+    }
+  }
 
-#rwd-table-large {
-	@extend %responive-tables-large;
-	@include responive-tables-large('', 'Heading Col 2', 'Heading Col 3','Heading Col 4');
-}
+  #rwd-table {
+    @extend %responive-tables;
+    @include responive-tables(
+      "Heading Col 1",
+      "Heading Col 2",
+      "Heading Col 3"
+    );
+  }
+
+  #rwd-table-large {
+    @extend %responive-tables-large;
+    @include responive-tables-large(
+      "",
+      "Heading Col 2",
+      "Heading Col 3",
+      "Heading Col 4"
+    );
+  }
 }

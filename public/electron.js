@@ -1,4 +1,4 @@
-const { app, BrowserWindow ,ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const { MinaLedgerJS } = require("mina-ledger-js");
 const TransportNodeHid = require("@ledgerhq/hw-transport-node-hid-singleton");
 
@@ -70,4 +70,3 @@ ipcMain.handle("ledger-sign-transaction", async (event, transaction) => {
   const instance = new MinaLedgerJS(transport);
   return await instance.signTransaction(transaction);
 });
-
