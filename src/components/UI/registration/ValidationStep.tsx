@@ -28,7 +28,7 @@ const ValidationStep = ({
       <div className="wrap-input1 validate-input">
         <h5 className="full-width-align-center">
           <Input
-            inputHandler={e => setValidationText(e.currentTarget.value)}
+            inputHandler={(e) => setValidationText(e.currentTarget.value)}
             placeholder="Private key"
           />
         </h5>

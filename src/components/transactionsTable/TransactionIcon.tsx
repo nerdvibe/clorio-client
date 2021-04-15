@@ -4,7 +4,7 @@ const TransactionIcon = (
   txType: string,
   sender: string,
   receiver: string,
-  userAddress: string,
+  userAddress: string
 ) => {
   if (txType === "delegation") {
     return <Check data-tip="Delegation TX" />;

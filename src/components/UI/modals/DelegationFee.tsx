@@ -35,7 +35,7 @@ export const DelegationFee = ({ proceedHandler, fees }: IProps) => {
       return;
     }
     const message = `Fee ${fee} is less than the minimum fee (${toMINA(
-      MINIMUM_FEE,
+      MINIMUM_FEE
     )})`;
     toast.error(message);
   };
@@ -67,7 +67,7 @@ export const DelegationFee = ({ proceedHandler, fees }: IProps) => {
         <Input
           placeholder="Enter a fee "
           value={fee}
-          inputHandler={e => setFee(+e.target.value)}
+          inputHandler={(e) => setFee(+e.target.value)}
           type="number"
         />
       </div>

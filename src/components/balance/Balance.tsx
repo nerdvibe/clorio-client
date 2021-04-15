@@ -26,7 +26,7 @@ const Balance = () => {
     setShouldBalanceUpdate,
   } = useContext<Partial<IBalanceContext>>(BalanceContext);
   const { data: tickerData, loading: tickerLoading } = useQuery<ITicker>(
-    GET_TICKER,
+    GET_TICKER
   );
   const {
     data: balanceData,
@@ -40,7 +40,7 @@ const Balance = () => {
     fetchPolicy: "network-only",
     skip: !address,
     pollInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
-    onCompleted: data => {
+    onCompleted: (data) => {
       if (setBalanceContext) {
         setBalanceContext(data?.accountByKey?.balance || {});
       }
@@ -129,7 +129,8 @@ const Balance = () => {
                     balanceData?.accountByKey?.balance?.liquid
                       ? toMINA(balanceData.accountByKey.balance.liquid)
                       : 0
-                  } Mina`}>
+                  } Mina`}
+                >
                   {renderBalance({ balanceData, balanceLoading, userBalance })}
                 </h5>
               </div>
@@ -177,7 +178,8 @@ const Balance = () => {
           <Row>
             <Col
               md={5}
-              className="full-width-align-center small-screen-wallet-value">
+              className="full-width-align-center small-screen-wallet-value"
+            >
               <div className="inline-block-element full-width-align-center">
                 <h6 className="secondaryText full-width-align-center">
                   Your balance
@@ -192,7 +194,8 @@ const Balance = () => {
                     balanceData?.accountByKey?.balance?.liquid
                       ? toMINA(balanceData.accountByKey.balance.liquid)
                       : 0
-                  } Mina`}>
+                  } Mina`}
+                >
                   {renderBalance({ balanceData, balanceLoading, userBalance })}
                 </h5>
               </div>

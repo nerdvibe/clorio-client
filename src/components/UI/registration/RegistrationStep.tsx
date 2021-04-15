@@ -19,7 +19,8 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => (
         md={12}
         lg={10}
         xl={8}
-        className="offset-lg-1 offset-xl-2 text-center">
+        className="offset-lg-1 offset-xl-2 text-center"
+      >
         <div id="element-to-print">
           <div className="v-spacer-big pdf-only" />
           <div className="v-spacer-big pdf-only" />
@@ -30,7 +31,8 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => (
           <h4 className="full-width-align-center">This is your address</h4>
           <div
             className="wrap-input1 validate-input"
-            data-validate="Name is required">
+            data-validate="Name is required"
+          >
             <h5 className="full-width-align-center">
               {keys.publicKey}
               <Button
@@ -56,7 +58,8 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => (
         <div className="v-spacer" />
         <div
           className="wrap-input1 validate-input no-print"
-          data-validate="Name is required">
+          data-validate="Name is required"
+        >
           <p className="full-width-align-center">
             This is the only time you will see the passphrase and the private
             key. <br />
@@ -64,7 +67,8 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => (
             you will not be able to access your funds anymore! <br />
             <a
               className="link-button"
-              onClick={() => downloadPaperWalletPDF(keys)}>
+              onClick={() => downloadPaperWalletPDF(keys)}
+            >
               Download a copy here
             </a>
           </p>

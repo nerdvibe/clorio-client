@@ -61,4 +61,4 @@
 
 // export default Entropy;
 
-export default {}
+export default {};

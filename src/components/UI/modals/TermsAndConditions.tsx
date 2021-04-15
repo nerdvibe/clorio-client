@@ -40,7 +40,8 @@ export const TermsAndConditions = () => {
             <a
               href="https://discord.gg/4GnkRqwsDK"
               target="_blank"
-              rel="noreferrer">
+              rel="noreferrer"
+            >
               WeStake.Club&apos;s discord
             </a>
             .
@@ -50,7 +51,8 @@ export const TermsAndConditions = () => {
             <a
               href="https://clor.io/terms-and-contions"
               target="_blank"
-              rel="noreferrer">
+              rel="noreferrer"
+            >
               terms and conditions
             </a>{" "}
             and you accept that{" "}

@@ -22,7 +22,8 @@ const StakeTableRow = ({ element, index, toggleModal }: IProps) => {
     <tr
       key={index}
       className={`stake-table-row ${boostedClassName}`}
-      data-tip={supportTooltip}>
+      data-tip={supportTooltip}
+    >
       <StakeTableValue
         avatar={
           <div className="walletImageContainer small-image inline-element">

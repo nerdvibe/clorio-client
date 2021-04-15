@@ -62,7 +62,7 @@ export const checkBalanceAfterTransaction = ({
     .toNumber();
   if (balanceAfterTransaction < 0) {
     throw new Error(
-      "Your are trying to send too many Mina, please check your balance",
+      "Your are trying to send too many Mina, please check your balance"
     );
   }
 };

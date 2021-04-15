@@ -33,7 +33,8 @@ const Pagination = ({ page, total, setOffset }: IProps) => {
         <p
           key={index}
           onClick={() => changePage(index)}
-          className={page === index ? "active" : ""}>
+          className={page === index ? "active" : ""}
+        >
           {index}
         </p>
       ))}

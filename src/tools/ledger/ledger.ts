@@ -40,7 +40,7 @@ export const isMinaAppOpen = async () => {
     }
     if (ledgerNameVersion.name !== "Mina") {
       throw new Error(
-        "Please make sure that you have the Mina app open on the Ledger device",
+        "Please make sure that you have the Mina app open on the Ledger device"
       );
     }
 
@@ -102,7 +102,7 @@ export const emojiToUnicode = (str: string) => {
         "\\u" +
         e.charCodeAt(1).toString(16)
       );
-    },
+    }
   );
 };
 
@@ -149,7 +149,7 @@ interface ISignture {
 }
 
 export const createLedgerSignatureInputFromSignature = (
-  signature: ISignture,
+  signature: ISignture
 ) => {
   return {
     scalar: signature.scalar,
@@ -221,15 +221,15 @@ export const createLedgerDelegationTransaction = ({
 export const escapeUnicode = (str: string) => {
   // @ts-expect-error
   return [...str]
-    .map(c =>
+    .map((c) =>
       /^[\x00-\x7F]$/.test(c)
         ? c
         : c
             .split("")
             .map(
-              (a: any) => "\\u" + a.charCodeAt().toString(16).padStart(4, "0"),
+              (a: any) => "\\u" + a.charCodeAt().toString(16).padStart(4, "0")
             )
-            .join(""),
+            .join("")
     )
     .join("");
 };

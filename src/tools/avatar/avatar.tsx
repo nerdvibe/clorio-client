@@ -13,10 +13,10 @@ const getShape = (
   size: any,
   gradient: any,
   sizeScale = 1,
-  boxSize: any,
+  boxSize: any
 ) => {
   const sizes = [1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1].map(
-    x => x * size * sizeScale,
+    (x) => x * size * sizeScale
   );
 
   let coord = [];
@@ -77,13 +77,13 @@ export default class Avatar extends React.Component<any> {
         addressHashChunks[2],
         newSize,
         color2,
-        addressHashChunks[6] / 200000,
+        addressHashChunks[6] / 200000
       ),
       getShape(
         addressHashChunks[3],
         newSize,
         color3,
-        addressHashChunks[7] / 200000,
+        addressHashChunks[7] / 200000
       ),
       // getShape(addressHashChunks[3], newSize, color5, (addressHashChunks[8] / 200000)),
       // getShape(addressHashChunks[3], newSize, color6, (addressHashChunks[9] / 200000))
@@ -95,7 +95,8 @@ export default class Avatar extends React.Component<any> {
         xmlns="http://www.w3.org/2000/svg"
         style={{
           borderRadius: "50%",
-        }}>
+        }}
+      >
         <circle cx="40" cy="40" r="40" fill="#F4A261" />{" "}
         {shapes.map((shape, i) => (
           <shape.component {...shape.props} key={i} />

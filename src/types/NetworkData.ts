@@ -1,10 +1,10 @@
 export interface INodeInfo {
-  height:number,
-  name:string,
-  network:string,
-  version:number
+  height: number;
+  name: string;
+  network: string;
+  version: number;
 }
 
 export interface INetworkData {
-  nodeInfo:INodeInfo
+  nodeInfo: INodeInfo;
 }

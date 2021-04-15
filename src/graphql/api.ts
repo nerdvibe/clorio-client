@@ -9,7 +9,7 @@ import {
 
 console.log(
   process.env.REACT_APP_GQL_SERVER,
-  "process.env.REACT_APP_GQL_SERVER",
+  "process.env.REACT_APP_GQL_SERVER"
 );
 
 const httpLink = ApolloLink.from([
@@ -17,8 +17,8 @@ const httpLink = ApolloLink.from([
     if (graphQLErrors)
       graphQLErrors.forEach(({ message, locations, path }) =>
         console.log(
-          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-        ),
+          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+        )
       );
     if (networkError) console.log(`[Network error]: ${networkError}`);
   }),

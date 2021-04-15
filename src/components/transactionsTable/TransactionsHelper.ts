@@ -35,7 +35,7 @@ export const mempoolQueryRowToTableRow = (mempoolRow: IMempoolQueryData) => {
  * @returns ITransactionRowData
  */
 export const transactionQueryRowToTableRow = (
-  transactionRow: ITransactionQueryData,
+  transactionRow: ITransactionQueryData
 ) => {
   const { timestamp } = transactionRow.blocks_user_commands[0].block;
   const id = transactionRow.hash;

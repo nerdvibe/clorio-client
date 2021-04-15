@@ -15,7 +15,7 @@ export const LedgerContext = createContext<Partial<ILedgerContext>>({});
 
 export const LedgerContextProvider = (props: IProps) => {
   const [ledgerData, setLedgerData] = useState<ILedgerContextData>(
-    initLedgerData,
+    initLedgerData
   );
 
   const setLedgerContext = (data: ILedgerContextData) => {

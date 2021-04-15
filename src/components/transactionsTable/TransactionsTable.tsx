@@ -34,7 +34,7 @@ const TransactionsTable = ({
       variables: { user: userId },
       skip: !userId,
       fetchPolicy: "network-only",
-    },
+    }
   );
 
   if (
@@ -74,7 +74,7 @@ const TransactionsTable = ({
         })}
         {transactions?.user_commands?.map((row, index) => {
           const rowData: ITransactionRowData = transactionQueryRowToTableRow(
-            row,
+            row
           );
           return TransactionRow(rowData, index, userAddress, false);
         })}
@@ -90,7 +90,8 @@ const TransactionsTable = ({
             <ReactTooltip multiline={true} />
             <Table
               className="animate__animated animate__fadeIn"
-              id="rwd-table-large">
+              id="rwd-table-large"
+            >
               <thead>{renderTableHeader()}</thead>
               {renderTableBody()}
             </Table>
@@ -100,7 +101,7 @@ const TransactionsTable = ({
           page={page}
           setOffset={setOffset}
           total={getTotalPages(
-            totalData?.user_commands_aggregate?.aggregate?.count || 0,
+            totalData?.user_commands_aggregate?.aggregate?.count || 0
           )}
         />
       </div>

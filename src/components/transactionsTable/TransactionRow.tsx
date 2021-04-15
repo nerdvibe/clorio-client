@@ -15,7 +15,7 @@ const TransactionRow = (
   }: ITransactionRowData,
   index: number,
   userAddress: string,
-  isMempool: boolean,
+  isMempool: boolean
 ) => {
   const timeDistance =
     !isMempool && timestamp
@@ -50,11 +50,13 @@ const TransactionRow = (
       </td>
       <td
         className="table-element table-hash"
-        data-tip={memo ? `Memo: ${memo}` : null}>
+        data-tip={memo ? `Memo: ${memo}` : null}
+      >
         <a
           href={`${process.env.REACT_APP_EXPLORER_URL}/${urlPath}/${id}`}
           target="_blank"
-          rel="noreferrer">
+          rel="noreferrer"
+        >
           {id}
         </a>
       </td>
@@ -70,7 +72,8 @@ const TransactionRow = (
       <td
         className="table-element"
         style={{ color: amountColor }}
-        data-tip={fee}>
+        data-tip={fee}
+      >
         {humanAmount} Mina
       </td>
     </tr>

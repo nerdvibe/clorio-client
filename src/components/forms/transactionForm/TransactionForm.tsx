@@ -23,10 +23,10 @@ const TransactionForm = ({
   nextStep,
 }: IProps) => {
   const [amount, setAmount] = useState<number | string>(
-    toLongMINA(transactionData.amount),
+    toLongMINA(transactionData.amount)
   );
   const [fee, setFee] = useState<number | string>(
-    toLongMINA(transactionData.fee),
+    toLongMINA(transactionData.fee)
   );
 
   /**
@@ -97,13 +97,13 @@ const TransactionForm = ({
               <Input
                 value={transactionData.receiverAddress}
                 placeholder="Enter address "
-                inputHandler={e => addressHandler(e.currentTarget.value)}
+                inputHandler={(e) => addressHandler(e.currentTarget.value)}
               />
               <h3>Memo</h3>
               <Input
                 value={transactionData.memo}
                 placeholder="Enter memo "
-                inputHandler={e => memoHandler(e.currentTarget.value)}
+                inputHandler={(e) => memoHandler(e.currentTarget.value)}
               />
               <Row>
                 <Col md={12} xl={6}>
@@ -111,7 +111,7 @@ const TransactionForm = ({
                   <Input
                     placeholder="Enter an amount "
                     value={amount}
-                    inputHandler={e => amountHandler(e.target.value)}
+                    inputHandler={(e) => amountHandler(e.target.value)}
                     type="number"
                   />
                 </Col>
@@ -138,7 +138,7 @@ const TransactionForm = ({
                   <Input
                     placeholder="Enter a fee "
                     value={fee}
-                    inputHandler={e => setFeeHandler(e.target.value)}
+                    inputHandler={(e) => setFeeHandler(e.target.value)}
                     type="number"
                   />
                 </Col>

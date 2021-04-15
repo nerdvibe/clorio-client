@@ -1,4 +1,3 @@
-
 // LOADER
 .lds-ellipsis {
   display: inline-block;
@@ -56,15 +55,14 @@
   }
 }
 
-@media print
-{    
-    .no-print, .no-print *
-    {
-        display: none !important;
-    }
+@media print {
+  .no-print,
+  .no-print * {
+    display: none !important;
+  }
 }
 
-a{
+a {
   color: $red !important;
 }
 
@@ -153,11 +151,11 @@ a{
   }
 }
 
-.hidden{
+.hidden {
   display: none;
 }
 
-.show{
+.show {
   display: inline;
 }
 
@@ -165,7 +163,7 @@ a{
   display: inline;
 }
 
-.show-mob{
+.show-mob {
   display: none;
 }
 
@@ -173,17 +171,17 @@ a{
   .hidden-mob {
     display: none;
   }
-  
-  .show-mob{
+
+  .show-mob {
     display: inline;
   }
 }
 
-.show-on-load{
+.show-on-load {
   display: none;
 }
 
-table{
-  table-layout: fixed; 
+table {
+  table-layout: fixed;
   width: 100%;
 }

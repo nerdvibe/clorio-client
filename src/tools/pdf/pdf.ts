@@ -13,7 +13,7 @@ export const downloadPaperWalletPDF = (keypair: IKeypair) => {
     105,
     65,
     "Access the power of the Mina Protocol Blockchain.",
-    "center",
+    "center"
   );
   doc.setFontSize(15);
   doc.text(105, 80, "This is your public key", "center");
@@ -29,68 +29,68 @@ export const downloadPaperWalletPDF = (keypair: IKeypair) => {
     20,
     160,
     "Whoever has this private key can access the Mina tokens contained in this wallet.",
-    "left",
+    "left"
   );
   doc.text(
     20,
     165,
     "Make sure that you store this paper wallet carefully and you make a backup of it.",
-    "left",
+    "left"
   );
   doc.text(
     20,
     170,
     "If you loose this credentials there is no way to get them back.",
-    "left",
+    "left"
   );
   doc.text(
     20,
     185,
     "By using this software you accept the terms and conditions.",
-    "left",
+    "left"
   );
   doc.text(
     20,
     190,
     'This software is provided "as is", without warranty of any kind, express or implied,',
-    "left",
+    "left"
   );
   doc.text(
     20,
     195,
     "including but not limited to the warranties of merchantability,",
-    "left",
+    "left"
   );
   doc.text(
     20,
     200,
     " fitness for a particular purpose and noninfringement.",
-    "left",
+    "left"
   );
   doc.text(
     20,
     205,
     "In no event shall the authors or copyright holders be liable for any claim,",
-    "left",
+    "left"
   );
   doc.text(
     20,
     210,
     " damages or other liability, whether in an action of contract, tort or otherwise,",
-    "left",
+    "left"
   );
   doc.text(
     20,
     215,
     "arising from, out of or in connection with the software or the use or other dealings in the software.",
-    "left",
+    "left"
   );
   doc.setFontSize(10);
   doc.text(
     105,
     290,
     "~Clorio is a wallet offered by Carbonara from WeStake.Club and is not developed by O(1)Labs.",
-    "center",
+    "center"
   );
   doc.save("Clorio-Paperwallet.pdf");
 };

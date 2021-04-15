@@ -52,7 +52,7 @@ const SendTX = (props: IProps) => {
   const history = useHistory();
   const [privateKey, setPrivateKey] = useState<string>("");
   const [sendTransactionFlag, setSendTransactionFlag] = useState<boolean>(
-    false,
+    false
   );
   const [step, setStep] = useState<number>(SendTXPageSteps.FORM);
   const [showModal, setShowModal] = useState<string>("");
@@ -60,13 +60,13 @@ const SendTX = (props: IProps) => {
   const [customNonce, setCustomNonce] = useState<number>(MINIMUM_NONCE);
   const [showLoader, setShowLoader] = useState<boolean>(true);
   const [transactionData, setTransactionData] = useState<ITransactionData>(
-    initialTransactionData,
+    initialTransactionData
   );
   const [ledgerTransactionData, setLedgerTransactionData] = useState<string>(
-    "",
+    ""
   );
   const { isLedgerEnabled } = useContext<Partial<ILedgerContext>>(
-    LedgerContext,
+    LedgerContext
   );
   const { balance, setShouldBalanceUpdate } = useContext<
     Partial<IBalanceContext>
@@ -80,7 +80,7 @@ const SendTX = (props: IProps) => {
     fetchPolicy: "network-only",
   });
   const feeQuery = useQuery<IFeeQuery>(GET_FEE, {
-    onCompleted: data => {
+    onCompleted: (data) => {
       if (data?.estimatedFee?.txFees?.average) {
         setTransactionData({
           ...transactionData,
@@ -96,11 +96,11 @@ const SendTX = (props: IProps) => {
   const [broadcastTransaction, broadcastResult] = useMutation(
     BROADCAST_TRANSACTION,
     {
-      onError: error => {
+      onError: (error) => {
         toast.error(error.message);
         clearState();
       },
-    },
+    }
   );
 
   /**
@@ -273,7 +273,7 @@ const SendTX = (props: IProps) => {
       setLedgerTransactionData(signature.signature);
     } catch (e) {
       toast.error(
-        e.message || "An error occurred while loading hardware wallet",
+        e.message || "An error occurred while loading hardware wallet"
       );
       stepBackwards();
     }
@@ -296,10 +296,10 @@ const SendTX = (props: IProps) => {
       });
       if (signedPayment) {
         const signatureInput = createSignatureInputFromSignature(
-          signedPayment.signature,
+          signedPayment.signature
         );
         const paymentInput = createPaymentInputFromPayload(
-          signedPayment.payload,
+          signedPayment.payload
         );
         broadcastTransaction({
           variables: { input: paymentInput, signature: signatureInput },
@@ -310,7 +310,7 @@ const SendTX = (props: IProps) => {
     } catch (e) {
       setShowModal("");
       toast.error(
-        "Check if the receiver address and/or the private key are right",
+        "Check if the receiver address and/or the private key are right"
       );
       stepBackwards();
       setPrivateKey("");
@@ -342,7 +342,8 @@ const SendTX = (props: IProps) => {
           </div>
           <ModalContainer
             show={showModal === ModalStates.PASSPHRASE}
-            close={closeModal}>
+            close={closeModal}
+          >
             <PrivateKeyModal
               confirmPrivateKey={confirmPrivateKey}
               closeModal={closeModal}
@@ -351,12 +352,14 @@ const SendTX = (props: IProps) => {
           </ModalContainer>
           <ModalContainer
             show={showModal === ModalStates.BROADCASTING}
-            close={closeModal}>
+            close={closeModal}
+          >
             <BroadcastTransaction />
           </ModalContainer>
           <ModalContainer
             show={showModal === ModalStates.NONCE}
-            close={closeNonceModal}>
+            close={closeNonceModal}
+          >
             <CustomNonce
               proceedHandler={openConfirmationModal}
               setCustomNonce={setCustomNonce}

@@ -17,7 +17,7 @@ export const CustomNonce = ({ proceedHandler, setCustomNonce }: IProps) => (
       <div className="v-spacer" />
       <Input
         type="number"
-        inputHandler={e => setCustomNonce(+e.target.value)}
+        inputHandler={(e) => setCustomNonce(+e.target.value)}
       />
       <div className="v-spacer" />
       <Button

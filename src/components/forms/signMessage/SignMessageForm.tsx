@@ -61,7 +61,8 @@ const SignMessageForm = ({ submitHandler }: IProps) => {
               <h3>Message</h3>
               <div
                 className="wrap-input1 validate-input"
-                data-validate="Name is required">
+                data-validate="Name is required"
+              >
                 <span className="icon" />
                 <Input
                   className="input1"
@@ -69,20 +70,21 @@ const SignMessageForm = ({ submitHandler }: IProps) => {
                   name="message"
                   value={message}
                   placeholder="Message "
-                  inputHandler={e => setMessage(e.currentTarget.value)}
+                  inputHandler={(e) => setMessage(e.currentTarget.value)}
                 />
               </div>
               <h3>Private key</h3>
               <div
                 className="wrap-input1 validate-input"
-                data-validate="Name is required">
+                data-validate="Name is required"
+              >
                 <span className="icon" />
                 <Input
                   type="text"
                   name="privateKey"
                   value={privateKey}
                   placeholder="Private key"
-                  inputHandler={e => setPrivateKey(e.currentTarget.value)}
+                  inputHandler={(e) => setPrivateKey(e.currentTarget.value)}
                 />
               </div>
               <div className="v-spacer" />

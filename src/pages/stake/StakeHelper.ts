@@ -21,7 +21,7 @@ export const initialDelegateData: IValidatorData = {
  */
 export const checkBalance = (
   transactionFee: number,
-  balance?: IBalanceData,
+  balance?: IBalanceData
 ) => {
   const available = balance?.liquidUnconfirmed || 0;
   const balanceAfterTransaction = Big(available)

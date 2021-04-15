@@ -62,7 +62,7 @@ const LedgerGetAddress = ({ accountNumber, toggleLoader, network }: IProps) => {
     } catch (e) {
       console.log(e);
       toast.error(
-        e.message || "An error occurred while loading hardware wallet",
+        e.message || "An error occurred while loading hardware wallet"
       );
       history.push("/");
     }
