@@ -12,7 +12,8 @@ const Input = ({
   hidden,
 }: IInputProps) => {
   const [showText, setShowText] = useState<boolean>(false);
-  const inputTypHandler = () => {
+
+  const inputTypeHandler = () => {
     if (hidden) {
       return showText ? type : "password";
     }
@@ -32,7 +33,7 @@ const Input = ({
       <ReactTooltip />
       <input
         className={`input1 ${hidden && "show-icon"}`}
-        type={inputTypHandler()}
+        type={inputTypeHandler()}
         value={value}
         name="name"
         onChange={inputHandler}
