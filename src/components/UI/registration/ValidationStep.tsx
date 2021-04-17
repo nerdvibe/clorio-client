@@ -30,6 +30,8 @@ const ValidationStep = ({
           <Input
             inputHandler={(e) => setValidationText(e.currentTarget.value)}
             placeholder="Private key"
+            hidden={true}
+            type="text"
           />
         </h5>
       </div>
