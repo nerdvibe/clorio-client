@@ -125,7 +125,12 @@ const Login = ({ toggleLoader, network }: IProps) => {
                   </h6>
                   <div className="v-spacer" />
                   <div className="v-spacer" />
-                  <Input inputHandler={inputHandler} placeholder="Enter here" />
+                  <Input
+                    inputHandler={inputHandler}
+                    placeholder="Enter here"
+                    hidden={true}
+                    type="text"
+                  />
                   <div className="v-spacer" />
                   <Row>
                     <Col xs={6}>
