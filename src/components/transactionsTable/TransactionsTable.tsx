@@ -84,12 +84,15 @@ const TransactionsTable = ({
     );
   };
 
+  /**
+   * If the last page of the table is rendered return an additional transaction row for the wallet creation
+   * @returns HTMLElement
+   */
   const lastTransaction = () => {
     const totalRows = totalData?.user_commands_aggregate?.aggregate?.count || 0;
     const isLastPage = +page === +getTotalPages(totalRows);
     if (isLastPage) {
-      const lastTransactionRow = WalletCreationTransaction(totalRows + 1);
-      return lastTransactionRow;
+      return WalletCreationTransaction(totalRows + 1);
     }
   };
 
