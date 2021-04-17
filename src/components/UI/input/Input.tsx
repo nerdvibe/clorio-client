@@ -13,6 +13,10 @@ const Input = ({
 }: IInputProps) => {
   const [showText, setShowText] = useState<boolean>(false);
 
+  /**
+   * If hidden props is set, hide or show the input field (based on the showText status).
+   * @returns string
+   */
   const inputTypeHandler = () => {
     if (hidden) {
       return showText ? type : "password";
