@@ -4,6 +4,9 @@
 <img height="300" src="https://westake.club/assets/cloriobanner_low.jpg">
 </p>
 
+## Introduction
+Clorio is a full-stack wallet for Mina Protocol. It is built with Typescript, communicates with the backend with GraphQL, and is offered in two versions. Hosted wallet on https://clor.io and the desktop builds compiled by Electron.
+
 ## Getting started
 
 Install the dependencies:
