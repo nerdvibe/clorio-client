@@ -33,7 +33,7 @@ User docs are available on https://docs.clor.io/
 
 ## Support
 
-You can get support on [discord](https://discord.gg/XakPRT3SCY). For security disclosures please get in touch privately on Discord with carbonara#5880.
+You can get support on [Discord](https://discord.gg/XakPRT3SCY). For security disclosures please get in touch privately on Discord with carbonara#5880.
 
 ## Bugs & Issues
 
