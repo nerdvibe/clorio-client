@@ -6,17 +6,13 @@
 
 ## Getting started
 
-In the project directory, you can run:
-
-Install the dependencies
+Install the dependencies:
 
 `yarn`
 
 Run electron:
 
 `yarn start`
-
-Now Electron will pop up
 
 ## Hosted wallet
 
