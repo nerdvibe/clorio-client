@@ -80,11 +80,12 @@ const SignMessageForm = ({ submitHandler }: IProps) => {
               >
                 <span className="icon" />
                 <Input
-                  type="text"
                   name="privateKey"
                   value={privateKey}
                   placeholder="Private key"
                   inputHandler={(e) => setPrivateKey(e.currentTarget.value)}
+                  hidden={true}
+                  type="text"
                 />
               </div>
               <div className="v-spacer" />

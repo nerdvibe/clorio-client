@@ -1,4 +1,7 @@
+import { useState } from "react";
 import { IInputProps } from "./InputProps";
+import { Eye, EyeOff } from "react-feather";
+import ReactTooltip from "react-tooltip";
 
 const Input = ({
   type,
@@ -6,7 +9,21 @@ const Input = ({
   inputHandler,
   placeholder,
   small,
+  hidden,
 }: IInputProps) => {
+  const [showText, setShowText] = useState<boolean>(false);
+
+  /**
+   * If hidden props is set, hide or show the input field (based on the showText status).
+   * @returns string
+   */
+  const inputTypeHandler = () => {
+    if (hidden) {
+      return showText ? type : "password";
+    }
+    return type || "text";
+  };
+
   return (
     <div
       className={
@@ -17,9 +34,10 @@ const Input = ({
       data-validate="Name is required"
     >
       <span className="icon" />
+      <ReactTooltip />
       <input
-        className="input1"
-        type={type || "text"}
+        className={`input1 ${hidden && "show-icon"}`}
+        type={inputTypeHandler()}
         value={value}
         name="name"
         onChange={inputHandler}
@@ -27,6 +45,18 @@ const Input = ({
         autoComplete="off"
         min="0"
       />
+      {hidden && (
+        <span
+          className="show-hide-icon"
+          data-tip={showText ? "Hide private key" : "Show private key"}
+        >
+          {!showText ? (
+            <Eye onClick={() => setShowText(!showText)} />
+          ) : (
+            <EyeOff onClick={() => setShowText(!showText)} />
+          )}
+        </span>
+      )}
       <span className="shadow-input1"></span>
     </div>
   );

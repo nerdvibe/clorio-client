@@ -27,6 +27,8 @@ export const PrivateKeyModal = ({
     <Input
       inputHandler={(e) => setPrivateKey(e.currentTarget.value)}
       placeholder="Insert your private key"
+      hidden={true}
+      type="text"
     />
     <div className="v-spacer" />
     <Row>
