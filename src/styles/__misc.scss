@@ -194,6 +194,20 @@ textarea:-ms-input-placeholder {
   padding: 10px 20px;
 }
 
+.show-icon {
+  width: 100%;
+  display: inline-block;
+}
+
+.show-hide-icon {
+  width: 10%;
+  position: absolute;
+  display: inline-block;
+  right: 0;
+  top: 7px;
+  cursor: pointer;
+}
+
 .shadow-input1 {
   font-family: "Lato", sans-serif;
   content: "";
