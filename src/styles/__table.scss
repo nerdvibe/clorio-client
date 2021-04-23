@@ -323,3 +323,14 @@ th {
     );
   }
 }
+
+@media (min-width: 1200px) {
+  #transaction-table{
+    .small-screen-stake-table-text,.small-screen-stake-table-text p{
+      text-align: left;
+    }
+    .stake-table-row td{
+      height: auto;
+    }
+  }
+}
