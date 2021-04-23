@@ -1,14 +1,13 @@
 import { ITransactionData } from "./../../types/TransactionData";
 /* eslint-disable no-control-regex */
 import { isDevnet } from "../utils";
-
-let ledgerAPI: any;
 import isElectron from "is-electron";
 import { feeOrDefault } from "../fees";
 import { getDefaultValidUntilField } from "../utils";
 import { toNanoMINA } from "../mina";
 import { ILedgerTransaction } from "../../types/LedgerDelegationTransaction";
 
+let ledgerAPI: any;
 // Because of compatibility we need to use 2 transporters, one for Electron, one for the browser.
 // For the Electron, we use node-hid transporter by the ipcRenderer (node). For the browser @ledgerhq/hw-transport-webhid.
 
