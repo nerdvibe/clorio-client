@@ -1,5 +1,5 @@
 {
-  "name": "clorio-client",
+  "name": "clorio-wallet",
   "version": "0.1.0",
   "private": true,
   "homepage": "./",
@@ -63,9 +63,7 @@
     "dist": "npm run build && build",
     "postinstall": "install-app-deps",
     "package": "electron-builder build --mac --publish never",
-    "build-all": "electron-builder build -wl --publish never",
-    "electron-pack": "electron-builder -mwl",
-    "build-electron": "rm -rf dist && yarn build-main && electron-builder build --publish never"
+    "build-all": "electron-builder build -mwl --publish never"
   },
   "build": {
     "appId": "io.clor",
@@ -86,6 +84,26 @@
     "mac": {
       "icon": "./public/icons/mac/icon.icns",
       "category": "public.app-category.utilities"
+    },
+    "dmg" : {
+      "title" : "Clorio Wallet",
+      "background": "assets/background.png",
+      "contents" : [
+        {
+          "x" : "320",
+          "y" : "280",
+          "type" : "file"
+        },
+        {
+          "x" : "580",
+          "y" : "280",
+          "type" : "link",
+          "path" : "/Applications"
+        }
+      ],
+      "window" : {
+        "height" : "450"
+      }
     }
   },
   "browserslist": {
