@@ -16,6 +16,7 @@ import {
   mempoolQueryRowToTableRow,
   transactionQueryRowToTableRow,
 } from "./TransactionsHelper";
+import WalletCreationTransaction from "./WalletCreationTransaction";
 
 const TransactionsTable = ({
   transactions,
@@ -78,8 +79,21 @@ const TransactionsTable = ({
           );
           return TransactionRow(rowData, index, userAddress, false);
         })}
+        {lastTransaction()}
       </tbody>
     );
+  };
+
+  /**
+   * If the last page of the table is rendered return an additional transaction row for the wallet creation
+   * @returns HTMLElement
+   */
+  const lastTransaction = () => {
+    const totalRows = totalData?.user_commands_aggregate?.aggregate?.count || 0;
+    const isLastPage = +page === +getTotalPages(totalRows);
+    if (isLastPage) {
+      return WalletCreationTransaction(totalRows + 1);
+    }
   };
 
   return (

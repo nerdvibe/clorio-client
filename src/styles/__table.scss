@@ -106,6 +106,10 @@ th {
       overflow: hidden;
     }
 
+    .full-width-table-cell {
+      max-width: 100%;
+    }
+
     .force-right {
       float: right !important;
     }
