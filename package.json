@@ -52,21 +52,15 @@
     "build": "yarn build:devnet && yarn build:mainnet",
     "build:devnet": "env-cmd -f ./.env.devnet react-scripts build && rm -rf build-devnet && mv build build-devnet",
     "build:mainnet": "env-cmd -f ./.env.mainnet react-scripts build && rm -rf build-mainnet && mv build build-mainnet",
-    "build-main": "env-cmd -f ./.env.mainnet react-scripts build ",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "electron": "electron .",
     "electron-start": "node src/start-react",
     "react-start": "BROWSER=none react-scripts start",
-    "pack:devnet": "env-cmd -f ./.env.devnet build --dir",
-    "pack:mainnet": "env-cmd -f ./.env.mainnet build --dir",
-    "dist": "npm run build && build",
-    "postinstall": "install-app-deps",
     "package": "electron-builder build --mac --publish never",
-    "build-all": "electron-builder build -mwl --publish never"
+    "package:devnet": "mv build-devnet build && electron-builder build -mwl --publish never && mv build build-devnet",
+    "package:mainnet": "mv build-mainnet build && electron-builder build -mwl --publish never && mv build build-mainnet"
   },
   "build": {
     "appId": "io.clor",
+    "productName": "Clorio Wallet",
     "files": [
       "build/**/*",
       "node_modules/**/*",
@@ -85,24 +79,24 @@
       "icon": "./public/icons/mac/icon.icns",
       "category": "public.app-category.utilities"
     },
-    "dmg" : {
-      "title" : "Clorio Wallet",
+    "dmg": {
+      "title": "Clorio Wallet",
       "background": "assets/background.png",
-      "contents" : [
+      "contents": [
         {
-          "x" : "320",
-          "y" : "280",
-          "type" : "file"
+          "x": "320",
+          "y": "280",
+          "type": "file"
         },
         {
-          "x" : "580",
-          "y" : "280",
-          "type" : "link",
-          "path" : "/Applications"
+          "x": "580",
+          "y": "280",
+          "type": "link",
+          "path": "/Applications"
         }
       ],
-      "window" : {
-        "height" : "450"
+      "window": {
+        "height": "450"
       }
     }
   },
@@ -136,7 +130,7 @@
     "@typescript-eslint/eslint-plugin": "4.22.0",
     "@typescript-eslint/parser": "4.21.0",
     "babel-eslint": "10.1.0",
-    "electron": "8.5.1",
+    "electron": "7.3.0",
     "electron-builder": "22.10.5",
     "electron-is-dev": "2.0.0",
     "electron-packager": "15.2.0",
