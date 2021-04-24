@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "./",
-  "main": "public/electron.js",
+  "main": "public/main.js",
   "dependencies": {
     "@apollo/client": "3.3.13",
-    "@ledgerhq/hw-transport-node-hid-singleton": "5.46.0",
+    "@ledgerhq/hw-transport-node-hid-singleton": "5.49.0",
     "@ledgerhq/hw-transport-webhid": "5.46.0",
     "@o1labs/client-sdk": "0.2.3",
     "@types/node": "14.14.37",
@@ -50,13 +50,12 @@
     "start": "env-cmd -f ./.env.devnet nf start -p 3000",
     "start:mainnet": "env-cmd -f ./.env.mainnet nf start -p 3000",
     "build": "yarn build:devnet && yarn build:mainnet",
-    "build:devnet": "env-cmd -f ./.env.devnet react-scripts build && rm -rf build-devnet && mv build build-devnet",
-    "build:mainnet": "env-cmd -f ./.env.mainnet react-scripts build && rm -rf build-mainnet && mv build build-mainnet",
+    "build:devnet": "env-cmd -f ./.env.devnet react-scripts build",
+    "build:mainnet": "env-cmd -f ./.env.mainnet react-scripts build",
     "electron-start": "node src/start-react",
     "react-start": "BROWSER=none react-scripts start",
-    "package": "electron-builder build --mac --publish never",
-    "package:devnet": "mv build-devnet build && electron-builder build -mwl --publish never && mv build build-devnet",
-    "package:mainnet": "mv build-mainnet build && electron-builder build -mwl --publish never && mv build build-mainnet"
+    "package:devnet": "yarn build:devnet && electron-builder build -mwl --publish never && mv dist dist-devnet",
+    "package:mainnet": "yarn build:mainnet && electron-builder build -mwl --publish never && mv dist dist-mainnet"
   },
   "build": {
     "appId": "io.clor",
@@ -124,13 +123,16 @@
       "pre-commit": "pretty-quick --staged"
     }
   },
+  "resolutions": {
+    "electron-builder/**/app-builder-bin": "3.5.13"
+  },
   "devDependencies": {
     "@types/big.js": "^6.0.2",
     "@types/react-router-dom": "5.1.7",
     "@typescript-eslint/eslint-plugin": "4.22.0",
     "@typescript-eslint/parser": "4.21.0",
     "babel-eslint": "10.1.0",
-    "electron": "7.3.0",
+    "electron": "12.0.4",
     "electron-builder": "22.10.5",
     "electron-is-dev": "2.0.0",
     "electron-packager": "15.2.0",

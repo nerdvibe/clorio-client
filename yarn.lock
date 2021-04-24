@@ -1510,7 +1510,7 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/errors/-/errors-5.49.0.tgz#8ecb43bb702504d9fc94ee12022d81d6e36cb5ce"
   integrity sha512-+uhoSsAnzZiZ2CUk/dv4Uo8lrl0jn2izYJATSbC5aZFd0Yl7PWZ1SMHMkvPVEgQvWZcu4iQZ67rlKOtj5tUFWA==
 
-"@ledgerhq/hw-transport-node-hid-noevents@^5.46.0":
+"@ledgerhq/hw-transport-node-hid-noevents@^5.49.0":
   version "5.49.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-node-hid-noevents/-/hw-transport-node-hid-noevents-5.49.0.tgz#fe26890772b3167dc8c5a978d801e22d9baa62a5"
   integrity sha512-Hly9Zl+EMG0V84FoemB7gig7h51w16216AqEUV4ztVofokpIWHi9upq9HolpSfTcodoO/Dp9bPri4tspN+tAOA==
@@ -1521,16 +1521,16 @@
     "@ledgerhq/logs" "^5.49.0"
     node-hid "2.1.1"
 
-"@ledgerhq/hw-transport-node-hid-singleton@5.46.0":
-  version "5.46.0"
-  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-node-hid-singleton/-/hw-transport-node-hid-singleton-5.46.0.tgz#e33f2b772e8d6f7b9c4514ef3e1689de889d723c"
-  integrity sha512-df2ri+zCiBOaWxwNpU5tjG2c6MB+rjvLjl1+r/duyUg4g2w3vGtMEI7dzrdsLFJ0jmdriFG7FbaGrbKI5gOUHg==
+"@ledgerhq/hw-transport-node-hid-singleton@5.49.0":
+  version "5.49.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-node-hid-singleton/-/hw-transport-node-hid-singleton-5.49.0.tgz#f2a1f525229808d8542738d39b76330c6cb6b534"
+  integrity sha512-uQQvNxHqPP0ncTGsDm8vi7CYeq5wchaN+TSDWa+hz7qKKwih5Wke+9i+hOkLbTyU/P79QOerrjoiC11tuVh9vA==
   dependencies:
-    "@ledgerhq/devices" "^5.46.0"
-    "@ledgerhq/errors" "^5.46.0"
-    "@ledgerhq/hw-transport" "^5.46.0"
-    "@ledgerhq/hw-transport-node-hid-noevents" "^5.46.0"
-    "@ledgerhq/logs" "^5.46.0"
+    "@ledgerhq/devices" "^5.49.0"
+    "@ledgerhq/errors" "^5.49.0"
+    "@ledgerhq/hw-transport" "^5.49.0"
+    "@ledgerhq/hw-transport-node-hid-noevents" "^5.49.0"
+    "@ledgerhq/logs" "^5.49.0"
     lodash "^4.17.21"
     node-hid "2.1.1"
     usb-detection "^4.10.0"
@@ -1954,7 +1954,7 @@
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.4.tgz#f0ec25dbf2f0e4b18647313ac031134ca5b24b21"
   integrity sha512-1z8k4wzFnNjVK/tlxvrWuK5WMt6mydWWP7+zvH5eFep4oj+UkrfiJTRtjCeBXNpwaA/FYqqtb4/QS4ianFpIRA==
 
-"@types/node@*", "@types/node@>=6":
+"@types/node@*", "@types/node@>=6", "@types/node@^14.6.2":
   version "14.14.41"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.41.tgz#d0b939d94c1d7bd53d04824af45f1139b8c45615"
   integrity sha512-dueRKfaJL4RTtSa7bWeTK1M+VH+Gns73oCgzvYfHZywRCoPSd8EkXBL0mZ9unPTveBn+D9phZBaxuzpwjWkW0g==
@@ -1963,11 +1963,6 @@
   version "14.14.37"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.37.tgz#a3dd8da4eb84a996c36e331df98d82abd76b516e"
   integrity sha512-XYmBiy+ohOR4Lh5jE379fV2IU+6Jn4g5qASinhitfyO71b/sCo6MKsMLF5tc7Zf2CE8hViVQyYSobJNke8OvUw==
-
-"@types/node@^12.0.12":
-  version "12.20.10"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.10.tgz#4dcb8a85a8f1211acafb88d72fafc7e3d2685583"
-  integrity sha512-TxCmnSSppKBBOzYzPR2BR25YlX5Oay8z2XGwFBInuA/Co0V9xJhLlW4kjbxKtgeNo3NOMbQP1A5Rc03y+XecPw==
 
 "@types/node@^13.7.0":
   version "13.13.50"
@@ -2777,10 +2772,10 @@ apollo-utilities@1.3.4, apollo-utilities@^1.3.0, apollo-utilities@^1.3.4:
     ts-invariant "^0.4.0"
     tslib "^1.10.0"
 
-app-builder-bin@3.5.12:
-  version "3.5.12"
-  resolved "https://registry.yarnpkg.com/app-builder-bin/-/app-builder-bin-3.5.12.tgz#bbe174972cc1f481f73d6d92ad47a8b4c7eb4530"
-  integrity sha512-lQARM2AielmFoBeIo6LZigAe+58Wwe07ZWkt+wVeDxzyieNmeWjlvz/V5dKzinydwdHd+CNswN86sww46yijjA==
+app-builder-bin@3.5.12, app-builder-bin@3.5.13:
+  version "3.5.13"
+  resolved "https://registry.yarnpkg.com/app-builder-bin/-/app-builder-bin-3.5.13.tgz#6dd7f4de34a4e408806f99b8c7d6ef1601305b7e"
+  integrity sha512-ighVe9G+bT1ENGdp9ecO1P+94vv/f+FUwaI+XkNzeg9bYF8Oi3BQ+mJuxS00UgyHs8luuOzjzC+qnAtdb43Mpg==
 
 app-builder-lib@22.10.5:
   version "22.10.5"
@@ -5369,13 +5364,13 @@ electron-to-chromium@^1.3.564, electron-to-chromium@^1.3.719:
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.720.tgz#f5d66df8754d993006b7b2ded15ff7738c58bd94"
   integrity sha512-B6zLTxxaOFP4WZm6DrvgRk8kLFYWNhQ5TrHMC0l5WtkMXhU5UbnvWoTfeEwqOruUSlNMhVLfYak7REX6oC5Yfw==
 
-electron@11.2.0:
-  version "11.2.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-11.2.0.tgz#f8577ea4c9ba94068850256145be26b0b89a5dd7"
-  integrity sha512-weszOPAJPoPu6ozL7vR9enXmaDSqH+KE9iZODfbGdnFgtVfVdfyedjlvEGIUJkLMPXM1y/QWwCl2dINzr0Jq5Q==
+electron@12.0.4:
+  version "12.0.4"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-12.0.4.tgz#c2ca4710d0e4da7db6d31c4f55777b08bfcb08e5"
+  integrity sha512-A8Lq3YMZ1CaO1z5z5nsyFxIwkgwXLHUwL2pf9MVUHpq7fv3XUewCMD98EnLL3DdtiyCvw5KMkeT1WGsZh8qFug==
   dependencies:
     "@electron/get" "^1.0.1"
-    "@types/node" "^12.0.12"
+    "@types/node" "^14.6.2"
     extract-zip "^1.0.3"
 
 elliptic@^6.5.3:
