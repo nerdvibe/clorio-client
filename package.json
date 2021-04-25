@@ -52,17 +52,12 @@
     "build": "yarn build:devnet && yarn build:mainnet",
     "build:devnet": "env-cmd -f ./.env.devnet react-scripts build && rm -rf build-devnet",
     "build:mainnet": "env-cmd -f ./.env.mainnet react-scripts build && rm -rf build-mainnet",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
     "electron": "electron .",
     "electron-start": "node src/start-react",
     "react-start": "BROWSER=none react-scripts start",
     "pack:devnet": "env-cmd -f ./.env.devnet build --dir",
     "pack:mainnet": "env-cmd -f ./.env.mainnet build --dir",
-    "dist": "npm run build && build",
     "postinstall": "install-app-deps",
-    "package": "electron-builder build --mac --publish never",
-    "electron-pack": "electron-builder -m",
     "package:devnet": "yarn build:devnet && electron-builder build -mwl --publish never && mv dist dist-devnet",
     "package:mainnet": "yarn build:mainnet && electron-builder build -mwl --publish never && mv dist dist-mainnet",
     "package-only:mainnet": "electron-builder build -mwl --publish never && mv dist dist-mainnet"
@@ -83,7 +78,7 @@
       "buildResources": "assets"
     },
     "win": {
-      "target": "portable"
+      "target": "zip"
     },
     "mac": {
       "icon": "./public/icons/mac/icon.icns",
