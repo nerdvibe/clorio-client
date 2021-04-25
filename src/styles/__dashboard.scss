@@ -40,3 +40,11 @@
   height: 95vh;
   margin-top: 20px !important;
 }
+
+* {
+  -webkit-user-select: none;
+}
+
+.selectable-text {
+  -webkit-user-select: text;
+}
