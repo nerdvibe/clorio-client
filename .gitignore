@@ -80,5 +80,7 @@ dist
 build
 build-devnet
 build-mainnet
+dist-devnet
+dist-mainnet
 .DS_Store
 .vscode
