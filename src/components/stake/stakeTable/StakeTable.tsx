@@ -7,6 +7,10 @@ import ReactTooltip from "react-tooltip";
 import { IValidatorData } from "../stakeTableRow/ValidatorDataTypes";
 import StakeTableError from "./StakeTableError";
 import Spinner from "../../UI/Spinner";
+import Pagination from "../../UI/pagination/Pagination";
+import { GET_VALIDATORS_TOTAL } from "../../../graphql/query";
+import { getTotalPages } from "../../../tools";
+import { useQuery } from "@apollo/client";
 
 interface IProps {
   error: any;
@@ -28,9 +32,16 @@ const StakeTable = ({
   currentDelegate,
   currentDelegateName,
   loading,
+  setOffset,
+  page,
 }: IProps) => {
   const [searchBox, setSearchBox] = useState<string>("");
+  const { data: validatorsTotalData } = useQuery(GET_VALIDATORS_TOTAL);
 
+  const totalPages = getTotalPages(
+    validatorsTotalData?.validators_aggregate?.aggregate?.count || 0,
+    false
+  );
   /**
    * Store search text inside component state
    * @param search string Search text
@@ -119,6 +130,7 @@ const StakeTable = ({
               &nbsp;
             </div>
           </Spinner>
+          <Pagination page={page} setOffset={setOffset} total={totalPages} />
         </div>
       </div>
     </div>
