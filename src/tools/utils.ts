@@ -1,3 +1,4 @@
+import { VALIDATORS_TABLE_ITEMS_PER_PAGE } from "./const/transactions";
 import Big from "big.js";
 import {
   DEFAULT_VALID_UNTIL_FIELD,
@@ -44,15 +45,19 @@ export const getDefaultValidUntilField = () => {
 };
 
 /**
- * Get the number of the table pages based on the total number of elements
+ * Get the number of the transactions table and validators table pages based on the total number of elements
  * @returns Number
  */
-export const getTotalPages = (totalItems = 0) => {
+export const getTotalPages = (totalItems = 0, transactions = true) => {
+  const itemsPerPage = transactions
+    ? TRANSACTIONS_TABLE_ITEMS_PER_PAGE
+    : VALIDATORS_TABLE_ITEMS_PER_PAGE;
+  const halfItemsPerPage = itemsPerPage / 2;
   if (totalItems) {
-    const pages = (totalItems / TRANSACTIONS_TABLE_ITEMS_PER_PAGE).toFixed(0);
+    const pages = (totalItems / itemsPerPage).toFixed(0);
     if (
-      totalItems % TRANSACTIONS_TABLE_ITEMS_PER_PAGE < 5 &&
-      totalItems % TRANSACTIONS_TABLE_ITEMS_PER_PAGE !== 0
+      totalItems % itemsPerPage < halfItemsPerPage &&
+      totalItems % itemsPerPage !== 0
     ) {
       return parseInt(pages) === 0 ? 1 : parseInt(pages) + 1;
     }
