@@ -31,7 +31,7 @@ const StakeStatus = ({ currentDelegate, currentDelegateName }: IProps) => {
       <h4>Validators:</h4>
       <h6 className="full-width-align-left">
         Your are staking for :
-        <div className="current-delegate-address">
+        <div className="current-delegate-address selectable-text">
           {`${currentDelegate} ${name}` || "Nobody"}
         </div>
       </h6>

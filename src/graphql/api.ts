@@ -7,11 +7,6 @@ import {
   NormalizedCacheObject,
 } from "@apollo/client";
 
-console.log(
-  process.env.REACT_APP_GQL_SERVER,
-  "process.env.REACT_APP_GQL_SERVER"
-);
-
 const httpLink = ApolloLink.from([
   onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors)
