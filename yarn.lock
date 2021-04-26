@@ -1595,10 +1595,10 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@o1labs/client-sdk@0.2.3":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@o1labs/client-sdk/-/client-sdk-0.2.3.tgz#319be734cc1194429c78839447ab4296ec2748de"
-  integrity sha512-K7P3E+4taqYHxMf84qKShnSn0SkmSqwvNtFVoPotNWALKpMOS078LZ6FiAd+yDIgYV7OrvxARuks2TD5TEEWfA==
+"@o1labs/client-sdk@0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@o1labs/client-sdk/-/client-sdk-0.2.5.tgz#e9972d1bd7c05d383f35449be78fe8c4b7cb5123"
+  integrity sha512-Ak+Ix0vcTT5VuITyySsMhXmO2y7mVvd1Yyq4oJaoe43EiIYU1jfEzHIjHkn/pSDCLCJRTF2yzeH+ZeKfk1rc/Q==
   dependencies:
     "@types/node" "^13.7.0"
 
