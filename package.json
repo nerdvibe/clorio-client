@@ -8,7 +8,7 @@
     "@apollo/client": "3.3.13",
     "@ledgerhq/hw-transport-node-hid-singleton": "5.46.0",
     "@ledgerhq/hw-transport-webhid": "5.46.0",
-    "@o1labs/client-sdk": "0.2.5",
+    "@o1labs/client-sdk": "1.0.0",
     "@types/node": "14.14.37",
     "@types/react": "17.0.3",
     "@types/react-dom": "17.0.3",
@@ -58,8 +58,8 @@
     "pack:devnet": "env-cmd -f ./.env.devnet build --dir",
     "pack:mainnet": "env-cmd -f ./.env.mainnet build --dir",
     "postinstall": "install-app-deps",
-    "package:devnet": "yarn build:devnet && electron-builder build -mwl --publish never && mv dist dist-devnet",
-    "package:mainnet": "yarn build:mainnet && electron-builder build -mwl --publish never && mv dist dist-mainnet",
+    "package:devnet": "yarn build:devnet && electron-builder build -mwl --publish never && rm -rf dist-devnet && mv dist dist-devnet",
+    "package:mainnet": "yarn build:mainnet && electron-builder build -mwl --publish never && rm -rf dist-mainnet && mv dist dist-mainnet",
     "package-only:mainnet": "electron-builder build -mwl --publish never && mv dist dist-mainnet"
   },
   "build": {
@@ -135,7 +135,7 @@
     "@typescript-eslint/eslint-plugin": "4.22.0",
     "@typescript-eslint/parser": "4.21.0",
     "babel-eslint": "10.1.0",
-    "electron": "9.0.0",
+    "electron": "9.4.0",
     "electron-builder": "22.10.5",
     "electron-is-dev": "2.0.0",
     "electron-packager": "15.2.0",
