@@ -1,4 +1,4 @@
-import { BrowserRouter as Router } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import "./App.scss";
 import Layout from "./Layout";
 import { ApolloProvider } from "@apollo/client";
@@ -12,9 +12,9 @@ function App() {
     <div className="App">
       <ApolloProvider client={apolloClient}>
         <LedgerContextProvider>
-          <Router>
+          <HashRouter>
             <Layout />
-          </Router>
+          </HashRouter>
         </LedgerContextProvider>
       </ApolloProvider>
     </div>

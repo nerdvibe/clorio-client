@@ -9,6 +9,7 @@
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo.svg" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="%PUBLIC_URL%/index.css">
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, minimum-scale=1"
@@ -70,10 +71,16 @@
       content="Access the power of the Mina Protocol Blockchain with ~Clorio. Wallet available for Browser, Windows, Linux, OSX and Ledger Hardware Wallets."
     />
     <meta itemprop="image" content="https://clor.io/assets/cloriobanner.png" />
+    <base href="./">
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="draggable-bar"></div>
+    <div id="initial-loader" style="display:flex;justify-content:center;align-items:center;width:100%; height: 100vh">
+      <div>
+        <img src="%PUBLIC_URL%/icon.png" alt="clorio-wallet-logo" width="250px" height="250px" class="fade-in-out">
+      </div>
+    </div>
     <div id="root" class="hidden-mob"></div>
     <div id="toast"></div>
     <div class="show-on-load" style="display: none">

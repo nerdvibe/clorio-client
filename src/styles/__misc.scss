@@ -7,6 +7,10 @@ th {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  -webkit-user-select: text;
+  *{
+    -webkit-user-select: text;
+  }
 }
 
 .walletImage {
