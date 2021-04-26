@@ -14,7 +14,7 @@ const StakeTableRow = ({ element, index, toggleModal }: IProps) => {
   let boostedClassName = "";
   if (element.priority === 1) {
     supportTooltip =
-      "~Clorio is built by Carbonara. <br>  You can support the development of this wallet by delegating your stake to Carbonara ❤️";
+      "~Clorio is built by Carbonara. <br>Earn rewards and support Clorio <br>by delegating to Carbonara ❤️";
     boostedClassName = "is-boosted";
   }
 
