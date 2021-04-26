@@ -106,7 +106,7 @@ const Balance = () => {
           <Row>
             <Col xs={12}>
               <h6 className="secondaryText">This is your address</h6>
-              <h5>
+              <h5 className="selectable-text">
                 {address} &nbsp;
                 <Button
                   className="inline-element"
@@ -163,7 +163,7 @@ const Balance = () => {
             </div>
             <div className="inline-block-element ">
               <h6 className="secondaryText">This is your address</h6>
-              <h5 className="small-screen-address">
+              <h5 className="small-screen-address selectable-text">
                 {address} &nbsp;
                 <Button
                   className="inline-element"

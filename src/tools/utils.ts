@@ -19,8 +19,12 @@ export const copyToClipboard = (content = "") => {
 /**
  * Set the class to show the error message "Smaller screen support is coming soon"
  */
-export const loadErrorMessage = () => {
+export const initHtmlElements = () => {
   document.getElementsByClassName("show-on-load")[0].className = "show-mob";
+  const loader = document.getElementById("initial-loader");
+  if (loader) {
+    loader.style.display = "none";
+  }
 };
 
 /**

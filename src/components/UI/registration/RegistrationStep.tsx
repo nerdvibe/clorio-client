@@ -33,7 +33,7 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => (
             className="wrap-input1 validate-input"
             data-validate="Name is required"
           >
-            <h5 className="full-width-align-center">
+            <h5 className="full-width-align-center selectable-text">
               {keys.publicKey}
               <Button
                 className="inline-element no-print"
@@ -45,7 +45,7 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => (
           <div className="v-spacer" />
           <h4 className="full-width-align-center">This is your private key</h4>
           <div className="wrap-input1 validate-input">
-            <h5 className="full-width-align-center">
+            <h5 className="full-width-align-center selectable-text">
               {keys.privateKey}
               <Button
                 className="inline-element no-print"

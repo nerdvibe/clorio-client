@@ -28,15 +28,15 @@ const SignMessageResult = ({
           <div className="v-spacer" />
           <Row>
             <Col md={8} className="offset-md-2">
-              <div className="signed-message-container my-auto">
-                <p>----- MESSAGE -----</p>
-                <p>{payload}</p>
-                <p>----- PUBLIC KEY -----</p>
-                <p>{publicKey}</p>
-                <p>----- FIELD -----</p>
-                <p>{field}</p>
-                <p>----- SCALAR -----</p>
-                <p>{scalar}</p>
+              <div className="signed-message-container my-auto selectable-text">
+                <p className="selectable-text">----- MESSAGE -----</p>
+                <p className="selectable-text">{payload}</p>
+                <p className="selectable-text">----- PUBLIC KEY -----</p>
+                <p className="selectable-text">{publicKey}</p>
+                <p className="selectable-text">----- FIELD -----</p>
+                <p className="selectable-text">{field}</p>
+                <p className="selectable-text">----- SCALAR -----</p>
+                <p className="selectable-text">{scalar}</p>
               </div>
               <div className="v-spacer" />
               <Button

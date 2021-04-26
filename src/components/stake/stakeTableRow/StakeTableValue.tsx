@@ -26,8 +26,10 @@ const StakeTableValue = ({
             <Col sm={12} className="small-screen-stake-table-text">
               <div className="inline-block-element">{avatar}</div>
               <div className="inline-block-element">
-                <p className="secondaryText no-bottom">{header}</p>
-                <h5>{text}</h5>
+                <p className="secondaryText no-bottom selectable-text">
+                  {header}
+                </p>
+                <h5 className="selectable-text">{text}</h5>
               </div>
             </Col>
           </Row>

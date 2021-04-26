@@ -8,7 +8,7 @@
     "@apollo/client": "3.3.13",
     "@ledgerhq/hw-transport-node-hid-singleton": "5.46.0",
     "@ledgerhq/hw-transport-webhid": "5.46.0",
-    "@o1labs/client-sdk": "0.2.3",
+    "@o1labs/client-sdk": "0.2.5",
     "@types/node": "14.14.37",
     "@types/react": "17.0.3",
     "@types/react-dom": "17.0.3",
@@ -32,7 +32,7 @@
     "mina-ledger-js": "1.0.6",
     "nedb": "1.8.0",
     "nedb-promises": "4.1.1",
-    "node-sass": "4.14.1",
+    "node-sass": "5.0.0",
     "open": "7.4.2",
     "react": "17.0.1",
     "react-bootstrap": "1.4.3",
@@ -50,26 +50,29 @@
     "start": "env-cmd -f ./.env.devnet nf start -p 3000",
     "start:mainnet": "env-cmd -f ./.env.mainnet nf start -p 3000",
     "build": "yarn build:devnet && yarn build:mainnet",
-    "build:devnet": "env-cmd -f ./.env.devnet react-scripts build && rm -rf build-devnet && mv build build-devnet",
-    "build:mainnet": "env-cmd -f ./.env.mainnet react-scripts build && rm -rf build-mainnet && mv build build-mainnet",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
+    "build:devnet": "yarn add @o1labs/client-sdk@0.2.5 && npm rebuild && env-cmd -f ./.env.devnet react-scripts build && rm -rf build-devnet && cp -r build build-devnet",
+    "build:mainnet": "yarn add @o1labs/client-sdk@1.0.0 && npm rebuild && env-cmd -f ./.env.mainnet react-scripts build && rm -rf build-mainnet && cp -r build build-mainnet",
     "electron": "electron .",
     "electron-start": "node src/start-react",
     "react-start": "BROWSER=none react-scripts start",
     "pack:devnet": "env-cmd -f ./.env.devnet build --dir",
     "pack:mainnet": "env-cmd -f ./.env.mainnet build --dir",
-    "dist": "npm run build && build",
     "postinstall": "install-app-deps",
-    "package": "electron-builder build --mac --publish never",
-    "electron-pack": "electron-builder -m"
+    "package:devnet": "yarn build:devnet && electron-builder build -mwl --publish never && mv dist dist-devnet",
+    "package:mainnet": "yarn build:mainnet && electron-builder build -mwl --publish never && mv dist dist-mainnet",
+    "package-only:mainnet": "electron-builder build -mwl --publish never && mv dist dist-mainnet"
   },
   "build": {
     "appId": "io.clor",
+    "productName": "Clorio Wallet",
     "files": [
       "build/**/*",
       "node_modules/**/*",
-      "*.js"
+      "*.js",
+      "*.js",
+      "*.ts",
+      "*.tsx",
+      "public/**/*"
     ],
     "directories": {
       "buildResources": "assets"
@@ -80,6 +83,26 @@
     "mac": {
       "icon": "./public/icons/mac/icon.icns",
       "category": "public.app-category.utilities"
+    },
+    "dmg": {
+      "title": "Clorio Wallet",
+      "background": "assets/background.png",
+      "contents": [
+        {
+          "x": "320",
+          "y": "280",
+          "type": "file"
+        },
+        {
+          "x": "580",
+          "y": "280",
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "window": {
+        "height": "450"
+      }
     }
   },
   "browserslist": {
@@ -112,7 +135,7 @@
     "@typescript-eslint/eslint-plugin": "4.22.0",
     "@typescript-eslint/parser": "4.21.0",
     "babel-eslint": "10.1.0",
-    "electron": "11.2.0",
+    "electron": "9.0.0",
     "electron-builder": "22.10.5",
     "electron-is-dev": "2.0.0",
     "electron-packager": "15.2.0",
@@ -130,5 +153,9 @@
     "prettier": "2.2.1",
     "pretty-quick": "3.1.0",
     "ts-node-dev": "1.0.0"
+  },
+  "resolutions": {
+    "electron-builder/**/app-builder-bin": "3.5.13",
+    "usb-detection": "4.10.0"
   }
 }
