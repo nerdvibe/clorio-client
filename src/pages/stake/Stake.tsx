@@ -26,7 +26,7 @@ import {
   getDefaultValidUntilField,
   toNanoMINA,
   DEFAULT_QUERY_REFRESH_INTERVAL,
-  TRANSACTIONS_TABLE_ITEMS_PER_PAGE,
+  VALIDATORS_TABLE_ITEMS_PER_PAGE,
   MINIMUM_FEE,
   MINIMUM_NONCE,
   readSession,
@@ -276,7 +276,7 @@ export default ({ sessionData }: IProps) => {
    * @param {number} page Page number
    */
   const changeOffset = (page: number) => {
-    const data = (page - 1) * TRANSACTIONS_TABLE_ITEMS_PER_PAGE;
+    const data = (page - 1) * VALIDATORS_TABLE_ITEMS_PER_PAGE;
     setOffset(data);
   };
 
@@ -395,7 +395,7 @@ export default ({ sessionData }: IProps) => {
           currentDelegateName={currentDelegateName}
           openCustomDelegateModal={openCustomDelegateModal}
           setOffset={changeOffset}
-          page={offset / TRANSACTIONS_TABLE_ITEMS_PER_PAGE + 1}
+          page={offset / VALIDATORS_TABLE_ITEMS_PER_PAGE + 1}
         />
       </div>
       <ModalContainer
