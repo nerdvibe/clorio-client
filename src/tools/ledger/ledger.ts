@@ -133,9 +133,7 @@ export const createAndSignLedgerTransaction = async ({
     amount: +amount,
     memo: cleanMemo,
     nonce,
-    // TODO: FIX HARDCODING!
     txType: TX_TYPE.PAYMENT,
-    // TODO: FIX HARDCODING!
     networkId: ledgerNetworkId(),
     validUntil: +getDefaultValidUntilField(),
   };
@@ -204,9 +202,7 @@ export const createLedgerDelegationTransaction = ({
     fee: +toNanoMINA(feeOrDefault(fee)),
     amount: 0,
     nonce,
-    // TODO: FIX HARDCODING!
     txType: TX_TYPE.DELEGATION,
-    // TODO: FIX HARDCODING!
     networkId: ledgerNetworkId(),
     validUntil: +getDefaultValidUntilField(),
   };

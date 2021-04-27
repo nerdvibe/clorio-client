@@ -6,9 +6,9 @@ export interface ILedgerTransaction {
   amount: number;
   memo?: string;
   nonce: number;
-  // TODO: FIX HARDCODING!
+  // TODO: FIX any type!
   txType: any;
-  // TODO: FIX HARDCODING!
+  // TODO: FIX any type!
   networkId: any;
   validUntil: number;
 }
