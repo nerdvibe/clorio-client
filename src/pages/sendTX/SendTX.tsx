@@ -230,7 +230,9 @@ const SendTX = (props: IProps) => {
    */
   const getAndSetAddress = async () => {
     const wallet = await readSession();
-    setSenderAddress(wallet.address);
+    if (wallet) {
+      setSenderAddress(wallet.address);
+    }
   };
 
   /**

@@ -164,7 +164,9 @@ export default ({ sessionData }: IProps) => {
    */
   const getAndSetAddress = async () => {
     const wallet = await readSession();
-    setAddress(wallet.address);
+    if (wallet) {
+      setAddress(wallet.address);
+    }
   };
 
   const broadcastLedgerTransaction = () => {
