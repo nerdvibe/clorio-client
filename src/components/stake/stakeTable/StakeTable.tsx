@@ -43,7 +43,7 @@ const StakeTable = ({
     false
   );
   /**
-   * Store search text inside component state
+   * Store search text inside component state (temporarily disabled, needs backend search query)
    * @param search string Search text
    */
   // const searchBoxHandler = (search: string) => {
