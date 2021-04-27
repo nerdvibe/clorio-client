@@ -35,7 +35,7 @@ const StakeTable = ({
   setOffset,
   page,
 }: IProps) => {
-  const [searchBox, setSearchBox] = useState<string>("");
+  const [searchBox] = useState<string>("");
   const { data: validatorsTotalData } = useQuery(GET_VALIDATORS_TOTAL);
 
   const totalPages = getTotalPages(
@@ -46,9 +46,9 @@ const StakeTable = ({
    * Store search text inside component state
    * @param search string Search text
    */
-  const searchBoxHandler = (search: string) => {
-    setSearchBox(search.toLowerCase());
-  };
+  // const searchBoxHandler = (search: string) => {
+  //   setSearchBox(search.toLowerCase());
+  // };
 
   const tableBody = () => {
     if (validators) {
@@ -112,7 +112,8 @@ const StakeTable = ({
                     <th className="stake-staked-th"></th>
                     <th></th>
                     <th className="th-last-item">
-                      <input
+                      {/* Search disabled for now */}
+                      {/* <input
                         className="table-searchbar"
                         placeholder={"Filter..."}
                         value={searchBox}
@@ -120,14 +121,14 @@ const StakeTable = ({
                           searchBoxHandler(e.currentTarget.value)
                         }
                         autoComplete="off"
-                      />
+                      /> */}
                     </th>
                   </tr>
                 </thead>
                 {tableBody()}
-                <ReactTooltip multiline={true} />
               </Table>
               &nbsp;
+              <ReactTooltip multiline={true} />
             </div>
           </Spinner>
           <Pagination page={page} setOffset={setOffset} total={totalPages} />
