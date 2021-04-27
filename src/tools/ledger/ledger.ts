@@ -172,7 +172,7 @@ export const createLedgerPaymentInputFromPayload = ({
   const { nonce, memo, receiverAddress } = transactionData;
   if (fee && amount) {
     return {
-      nonce,
+      nonce: nonce.toString(),
       memo,
       fee: fee.toString(),
       amount: amount.toString(),
