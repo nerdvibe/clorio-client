@@ -46,7 +46,7 @@ const LedgerGetAddress = ({ accountNumber, toggleLoader, network }: IProps) => {
           : -1;
       const success = await storeSession(publicKey, id, true, ledgerAccount);
       if (success) {
-        history.push("/overview");
+        history.replace("/overview");
       }
     }
   };
@@ -64,7 +64,7 @@ const LedgerGetAddress = ({ accountNumber, toggleLoader, network }: IProps) => {
       toast.error(
         e.message || "An error occurred while loading hardware wallet"
       );
-      history.push("/");
+      history.replace("/");
     }
   };
 

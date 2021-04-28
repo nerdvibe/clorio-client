@@ -54,7 +54,7 @@ const Register = ({ toggleLoader, network }: IProps) => {
     toggleLoader();
     storeSession(keys.publicKey, -1, false, 0).then((success) => {
       if (success) {
-        history.push("/overview");
+        history.replace("/overview");
       }
     });
   };

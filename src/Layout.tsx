@@ -49,7 +49,9 @@ const Layout = () => {
   });
 
   const goToHome = () => {
-    history.push("/overview");
+    history.replace({
+      pathname: "/overview",
+    });
   };
 
   useEffect(() => {

@@ -13,7 +13,7 @@ export const TermsAndConditions = () => {
    */
   const acceptTermsAndConditions = () => {
     sessionStorage.setItem("terms-and-conditions", "true");
-    history.push("/");
+    history.replace("/");
   };
 
   return (

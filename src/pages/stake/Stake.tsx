@@ -24,7 +24,6 @@ import {
 } from "../../tools/ledger/ledger";
 import {
   getDefaultValidUntilField,
-  toNanoMINA,
   DEFAULT_QUERY_REFRESH_INTERVAL,
   VALIDATORS_TABLE_ITEMS_PER_PAGE,
   MINIMUM_FEE,
@@ -68,9 +67,7 @@ export default ({ sessionData }: IProps) => {
   const [customDelegate, setCustomDelegate] = useState<string>("");
   const [offset, setOffset] = useState<number>(0);
   const [customNonce, setCustomNonce] = useState<number>(MINIMUM_NONCE);
-  const [selectedFee, setSelectedFee] = useState<number>(
-    toNanoMINA(MINIMUM_FEE)
-  );
+  const [selectedFee, setSelectedFee] = useState<number>(MINIMUM_FEE);
   const [ledgerTransactionData, setLedgerTransactionData] = useState<string>(
     ""
   );
@@ -154,7 +151,7 @@ export default ({ sessionData }: IProps) => {
       }
       nonceAndDelegateRefetch({ publicKey: sessionData.address });
       toast.success("Delegation successfully broadcasted");
-      history.push("/stake");
+      history.replace("/stake");
     }
     broadcastLedgerTransaction();
   }, [sendTransactionFlag, broadcastResult]);
