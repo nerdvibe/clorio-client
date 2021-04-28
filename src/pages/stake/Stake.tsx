@@ -296,7 +296,7 @@ export default ({ sessionData }: IProps) => {
    */
   const signLedgerDelegation = async () => {
     try {
-      if (!delegateData || delegateData?.publicKey) {
+      if (!delegateData?.publicKey) {
         throw new Error("Recipient Public key is not defined");
       }
       checkBalance(selectedFee, balance);
