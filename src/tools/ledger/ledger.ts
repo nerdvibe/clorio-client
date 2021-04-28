@@ -4,7 +4,6 @@ import { isDevnet } from "../utils";
 import isElectron from "is-electron";
 import { feeOrDefault } from "../fees";
 import { getDefaultValidUntilField } from "../utils";
-import { toNanoMINA } from "../mina";
 import { ILedgerTransaction } from "../../types/LedgerDelegationTransaction";
 
 let ledgerAPI: any;
@@ -133,9 +132,7 @@ export const createAndSignLedgerTransaction = async ({
     amount: +amount,
     memo: cleanMemo,
     nonce,
-    // TODO: FIX HARDCODING!
     txType: TX_TYPE.PAYMENT,
-    // TODO: FIX HARDCODING!
     networkId: ledgerNetworkId(),
     validUntil: +getDefaultValidUntilField(),
   };
@@ -172,7 +169,7 @@ export const createLedgerPaymentInputFromPayload = ({
   const { nonce, memo, receiverAddress } = transactionData;
   if (fee && amount) {
     return {
-      nonce,
+      nonce: nonce.toString(),
       memo,
       fee: fee.toString(),
       amount: amount.toString(),
@@ -201,12 +198,10 @@ export const createLedgerDelegationTransaction = ({
     senderAccount,
     senderAddress,
     receiverAddress,
-    fee: +toNanoMINA(feeOrDefault(fee)),
+    fee: +feeOrDefault(fee),
     amount: 0,
     nonce,
-    // TODO: FIX HARDCODING!
     txType: TX_TYPE.DELEGATION,
-    // TODO: FIX HARDCODING!
     networkId: ledgerNetworkId(),
     validUntil: +getDefaultValidUntilField(),
   };

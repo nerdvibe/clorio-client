@@ -10,12 +10,12 @@ const Footer = ({ network }: IProps) => {
     : "Network unavailable";
 
   return (
-    <p className="full-width-align-center footer-text">
+    <div className="full-width-align-center footer-text">
       ~Clorio is a wallet offered by Carbonara from WeStake.Club and is not
       developed by O(1)Labs.
       <br />
       <div>{renderNetwork}</div>
-    </p>
+    </div>
   );
 };
 

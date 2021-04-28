@@ -12,7 +12,6 @@ export const isMinaAppOpen = async () => {
     throw new Error("Wrong environment");
   }
   const transport = await Transporter.create();
-  transport.setDebugMode(true);
   const instance = new MinaLedgerJS(transport);
   const appName = await instance.getAppName();
   transport.close();
