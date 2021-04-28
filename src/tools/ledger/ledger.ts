@@ -199,7 +199,7 @@ export const createLedgerDelegationTransaction = ({
     senderAccount,
     senderAddress,
     receiverAddress,
-    fee: +toNanoMINA(feeOrDefault(fee)),
+    fee: +feeOrDefault(fee),
     amount: 0,
     nonce,
     txType: TX_TYPE.DELEGATION,
