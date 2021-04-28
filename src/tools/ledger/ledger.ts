@@ -4,7 +4,6 @@ import { isDevnet } from "../utils";
 import isElectron from "is-electron";
 import { feeOrDefault } from "../fees";
 import { getDefaultValidUntilField } from "../utils";
-import { toNanoMINA } from "../mina";
 import { ILedgerTransaction } from "../../types/LedgerDelegationTransaction";
 
 let ledgerAPI: any;
