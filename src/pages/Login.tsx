@@ -59,7 +59,7 @@ const Login = ({ toggleLoader, network }: IProps) => {
   const storeSessionAndRedirect = async (publicKey: string, id: number) => {
     const success = await storeSession(publicKey, id, false, 0);
     if (success) {
-      history.push("/overview");
+      history.replace("/overview");
       toggleLoader(false);
     }
   };

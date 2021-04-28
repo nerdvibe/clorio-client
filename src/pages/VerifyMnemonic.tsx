@@ -29,7 +29,7 @@
 
 //   function setAuthorization() {
 //     storeSession(address, passphrase, privateKey);
-//     history.push("/overview");
+//     history.replace("/overview");
 //   }
 
 //   function removeWords() {
