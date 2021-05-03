@@ -1,4 +1,4 @@
-import { Col, Row } from "react-bootstrap";
+import { Badge, Col, Row } from "react-bootstrap";
 import { Copy } from "react-feather";
 import { Link } from "react-router-dom";
 import Button from "../Button";
@@ -8,7 +8,7 @@ import { copyToClipboard, downloadPaperWalletPDF } from "../../../tools";
 
 interface IProps {
   keys: IKeypair;
-  generateNew: () => void;
+  generateNew?: () => void;
   setValidation: (showValidation: boolean) => void;
 }
 
@@ -28,6 +28,28 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => (
             <Logo big={true} />
           </div>
           <div className="v-spacer no-print" />
+          <h4 className="full-width-align-center">This is your passphrase</h4>
+          <div
+            className="wrap-input1 validate-input"
+            data-validate="Name is required"
+          >
+            <h5 className="full-width-align-center selectable-text">
+              {keys.mnemonic?.split(" ").map((word: string, index: number) => (
+                <span key={index}>
+                  {" "}
+                  <Badge className="selectable-text word-badge" variant="info">
+                    {word}&nbsp;
+                  </Badge>{" "}
+                </span>
+              ))}
+              <Button
+                className="inline-element no-print"
+                icon={<Copy />}
+                onClick={() => copyToClipboard(keys.mnemonic)}
+              />
+            </h5>
+          </div>
+          <div className="v-spacer" />
           <h4 className="full-width-align-center">This is your address</h4>
           <div
             className="wrap-input1 validate-input"
@@ -63,8 +85,9 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => (
           <p className="full-width-align-center">
             This is the only time you will see the passphrase and the private
             key. <br />
-            Make sure have made a copy of them. If you loose your private key
-            you will not be able to access your funds anymore! <br />
+            Make sure have made a copy of them. If you loose your Passphrase or
+            Private key you will not be able to access your funds anymore!{" "}
+            <br />
             <a
               className="link-button"
               onClick={() => downloadPaperWalletPDF(keys)}
@@ -75,19 +98,21 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => (
         </div>
         <div className="v-spacer" />
         <Row className="no-print">
-          <Col xs={4}>
+          <Col>
             <Link to="/">
               <Button className="link-button mx-auto" text="Cancel" />
             </Link>
           </Col>
-          <Col xs={4}>
-            <Button
-              className="link-button mx-auto"
-              text="Generate new key"
-              onClick={generateNew}
-            />
-          </Col>
-          <Col xs={4}>
+          {generateNew && (
+            <Col>
+              <Button
+                className="link-button mx-auto"
+                text="Generate new key"
+                onClick={generateNew}
+              />
+            </Col>
+          )}
+          <Col>
             <Button
               className="lightGreenButton__fullMono mx-auto"
               onClick={() => setValidation(true)}

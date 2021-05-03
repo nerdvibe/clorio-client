@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { derivePublicKey, signStakeDelegation } from "@o1labs/client-sdk";
+import { signStakeDelegation } from "@o1labs/client-sdk";
 import { toast } from "react-toastify";
 import NewsBanner from "../../components/UI/NewsBanner";
 import LedgerLoader from "../../components/UI/LedgerLoader";
@@ -32,6 +32,7 @@ import {
   createDelegationPaymentInputFromPayload,
   createSignatureInputFromSignature,
   feeOrDefault,
+  deriveAccount,
 } from "../../tools";
 import {
   BROADCAST_DELEGATION,
@@ -192,7 +193,7 @@ export default ({ sessionData }: IProps) => {
 
   /**
    * Set delegate public key on component state, open confirmation modal
-   * @param {string} delegate Delegate private key
+   * @param {string} delegate Delegate public key
    */
   const openModal = (delegate: IValidatorData) => {
     setDelegate(delegate);
@@ -280,7 +281,7 @@ export default ({ sessionData }: IProps) => {
   };
 
   /**
-   * Set the selected fee inside the component state and show the private key modal
+   * Set the selected fee inside the component state and show the passphrase/private key modal
    * @param selectedFee number
    */
   const setFee = (selectedFee: number) => {
@@ -321,19 +322,19 @@ export default ({ sessionData }: IProps) => {
   };
 
   /**
-   * Sign stake delegation using MinaSDK through private key
+   * Sign stake delegation using MinaSDK through passphrase or private key
    */
-  const signDelegation = () => {
+  const signDelegation = async () => {
     try {
       if (!delegateData?.publicKey) {
         throw new Error("The Public key of the selected delegate is missing");
       }
       checkBalance(selectedFee, balance);
       const actualNonce = getNonce();
-      const publicKey = derivePublicKey(privateKey);
+      const derivedAccount = await deriveAccount(privateKey);
       const keypair = {
-        privateKey: privateKey,
-        publicKey: publicKey,
+        privateKey: derivedAccount.privateKey,
+        publicKey: derivedAccount.publicKey,
       };
       const stakeDelegation = {
         to: delegateData.publicKey,

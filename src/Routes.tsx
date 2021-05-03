@@ -4,16 +4,17 @@ const SendTX = React.lazy(() => import("./pages/sendTX/SendTX"));
 const Stake = React.lazy(() => import("./pages/stake/Stake"));
 const SplashScreen = React.lazy(() => import("./pages/SplashScreen"));
 const Login = React.lazy(() => import("./pages/Login"));
-const Register = React.lazy(() => import("./pages/registration/Registration"));
-import { Route, Redirect, Switch } from "react-router-dom";
-import Spinner from "./components/UI/Spinner";
+// const Register = React.lazy(() => import("./pages/registration/Registration"));
 const LedgerLogin = React.lazy(() => import("./pages/LedgerLogin"));
 const SignMessage = React.lazy(() => import("./pages/signMessage/SignMessage"));
 const NotFound = React.lazy(() => import("./pages/404"));
 const VerifyMessage = React.lazy(() => import("./pages/VerifyMessage"));
+const Mnemonic = React.lazy(() => import("./pages/mnemonic/Mnemonic"));
 import { isEmptyObject } from "./tools/utils";
 import { INetworkData } from "./types/NetworkData";
 import { IWalletData } from "./types/WalletData";
+import { Route, Redirect, Switch } from "react-router-dom";
+import Spinner from "./components/UI/Spinner";
 
 interface IProtectedRouteProps {
   component: React.FC<any>;
@@ -87,14 +88,11 @@ const Routes = (props: IRoutesProps) => {
           <Login {...props} network={props.network} />
         </Route>
         <Route path="/register" exact>
-          <Register {...props} network={props.network} />
+          <Mnemonic {...props} network={props.network} />
         </Route>
         <Route path="/ledger" exact>
-          <LedgerLogin {...props} network={props.network} />
+          <LedgerLogin {...props} />
         </Route>
-        {/*<Route path="/register">
-          <Entropy />
-        </Route>*/}
         {/*<Route path="/verify">
           <VerifyMnemonic />
         </Route>*/}

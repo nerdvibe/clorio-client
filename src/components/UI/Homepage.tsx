@@ -18,7 +18,7 @@ const Homepage = () => (
         <Link to="/login">
           <Button
             className="lightGreenButton__fullMono mx-auto"
-            text="Access with Private key"
+            text="Access with Passphrase or Private key"
           />
         </Link>
         <div className="v-spacer" />
