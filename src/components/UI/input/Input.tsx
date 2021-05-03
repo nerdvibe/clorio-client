@@ -48,7 +48,11 @@ const Input = ({
       {hidden && (
         <span
           className="show-hide-icon"
-          data-tip={showText ? "Hide private key" : "Show private key"}
+          data-tip={
+            showText
+              ? "Hide Passphrase/Private key"
+              : "Show Passphrase/Private key"
+          }
         >
           {!showText ? (
             <Eye onClick={() => setShowText(!showText)} />

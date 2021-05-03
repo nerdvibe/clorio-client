@@ -40,7 +40,7 @@ const Register = ({ toggleLoader, network }: IProps) => {
   }, []);
 
   /**
-   * If input text is equal to given private key in the previous state, unlock the Button
+   * If input text is equal to given Passphrase/Private key in the previous state, unlock the Button
    * @returns boolean
    */
   const checkButtonState = () => {
