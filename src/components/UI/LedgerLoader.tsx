@@ -1,11 +1,13 @@
+import Animation from "../UI/Animation";
+import ConnectAnimation from "../../assets/connect.json";
+
 const LedgerLoader = () => (
   <div>
-    <div className="lds-ellipsis">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
+    <Animation
+      width="400px"
+      animation={ConnectAnimation}
+      text="Looking for devices"
+    />
   </div>
 );
 
