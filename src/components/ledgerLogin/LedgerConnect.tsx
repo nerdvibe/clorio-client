@@ -89,7 +89,6 @@ const LedgerConnect = (props: IProps) => {
       <div className="v-spacer" />
       <LedgerLoader />
       <div className="v-spacer" />
-      <h6 className="full-width-align-center">Looking for devices</h6>
       <div className="v-spacer" />
       <Link to="/">
         <Button className="link-button mx-auto" text="Go back" />
