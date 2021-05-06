@@ -105,7 +105,10 @@ const Sidebar = ({ network, clearSessionData }: IProps) => {
               </strong>{" "}
             </Link>
           </Nav.Item>
-          <div className="sidebar-footer-network">
+          <div
+            className="sidebar-footer-network"
+            data-tip={`Clorio version : ${process.env.REACT_APP_VERSION}`}
+          >
             {renderNetworkLabel(network?.nodeInfo)} {statusDot}
           </div>
         </div>
