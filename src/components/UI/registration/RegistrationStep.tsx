@@ -1,4 +1,4 @@
-import { Badge, Col, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { Copy } from "react-feather";
 import { Link } from "react-router-dom";
 import Button from "../Button";
@@ -14,13 +14,8 @@ interface IProps {
 
 const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => (
   <div className="animate__animated animate__fadeIn full-width">
-    <Row className="full-width">
-      <Col
-        md={12}
-        lg={10}
-        xl={8}
-        className="offset-lg-1 offset-xl-2 text-center"
-      >
+    <Row className="full-width justify-content-center">
+      <Col md={12} lg={10} xl={8} className=" text-center">
         <div id="element-to-print">
           <div className="v-spacer-big pdf-only" />
           <div className="v-spacer-big pdf-only" />
@@ -29,17 +24,11 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => (
           </div>
           <div className="v-spacer no-print" />
           <h4 className="full-width-align-center">This is your passphrase</h4>
-          <div
-            className="wrap-input1 validate-input"
-            data-validate="Name is required"
-          >
+          <div className="custom-card">
             <h5 className="full-width-align-center selectable-text">
               {keys.mnemonic?.split(" ").map((word: string, index: number) => (
                 <span key={index}>
-                  {" "}
-                  <Badge className="selectable-text word-badge" variant="info">
-                    {word}&nbsp;
-                  </Badge>{" "}
+                  <span className="selectable-text">{word}&nbsp;</span>
                 </span>
               ))}
               <Button
@@ -51,10 +40,7 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => (
           </div>
           <div className="v-spacer" />
           <h4 className="full-width-align-center">This is your address</h4>
-          <div
-            className="wrap-input1 validate-input"
-            data-validate="Name is required"
-          >
+          <div className="custom-card">
             <h5 className="full-width-align-center selectable-text">
               {keys.publicKey}
               <Button
@@ -66,7 +52,7 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => (
           </div>
           <div className="v-spacer" />
           <h4 className="full-width-align-center">This is your private key</h4>
-          <div className="wrap-input1 validate-input">
+          <div className="custom-card">
             <h5 className="full-width-align-center selectable-text">
               {keys.privateKey}
               <Button

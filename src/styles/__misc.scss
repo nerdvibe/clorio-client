@@ -13,6 +13,14 @@ th {
   }
 }
 
+.custom-card{
+  padding: 20px;
+  border-radius: 20px;
+  // background: #fff;
+  // box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+  overflow-x: auto;
+}
+
 .walletImage {
   background: $red;
   width: 80px;
