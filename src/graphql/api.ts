@@ -7,6 +7,8 @@ import {
   NormalizedCacheObject,
 } from "@apollo/client";
 
+const customEndpoint = localStorage.getItem("custom-endpoint");
+
 const httpLink = ApolloLink.from([
   onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors)
@@ -18,7 +20,7 @@ const httpLink = ApolloLink.from([
     if (networkError) console.log(`[Network error]: ${networkError}`);
   }),
   new HttpLink({
-    uri: process.env.REACT_APP_GQL_SERVER,
+    uri: customEndpoint || process.env.REACT_APP_GQL_SERVER,
     credentials: "same-origin",
     fetchOptions: {
       reconnect: true,

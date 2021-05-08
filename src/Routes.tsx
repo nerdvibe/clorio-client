@@ -11,6 +11,7 @@ const LedgerLogin = React.lazy(() => import("./pages/LedgerLogin"));
 const SignMessage = React.lazy(() => import("./pages/signMessage/SignMessage"));
 const NotFound = React.lazy(() => import("./pages/404"));
 const VerifyMessage = React.lazy(() => import("./pages/VerifyMessage"));
+const Settings = React.lazy(() => import("./pages/Settings"));
 import { isEmptyObject } from "./tools/utils";
 import { INetworkData } from "./types/NetworkData";
 import { IWalletData } from "./types/WalletData";
@@ -86,6 +87,12 @@ const Routes = (props: IRoutesProps) => {
         <Route path="/login" exact>
           <Login {...props} network={props.network} />
         </Route>
+        <ProtectedRoute
+          {...props}
+          exact
+          path="/settings"
+          component={Settings}
+        />
         <Route path="/register" exact>
           <Register {...props} network={props.network} />
         </Route>

@@ -1,7 +1,7 @@
 import { Nav } from "react-bootstrap";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
-import { Cpu, LogIn, TrendingUp, Edit3, Check } from "react-feather";
+import { Cpu, LogIn, TrendingUp, Edit3, Check, Tool } from "react-feather";
 import Logo from "../logo/Logo";
 import { clearSession } from "../../../tools";
 import { isRouteActiveClass, renderNetworkLabel } from "./SidebarHelper";
@@ -106,6 +106,9 @@ const Sidebar = ({ network, clearSessionData }: IProps) => {
             </Link>
           </Nav.Item>
           <div className="sidebar-footer-network">
+            <Link to="/settings">
+              <Tool className="sidebar-item" />
+            </Link>{" "}
             {renderNetworkLabel(network?.nodeInfo)} {statusDot}
           </div>
         </div>
