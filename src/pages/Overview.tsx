@@ -35,6 +35,9 @@ const Overview = ({ sessionData }: IProps) => {
     data: transactionsData,
     loading: transactionsLoading,
     error: transactionsError,
+    refetch: transactionsRefetch,
+    stopPolling: transactionStopPolling,
+    startPolling: transactionStartPolling,
   } = useQuery<ITransactionQueryResult>(GET_TRANSACTIONS, {
     variables: { user: sessionData.id, offset },
     fetchPolicy: "network-only",
@@ -44,6 +47,9 @@ const Overview = ({ sessionData }: IProps) => {
   const {
     data: mempoolData,
     loading: mempoolLoading,
+    refetch: mempoolRefetch,
+    stopPolling: mempoolStopPolling,
+    startPolling: mempoolStartPolling,
   } = useQuery<IMempoolQueryResult>(GET_MEMPOOL, {
     variables: { publicKey: sessionData.address },
     skip: !sessionData.address,
@@ -60,6 +66,23 @@ const Overview = ({ sessionData }: IProps) => {
     setOffset(data);
   };
 
+  /**
+   * Restart polling interval
+   * @param refetch force refetch data
+   */
+  const refetchData = (refetch = false) => {
+    transactionStopPolling();
+    mempoolStopPolling();
+    if (refetch) {
+      mempoolRefetch();
+      transactionsRefetch();
+    }
+    setTimeout(() => {
+      transactionStartPolling(DEFAULT_QUERY_REFRESH_INTERVAL);
+      mempoolStartPolling(DEFAULT_QUERY_REFRESH_INTERVAL);
+    }, 1000);
+  };
+
   return (
     <Hoc className="main-container">
       <div>
@@ -74,6 +97,7 @@ const Overview = ({ sessionData }: IProps) => {
           page={getPageFromOffset(offset)}
           userId={sessionData.id}
           userAddress={sessionData.address}
+          refetchData={refetchData}
         />
       </div>
     </Hoc>

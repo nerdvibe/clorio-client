@@ -2,3 +2,5 @@
 export const DEFAULT_QUERY_REFRESH_INTERVAL = 30 * 1000;
 // 5s delay (5000ms)
 export const TOAST_TIMEOUT = 5 * 1000;
+// 30s delay
+export const DEFAULT_REFRESH_COUNTDOWN = 30;
