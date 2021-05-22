@@ -6,7 +6,8 @@ import { ILedgerTransaction } from "../../types/LedgerDelegationTransaction";
 
 if (isElectron()) {
   // Import the node-hid
-  ipcRenderer = window.require("electron").ipcRenderer;
+  // @ts-ignore
+  ipcRenderer = window.ipcRenderer;
 }
 
 export const isMinaAppOpen = async () => {
