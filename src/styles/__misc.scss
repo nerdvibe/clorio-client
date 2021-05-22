@@ -334,11 +334,9 @@ a:hover {
   padding: 50px 100px;
   opacity: 1;
   border-radius: 10px;
-  left: 25%;
   background-color: #fafafa;
   z-index: 5;
   position: fixed;
-  top: 35%;
   div {
     h2,
     h5,
@@ -617,6 +615,16 @@ tbody {
 .success-toast {
   background: $light-green !important;
   color: $white !important;
+}
+
+.modal-wrapper{
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  height: 100%;
+  top: 0;
+  left: 0;
 }
 
 .first-place {
