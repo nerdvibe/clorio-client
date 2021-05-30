@@ -1428,9 +1428,10 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@o1labs/client-sdk@0.2.5":
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/@o1labs/client-sdk/-/client-sdk-0.2.5.tgz#e9972d1bd7c05d383f35449be78fe8c4b7cb5123"
+"@o1labs/client-sdk@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@o1labs/client-sdk/-/client-sdk-1.0.1.tgz#5b2824a52fd0e839873791e4a5949aa5197a2ed1"
+  integrity sha512-fHAmY31WIKuXIgMohyf5kJkjNGNqco965YwE2Td4k+IJRswO2ymaIK2Uo4CSp8UqivGzF02i7oJJhzyWWViN5Q==
   dependencies:
     "@types/node" "^13.7.0"
 
