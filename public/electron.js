@@ -19,6 +19,7 @@ function createWindow() {
       nodeIntegration: false,
       devTools: false,
       sandbox: true,
+      contextIsolation:true
     },
     minWidth: 800,
     minHeight: 800,
