@@ -37,6 +37,12 @@ const RefetchTransactions = ({ refetch }: any) => {
     }
   };
 
+  if (countdown >= 20) {
+    return (
+      <div className="full-width-align-center small-text">Just fetched</div>
+    );
+  }
+
   return (
     <div className="full-width-align-center small-text">
       Fetching data in {countdown}s

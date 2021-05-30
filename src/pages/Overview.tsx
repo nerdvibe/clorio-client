@@ -42,7 +42,6 @@ const Overview = ({ sessionData }: IProps) => {
     variables: { user: sessionData.id, offset },
     fetchPolicy: "network-only",
     skip: !sessionData.id,
-    pollInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
   });
   const {
     data: mempoolData,
@@ -80,7 +79,7 @@ const Overview = ({ sessionData }: IProps) => {
     setTimeout(() => {
       transactionStartPolling(DEFAULT_QUERY_REFRESH_INTERVAL);
       mempoolStartPolling(DEFAULT_QUERY_REFRESH_INTERVAL);
-    }, 1000);
+    }, 500);
   };
 
   return (
