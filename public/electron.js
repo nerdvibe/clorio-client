@@ -54,8 +54,8 @@ app.on("web-contents-created", (e, contents) => {
     e.preventDefault();
     require("open")(url);
   });
-  contents.on("will-navigate", (e, url) => {
-    if (url !== contents.getURL()) e.preventDefault(), require("open")(url);
+  contents.on("will-navigate", (event) => {
+    event.preventDefault();
   });
 });
 
