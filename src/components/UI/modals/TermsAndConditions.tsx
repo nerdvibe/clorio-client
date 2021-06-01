@@ -49,7 +49,7 @@ export const TermsAndConditions = () => {
           <p>
             By using ~Clorio Wallet you agree to the{" "}
             <a
-              href="https://clor.io/terms-and-contions"
+              href="https://docs.clor.io/other/terms-and-conditions"
               target="_blank"
               rel="noreferrer"
             >
