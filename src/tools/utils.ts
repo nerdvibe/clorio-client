@@ -6,6 +6,8 @@ import {
   MINIMUM_FEE,
 } from "./const";
 import { toNanoMINA } from "./mina";
+import isElectron from "is-electron";
+import { toast } from "react-toastify";
 
 export const copyToClipboard = (content = "") => {
   const el = document.createElement("textarea");
@@ -97,4 +99,48 @@ export const feeGreaterThanMinimum = (fee: number) => {
 
 export const isDevnet = () => {
   return process.env.REACT_APP_NETWORK === "devnet";
+};
+
+export const electronAlerts = async () => {
+  const alerts: string[] = [];
+
+  if (isElectron()) {
+    const ipcRenderer = window.require("electron").ipcRenderer;
+    ipcRenderer.send("CHECK_FOR_UPDATE_PENDING");
+    ipcRenderer.on(
+      "CHECK_FOR_UPDATE_SUCCESS",
+      async (_: any, version: string) => {
+        if (!alerts.includes("CHECK_FOR_UPDATE_SUCCESS")) {
+          toast.info(`There is a new release 🎉 v${version}`, {
+            toastId: "CHECK_FOR_UPDATE_SUCCESS",
+          });
+          alerts.push("CHECK_FOR_UPDATE_SUCCESS");
+        }
+      }
+    );
+    ipcRenderer.on("UPDATE_ERROR", () => {
+      if (!alerts.includes("UPDATE_ERROR")) {
+        toast.error("There was an error while updating the app", {
+          toastId: "UPDATE_ERROR",
+        });
+        alerts.push("UPDATE_ERROR");
+      }
+    });
+    ipcRenderer.on("DOWNLOAD_UPDATE_SUCCESS", () => {
+      if (!alerts.includes("DOWNLOAD_UPDATE_SUCCESS")) {
+        toast.success("Clorio successfully downloaded", {
+          toastId: "DOWNLOAD_UPDATE_SUCCESS",
+        });
+        alerts.push("DOWNLOAD_UPDATE_SUCCESS");
+      }
+    });
+    ipcRenderer.on("DOWNLOAD_UPDATE_FAILURE", () => {
+      if (!alerts.includes("DOWNLOAD_UPDATE_FAILURE")) {
+        toast.error("There was an error while updating", {
+          toastId: "DOWNLOAD_UPDATE_FAILURE",
+        });
+        alerts.push("DOWNLOAD_UPDATE_FAILURE");
+      }
+    });
+  }
 };
