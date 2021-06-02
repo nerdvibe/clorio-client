@@ -92,6 +92,8 @@ export default ({ sessionData }: IProps) => {
   const {
     data: nonceAndDelegateData,
     refetch: nonceAndDelegateRefetch,
+    loading: nonceAndDelegateLoading,
+    error: nonceAndDelegateError,
   } = useQuery<INonceDelegateQueryResult>(GET_NONCE_AND_DELEGATE, {
     variables: { publicKey: sessionData.address },
     fetchPolicy: "network-only",
@@ -126,6 +128,15 @@ export default ({ sessionData }: IProps) => {
       setCurrentDelegateName(nonceAndDelegateData.accountByKey.delegate.name);
     }
   }, [nonceAndDelegateData]);
+
+  /**
+   * If there was a problem fetching the nonce, retry to fetch it
+   */
+  useEffect(() => {
+    if (!nonceAndDelegateLoading && nonceAndDelegateError) {
+      nonceAndDelegateRefetch();
+    }
+  }, [nonceAndDelegateLoading, nonceAndDelegateError]);
 
   /**
    * Wait for the ledger to sign the transaction
@@ -405,6 +416,7 @@ export default ({ sessionData }: IProps) => {
           name={delegateData?.name}
           closeModal={closeModal}
           confirmDelegate={confirmDelegate}
+          loadingNonce={nonceAndDelegateLoading}
         />
       </ModalContainer>
       <ModalContainer
