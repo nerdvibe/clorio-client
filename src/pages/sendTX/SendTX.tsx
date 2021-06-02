@@ -51,6 +51,7 @@ interface IProps {
 const SendTX = (props: IProps) => {
   const history = useHistory();
   const [privateKey, setPrivateKey] = useState<string>("");
+  const [waitingNonce, setWaitingNonce] = useState<boolean>(false);
   const [sendTransactionFlag, setSendTransactionFlag] = useState<boolean>(
     false
   );
@@ -74,6 +75,8 @@ const SendTX = (props: IProps) => {
   const {
     data: nonceData,
     refetch: nonceRefetch,
+    loading: nonceLoading,
+    error: nonceError,
   } = useQuery<INonceQueryResult>(GET_NONCE, {
     variables: { publicKey: senderAddress },
     skip: !senderAddress,
@@ -117,6 +120,22 @@ const SendTX = (props: IProps) => {
     }
     broadcastLedgerTransaction();
   }, [ledgerTransactionData, step]);
+
+  /**
+   * If there was a problem fetching the nonce, retry to fetch it
+   */
+  useEffect(() => {
+    if (!nonceLoading && nonceError) {
+      nonceRefetch();
+    }
+  }, [nonceLoading, nonceError]);
+
+  useEffect(() => {
+    if (waitingNonce && !nonceLoading) {
+      openConfirmationModal();
+      setWaitingNonce(false);
+    }
+  }, [waitingNonce, nonceLoading]);
 
   /**
    * If address is not stored inside component state, fetch it and save it.
@@ -173,6 +192,10 @@ const SendTX = (props: IProps) => {
    * After the nonce is set, proceed with transaction data verification and private key verification
    */
   const openConfirmationModal = () => {
+    if (nonceLoading) {
+      setWaitingNonce(true);
+      return;
+    }
     try {
       if (!nonceData && !customNonce) {
         return setShowModal(ModalStates.NONCE);
@@ -320,8 +343,11 @@ const SendTX = (props: IProps) => {
   };
 
   return (
-    <Hoc className="main-container">
-      <Spinner show={showLoader}>
+    <Hoc className="main-container block-container">
+      <Spinner
+        show={showLoader || waitingNonce}
+        className="spinner-container center full-width"
+      >
         <div>
           <div className="animate__animated animate__fadeIn">
             {step === 0 ? (
