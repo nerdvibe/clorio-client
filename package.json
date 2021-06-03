@@ -78,6 +78,9 @@
     "directories": {
       "buildResources": "assets"
     },
+    "nsis": {
+      "artifactName": "Clorio-Wallet"
+    },
     "win": {
       "publish": [
         "github"
