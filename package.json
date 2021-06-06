@@ -79,7 +79,7 @@
       "buildResources": "assets"
     },
     "nsis": {
-      "artifactName": "Clorio-Wallet"
+      "artifactName": "Clorio-Wallet.exe"
     },
     "win": {
       "publish": [
