@@ -38,7 +38,12 @@ import {
   ModalStates,
   SendTXPageSteps,
 } from "./SendTXHelper";
-import { IFeeQuery, IWalletData, ITransactionData } from "../../types";
+import {
+  IFeeQuery,
+  IWalletData,
+  ITransactionData,
+  IKeypair,
+} from "../../types";
 import { ILedgerContext } from "../../contexts/ledger/LedgerTypes";
 import { LedgerContext } from "../../contexts/ledger/LedgerContext";
 import { IBalanceContext } from "../../contexts/balance/BalanceTypes";
@@ -292,7 +297,7 @@ const SendTX = (props: IProps) => {
       const keypair = {
         privateKey: derivedData?.privateKey,
         publicKey: derivedData?.publicKey,
-      };
+      } as IKeypair;
       const signedPayment = signTransaction({
         transactionData,
         keypair,
