@@ -10,6 +10,7 @@ import { IMessageToSign } from "../../types/MessageToSign";
 import SignatureMessageResult from "../../components/UI/signMessage/SignatureMessageResult";
 import SignMessageLedgerScreen from "../../components/UI/signMessage/SignMessageLedgerScreen";
 import { deriveAccount } from "../../tools";
+import { IKeypair } from "../../types";
 
 const SignMessage = () => {
   const [showResult, setShowResult] = useState<boolean>(false);
@@ -34,7 +35,7 @@ const SignMessage = () => {
       const keypair = {
         publicKey: derivedKeypair.publicKey,
         privateKey: derivedKeypair.privateKey,
-      };
+      } as IKeypair;
       setResult(signMessage(messageToSign.message, keypair));
       setShowResult(true);
     } catch (e) {

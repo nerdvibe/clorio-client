@@ -50,6 +50,7 @@ import { IWalletData } from "../../types/WalletData";
 import { IValidatorsNewsQuery } from "../../types/NewsData";
 import { IFeeQuery } from "../../types/Fee";
 import { INonceDelegateQueryResult } from "./StakeTypes";
+import { IKeypair } from "../../types";
 
 interface IProps {
   sessionData: IWalletData;
@@ -335,7 +336,7 @@ export default ({ sessionData }: IProps) => {
       const keypair = {
         privateKey: derivedAccount.privateKey,
         publicKey: derivedAccount.publicKey,
-      };
+      } as IKeypair;
       const stakeDelegation = {
         to: delegateData.publicKey,
         from: address,
