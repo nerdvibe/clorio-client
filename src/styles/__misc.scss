@@ -53,6 +53,34 @@ th {
   max-width: 100% !important;
 }
 
+.clorio-app-banner {
+  position: absolute;
+  width: 100%;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  z-index: 20;
+  div{
+    .close-button{
+      float: right;
+      padding: 8px;
+      opacity: .5;
+      cursor: pointer;
+    }
+    border-radius: 10px;
+    display: inline-block;
+    margin: 0 auto;
+    padding: 15px 20px 10px 20px;
+    width:fit-content;
+    background-color: #cce5ff;
+    border-color: #b8daff;
+    p{
+      font-size: medium;
+      color: #004085;
+    }
+  }
+}
+
 .walletImageContainer {
   margin-left: 2%;
   margin-right: 2%;
