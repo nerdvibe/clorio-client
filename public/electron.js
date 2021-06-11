@@ -16,8 +16,11 @@ function createWindow() {
     icon: path.join(__dirname, "icon.png"),
     title: "Clorio Wallet",
     webPreferences: {
-      nodeIntegration: true,
+      preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: false,
       devTools: false,
+      sandbox: true,
+      contextIsolation:true
     },
     minWidth: 800,
     minHeight: 800,
