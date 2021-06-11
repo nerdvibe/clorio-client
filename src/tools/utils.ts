@@ -105,28 +105,30 @@ export const electronAlerts = async () => {
   const alerts: string[] = [];
 
   if (isElectron()) {
-    const ipcRenderer = window.require("electron").ipcRenderer;
-    ipcRenderer.send("CHECK_FOR_UPDATE_PENDING");
-    ipcRenderer.on(
-      "CHECK_FOR_UPDATE_SUCCESS",
-      async (_: any, version: string) => {
-        if (!alerts.includes("CHECK_FOR_UPDATE_SUCCESS")) {
-          toast.info(`There is a new release 🎉 v${version}`, {
-            toastId: "CHECK_FOR_UPDATE_SUCCESS",
-          });
-          alerts.push("CHECK_FOR_UPDATE_SUCCESS");
-        }
+    let updateChecked = false;
+    // @ts-ignore
+    const ipcOn = window.ipcBridge.on;
+    // @ts-ignore
+    const ipcSend = window.ipcBridge.send;
+    ipcSend("CHECK_FOR_UPDATE_PENDING");
+    ipcOn("CHECK_FOR_UPDATE_SUCCESS", async (_: any, version: string) => {
+      updateChecked = true;
+      if (!alerts.includes("CHECK_FOR_UPDATE_SUCCESS")) {
+        toast.info(`There is a new release 🎉 v${version}`, {
+          toastId: "CHECK_FOR_UPDATE_SUCCESS",
+        });
+        alerts.push("CHECK_FOR_UPDATE_SUCCESS");
       }
-    );
-    ipcRenderer.on("UPDATE_ERROR", () => {
-      if (!alerts.includes("UPDATE_ERROR")) {
+    });
+    ipcOn("UPDATE_ERROR", () => {
+      if (!alerts.includes("UPDATE_ERROR") && updateChecked) {
         toast.error("There was an error while updating the app", {
           toastId: "UPDATE_ERROR",
         });
         alerts.push("UPDATE_ERROR");
       }
     });
-    ipcRenderer.on("DOWNLOAD_UPDATE_SUCCESS", () => {
+    ipcOn("DOWNLOAD_UPDATE_SUCCESS", () => {
       if (!alerts.includes("DOWNLOAD_UPDATE_SUCCESS")) {
         toast.success("Clorio successfully downloaded", {
           toastId: "DOWNLOAD_UPDATE_SUCCESS",
@@ -134,7 +136,7 @@ export const electronAlerts = async () => {
         alerts.push("DOWNLOAD_UPDATE_SUCCESS");
       }
     });
-    ipcRenderer.on("DOWNLOAD_UPDATE_FAILURE", () => {
+    ipcOn("DOWNLOAD_UPDATE_FAILURE", () => {
       if (!alerts.includes("DOWNLOAD_UPDATE_FAILURE")) {
         toast.error("There was an error while updating", {
           toastId: "DOWNLOAD_UPDATE_FAILURE",
