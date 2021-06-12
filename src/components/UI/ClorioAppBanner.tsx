@@ -4,13 +4,17 @@ import { X } from "react-feather";
 
 export const ClorioAppBanner = () => {
   const [show, setShow] = useState(true);
-  return !isElectron() && show ? (
-    <div className="clorio-app-banner">
+  return !isElectron() ? (
+    <div
+      className={`clorio-app-banner animate__animated animate__fadeInDown ${
+        !show ? "animate__fadeOutUp" : ""
+      }`}
+    >
       <div>
         <div>
           <p>To enhance your security we recommend to download Clorio App.</p>
           <p>
-            For more info click{" "}
+            Download Clorio Desktop App{" "}
             <a
               href={process.env.REACT_APP_GITHUB_RELEASE_URL}
               target="_blank"
