@@ -12,7 +12,7 @@ export const ClorioAppBanner = () => {
           <p>
             For more info click{" "}
             <a
-              href={`https://github.com/nerdvibe/clorio-client/releases`}
+              href={process.env.REACT_APP_GITHUB_RELEASE_URL}
               target="_blank"
               rel="noreferrer"
             >
