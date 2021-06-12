@@ -8,6 +8,7 @@ import {
 import { toNanoMINA } from "./mina";
 import isElectron from "is-electron";
 import { toast } from "react-toastify";
+import { UpdateError } from "../components/UI/UpdateError";
 
 export const copyToClipboard = (content = "") => {
   const el = document.createElement("textarea");
@@ -122,10 +123,19 @@ export const electronAlerts = async () => {
     });
     ipcOn("UPDATE_ERROR", () => {
       if (!alerts.includes("UPDATE_ERROR") && updateChecked) {
-        toast.error("There was an error while updating the app", {
-          toastId: "UPDATE_ERROR",
-        });
-        alerts.push("UPDATE_ERROR");
+        const macosPlatforms = ["Macintosh", "MacIntel", "MacPPC", "Mac68K"];
+        if (macosPlatforms.includes(window.navigator.platform)) {
+          toast.error(UpdateError, {
+            toastId: "UPDATE_ERROR",
+            autoClose: 10000,
+          });
+          alerts.push("UPDATE_ERROR");
+        } else {
+          toast.error("There was an error while updating the app", {
+            toastId: "UPDATE_ERROR",
+          });
+          alerts.push("UPDATE_ERROR");
+        }
       }
     });
     ipcOn("DOWNLOAD_UPDATE_SUCCESS", () => {
