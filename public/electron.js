@@ -18,6 +18,7 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: false,
+      enableRemoteModule: false,
       devTools: false,
       sandbox: true,
       contextIsolation:true

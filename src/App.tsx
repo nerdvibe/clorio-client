@@ -6,6 +6,7 @@ import { apolloClient } from "./graphql/api";
 import { clearSession } from "./tools";
 import { electronAlerts } from "./tools";
 import { LedgerContextProvider } from "./contexts/ledger/LedgerContext";
+import { ClorioAppBanner } from "./components/UI/ClorioAppBanner";
 
 function App() {
   clearSession();
@@ -15,6 +16,7 @@ function App() {
       <ApolloProvider client={apolloClient}>
         <LedgerContextProvider>
           <HashRouter>
+            <ClorioAppBanner />
             <Layout />
           </HashRouter>
         </LedgerContextProvider>
