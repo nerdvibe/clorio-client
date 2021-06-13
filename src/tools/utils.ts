@@ -115,27 +115,29 @@ export const electronAlerts = async () => {
     ipcOn("CHECK_FOR_UPDATE_SUCCESS", async (_: any, version: string) => {
       updateChecked = true;
       if (!alerts.includes("CHECK_FOR_UPDATE_SUCCESS")) {
-        toast.info(`There is a new release 🎉 v${version}`, {
-          toastId: "CHECK_FOR_UPDATE_SUCCESS",
-        });
-        alerts.push("CHECK_FOR_UPDATE_SUCCESS");
+        const macosPlatforms = ["Macintosh", "MacIntel", "MacPPC", "Mac68K"];
+        if (macosPlatforms.includes(window.navigator.platform)) {
+          toast.info(UpdateError({ version }), {
+            toastId: "CHECK_FOR_UPDATE_SUCCESS",
+            autoClose: 10000,
+          });
+          alerts.push("CHECK_FOR_UPDATE_SUCCESS");
+          alerts.push("UPDATE_ERROR");
+          alerts.push("DOWNLOAD_UPDATE_FAILURE");
+        } else {
+          toast.info(`There is a new release 🎉 v${version}`, {
+            toastId: "CHECK_FOR_UPDATE_SUCCESS",
+          });
+          alerts.push("CHECK_FOR_UPDATE_SUCCESS");
+        }
       }
     });
     ipcOn("UPDATE_ERROR", () => {
       if (!alerts.includes("UPDATE_ERROR") && updateChecked) {
-        const macosPlatforms = ["Macintosh", "MacIntel", "MacPPC", "Mac68K"];
-        if (macosPlatforms.includes(window.navigator.platform)) {
-          toast.error(UpdateError, {
-            toastId: "UPDATE_ERROR",
-            autoClose: 10000,
-          });
-          alerts.push("UPDATE_ERROR");
-        } else {
-          toast.error("There was an error while updating the app", {
-            toastId: "UPDATE_ERROR",
-          });
-          alerts.push("UPDATE_ERROR");
-        }
+        toast.error("There was an error while updating the app", {
+          toastId: "UPDATE_ERROR",
+        });
+        alerts.push("UPDATE_ERROR");
       }
     });
     ipcOn("DOWNLOAD_UPDATE_SUCCESS", () => {

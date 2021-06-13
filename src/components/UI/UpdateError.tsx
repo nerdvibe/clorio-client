@@ -1,9 +1,13 @@
-export const UpdateError = () => (
+interface IProps {
+  version: string;
+}
+
+export const UpdateError = ({ version }: IProps) => (
   <span>
-    There was an error while updating the app. Go to{" "}
+    There is a new release 🎉 v{version} <br />
     <a href={process.env.REACT_APP_GITHUB_RELEASE_URL} className="github-link">
-      github
+      Click here
     </a>{" "}
-    and update manually.
+    to download the update.
   </span>
 );
