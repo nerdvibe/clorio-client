@@ -12,7 +12,9 @@ export const ClorioAppBanner = () => {
     >
       <div>
         <div>
-          <p>To enhance your security we recommend to download Clorio Desktop.</p>
+          <p>
+            To enhance your security we recommend to download Clorio Desktop.
+          </p>
           <p>
             Download Clorio Desktop{" "}
             <a
