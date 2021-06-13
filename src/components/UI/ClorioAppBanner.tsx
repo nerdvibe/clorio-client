@@ -12,9 +12,9 @@ export const ClorioAppBanner = () => {
     >
       <div>
         <div>
-          <p>To enhance your security we recommend to download Clorio App.</p>
+          <p>To enhance your security we recommend to download Clorio Desktop.</p>
           <p>
-            Download Clorio Desktop App{" "}
+            Download Clorio Desktop{" "}
             <a
               href={process.env.REACT_APP_GITHUB_RELEASE_URL}
               target="_blank"
