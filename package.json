@@ -25,6 +25,7 @@
     "bignumber.js": "9.0.1",
     "bootstrap": "4.6.0",
     "date-fns": "2.19.0",
+    "electron-updater": "4.3.9",
     "graphql": "15.5.0",
     "is-electron": "2.2.0",
     "js-sha256": "0.9.0",
@@ -64,7 +65,7 @@
   },
   "build": {
     "appId": "io.clor",
-    "productName": "Clorio Wallet",
+    "productName": "Clorio-Wallet",
     "files": [
       "build/**/*",
       "node_modules/**/*",
@@ -77,12 +78,21 @@
     "directories": {
       "buildResources": "assets"
     },
+    "nsis": {
+      "artifactName": "Clorio-Wallet.exe"
+    },
     "win": {
-      "target": "portable"
+      "publish": [
+        "github"
+      ]
     },
     "mac": {
       "icon": "./public/icons/mac/icon.icns",
-      "category": "public.app-category.utilities"
+      "category": "public.app-category.utilities",
+      "target": [
+        "zip",
+        "dmg"
+      ]
     },
     "dmg": {
       "title": "Clorio Wallet",
@@ -161,5 +171,13 @@
   "resolutions": {
     "electron-builder/**/app-builder-bin": "3.5.13",
     "usb-detection": "4.10.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nerdvibe/clorio-client"
+  },
+  "publish": {
+    "provider": "github",
+    "releaseType": "release"
   }
 }
