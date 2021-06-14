@@ -39,12 +39,6 @@ function init() {
         return ipcRenderer.on(text, callback);
       }
     },
-    send: (text) => {
-      return ipcRenderer.send(text);
-    },
-    on: (text, callback) => {
-      return ipcRenderer.on(text, callback);
-    },
   });
 }
 
