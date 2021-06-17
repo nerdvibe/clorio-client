@@ -27,6 +27,7 @@ const Login = ({ toggleLoader, network }: IProps) => {
   const history = useHistory();
   const {
     data: userIdData,
+    error: userIdError,
     loading: userIdLoading,
     refetch: userIdRefetch,
   } = useQuery<IWalletIdData>(GET_ID, {
@@ -55,6 +56,16 @@ const Login = ({ toggleLoader, network }: IProps) => {
       storeSessionAndRedirect(publicKey, id);
     }
   }, [userIdData]);
+
+  /**
+   * If User ID service fails, login into the app
+   */
+  useEffect(() => {
+    if (userIdError) {
+      toggleLoader(true);
+      storeSessionAndRedirect(publicKey, -1);
+    }
+  }, [userIdError]);
 
   const storeSessionAndRedirect = async (publicKey: string, id: number) => {
     const success = await storeSession(publicKey, id, false, 0);
