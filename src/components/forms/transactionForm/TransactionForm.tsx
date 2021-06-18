@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Row, Col } from "react-bootstrap";
-import { toNanoMINA, toLongMINA } from "../../../tools";
+import { toNanoMINA, toLongMINA, toMINA, MINIMUM_FEE } from "../../../tools";
 import Button from "../../UI/Button";
 import Input from "../../UI/input/Input";
 import { toast } from "react-toastify";
@@ -124,14 +124,26 @@ const TransactionForm = ({
                       <Button
                         className="link-button align-end  no-padding"
                         text="Average"
-                        onClick={() => setFeeHandler(averageFee)}
+                        onClick={() =>
+                          setFeeHandler(
+                            averageFee > toMINA(MINIMUM_FEE)
+                              ? averageFee
+                              : toMINA(MINIMUM_FEE)
+                          )
+                        }
                       />
                     </Col>
                     <Col className="fee-label">
                       <Button
                         className="link-button align-end  no-padding"
                         text="Fast"
-                        onClick={() => setFeeHandler(fastFee)}
+                        onClick={() =>
+                          setFeeHandler(
+                            fastFee > toMINA(MINIMUM_FEE)
+                              ? fastFee
+                              : toMINA(MINIMUM_FEE)
+                          )
+                        }
                       />
                     </Col>
                   </Row>
