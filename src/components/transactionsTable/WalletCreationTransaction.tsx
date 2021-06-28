@@ -10,12 +10,7 @@ const WalletCreationTransaction = (index: number) => {
       <td className="table-element table-hash" colSpan={4}>
         1 Mina wallet creation fee
       </td>
-      <td
-        className="table-element full-width-table-cell"
-        style={{ color: "red" }}
-      >
-        1 Mina
-      </td>
+      <td className="table-element full-width-table-cell red-text">1 Mina</td>
     </tr>
   );
 };
