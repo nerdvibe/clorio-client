@@ -25,6 +25,7 @@
     "bignumber.js": "9.0.1",
     "bootstrap": "4.6.0",
     "date-fns": "2.19.0",
+    "electron-updater": "4.3.9",
     "graphql": "15.5.0",
     "is-electron": "2.2.0",
     "js-sha256": "0.9.0",
@@ -42,7 +43,7 @@
     "react-router-dom": "5.1.2",
     "react-scripts": "4.0.3",
     "react-toastify": "7.0.3",
-    "react-tooltip": "4.2.15",
+    "react-tooltip": "4.2.21",
     "subscriptions-transport-ws": "0.9.5",
     "typescript": "4.2.3"
   },
@@ -50,11 +51,11 @@
     "start": "env-cmd -f ./.env.devnet nf start -p 3000",
     "start:mainnet": "env-cmd -f ./.env.mainnet nf start -p 3000",
     "build": "yarn build:devnet && yarn build:mainnet",
-    "build:devnet": "yarn add @o1labs/client-sdk@0.2.5 && npm rebuild && env-cmd -f ./.env.devnet react-scripts build && rm -rf build-devnet && cp -r build build-devnet",
-    "build:mainnet": "env-cmd -f ./.env.mainnet react-scripts build && rm -rf build-mainnet && cp -r build build-mainnet",
+    "build:devnet": "yarn add @o1labs/client-sdk@0.2.5 && npm rebuild && env-cmd -f ./.env.devnet react-app-rewired build && rm -rf build-devnet && cp -r build build-devnet",
+    "build:mainnet": "env-cmd -f ./.env.mainnet react-app-rewired build && rm -rf build-mainnet && cp -r build build-mainnet",
     "electron": "electron .",
     "electron-start": "node src/start-react",
-    "react-start": "BROWSER=none react-scripts start",
+    "react-start": "BROWSER=none react-app-rewired start",
     "pack:devnet": "env-cmd -f ./.env.devnet build --dir",
     "pack:mainnet": "env-cmd -f ./.env.mainnet build --dir",
     "postinstall": "install-app-deps",
@@ -64,7 +65,7 @@
   },
   "build": {
     "appId": "io.clor",
-    "productName": "Clorio Wallet",
+    "productName": "Clorio-Wallet",
     "files": [
       "build/**/*",
       "node_modules/**/*",
@@ -77,12 +78,21 @@
     "directories": {
       "buildResources": "assets"
     },
+    "nsis": {
+      "artifactName": "Clorio-Wallet.exe"
+    },
     "win": {
-      "target": "portable"
+      "publish": [
+        "github"
+      ]
     },
     "mac": {
       "icon": "./public/icons/mac/icon.icns",
-      "category": "public.app-category.utilities"
+      "category": "public.app-category.utilities",
+      "target": [
+        "zip",
+        "dmg"
+      ]
     },
     "dmg": {
       "title": "Clorio Wallet",
@@ -132,9 +142,12 @@
   "devDependencies": {
     "@types/big.js": "^6.0.2",
     "@types/react-router-dom": "5.1.7",
+    "@types/react-tooltip": "4.2.4",
     "@typescript-eslint/eslint-plugin": "4.22.0",
     "@typescript-eslint/parser": "4.21.0",
     "babel-eslint": "10.1.0",
+    "csp-html-webpack-plugin": "5.1.0",
+    "customize-cra": "1.0.0",
     "electron": "9.4.0",
     "electron-builder": "22.10.5",
     "electron-is-dev": "2.0.0",
@@ -152,10 +165,19 @@
     "husky": "6.0.0",
     "prettier": "2.2.1",
     "pretty-quick": "3.1.0",
+    "react-app-rewired": "2.1.8",
     "ts-node-dev": "1.0.0"
   },
   "resolutions": {
     "electron-builder/**/app-builder-bin": "3.5.13",
     "usb-detection": "4.10.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nerdvibe/clorio-client"
+  },
+  "publish": {
+    "provider": "github",
+    "releaseType": "release"
   }
 }

@@ -1,4 +1,4 @@
-let ipcRenderer: any;
+let invoke: any;
 import isElectron from "is-electron";
 import { ILedgerTransaction } from "../../types/LedgerDelegationTransaction";
 
@@ -6,24 +6,25 @@ import { ILedgerTransaction } from "../../types/LedgerDelegationTransaction";
 
 if (isElectron()) {
   // Import the node-hid
-  ipcRenderer = window.require("electron").ipcRenderer;
+  // @ts-ignore
+  invoke = window.ipcBridge.invoke;
 }
 
 export const isMinaAppOpen = async () => {
   if (!isElectron()) {
     throw new Error("Wrong environment");
   }
-  return await ipcRenderer.invoke("ledger-get-name-version");
+  return await invoke("ledger-get-name-version");
 };
 export const getPublicKey = async (account: number) => {
   if (!isElectron()) {
     throw new Error("Wrong environment");
   }
-  return await ipcRenderer.invoke("ledger-get-address", account);
+  return await invoke("ledger-get-address", account);
 };
 export const signTransaction = async (transaction: ILedgerTransaction) => {
   if (!isElectron()) {
     throw new Error("Wrong environment");
   }
-  return await ipcRenderer.invoke("ledger-sign-transaction", transaction);
+  return await invoke("ledger-sign-transaction", transaction);
 };
