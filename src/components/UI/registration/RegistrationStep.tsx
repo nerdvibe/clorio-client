@@ -58,8 +58,10 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => {
           >
             <p className="full-width-align-center">
               This is the only time you will see the private key. <br />
-              Make sure to write down your private key on a secure medium and you safe keep the private key. If you loose your private key
-              you will not be able to access your funds anymore!<br />
+              Make sure to write down your private key on a secure medium and
+              you safe keep the private key. If you loose your private key you
+              will not be able to access your funds anymore!
+              <br />
               <a
                 className="link-button"
                 onClick={() => setShowEncryptionModal(true)}
