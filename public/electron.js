@@ -16,8 +16,13 @@ function createWindow() {
     icon: path.join(__dirname, "icon.png"),
     title: "Clorio Wallet",
     webPreferences: {
-      nodeIntegration: true,
+      preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: false,
+      enableRemoteModule: false,
       devTools: false,
+      sandbox: true,
+      contextIsolation: true,
+      disableBlinkFeatures: "Auxclick",
     },
     minWidth: 800,
     minHeight: 800,
@@ -30,6 +35,11 @@ function createWindow() {
         slashes: true,
       })
   );
+
+  const ses = mainWindow.webContents.session;
+  ses.setPermissionRequestHandler((webContents, permission, callback) => {
+    return callback(false);
+  });
 
   mainWindow.on("closed", () => {
     mainWindow = null;
@@ -75,7 +85,10 @@ app.on("web-contents-created", (e, contents) => {
     require("open")(url);
   });
   contents.on("will-navigate", (e, url) => {
-    if (url !== contents.getURL()) e.preventDefault(), require("open")(url);
+    e.preventDefault();
+    return {
+      cancel: true,
+    };
   });
 });
 
