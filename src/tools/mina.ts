@@ -52,7 +52,7 @@ export const deriveAccountFromMnemonic = async (mnemonic: string) => {
   if (mneList.length !== 12) {
     throw new Error("Passphrase should be 12 words long");
   }
-  const validMnemonic = bip39.validateMnemonic(mnemonic);
+  const validMnemonic = bip39.validateMnemonic(mnemonic.trim());
   if (!validMnemonic) {
     throw new Error("Invalid passphrase");
   }

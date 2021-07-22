@@ -4,8 +4,17 @@ import { jsPDF } from "jspdf";
 import { IKeypair } from "../../types";
 import ClorioLogoB64 from "./ClorioLogoB64.json";
 
-export const downloadPaperWalletPDF = (keypair: IKeypair) => {
-  const doc = new jsPDF();
+export const downloadPaperWalletPDF = (
+  keypair: IKeypair,
+  encryption: string
+) => {
+  const doc = new jsPDF({
+    encryption: {
+      ownerPassword: encryption,
+      userPassword: encryption,
+      userPermissions: ["print"],
+    },
+  });
   const additionalSpace = keypair.mnemonic ? 20 : 0;
   doc.addImage(ClorioLogoB64, "PNG", 70, 20);
   doc.setFont("Helvetica");

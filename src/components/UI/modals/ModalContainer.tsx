@@ -14,7 +14,7 @@ export const ModalContainer = ({
   className = "",
 }: IProps) => {
   return show ? (
-    <Hoc className="mx-auto first-place  animate__animated animate__fadeIn">
+    <Hoc className="mx-auto first-place  animate__animated animate__fadeIn modal-wrapper">
       <div className="modal-background " onClick={close} />
       <div className={`modal-container ${className}`}>{children}</div>
     </Hoc>
