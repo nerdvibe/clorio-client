@@ -93,7 +93,11 @@ const Login = ({ toggleLoader, network }: IProps) => {
       await userIdRefetch({ publicKey: derivedPublicKey });
       setLoader(true);
     } catch (e) {
-      toast.error("Private key not valid, please try again.");
+      if (navigator.onLine) {
+        toast.error("Private key not valid, please try again.");
+      } else {
+        toast.warning("You are currently offline.");
+      }
     }
   };
 
