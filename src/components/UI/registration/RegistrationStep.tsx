@@ -57,10 +57,11 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => {
             data-validate="Name is required"
           >
             <p className="full-width-align-center">
-              This is the only time you will see the passphrase and the private
-              key. <br />
-              Make sure have made a copy of them. If you loose your private key
-              you will not be able to access your funds anymore! <br />
+              This is the only time you will see the private key. <br />
+              Make sure to write down your private key on a secure medium and
+              you safe keep the private key. If you loose your private key you
+              will not be able to access your funds anymore!
+              <br />
               <a
                 className="link-button"
                 onClick={() => setShowEncryptionModal(true)}
