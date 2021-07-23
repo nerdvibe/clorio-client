@@ -125,12 +125,15 @@ const SendTX = (props: IProps) => {
   useEffect(() => {
     getAndSetAddress();
     if (showModal && broadcastResult?.data && sendTransactionFlag) {
-      clearState();
-      nonceRefetch({ publicKey: senderAddress });
-      if (setShouldBalanceUpdate) {
-        setShouldBalanceUpdate(true);
-      }
-      toast.success("Transaction successfully broadcasted");
+      setSendTransactionFlag(false);
+      setTimeout(() => {
+        clearState();
+        nonceRefetch({ publicKey: senderAddress });
+        if (setShouldBalanceUpdate) {
+          setShouldBalanceUpdate(true);
+        }
+        toast.success("Transaction successfully broadcasted");
+      }, 3 * 1000);
       history.replace("/send-tx");
     }
   });
