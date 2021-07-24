@@ -1,9 +1,10 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const { MinaLedgerJS } = require("mina-ledger-js");
 const TransportNodeHid = require("@ledgerhq/hw-transport-node-hid-singleton");
-
+const { autoUpdater } = require("electron-updater");
 const path = require("path");
 const url = require("url");
+
 let mainWindow;
 
 function createWindow() {
@@ -15,8 +16,13 @@ function createWindow() {
     icon: path.join(__dirname, "icon.png"),
     title: "Clorio Wallet",
     webPreferences: {
-      nodeIntegration: true,
+      preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: false,
+      enableRemoteModule: false,
       devTools: false,
+      sandbox: true,
+      contextIsolation: true,
+      disableBlinkFeatures: "Auxclick",
     },
     minWidth: 800,
     minHeight: 800,
@@ -30,9 +36,33 @@ function createWindow() {
       })
   );
 
+  const ses = mainWindow.webContents.session;
+  ses.setPermissionRequestHandler((webContents, permission, callback) => {
+    return callback(false);
+  });
+
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
+
+  ipcMain.on("CHECK_FOR_UPDATE_PENDING", () => {
+    autoUpdater.checkForUpdates();
+  });
+
+  autoUpdater.on("error", (error) => {
+    mainWindow.webContents.send("UPDATE_ERROR");
+  });
+
+  autoUpdater.on("update-available", (info) => {
+    mainWindow.webContents.send("CHECK_FOR_UPDATE_SUCCESS", info.version);
+    autoUpdater.downloadUpdate();
+  });
+
+  autoUpdater.on("update-downloaded", () => {
+    mainWindow.webContents.send("DOWNLOAD_UPDATE_SUCCESS");
+    autoUpdater.quitAndInstall();
+  });
+  autoUpdater.checkForUpdatesAndNotify();
 }
 
 app.on("ready", createWindow);
@@ -55,7 +85,10 @@ app.on("web-contents-created", (e, contents) => {
     require("open")(url);
   });
   contents.on("will-navigate", (e, url) => {
-    if (url !== contents.getURL()) e.preventDefault(), require("open")(url);
+    e.preventDefault();
+    return {
+      cancel: true,
+    };
   });
 });
 

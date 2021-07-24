@@ -27,7 +27,7 @@ const NewsBanner = (props: INewsData) => {
           <h4>{title}</h4>
           <p>{subtitle}</p>
         </Col>
-        <Col className="align-end ml-auto " style={{ paddingTop: "20px" }}>
+        <Col className="align-end ml-auto pt-20p">
           {link ? (
             <a href={link} target="_blank" rel="noreferrer">
               <Button
