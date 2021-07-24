@@ -37,8 +37,8 @@ const TransactionRow = (
   const amountColor = isOutgoing
     ? isSelf || type === "delegation"
       ? ""
-      : "red"
-    : "green";
+      : "red-text"
+    : "green-text";
 
   const urlPath = isMempool ? "payment" : "transaction";
 
@@ -69,11 +69,7 @@ const TransactionRow = (
       <td className="table-element">
         {receiver === userAddress ? "you" : receiver}
       </td>
-      <td
-        className="table-element"
-        style={{ color: amountColor }}
-        data-tip={fee}
-      >
+      <td className={`table-element ${amountColor}`} data-tip={fee}>
         {humanAmount} Mina
       </td>
     </tr>
