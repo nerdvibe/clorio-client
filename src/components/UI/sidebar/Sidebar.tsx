@@ -105,7 +105,11 @@ const Sidebar = ({ network, clearSessionData }: IProps) => {
               </strong>{" "}
             </Link>
           </Nav.Item>
-          <div className="sidebar-footer-network">
+          <div
+            className="sidebar-footer-network"
+            // TODO REMOVE HARDCOING!
+            data-tip={"v: 0.1.3"}
+          >
             <Link to="/settings">
               <Tool className="sidebar-item" />
             </Link>{" "}

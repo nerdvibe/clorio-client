@@ -6,6 +6,9 @@ import {
   MINIMUM_FEE,
 } from "./const";
 import { toNanoMINA } from "./mina";
+import isElectron from "is-electron";
+import { toast } from "react-toastify";
+import { UpdateError } from "../components/UI/UpdateError";
 
 export const copyToClipboard = (content = "") => {
   const el = document.createElement("textarea");
@@ -97,4 +100,61 @@ export const feeGreaterThanMinimum = (fee: number) => {
 
 export const isDevnet = () => {
   return process.env.REACT_APP_NETWORK === "devnet";
+};
+
+export const electronAlerts = async () => {
+  const alerts: string[] = [];
+
+  if (isElectron()) {
+    let updateChecked = false;
+    // @ts-ignore
+    const ipcOn = window.ipcBridge.on;
+    // @ts-ignore
+    const ipcSend = window.ipcBridge.send;
+    ipcSend("CHECK_FOR_UPDATE_PENDING");
+    ipcOn("CHECK_FOR_UPDATE_SUCCESS", async (_: any, version: string) => {
+      updateChecked = true;
+      if (!alerts.includes("CHECK_FOR_UPDATE_SUCCESS")) {
+        const macosPlatforms = ["Macintosh", "MacIntel", "MacPPC", "Mac68K"];
+        if (macosPlatforms.includes(window.navigator.platform)) {
+          toast.info(UpdateError({ version }), {
+            toastId: "CHECK_FOR_UPDATE_SUCCESS",
+            autoClose: 10000,
+          });
+          alerts.push("CHECK_FOR_UPDATE_SUCCESS");
+          alerts.push("UPDATE_ERROR");
+          alerts.push("DOWNLOAD_UPDATE_FAILURE");
+        } else {
+          toast.info(`There is a new release 🎉 v${version}`, {
+            toastId: "CHECK_FOR_UPDATE_SUCCESS",
+          });
+          alerts.push("CHECK_FOR_UPDATE_SUCCESS");
+        }
+      }
+    });
+    ipcOn("UPDATE_ERROR", () => {
+      if (!alerts.includes("UPDATE_ERROR") && updateChecked) {
+        toast.error("There was an error while updating the app", {
+          toastId: "UPDATE_ERROR",
+        });
+        alerts.push("UPDATE_ERROR");
+      }
+    });
+    ipcOn("DOWNLOAD_UPDATE_SUCCESS", () => {
+      if (!alerts.includes("DOWNLOAD_UPDATE_SUCCESS")) {
+        toast.success("Clorio successfully downloaded", {
+          toastId: "DOWNLOAD_UPDATE_SUCCESS",
+        });
+        alerts.push("DOWNLOAD_UPDATE_SUCCESS");
+      }
+    });
+    ipcOn("DOWNLOAD_UPDATE_FAILURE", () => {
+      if (!alerts.includes("DOWNLOAD_UPDATE_FAILURE")) {
+        toast.error("There was an error while updating", {
+          toastId: "DOWNLOAD_UPDATE_FAILURE",
+        });
+        alerts.push("DOWNLOAD_UPDATE_FAILURE");
+      }
+    });
+  }
 };
