@@ -8,7 +8,7 @@ import { PdfEncryption } from "./PdfEncryption";
 
 interface IProps {
   keys: IKeypair;
-  generateNew: () => void;
+  generateNew?: () => void;
   setValidation: (showValidation: boolean) => void;
 }
 
@@ -32,6 +32,18 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => {
               <Logo big={true} />
             </div>
             <div className="v-spacer no-print" />
+            <h4 className="full-width-align-center">This is your passphrase</h4>
+            <div className="custom-card">
+              <h5 className="full-width-align-center selectable-text">
+                {keys.mnemonic
+                  ?.split(" ")
+                  .map((word: string, index: number) => (
+                    <span key={index}>
+                      <span className="selectable-text">{word}&nbsp;</span>
+                    </span>
+                  ))}
+              </h5>
+            </div>
             <h4 className="full-width-align-center">This is your address</h4>
             <div
               className="wrap-input1 validate-input"

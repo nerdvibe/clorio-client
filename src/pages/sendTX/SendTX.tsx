@@ -23,9 +23,9 @@ import {
   signTransaction,
   MINIMUM_NONCE,
   readSession,
+  deriveAccount,
 } from "../../tools";
 import Spinner from "../../components/UI/Spinner";
-import { derivePublicKey } from "@o1labs/client-sdk";
 import { BROADCAST_TRANSACTION, GET_FEE, GET_NONCE } from "../../graphql/query";
 import { toast } from "react-toastify";
 import {
@@ -38,7 +38,12 @@ import {
   ModalStates,
   SendTXPageSteps,
 } from "./SendTXHelper";
-import { IFeeQuery, IWalletData, ITransactionData } from "../../types";
+import {
+  IFeeQuery,
+  IWalletData,
+  ITransactionData,
+  IKeypair,
+} from "../../types";
 import { ILedgerContext } from "../../contexts/ledger/LedgerTypes";
 import { LedgerContext } from "../../contexts/ledger/LedgerContext";
 import { IBalanceContext } from "../../contexts/balance/BalanceTypes";
@@ -170,7 +175,7 @@ const SendTX = (props: IProps) => {
 
   /**
    * Check if nonce is available, if not ask the user for a custom nonce.
-   * After the nonce is set, proceed with transaction data verification and private key verification
+   * After the nonce is set, proceed with transaction data verification and Passphrase/Private key verification
    */
   const openConfirmationModal = () => {
     try {
@@ -196,11 +201,11 @@ const SendTX = (props: IProps) => {
   };
 
   /**
-   *  Check if private key is not empty
+   *  Check if Passphrase/Private key is not empty
    */
   const confirmPrivateKey = () => {
     if (!privateKey) {
-      toast.error("Please insert a private key");
+      toast.error("Please insert a passphrase or a private key");
     } else {
       setShowModal("");
       setStep(SendTXPageSteps.CONFIRMATION);
@@ -284,12 +289,15 @@ const SendTX = (props: IProps) => {
   /**
    * Broadcast transaction without Ledger
    */
-  const sendTransaction = () => {
+  const sendTransaction = async () => {
     setShowModal(ModalStates.BROADCASTING);
     try {
       const actualNonce = getNonce();
-      const publicKey = derivePublicKey(privateKey);
-      const keypair = { privateKey, publicKey };
+      const derivedData = await deriveAccount(privateKey);
+      const keypair = {
+        privateKey: derivedData?.privateKey,
+        publicKey: derivedData?.publicKey,
+      } as IKeypair;
       const signedPayment = signTransaction({
         transactionData,
         keypair,
@@ -312,7 +320,7 @@ const SendTX = (props: IProps) => {
     } catch (e) {
       setShowModal("");
       toast.error(
-        "Check if the receiver address and/or the private key are right"
+        "Check if the receiver address and/or the passphrase/private key are right"
       );
       stepBackwards();
       setPrivateKey("");

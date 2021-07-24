@@ -15,6 +15,7 @@ export const downloadPaperWalletPDF = (
       userPermissions: ["print"],
     },
   });
+  const additionalSpace = keypair.mnemonic ? 20 : 0;
   doc.addImage(ClorioLogoB64, "PNG", 70, 20);
   doc.setFont("Helvetica");
   doc.setFontSize(10);
@@ -25,72 +26,81 @@ export const downloadPaperWalletPDF = (
     "center"
   );
   doc.setFontSize(15);
-  doc.text(105, 80, "This is your public key", "center");
-  doc.text(105, 90, keypair.publicKey, "center");
-  doc.text(105, 100, "This is your private key", "center");
-  doc.text(105, 110, keypair.privateKey, "center");
+  if (additionalSpace) {
+    doc.text(105, 80, "This is your passphrase", "center");
+    doc.text(105, 90, keypair.mnemonic, "center");
+  }
+  doc.text(105, 80 + additionalSpace, "This is your public key", "center");
+  doc.text(105, 90 + additionalSpace, keypair.publicKey, "center");
+  doc.text(105, 100 + additionalSpace, "This is your private key", "center");
+  doc.text(105, 110 + additionalSpace, keypair.privateKey, "center");
   doc.setFontSize(20);
-  doc.text(20, 140, "What to do now?", "left");
+  doc.text(20, 140 + additionalSpace, "What to do now?", "left");
   doc.setFontSize(15);
-  doc.text(20, 152, "Never ever give to anybody your private key.", "left");
+  doc.text(
+    20,
+    152 + additionalSpace,
+    "Never ever give to anybody your passphrase or private key.",
+    "left"
+  );
   doc.setFontSize(10);
   doc.text(
     20,
-    160,
-    "Whoever has this private key can access the Mina tokens contained in this wallet.",
+    160 + additionalSpace,
+    "Whoever has this passphrase or private key can access the Mina tokens contained in this wallet.",
     "left"
   );
   doc.text(
     20,
-    165,
+    165 + additionalSpace,
     "Make sure that you store this paper wallet carefully and you make a backup of it.",
     "left"
   );
   doc.text(
     20,
-    170,
+    170 + additionalSpace,
     "If you loose this credentials there is no way to get them back.",
     "left"
   );
   doc.text(
     20,
-    185,
+    185 + additionalSpace,
     "By using this software you accept the terms and conditions.",
     "left"
   );
   doc.text(
     20,
-    190,
+    190 + additionalSpace,
     'This software is provided "as is", without warranty of any kind, express or implied,',
     "left"
   );
   doc.text(
     20,
-    195,
+    195 + additionalSpace,
     "including but not limited to the warranties of merchantability,",
     "left"
   );
   doc.text(
     20,
-    200,
+    200 + additionalSpace,
     " fitness for a particular purpose and noninfringement.",
     "left"
   );
   doc.text(
     20,
-    205,
+    205 + additionalSpace,
     "In no event shall the authors or copyright holders be liable for any claim,",
     "left"
   );
   doc.text(
     20,
-    210,
+    210 + additionalSpace,
     " damages or other liability, whether in an action of contract, tort or otherwise,",
     "left"
   );
   doc.text(
     20,
-    215,
+    215 + additionalSpace,
     "arising from, out of or in connection with the software or the use or other dealings in the software.",
     "left"
   );
