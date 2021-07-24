@@ -13,7 +13,7 @@ const NotFound = () => (
           <div className="huge-text">404</div>
           <div className="v-spacer" />
           <div className="big-text">Something went wrong</div>
-          <h3 style={{ textAlign: "center", width: "100%" }}>
+          <h3 className="full-width-align-center">
             Better go back to the{" "}
             <Button className="inline-element" link="/" text="home page" />
           </h3>
