@@ -45,12 +45,13 @@
     "react-toastify": "7.0.3",
     "react-tooltip": "4.2.21",
     "subscriptions-transport-ws": "0.9.5",
-    "typescript": "4.2.3"
+    "typescript": "4.2.3",
+    "usb-detection": "^4.10.0"
   },
   "scripts": {
     "start": "env-cmd -f ./.env.devnet nf start -p 3000",
     "start:mainnet": "env-cmd -f ./.env.mainnet nf start -p 3000",
-    "build": "yarn build:devnet && yarn build:mainnet",
+    "build": "yarn build:devnet && yarn build:mainnet && yarn post-build",
     "build:devnet": "yarn add @o1labs/client-sdk@0.2.5 && npm rebuild && env-cmd -f ./.env.devnet react-app-rewired build && rm -rf build-devnet && cp -r build build-devnet",
     "build:mainnet": "env-cmd -f ./.env.mainnet react-app-rewired build && rm -rf build-mainnet && cp -r build build-mainnet",
     "electron": "electron .",
@@ -61,7 +62,8 @@
     "postinstall": "install-app-deps",
     "package:devnet": "yarn build:devnet && electron-builder build -mwl --publish never && rm -rf dist-devnet && mv dist dist-devnet",
     "package:mainnet": "yarn build:mainnet && electron-builder build -mwl --publish never && rm -rf dist-mainnet && mv dist dist-mainnet",
-    "package-only:mainnet": "electron-builder build -mwl --publish never && mv dist dist-mainnet"
+    "package-only:mainnet": "electron-builder build -mwl --publish never && mv dist dist-mainnet",
+    "post-build": "yarn add usb-detection"
   },
   "build": {
     "appId": "io.clor",
