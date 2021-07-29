@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Col, Row } from "react-bootstrap";
+import { Col, Collapse, Row } from "react-bootstrap";
 import {
   Hash,
   Server,
@@ -131,12 +131,12 @@ const Settings = () => {
             />
           </Col>
         </Row>
-        {privateKey && (
+        <Collapse in={!!privateKey}>
           <div>
             <h5>This is your Private Key</h5>
             <h6 className="selectable-text">{privateKey}</h6>
           </div>
-        )}
+        </Collapse>
       </div>
     </Hoc>
   );
