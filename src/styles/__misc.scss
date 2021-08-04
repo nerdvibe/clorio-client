@@ -660,7 +660,7 @@ tbody {
 }
 
 .first-place {
-  position: absolute;
+  position: fixed;
   z-index: 4;
 }
 
@@ -803,6 +803,20 @@ input[type="number"] {
     color: #000;
     line-height: 25px;
   }
+}
+
+.small-proceed-button{
+  width: fit-content;
+  float: right;
+  font-size: small;
+  position: relative;
+  top: 30px;
+  left: 40px;
+}
+
+.small-proceed-button:active{
+  top: 30px;
+  left: 40px;
 }
 
 .__react_component_tooltip {
