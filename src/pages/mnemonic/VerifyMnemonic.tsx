@@ -22,7 +22,7 @@ export const VerifyMnemonic = ({
    * @returns number[]
    */
   const selectRandomIndexes = () => {
-    const numberOfWords = Math.floor(3 + Math.random() * 9);
+    const numberOfWords = 3;
     const randomIndexes: any[] = [];
     while (randomIndexes.length <= numberOfWords) {
       const tmpIndex = Math.floor(1 + Math.random() * 12);
