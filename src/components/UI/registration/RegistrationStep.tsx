@@ -30,13 +30,7 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => {
             <h4 className="full-width-align-center">This is your passphrase</h4>
             <div className="custom-card">
               <h5 className="full-width-align-center selectable-text break-text">
-                {keys.mnemonic
-                  ?.split(" ")
-                  .map((word: string, index: number) => (
-                    <span className="selectable-text" key={index}>
-                      {word}&nbsp;
-                    </span>
-                  ))}
+                {keys.mnemonic}
               </h5>
             </div>
             <h4 className="full-width-align-center">This is your address</h4>
