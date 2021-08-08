@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { derivePublicKey, signStakeDelegation } from "@o1labs/client-sdk";
 import { toast } from "react-toastify";
 import NewsBanner from "../../components/UI/NewsBanner";
-import LedgerLoader from "../../components/UI/LedgerLoader";
+import LedgerLoader from "../../components/UI/ledgerLogin/LedgerLoader";
 import Hoc from "../../components/UI/Hoc";
 import Button from "../../components/UI/Button";
 import { IValidatorData } from "../../components/stake/stakeTableRow/ValidatorDataTypes";
