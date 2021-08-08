@@ -1,5 +1,4 @@
 import { HelpCircle } from "react-feather";
-import ReactTooltip from "react-tooltip";
 
 interface IProps {
   hint: string;
@@ -8,7 +7,6 @@ interface IProps {
 const HelpHint = ({ hint }: IProps) => (
   <>
     <HelpCircle data-tip={hint} />
-    <ReactTooltip multiline={true} />
   </>
 );
 
