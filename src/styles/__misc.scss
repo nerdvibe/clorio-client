@@ -8,12 +8,12 @@ th {
   overflow: hidden;
   text-overflow: ellipsis;
   -webkit-user-select: text;
-  *{
+  * {
     -webkit-user-select: text;
   }
 }
 
-.custom-card{
+.custom-card {
   padding: 20px;
   border-radius: 20px;
   // background: #fff;
@@ -21,7 +21,7 @@ th {
   overflow-x: auto;
 }
 
-a.github-link{
+a.github-link {
   color: #ffa958 !important;
 }
 
@@ -72,21 +72,21 @@ a.github-link{
   margin-bottom: 1rem;
   border: 1px solid transparent;
   z-index: 20;
-  div{
-    .close-button{
+  div {
+    .close-button {
       float: right;
       padding: 8px;
-      opacity: .5;
+      opacity: 0.5;
       cursor: pointer;
     }
     border-radius: 10px;
     display: inline-block;
     margin: 0 auto;
     padding: 15px 20px 10px 20px;
-    width:fit-content;
+    width: fit-content;
     background-color: #cce5ff;
     border-color: #b8daff;
-    p{
+    p {
       font-size: medium;
       color: #004085;
     }
@@ -315,6 +315,10 @@ textarea:-ms-input-placeholder {
   width: fit-content;
 }
 
+.break-text {
+  word-break: break-all;
+}
+
 .v-spacer {
   width: 100%;
   height: 20px;
@@ -476,7 +480,7 @@ a:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 90vh;
+  height: 87vh;
   width: 100%;
 }
 
@@ -657,7 +661,7 @@ tbody {
   color: $white !important;
 }
 
-.modal-wrapper{
+.modal-wrapper {
   width: 100%;
   align-items: center;
   justify-content: center;
@@ -921,6 +925,10 @@ input[type="number"] {
 @media screen and (max-height: 899px) {
   .big-modal-container {
     top: 8vh;
+  }
+  
+  .hide-small{
+    display: none;
   }
 }
 

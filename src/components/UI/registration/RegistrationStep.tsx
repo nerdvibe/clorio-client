@@ -19,12 +19,7 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => {
   return (
     <div className="animate__animated animate__fadeIn full-width">
       <Row className="full-width">
-        <Col
-          md={12}
-          lg={10}
-          xl={8}
-          className="offset-lg-1 offset-xl-2 text-center"
-        >
+        <Col md={12} lg={12} xl={10} className="offset-xl-1 text-center">
           <div id="element-to-print">
             <div className="v-spacer-big pdf-only" />
             <div className="v-spacer-big pdf-only" />
@@ -34,12 +29,12 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => {
             <div className="v-spacer no-print" />
             <h4 className="full-width-align-center">This is your passphrase</h4>
             <div className="custom-card">
-              <h5 className="full-width-align-center selectable-text">
+              <h5 className="full-width-align-center selectable-text break-text">
                 {keys.mnemonic
                   ?.split(" ")
                   .map((word: string, index: number) => (
-                    <span key={index}>
-                      <span className="selectable-text">{word}&nbsp;</span>
+                    <span className="selectable-text" key={index}>
+                      {word}&nbsp;
                     </span>
                   ))}
               </h5>
@@ -49,7 +44,7 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => {
               className="wrap-input1 validate-input"
               data-validate="Name is required"
             >
-              <h5 className="full-width-align-center selectable-text">
+              <h5 className="full-width-align-center selectable-text break-text">
                 {keys.publicKey}
               </h5>
             </div>
@@ -58,12 +53,12 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => {
               This is your private key
             </h4>
             <div className="wrap-input1 validate-input">
-              <h5 className="full-width-align-center selectable-text">
+              <h5 className="full-width-align-center selectable-text break-text">
                 {keys.privateKey}
               </h5>
             </div>
           </div>
-          <div className="v-spacer" />
+          <div className="v-spacer hide-small" />
           <div
             className="wrap-input1 validate-input no-print"
             data-validate="Name is required"
@@ -82,7 +77,7 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => {
               </a>
             </p>
           </div>
-          <div className="v-spacer" />
+          <div className="v-spacer hide-small" />
           <Row className="no-print">
             <Col xs={4}>
               <Link to="/">
