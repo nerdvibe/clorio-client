@@ -77,9 +77,11 @@ const Login = ({ toggleLoader, network }: IProps) => {
   const checkCredentials = async () => {
     try {
       const derivedAccount = await deriveAccount(privateKey);
-      setPublicKey(derivedAccount.publicKey);
-      await userIdRefetch({ publicKey: derivedAccount.publicKey });
-      setLoader(true);
+      if (derivedAccount.publicKey) {
+        setPublicKey(derivedAccount.publicKey);
+        await userIdRefetch({ publicKey: derivedAccount.publicKey });
+        setLoader(true);
+      }
     } catch (e) {
       toast.error(
         e.message || "Passphrase/Private key not valid, please try again."
