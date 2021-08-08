@@ -4,7 +4,6 @@ import * as bip32 from "bip32";
 // @ts-ignore
 import * as bs58check from "bs58check";
 // @ts-ignore
-import * as RawSDK from "@o1labs/client-sdk/src/client_sdk.bc";
 import { MINA_COIN_INDEX } from "./const";
 import { derivePublicKey } from "@o1labs/client-sdk";
 
@@ -79,7 +78,7 @@ export const deriveWalletByMnemonic = async (
     const childPrivateKey = reverseBytes(child0.privateKey);
     const privateKeyHex = `5a01${childPrivateKey.toString("hex")}`;
     const privateKey = bs58check.encode(Buffer.from(privateKeyHex, "hex"));
-    const publicKey = RawSDK.codaSDK.publicKeyOfPrivateKey(privateKey);
+    const publicKey = derivePublicKey(privateKey);
     return {
       priKey: privateKey,
       pubKey: publicKey,
