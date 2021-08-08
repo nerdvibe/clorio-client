@@ -58,12 +58,14 @@ const StakeTable = ({
       return (
         <tbody>
           {filteredValidators.map((el, index: number) => {
+            const isDelegating = el.publicKey === currentDelegate;
             return (
               <StakeTableRow
                 key={index}
                 element={el}
                 index={index}
                 toggleModal={toggleModal}
+                isDelegating={isDelegating}
               />
             );
           })}
