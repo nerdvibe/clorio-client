@@ -357,6 +357,7 @@ const SendTX = (props: IProps) => {
                 nextStep={openConfirmationModal}
                 transactionData={transactionData}
                 setData={setTransactionData}
+                balance={balance}
               />
             ) : isLedgerEnabled ? (
               <ConfirmLedgerTransaction {...transactionData} />
