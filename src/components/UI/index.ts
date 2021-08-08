@@ -4,7 +4,7 @@ export * from "./Footer";
 export * from "./HelpHint";
 export * from "./Hoc";
 export * from "./Homepage";
-export * from "./LedgerLoader";
+export * from "./ledgerLogin/LedgerLoader";
 export * from "./NewsBanner";
 export * from "./ProgressBar";
 export * from "./Spinner";

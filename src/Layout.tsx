@@ -101,7 +101,7 @@ const Layout = () => {
                 network={networkData}
                 clearSessionData={clearSessionData}
               />
-              <UserIDUpdater sessionData={sessionData} />
+              <UserIDUpdater />
             </Col>
           )}
           {}

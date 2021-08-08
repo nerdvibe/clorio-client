@@ -27,6 +27,7 @@ const Login = ({ toggleLoader, network }: IProps) => {
   const history = useHistory();
   const {
     data: userIdData,
+    error: userIdError,
     loading: userIdLoading,
     refetch: userIdRefetch,
   } = useQuery<IWalletIdData>(GET_ID, {
@@ -56,6 +57,16 @@ const Login = ({ toggleLoader, network }: IProps) => {
     }
   }, [userIdData]);
 
+  /**
+   * If User ID service fails, login into the app
+   */
+  useEffect(() => {
+    if (userIdError) {
+      toggleLoader(true);
+      storeSessionAndRedirect(publicKey, -1);
+    }
+  }, [userIdError]);
+
   const storeSessionAndRedirect = async (publicKey: string, id: number) => {
     const success = await storeSession(publicKey, id, false, 0);
     if (success) {
@@ -82,7 +93,11 @@ const Login = ({ toggleLoader, network }: IProps) => {
       await userIdRefetch({ publicKey: derivedPublicKey });
       setLoader(true);
     } catch (e) {
-      toast.error("Private key not valid, please try again.");
+      if (navigator.onLine) {
+        toast.error("Private key not valid, please try again.");
+      } else {
+        toast.warning("You are currently offline.");
+      }
     }
   };
 
