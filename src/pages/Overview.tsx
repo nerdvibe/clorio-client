@@ -1,7 +1,7 @@
 import TransactionsTable from "../components/transactionsTable/TransactionsTable";
 import Hoc from "../components/UI/Hoc";
 import { useQuery } from "@apollo/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useContext } from "react";
 import { BalanceContext } from "../contexts/balance/BalanceContext";
 import { IBalanceContext } from "../contexts/balance/BalanceTypes";
@@ -9,6 +9,8 @@ import {
   getPageFromOffset,
   TRANSACTIONS_TABLE_ITEMS_PER_PAGE,
   DEFAULT_QUERY_REFRESH_INTERVAL,
+  readSession,
+  UPDATE_WALLET_ID_TIMEOUT,
 } from "../tools";
 import { GET_MEMPOOL, GET_TRANSACTIONS, GET_HOME_NEWS } from "../graphql/query";
 import NewsBanner from "../components/UI/NewsBanner";
@@ -26,6 +28,7 @@ interface IProps {
 const Overview = ({ sessionData }: IProps) => {
   const { balance } = useContext<Partial<IBalanceContext>>(BalanceContext);
   const [offset, setOffset] = useState<number>(0);
+  const [walletId, setWalletId] = useState<number>(sessionData.id);
   const { data: newsData } = useQuery<IHomeNewsQuery>(GET_HOME_NEWS);
   const latestNews =
     newsData?.news_home && newsData?.news_home.length > 0
@@ -36,9 +39,9 @@ const Overview = ({ sessionData }: IProps) => {
     loading: transactionsLoading,
     error: transactionsError,
   } = useQuery<ITransactionQueryResult>(GET_TRANSACTIONS, {
-    variables: { user: sessionData.id, offset },
+    variables: { user: walletId, offset },
     fetchPolicy: "network-only",
-    skip: !sessionData.id,
+    skip: !walletId,
     pollInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
   });
   const {
@@ -50,6 +53,32 @@ const Overview = ({ sessionData }: IProps) => {
     fetchPolicy: "network-only",
     pollInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
   });
+
+  /**
+   * Read the wallet id from the session data every 10 seconds until a valid id is retrieved
+   */
+  useEffect(() => {
+    const timerCheck = setInterval(
+      () => readWalletData(),
+      UPDATE_WALLET_ID_TIMEOUT
+    );
+    if (walletId !== -1) {
+      clearInterval(timerCheck);
+    }
+    return () => {
+      clearInterval(timerCheck);
+    };
+  });
+
+  /**
+   * Read session data and set the wallet id in the component state
+   */
+  const readWalletData = async () => {
+    const wallet = await readSession();
+    if (wallet.id !== -1) {
+      setWalletId(wallet.id);
+    }
+  };
 
   /**
    * Set query offset param based on selected table page
@@ -72,7 +101,7 @@ const Overview = ({ sessionData }: IProps) => {
           balance={+(balance?.total || 0)}
           setOffset={changeOffset}
           page={getPageFromOffset(offset)}
-          userId={sessionData.id}
+          userId={walletId}
           userAddress={sessionData.address}
         />
       </div>
