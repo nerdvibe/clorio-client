@@ -121,15 +121,19 @@ const Balance = () => {
               <div className="inline-block-element">
                 <h6 className="secondaryText">Your balance</h6>
                 <h5
-                  data-tip={`Locked: ${
-                    balanceData?.accountByKey?.balance?.locked
-                      ? toMINA(balanceData.accountByKey.balance.locked)
-                      : 0
-                  } Mina <br/> Liquid: ${
-                    balanceData?.accountByKey?.balance?.liquid
-                      ? toMINA(balanceData.accountByKey.balance.liquid)
-                      : 0
-                  } Mina`}
+                  data-tip={
+                    +(balanceData?.accountByKey?.balance?.locked || 0) > 0
+                      ? `Locked: ${
+                          balanceData?.accountByKey?.balance?.locked
+                            ? toMINA(balanceData.accountByKey.balance.locked)
+                            : 0
+                        } Mina <br/> Liquid: ${
+                          balanceData?.accountByKey?.balance?.liquid
+                            ? toMINA(balanceData.accountByKey.balance.liquid)
+                            : 0
+                        } Mina`
+                      : ""
+                  }
                 >
                   {renderBalance({ balanceData, balanceLoading, userBalance })}
                 </h5>

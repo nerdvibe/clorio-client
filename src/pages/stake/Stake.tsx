@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { derivePublicKey, signStakeDelegation } from "@o1labs/client-sdk";
 import { toast } from "react-toastify";
 import NewsBanner from "../../components/UI/NewsBanner";
-import LedgerLoader from "../../components/UI/LedgerLoader";
+import LedgerLoader from "../../components/UI/ledgerLogin/LedgerLoader";
 import Hoc from "../../components/UI/Hoc";
 import Button from "../../components/UI/Button";
 import { IValidatorData } from "../../components/stake/stakeTableRow/ValidatorDataTypes";
@@ -92,6 +92,8 @@ export default ({ sessionData }: IProps) => {
   const {
     data: nonceAndDelegateData,
     refetch: nonceAndDelegateRefetch,
+    loading: nonceAndDelegateLoading,
+    error: nonceAndDelegateError,
   } = useQuery<INonceDelegateQueryResult>(GET_NONCE_AND_DELEGATE, {
     variables: { publicKey: sessionData.address },
     fetchPolicy: "network-only",
@@ -126,6 +128,15 @@ export default ({ sessionData }: IProps) => {
       setCurrentDelegateName(nonceAndDelegateData.accountByKey.delegate.name);
     }
   }, [nonceAndDelegateData]);
+
+  /**
+   * If there was a problem fetching the nonce, retry to fetch it
+   */
+  useEffect(() => {
+    if (!nonceAndDelegateLoading && nonceAndDelegateError) {
+      nonceAndDelegateRefetch();
+    }
+  }, [nonceAndDelegateLoading, nonceAndDelegateError]);
 
   /**
    * Wait for the ledger to sign the transaction
@@ -405,6 +416,7 @@ export default ({ sessionData }: IProps) => {
           name={delegateData?.name}
           closeModal={closeModal}
           confirmDelegate={confirmDelegate}
+          loadingNonce={nonceAndDelegateLoading}
         />
       </ModalContainer>
       <ModalContainer

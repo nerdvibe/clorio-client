@@ -9,6 +9,7 @@ import { useContext } from "react";
 import { IMessageToSign } from "../../types/MessageToSign";
 import SignatureMessageResult from "../../components/UI/signMessage/SignatureMessageResult";
 import SignMessageLedgerScreen from "../../components/UI/signMessage/SignMessageLedgerScreen";
+import ReactTooltip from "react-tooltip";
 
 const SignMessage = () => {
   const [showResult, setShowResult] = useState<boolean>(false);
@@ -68,6 +69,7 @@ const SignMessage = () => {
     <Hoc>
       <div className="animate__animated animate__fadeIn">
         <SignMessageForm submitHandler={submitHandler} />
+        <ReactTooltip multiline={true} />
       </div>
     </Hoc>
   );

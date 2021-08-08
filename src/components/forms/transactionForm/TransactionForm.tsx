@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Row, Col } from "react-bootstrap";
-import { toNanoMINA, toLongMINA } from "../../../tools";
+import { toNanoMINA, toLongMINA, toMINA, MINIMUM_FEE } from "../../../tools";
 import Button from "../../UI/Button";
 import Input from "../../UI/input/Input";
 import { toast } from "react-toastify";
 import { ITransactionData } from "../../../types/TransactionData";
 import { checkFieldsAndProceed } from "./TransactionFormHelper";
+import { IBalanceData } from "../../../contexts/balance/BalanceTypes";
+import Big from "big.js";
 
 interface IProps {
   transactionData: ITransactionData;
@@ -13,6 +15,7 @@ interface IProps {
   fastFee: number;
   setData: (transactionData: ITransactionData) => void;
   nextStep: () => void;
+  balance?: IBalanceData;
 }
 
 const TransactionForm = ({
@@ -21,6 +24,7 @@ const TransactionForm = ({
   fastFee,
   setData,
   nextStep,
+  balance,
 }: IProps) => {
   const [amount, setAmount] = useState<number | string>(
     toLongMINA(transactionData.amount)
@@ -81,6 +85,21 @@ const TransactionForm = ({
     }
   };
 
+  /**
+   * Set the max amount based on the selected fee and the wallet balance
+   * @returns max amount
+   */
+  const setAllFunds = () => {
+    const fee = transactionData.fee;
+    const available = balance?.liquidUnconfirmed || 0;
+    if (+Big(available).sub(fee) <= 0) {
+      toast.error("Please select a lower fee");
+      return;
+    }
+    const maxAmount = +Big(available).sub(fee);
+    amountHandler(toLongMINA(maxAmount).toString());
+  };
+
   return (
     <div className="mx-auto  ">
       <div className="block-container fit-content-container">
@@ -107,7 +126,18 @@ const TransactionForm = ({
               />
               <Row>
                 <Col md={12} xl={6}>
-                  <h3>Amount</h3>
+                  <Row>
+                    <Col>
+                      <h3>Amount</h3>
+                    </Col>
+                    <Col className="fee-label">
+                      <Button
+                        className="link-button align-end  no-padding"
+                        text="Send all"
+                        onClick={setAllFunds}
+                      />
+                    </Col>
+                  </Row>
                   <Input
                     placeholder="Enter an amount "
                     value={amount}
@@ -124,14 +154,26 @@ const TransactionForm = ({
                       <Button
                         className="link-button align-end  no-padding"
                         text="Average"
-                        onClick={() => setFeeHandler(averageFee)}
+                        onClick={() =>
+                          setFeeHandler(
+                            averageFee > toMINA(MINIMUM_FEE)
+                              ? averageFee
+                              : toMINA(MINIMUM_FEE)
+                          )
+                        }
                       />
                     </Col>
                     <Col className="fee-label">
                       <Button
                         className="link-button align-end  no-padding"
                         text="Fast"
-                        onClick={() => setFeeHandler(fastFee)}
+                        onClick={() =>
+                          setFeeHandler(
+                            fastFee > toMINA(MINIMUM_FEE)
+                              ? fastFee
+                              : toMINA(MINIMUM_FEE)
+                          )
+                        }
                       />
                     </Col>
                   </Row>
