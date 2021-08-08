@@ -14,7 +14,7 @@ export const storeSession = async (
     type: "wallet",
     address: address,
     id: id,
-    ledger: isLedgerEnabled,
+    ledger: isLedgerEnabled || false,
     ledgerAccount,
   };
   return db.insert(wallet);
