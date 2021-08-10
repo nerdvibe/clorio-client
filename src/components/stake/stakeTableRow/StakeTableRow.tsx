@@ -7,9 +7,15 @@ interface IProps {
   index: number;
   element: IValidatorData;
   toggleModal: (element: IValidatorData) => void;
+  isDelegating?: boolean;
 }
 
-const StakeTableRow = ({ element, index, toggleModal }: IProps) => {
+const StakeTableRow = ({
+  element,
+  index,
+  toggleModal,
+  isDelegating,
+}: IProps) => {
   let supportTooltip = "";
   let boostedClassName = "";
   if (element.priority === 1) {
@@ -17,6 +23,19 @@ const StakeTableRow = ({ element, index, toggleModal }: IProps) => {
       "~Clorio is built by Carbonara. <br>Earn rewards and support Clorio <br>by delegating to Carbonara ❤️";
     boostedClassName = "is-boosted";
   }
+
+  const delegateButton = isDelegating ? (
+    <Button
+      className="lightGreenButton__fullMono button-small-padding"
+      text="Delegating"
+    />
+  ) : (
+    <Button
+      className="yellowButton__fullMono"
+      text="Delegate"
+      onClick={() => toggleModal(element)}
+    />
+  );
 
   return (
     <tr
@@ -58,13 +77,7 @@ const StakeTableRow = ({ element, index, toggleModal }: IProps) => {
         text={"Website"}
         website={element.website}
       />
-      <td className="table-element stake-table-button">
-        <Button
-          className="yellowButton__fullMono"
-          text="Delegate"
-          onClick={() => toggleModal(element)}
-        />
-      </td>
+      <td className="table-element stake-table-button">{delegateButton}</td>
     </tr>
   );
 };
