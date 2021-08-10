@@ -1,7 +1,12 @@
+import RefetchTransactions from "./RefetchTransactions";
 import Animation from "../UI/Animation";
 import MissingAnimation from "./assets/missing.json";
 
-const TransactionsTableError = (balance: number, hasErrors: boolean) => {
+const TransactionsTableError = (
+  balance: number,
+  hasErrors: boolean,
+  refetchData: () => void
+) => {
   let secondaryText = "";
   let text = hasErrors
     ? "Ooops... Something went wrong! Please try again later"
@@ -15,6 +20,7 @@ const TransactionsTableError = (balance: number, hasErrors: boolean) => {
   }
   return (
     <div className="block-container">
+      <RefetchTransactions refetch={refetchData} />
       <div className="full-width padding-y-50">
         <div className="full-width-align-center">
           <Animation
