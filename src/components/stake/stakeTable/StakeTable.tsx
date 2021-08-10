@@ -20,6 +20,7 @@ interface IProps {
   currentDelegate: string;
   currentDelegateName: string;
   loading: boolean;
+  delegateLoading: boolean;
   page: number;
   setOffset: (page: number) => void;
 }
@@ -32,6 +33,7 @@ const StakeTable = ({
   currentDelegate,
   currentDelegateName,
   loading,
+  delegateLoading,
   setOffset,
   page,
 }: IProps) => {
@@ -66,6 +68,7 @@ const StakeTable = ({
                 index={index}
                 toggleModal={toggleModal}
                 isDelegating={isDelegating}
+                loading={delegateLoading}
               />
             );
           })}
