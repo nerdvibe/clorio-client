@@ -1,4 +1,5 @@
-import { useLottie } from "lottie-react";
+import { LottieOptions, useLottie } from "lottie-react";
+import { useEffect } from "react";
 
 interface IProps {
   text?: string;
@@ -19,12 +20,19 @@ const MissingAnimation = ({
     animationData: animation,
     loop,
     autoplay: true,
-  };
+  } as LottieOptions;
 
-  const { View } = useLottie(options, {
+  const { View, stop } = useLottie(options, {
     width: width ? width : "100%",
     margin: "0 auto",
   });
+
+  useEffect(() => {
+    setTimeout(() => {
+      stop();
+    }, 6000);
+  }, []);
+
   return (
     <div>
       {View}
