@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { IInputProps } from "./InputProps";
 import { Eye, EyeOff } from "react-feather";
-import ReactTooltip from "react-tooltip";
 
 const Input = ({
   type,
@@ -34,7 +33,6 @@ const Input = ({
       data-validate="Name is required"
     >
       <span className="icon" />
-      <ReactTooltip />
       <input
         className={`input1 ${hidden && "show-icon"}`}
         type={inputTypeHandler()}

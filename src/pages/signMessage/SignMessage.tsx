@@ -11,6 +11,7 @@ import SignatureMessageResult from "../../components/UI/signMessage/SignatureMes
 import SignMessageLedgerScreen from "../../components/UI/signMessage/SignMessageLedgerScreen";
 import { deriveAccount } from "../../tools";
 import { IKeypair } from "../../types";
+import ReactTooltip from "react-tooltip";
 
 const SignMessage = () => {
   const [showResult, setShowResult] = useState<boolean>(false);
@@ -70,6 +71,7 @@ const SignMessage = () => {
     <Hoc>
       <div className="animate__animated animate__fadeIn">
         <SignMessageForm submitHandler={submitHandler} />
+        <ReactTooltip multiline={true} />
       </div>
     </Hoc>
   );

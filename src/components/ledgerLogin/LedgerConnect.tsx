@@ -5,7 +5,7 @@ import Input from "../UI/input/Input";
 import { isMinaAppOpen } from "../../tools/ledger";
 import { Row, Col } from "react-bootstrap";
 import Logo from "../UI/logo/Logo";
-import LedgerLoader from "../UI/LedgerLoader";
+import LedgerLoader from "../UI/ledgerLogin/LedgerLoader";
 import Footer from "../UI/Footer";
 import Button from "../UI/Button";
 import LedgerGetAddress from "./LedgerGetAddress";
@@ -89,7 +89,6 @@ const LedgerConnect = (props: IProps) => {
       <div className="v-spacer" />
       <LedgerLoader />
       <div className="v-spacer" />
-      <h6 className="full-width-align-center">Looking for devices</h6>
       <div className="v-spacer" />
       <Link to="/">
         <Button className="link-button mx-auto" text="Go back" />

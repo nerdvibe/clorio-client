@@ -42,6 +42,7 @@ export interface ITransactionTableProps {
   error?: any;
   loading: boolean;
   setOffset: (page: number) => void;
+  refetchData: () => void;
 }
 
 export interface ITransactionRowData {
