@@ -406,6 +406,7 @@ export default ({ sessionData }: IProps) => {
           openCustomDelegateModal={openCustomDelegateModal}
           setOffset={changeOffset}
           page={offset / VALIDATORS_TABLE_ITEMS_PER_PAGE + 1}
+          delegateLoading={nonceAndDelegateLoading}
         />
       </div>
       <ModalContainer

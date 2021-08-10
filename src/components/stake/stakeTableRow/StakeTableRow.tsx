@@ -8,6 +8,7 @@ interface IProps {
   element: IValidatorData;
   toggleModal: (element: IValidatorData) => void;
   isDelegating?: boolean;
+  loading?: boolean;
 }
 
 const StakeTableRow = ({
@@ -15,6 +16,7 @@ const StakeTableRow = ({
   index,
   toggleModal,
   isDelegating,
+  loading,
 }: IProps) => {
   let supportTooltip = "";
   let boostedClassName = "";
@@ -24,18 +26,26 @@ const StakeTableRow = ({
     boostedClassName = "is-boosted";
   }
 
-  const delegateButton = isDelegating ? (
-    <Button
-      className="lightGreenButton__fullMono button-small-padding"
-      text="Delegating"
-    />
-  ) : (
-    <Button
-      className="yellowButton__fullMono"
-      text="Delegate"
-      onClick={() => toggleModal(element)}
-    />
-  );
+  const delegateButton = () => {
+    const buttonHandler = !isDelegating
+      ? () => toggleModal(element)
+      : () => null;
+    const buttonColor = loading
+      ? "whiteButton__fullMono no-padding"
+      : isDelegating
+      ? "lightGreenButton__fullMono yellowButton__fullMono"
+      : "yellowButton__fullMono";
+    const text = isDelegating ? "Delegating" : "Delegate";
+    return (
+      <Button
+        className={`${buttonColor} button-small-padding`}
+        text={text}
+        loading={loading}
+        disableAnimation={isDelegating}
+        onClick={buttonHandler}
+      />
+    );
+  };
 
   return (
     <tr
@@ -77,7 +87,7 @@ const StakeTableRow = ({
         text={"Website"}
         website={element.website}
       />
-      <td className="table-element stake-table-button">{delegateButton}</td>
+      <td className="table-element stake-table-button">{delegateButton()}</td>
     </tr>
   );
 };
