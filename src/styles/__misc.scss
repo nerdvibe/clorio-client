@@ -25,9 +25,9 @@ a.github-link {
   color: #ffa958 !important;
 }
 
-.ledger-animation{
+.ledger-animation {
   margin-right: 10%;
-  *{
+  * {
     max-width: 750px;
   }
 }
@@ -364,6 +364,12 @@ a:hover {
   width: 100%;
 }
 
+.half-width-align-center {
+  text-align: center;
+  width: 50%;
+  margin: 0 auto;
+}
+
 .full-width-align-left {
   text-align: left;
   width: 100%;
@@ -464,7 +470,7 @@ a:hover {
 .footer-text {
   padding: 10px;
   position: absolute;
-  bottom: 20px;
+  bottom: 0px;
   left: 0;
   font-size: 12px;
 }
@@ -683,7 +689,7 @@ tbody {
   z-index: 4;
 }
 
-.button-small-padding{
+.button-small-padding {
   padding: 10px 33px;
 }
 
@@ -828,7 +834,7 @@ input[type="number"] {
   }
 }
 
-.small-proceed-button{
+.small-proceed-button {
   width: fit-content;
   float: right;
   font-size: small;
@@ -837,7 +843,7 @@ input[type="number"] {
   left: 40px;
 }
 
-.small-proceed-button:active{
+.small-proceed-button:active {
   top: 30px;
   left: 40px;
 }
@@ -947,12 +953,72 @@ input[type="number"] {
   display: block !important;
 }
 
+.word-index {
+  width: 20%;
+  display: inline-block;
+  text-align: center;
+}
+
+.mnemonic-card {
+  border: 2px $gradient solid;
+}
+
+.custom-badge {
+  padding-left: 10px !important;
+  margin: 2px auto;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  font-size: large !important;
+  width: 30%;
+  text-align: left !important;
+  .selectable-text{
+    padding-left: 3px;
+  }
+}
+
+.label {
+  font-size: larger;
+}
+
+.no-style-button {
+  background: none;
+  border: none;
+  transition: 0.4s;
+  margin-left: 0;
+  .link-button {
+    padding-bottom: 0;
+    padding-top: 10px;
+  }
+  div {
+    padding-top: 0;
+    margin-top: 0;
+  }
+}
+
+.no-style-button:focus,
+.no-style-button:hover {
+  border: none;
+  outline: none;
+}
+
+.right-side-animation {
+  position: relative;
+  transition: 0.4s;
+  left: 35%;
+}
+
+.center-side-animation {
+  position: relative;
+  transition: 0.4s;
+  left: 0%;
+}
+
 @media screen and (max-height: 899px) {
   .big-modal-container {
     top: 8vh;
   }
-  
-  .hide-small{
+
+  .hide-small {
     display: none;
   }
 }
@@ -1008,6 +1074,10 @@ input[type="number"] {
     h5 {
       font-size: 1.5vw;
     }
+  }
+
+  .half-width-align-center {
+    width: 70%;
   }
 
   .walletImageContainer {
