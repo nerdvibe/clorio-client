@@ -67,7 +67,14 @@ const Login = ({ toggleLoader, network }: IProps) => {
   }, [userIdError]);
 
   const storeSessionAndRedirect = async (publicKey: string, id: number) => {
-    const success = await storeSession(publicKey, id, false, 0);
+    const isUsingMnemonic = privateKey.trim().split(" ").length === 12;
+    const success = await storeSession(
+      publicKey,
+      id,
+      false,
+      0,
+      isUsingMnemonic
+    );
     if (success) {
       history.replace("/overview");
       toggleLoader(false);

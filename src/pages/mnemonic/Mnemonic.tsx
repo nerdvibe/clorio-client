@@ -36,7 +36,7 @@ const Mnemonic = ({ network, toggleLoader }: IProps) => {
    */
   const completeRegistration = async () => {
     toggleLoader();
-    const result = await storeSession(keypair.publicKey, -1, false);
+    const result = await storeSession(keypair.publicKey, -1, false, 0, true);
     if (result) {
       history.replace("/overview");
     }
