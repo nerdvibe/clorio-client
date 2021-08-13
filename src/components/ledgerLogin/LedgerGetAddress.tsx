@@ -44,7 +44,13 @@ const LedgerGetAddress = ({ accountNumber, toggleLoader, network }: IProps) => {
         walletIdData?.public_keys?.length > 0
           ? walletIdData.public_keys[0].id
           : -1;
-      const success = await storeSession(publicKey, id, true, ledgerAccount);
+      const success = await storeSession(
+        publicKey,
+        id,
+        true,
+        ledgerAccount,
+        false
+      );
       if (success) {
         history.replace("/overview");
       }

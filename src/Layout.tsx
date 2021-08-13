@@ -29,6 +29,7 @@ const initialSessionData = {
   ledger: false,
   ledgerAccount: 0,
   type: "wallet",
+  mnemonic: false,
 };
 
 const Layout = () => {
@@ -97,6 +98,7 @@ const Layout = () => {
           {sessionData && !isEmptyObject(sessionData) && sessionData.address && (
             <Col md={3} lg={3} xl={2} id="sidebar-wrapper">
               <Sidebar
+                mnemonic={sessionData.mnemonic}
                 toggleLoader={toggleLoader}
                 network={networkData}
                 clearSessionData={clearSessionData}

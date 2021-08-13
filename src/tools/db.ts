@@ -8,7 +8,8 @@ export const storeSession = async (
   address: string,
   id: number,
   isLedgerEnabled: boolean,
-  ledgerAccount = 0
+  ledgerAccount = 0,
+  isUsingMnemonic: boolean
 ) => {
   const wallet = {
     type: "wallet",
@@ -16,6 +17,7 @@ export const storeSession = async (
     id: id,
     ledger: isLedgerEnabled || false,
     ledgerAccount,
+    mnemonic: isUsingMnemonic,
   };
   return db.insert(wallet);
 };

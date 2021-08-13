@@ -52,7 +52,7 @@ const Register = ({ toggleLoader, network }: IProps) => {
    */
   const setAuthorization = () => {
     toggleLoader();
-    storeSession(keys.publicKey, -1, false, 0).then((success) => {
+    storeSession(keys.publicKey, -1, false, 0, false).then((success) => {
       if (success) {
         history.replace("/overview");
       }
