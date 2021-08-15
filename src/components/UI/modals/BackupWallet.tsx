@@ -88,7 +88,7 @@ const BackupWallet = ({ closeModal }: IProps) => {
         You are about to see your raw private key. Never share it with anyone!{" "}
         <br />
         Anyone viewing it can steal your funds from anywhere! View it in private
-        with no cameras around. No one from Clorio will ever ask for it
+        with no cameras around. No one from Clorio will ever ask for it.
       </p>
       <p className="align-center mx-auto disclaimer-text">
         In order to continue please insert your Passphrase
