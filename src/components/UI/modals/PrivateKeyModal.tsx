@@ -16,17 +16,17 @@ export const PrivateKeyModal = ({
   confirmPrivateKey,
 }: IProps) => (
   <div className="mx-auto">
-    <h2>Insert Private Key</h2>
+    <h2>Insert Passphrase or Private key</h2>
     <div className="v-spacer" />
     {subtitle && <h5>{subtitle}</h5>}
     <div className="v-spacer" />
     <h5 className="align-center mx-auto">
-      In order to continue please insert your private key
+      In order to continue please insert your Private key or Passphrase
     </h5>
     <div className="v-spacer" />
     <Input
       inputHandler={(e) => setPrivateKey(e.currentTarget.value)}
-      placeholder="Insert your private key"
+      placeholder="Insert your Passphrase or Private key"
       hidden={true}
       type="text"
     />

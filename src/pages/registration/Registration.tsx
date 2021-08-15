@@ -40,7 +40,7 @@ const Register = ({ toggleLoader, network }: IProps) => {
   }, []);
 
   /**
-   * If input text is equal to given private key in the previous state, unlock the Button
+   * If input text is equal to given Passphrase/Private key in the previous state, unlock the Button
    * @returns boolean
    */
   const checkButtonState = () => {
@@ -52,7 +52,7 @@ const Register = ({ toggleLoader, network }: IProps) => {
    */
   const setAuthorization = () => {
     toggleLoader();
-    storeSession(keys.publicKey, -1, false, 0).then((success) => {
+    storeSession(keys.publicKey, -1, false, 0, false).then((success) => {
       if (success) {
         history.replace("/overview");
       }

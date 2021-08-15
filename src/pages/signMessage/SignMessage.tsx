@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Hoc from "../../components/UI/Hoc";
 import SignMessageForm from "../../components/forms/signMessage/SignMessageForm";
-import { derivePublicKey, signed, signMessage } from "@o1labs/client-sdk";
+import { signed, signMessage } from "@o1labs/client-sdk";
 import { toast } from "react-toastify";
 import { ILedgerContext } from "../../contexts/ledger/LedgerTypes";
 import { LedgerContext } from "../../contexts/ledger/LedgerContext";
@@ -9,6 +9,8 @@ import { useContext } from "react";
 import { IMessageToSign } from "../../types/MessageToSign";
 import SignatureMessageResult from "../../components/UI/signMessage/SignatureMessageResult";
 import SignMessageLedgerScreen from "../../components/UI/signMessage/SignMessageLedgerScreen";
+import { deriveAccount } from "../../tools";
+import { IKeypair } from "../../types";
 import ReactTooltip from "react-tooltip";
 
 const SignMessage = () => {
@@ -28,17 +30,17 @@ const SignMessage = () => {
   /**
    * If fields are not empty, sign the message and set the result inside the component state
    */
-  const submitHandler = (messageToSign: IMessageToSign) => {
+  const submitHandler = async (messageToSign: IMessageToSign) => {
     try {
-      const publicKey = derivePublicKey(messageToSign.privateKey);
+      const derivedKeypair = await deriveAccount(messageToSign.privateKey);
       const keypair = {
-        publicKey,
-        privateKey: messageToSign.privateKey,
-      };
+        publicKey: derivedKeypair.publicKey,
+        privateKey: derivedKeypair.privateKey,
+      } as IKeypair;
       setResult(signMessage(messageToSign.message, keypair));
       setShowResult(true);
     } catch (e) {
-      toast.error("Please check private key");
+      toast.error("Please check the passphrase/private key");
     }
   };
 

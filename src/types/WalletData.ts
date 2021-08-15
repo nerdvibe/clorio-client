@@ -4,4 +4,5 @@ export interface IWalletData {
   id: number;
   ledger: boolean;
   ledgerAccount: number;
+  mnemonic: boolean;
 }

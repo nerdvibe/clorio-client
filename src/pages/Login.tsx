@@ -3,9 +3,8 @@ import { Link, useHistory } from "react-router-dom";
 import Hoc from "../components/UI/Hoc";
 import Footer from "../components/UI/Footer";
 import { useState, useEffect } from "react";
-import { storeSession } from "../tools";
+import { deriveAccount, storeSession } from "../tools";
 import { useQuery } from "@apollo/client";
-import { derivePublicKey } from "@o1labs/client-sdk";
 import { GET_ID } from "../graphql/query";
 import { toast } from "react-toastify";
 import Button from "../components/UI/Button";
@@ -68,7 +67,14 @@ const Login = ({ toggleLoader, network }: IProps) => {
   }, [userIdError]);
 
   const storeSessionAndRedirect = async (publicKey: string, id: number) => {
-    const success = await storeSession(publicKey, id, false, 0);
+    const isUsingMnemonic = privateKey.trim().split(" ").length === 12;
+    const success = await storeSession(
+      publicKey,
+      id,
+      false,
+      0,
+      isUsingMnemonic
+    );
     if (success) {
       history.replace("/overview");
       toggleLoader(false);
@@ -88,10 +94,12 @@ const Login = ({ toggleLoader, network }: IProps) => {
    */
   const checkCredentials = async () => {
     try {
-      const derivedPublicKey = derivePublicKey(privateKey);
-      setPublicKey(derivedPublicKey);
-      await userIdRefetch({ publicKey: derivedPublicKey });
-      setLoader(true);
+      const derivedAccount = await deriveAccount(privateKey);
+      if (derivedAccount.publicKey) {
+        setPublicKey(derivedAccount.publicKey);
+        await userIdRefetch({ publicKey: derivedAccount.publicKey });
+        setLoader(true);
+      }
     } catch (e) {
       if (navigator.onLine) {
         toast.error("Private key not valid, please try again.");
@@ -102,7 +110,7 @@ const Login = ({ toggleLoader, network }: IProps) => {
   };
 
   /**
-   * If the private key is empty disable button
+   * If the Passphrase/Private key is empty disable button
    * @returns boolean
    */
   const disableButton = () => {
@@ -127,7 +135,7 @@ const Login = ({ toggleLoader, network }: IProps) => {
                   </div>
                   <div className="v-spacer" />
                   <h4 className="full-width-align-center">
-                    Sign in with your Private Key
+                    Sign in with your passphrase or private key
                   </h4>
                   <h6 className="full-width-align-center">
                     Don&apos;t have an wallet?{" "}
