@@ -23,7 +23,7 @@ const SignMessageForm = ({ submitHandler }: IProps) => {
   }, []);
 
   /**
-   * Check if message and private key are not empty
+   * Check if message and Passphrase/Private key are not empty
    * @returns boolean
    */
   const signButtonStateHandler = () => {
@@ -73,7 +73,7 @@ const SignMessageForm = ({ submitHandler }: IProps) => {
                   inputHandler={(e) => setMessage(e.currentTarget.value)}
                 />
               </div>
-              <h3>Private key</h3>
+              <h3>Passphrase or Private key</h3>
               <div
                 className="wrap-input1 validate-input"
                 data-validate="Name is required"
@@ -82,7 +82,7 @@ const SignMessageForm = ({ submitHandler }: IProps) => {
                 <Input
                   name="privateKey"
                   value={privateKey}
-                  placeholder="Private key"
+                  placeholder="Passphrase or Private key"
                   inputHandler={(e) => setPrivateKey(e.currentTarget.value)}
                   hidden={true}
                   type="text"

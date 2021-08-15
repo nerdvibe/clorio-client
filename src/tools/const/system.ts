@@ -2,6 +2,7 @@
 export const DEFAULT_QUERY_REFRESH_INTERVAL = 31 * 1000;
 // 5s delay (5000ms)
 export const TOAST_TIMEOUT = 5 * 1000;
+export const MINA_COIN_INDEX = 12586;
 // 30s delay
 export const DEFAULT_REFRESH_COUNTDOWN = 31;
 // 10s delay (10000ms)
