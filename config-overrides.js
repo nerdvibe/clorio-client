@@ -7,6 +7,7 @@ const cspConfigPolicy = {
   "img-src": "https://*.staketab.com 'self'",
   "script-src": "'self'",
   "style-src": "'self' https://fonts.googleapis.com",
+  "object-src": "'self'",
   "font-src": "https://fonts.googleapis.com https://fonts.gstatic.com",
 };
 
