@@ -1,9 +1,9 @@
 import { useState, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { derivePublicKey, signStakeDelegation } from "@o1labs/client-sdk";
+import { signStakeDelegation } from "@o1labs/client-sdk";
 import { toast } from "react-toastify";
 import NewsBanner from "../../components/UI/NewsBanner";
-import LedgerLoader from "../../components/UI/LedgerLoader";
+import LedgerLoader from "../../components/UI/ledgerLogin/LedgerLoader";
 import Hoc from "../../components/UI/Hoc";
 import Button from "../../components/UI/Button";
 import { IValidatorData } from "../../components/stake/stakeTableRow/ValidatorDataTypes";
@@ -32,6 +32,7 @@ import {
   createDelegationPaymentInputFromPayload,
   createSignatureInputFromSignature,
   feeOrDefault,
+  deriveAccount,
 } from "../../tools";
 import {
   BROADCAST_DELEGATION,
@@ -49,6 +50,7 @@ import { IWalletData } from "../../types/WalletData";
 import { IValidatorsNewsQuery } from "../../types/NewsData";
 import { IFeeQuery } from "../../types/Fee";
 import { INonceDelegateQueryResult } from "./StakeTypes";
+import { IKeypair } from "../../types";
 
 interface IProps {
   sessionData: IWalletData;
@@ -92,6 +94,8 @@ export default ({ sessionData }: IProps) => {
   const {
     data: nonceAndDelegateData,
     refetch: nonceAndDelegateRefetch,
+    loading: nonceAndDelegateLoading,
+    error: nonceAndDelegateError,
   } = useQuery<INonceDelegateQueryResult>(GET_NONCE_AND_DELEGATE, {
     variables: { publicKey: sessionData.address },
     fetchPolicy: "network-only",
@@ -126,6 +130,15 @@ export default ({ sessionData }: IProps) => {
       setCurrentDelegateName(nonceAndDelegateData.accountByKey.delegate.name);
     }
   }, [nonceAndDelegateData]);
+
+  /**
+   * If there was a problem fetching the nonce, retry to fetch it
+   */
+  useEffect(() => {
+    if (!nonceAndDelegateLoading && nonceAndDelegateError) {
+      nonceAndDelegateRefetch();
+    }
+  }, [nonceAndDelegateLoading, nonceAndDelegateError]);
 
   /**
    * Wait for the ledger to sign the transaction
@@ -192,7 +205,7 @@ export default ({ sessionData }: IProps) => {
 
   /**
    * Set delegate public key on component state, open confirmation modal
-   * @param {string} delegate Delegate private key
+   * @param {string} delegate Delegate public key
    */
   const openModal = (delegate: IValidatorData) => {
     setDelegate(delegate);
@@ -280,7 +293,7 @@ export default ({ sessionData }: IProps) => {
   };
 
   /**
-   * Set the selected fee inside the component state and show the private key modal
+   * Set the selected fee inside the component state and show the passphrase/private key modal
    * @param selectedFee number
    */
   const setFee = (selectedFee: number) => {
@@ -321,20 +334,20 @@ export default ({ sessionData }: IProps) => {
   };
 
   /**
-   * Sign stake delegation using MinaSDK through private key
+   * Sign stake delegation using MinaSDK through passphrase or private key
    */
-  const signDelegation = () => {
+  const signDelegation = async () => {
     try {
       if (!delegateData?.publicKey) {
         throw new Error("The Public key of the selected delegate is missing");
       }
       checkBalance(selectedFee, balance);
       const actualNonce = getNonce();
-      const publicKey = derivePublicKey(privateKey);
+      const derivedAccount = await deriveAccount(privateKey);
       const keypair = {
-        privateKey: privateKey,
-        publicKey: publicKey,
-      };
+        privateKey: derivedAccount.privateKey,
+        publicKey: derivedAccount.publicKey,
+      } as IKeypair;
       const stakeDelegation = {
         to: delegateData.publicKey,
         from: address,
@@ -395,6 +408,7 @@ export default ({ sessionData }: IProps) => {
           openCustomDelegateModal={openCustomDelegateModal}
           setOffset={changeOffset}
           page={offset / VALIDATORS_TABLE_ITEMS_PER_PAGE + 1}
+          delegateLoading={nonceAndDelegateLoading}
         />
       </div>
       <ModalContainer
@@ -405,6 +419,7 @@ export default ({ sessionData }: IProps) => {
           name={delegateData?.name}
           closeModal={closeModal}
           confirmDelegate={confirmDelegate}
+          loadingNonce={nonceAndDelegateLoading}
         />
       </ModalContainer>
       <ModalContainer

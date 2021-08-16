@@ -48,3 +48,7 @@
 .selectable-text {
   -webkit-user-select: text;
 }
+
+.non-selectable-text {
+  -webkit-user-select: none;
+}

@@ -1,22 +1,35 @@
-import ErrorImage from "./assets/error.png";
-import NoTransactionsOrNotAvailableImage from "./assets/noTransactionsOrNotAvailable.svg";
-import TxHistoryNotAvailableImage from "./assets/txHistoryNotAvailable.svg";
-import NoTransactions from "./assets/noTransactions.svg";
+import RefetchTransactions from "./RefetchTransactions";
+import Animation from "../UI/Animation";
+import MissingAnimation from "./assets/missing.json";
 
-const TransactionsTableError = (balance: number, hasErrors: boolean) => {
-  let imageToRender = hasErrors ? ErrorImage : NoTransactions;
+const TransactionsTableError = (
+  balance: number,
+  hasErrors: boolean,
+  refetchData: () => void
+) => {
+  let secondaryText = "";
+  let text = hasErrors
+    ? "Ooops... Something went wrong! Please try again later"
+    : "You haven't made any transaction yet";
   if (balance === 0) {
-    imageToRender = NoTransactionsOrNotAvailableImage;
+    text =
+      "You haven't made any transaction yet or the history might not be available for your address.";
   } else if (balance > 0) {
-    imageToRender = TxHistoryNotAvailableImage;
+    text = "The history might not be available for your address at this time.";
+    secondaryText = "Please consult your transaction history on the explorer.";
   }
   return (
     <div className="block-container">
+      <RefetchTransactions refetch={refetchData} />
       <div className="full-width padding-y-50">
-        <img
-          src={imageToRender}
-          className="animate__animated animate__fadeIn"
-        />
+        <div className="full-width-align-center">
+          <Animation
+            text={text}
+            secondaryText={secondaryText}
+            width="200px"
+            animation={MissingAnimation}
+          />
+        </div>
       </div>
     </div>
   );

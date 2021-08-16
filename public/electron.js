@@ -12,7 +12,7 @@ function createWindow() {
     width: 1200,
     height: 800,
     titleBarStyle: "hidden",
-    backgroundColor: "#afcbeb",
+    backgroundColor: "#ffffff",
     icon: path.join(__dirname, "icon.png"),
     title: "Clorio Wallet",
     webPreferences: {

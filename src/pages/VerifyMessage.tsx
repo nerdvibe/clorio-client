@@ -3,6 +3,7 @@ import VerifyForm from "../components/forms/verifyMessage/VerifyMessageForm";
 import { verifyMessage } from "@o1labs/client-sdk";
 import { toast } from "react-toastify";
 import { IMessageToVerify } from "../types/MessageToVerify";
+import ReactTooltip from "react-tooltip";
 
 const VerifyMessage = () => {
   /**
@@ -34,6 +35,7 @@ const VerifyMessage = () => {
   return (
     <Hoc>
       <VerifyForm verifyMessage={verifySignedMessage} />
+      <ReactTooltip multiline={true} />
     </Hoc>
   );
 };

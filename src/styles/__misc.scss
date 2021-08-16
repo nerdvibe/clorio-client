@@ -8,13 +8,28 @@ th {
   overflow: hidden;
   text-overflow: ellipsis;
   -webkit-user-select: text;
-  *{
+  * {
     -webkit-user-select: text;
   }
 }
 
-a.github-link{
+.custom-card {
+  padding: 20px;
+  border-radius: 20px;
+  // background: #fff;
+  // box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+  overflow-x: auto;
+}
+
+a.github-link {
   color: #ffa958 !important;
+}
+
+.ledger-animation {
+  margin-right: 10%;
+  * {
+    max-width: 750px;
+  }
 }
 
 .walletImage {
@@ -64,21 +79,21 @@ a.github-link{
   margin-bottom: 1rem;
   border: 1px solid transparent;
   z-index: 20;
-  div{
-    .close-button{
+  div {
+    .close-button {
       float: right;
       padding: 8px;
-      opacity: .5;
+      opacity: 0.5;
       cursor: pointer;
     }
     border-radius: 10px;
     display: inline-block;
     margin: 0 auto;
     padding: 15px 20px 10px 20px;
-    width:fit-content;
+    width: fit-content;
     background-color: #cce5ff;
     border-color: #b8daff;
-    p{
+    p {
       font-size: medium;
       color: #004085;
     }
@@ -307,9 +322,13 @@ textarea:-ms-input-placeholder {
   width: fit-content;
 }
 
+.break-text {
+  word-break: break-all;
+}
+
 .v-spacer {
   width: 100%;
-  height: 30px;
+  height: 20px;
 }
 
 .v-spacer-big {
@@ -343,6 +362,12 @@ a:hover {
 .full-width-align-center {
   text-align: center;
   width: 100%;
+}
+
+.half-width-align-center {
+  text-align: center;
+  width: 50%;
+  margin: 0 auto;
 }
 
 .full-width-align-left {
@@ -445,7 +470,7 @@ a:hover {
 .footer-text {
   padding: 10px;
   position: absolute;
-  bottom: 20px;
+  bottom: 0px;
   left: 0;
   font-size: 12px;
 }
@@ -468,7 +493,7 @@ a:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 90vh;
+  height: 87vh;
   width: 100%;
 }
 
@@ -649,7 +674,7 @@ tbody {
   color: $white !important;
 }
 
-.modal-wrapper{
+.modal-wrapper {
   width: 100%;
   align-items: center;
   justify-content: center;
@@ -660,8 +685,12 @@ tbody {
 }
 
 .first-place {
-  position: absolute;
+  position: fixed;
   z-index: 4;
+}
+
+.button-small-padding {
+  padding: 10px 33px;
 }
 
 .signed-message-container {
@@ -805,6 +834,20 @@ input[type="number"] {
   }
 }
 
+.small-proceed-button {
+  width: fit-content;
+  float: right;
+  font-size: small;
+  position: relative;
+  top: 30px;
+  left: 40px;
+}
+
+.small-proceed-button:active {
+  top: 30px;
+  left: 40px;
+}
+
 .__react_component_tooltip {
   border-radius: 3px;
   display: inline-block;
@@ -910,9 +953,73 @@ input[type="number"] {
   display: block !important;
 }
 
+.word-index {
+  width: 20%;
+  display: inline-block;
+  text-align: center;
+}
+
+.mnemonic-card {
+  border: 2px $gradient solid;
+}
+
+.custom-badge {
+  padding-left: 10px !important;
+  margin: 2px auto;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  font-size: large !important;
+  width: 30%;
+  text-align: left !important;
+  .selectable-text{
+    padding-left: 3px;
+  }
+}
+
+.label {
+  font-size: larger;
+}
+
+.no-style-button {
+  background: none;
+  border: none;
+  transition: 0.4s;
+  margin-left: 0;
+  .link-button {
+    padding-bottom: 0;
+    padding-top: 10px;
+  }
+  div {
+    padding-top: 0;
+    margin-top: 0;
+  }
+}
+
+.no-style-button:focus,
+.no-style-button:hover {
+  border: none;
+  outline: none;
+}
+
+.right-side-animation {
+  position: relative;
+  transition: 0.4s;
+  left: 35%;
+}
+
+.center-side-animation {
+  position: relative;
+  transition: 0.4s;
+  left: 0%;
+}
+
 @media screen and (max-height: 899px) {
   .big-modal-container {
     top: 8vh;
+  }
+
+  .hide-small {
+    display: none;
   }
 }
 
@@ -967,6 +1074,10 @@ input[type="number"] {
     h5 {
       font-size: 1.5vw;
     }
+  }
+
+  .half-width-align-center {
+    width: 70%;
   }
 
   .walletImageContainer {

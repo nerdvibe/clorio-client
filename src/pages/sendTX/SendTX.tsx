@@ -23,9 +23,9 @@ import {
   signTransaction,
   MINIMUM_NONCE,
   readSession,
+  deriveAccount,
 } from "../../tools";
 import Spinner from "../../components/UI/Spinner";
-import { derivePublicKey } from "@o1labs/client-sdk";
 import { BROADCAST_TRANSACTION, GET_FEE, GET_NONCE } from "../../graphql/query";
 import { toast } from "react-toastify";
 import {
@@ -38,7 +38,12 @@ import {
   ModalStates,
   SendTXPageSteps,
 } from "./SendTXHelper";
-import { IFeeQuery, IWalletData, ITransactionData } from "../../types";
+import {
+  IFeeQuery,
+  IWalletData,
+  ITransactionData,
+  IKeypair,
+} from "../../types";
 import { ILedgerContext } from "../../contexts/ledger/LedgerTypes";
 import { LedgerContext } from "../../contexts/ledger/LedgerContext";
 import { IBalanceContext } from "../../contexts/balance/BalanceTypes";
@@ -51,6 +56,7 @@ interface IProps {
 const SendTX = (props: IProps) => {
   const history = useHistory();
   const [privateKey, setPrivateKey] = useState<string>("");
+  const [waitingNonce, setWaitingNonce] = useState<boolean>(false);
   const [sendTransactionFlag, setSendTransactionFlag] = useState<boolean>(
     false
   );
@@ -74,6 +80,8 @@ const SendTX = (props: IProps) => {
   const {
     data: nonceData,
     refetch: nonceRefetch,
+    loading: nonceLoading,
+    error: nonceError,
   } = useQuery<INonceQueryResult>(GET_NONCE, {
     variables: { publicKey: senderAddress },
     skip: !senderAddress,
@@ -117,6 +125,22 @@ const SendTX = (props: IProps) => {
     }
     broadcastLedgerTransaction();
   }, [ledgerTransactionData, step]);
+
+  /**
+   * If there was a problem fetching the nonce, retry to fetch it
+   */
+  useEffect(() => {
+    if (!nonceLoading && nonceError) {
+      nonceRefetch();
+    }
+  }, [nonceLoading, nonceError]);
+
+  useEffect(() => {
+    if (waitingNonce && !nonceLoading) {
+      openConfirmationModal();
+      setWaitingNonce(false);
+    }
+  }, [waitingNonce, nonceLoading]);
 
   /**
    * If address is not stored inside component state, fetch it and save it.
@@ -170,9 +194,13 @@ const SendTX = (props: IProps) => {
 
   /**
    * Check if nonce is available, if not ask the user for a custom nonce.
-   * After the nonce is set, proceed with transaction data verification and private key verification
+   * After the nonce is set, proceed with transaction data verification and Passphrase/Private key verification
    */
   const openConfirmationModal = () => {
+    if (nonceLoading) {
+      setWaitingNonce(true);
+      return;
+    }
     try {
       if (!nonceData && !customNonce) {
         return setShowModal(ModalStates.NONCE);
@@ -196,11 +224,11 @@ const SendTX = (props: IProps) => {
   };
 
   /**
-   *  Check if private key is not empty
+   *  Check if Passphrase/Private key is not empty
    */
   const confirmPrivateKey = () => {
     if (!privateKey) {
-      toast.error("Please insert a private key");
+      toast.error("Please insert a passphrase or a private key");
     } else {
       setShowModal("");
       setStep(SendTXPageSteps.CONFIRMATION);
@@ -284,12 +312,15 @@ const SendTX = (props: IProps) => {
   /**
    * Broadcast transaction without Ledger
    */
-  const sendTransaction = () => {
+  const sendTransaction = async () => {
     setShowModal(ModalStates.BROADCASTING);
     try {
       const actualNonce = getNonce();
-      const publicKey = derivePublicKey(privateKey);
-      const keypair = { privateKey, publicKey };
+      const derivedData = await deriveAccount(privateKey);
+      const keypair = {
+        privateKey: derivedData?.privateKey,
+        publicKey: derivedData?.publicKey,
+      } as IKeypair;
       const signedPayment = signTransaction({
         transactionData,
         keypair,
@@ -312,7 +343,7 @@ const SendTX = (props: IProps) => {
     } catch (e) {
       setShowModal("");
       toast.error(
-        "Check if the receiver address and/or the private key are right"
+        "Check if the receiver address and/or the passphrase/private key are right"
       );
       stepBackwards();
       setPrivateKey("");
@@ -320,8 +351,11 @@ const SendTX = (props: IProps) => {
   };
 
   return (
-    <Hoc className="main-container">
-      <Spinner show={showLoader}>
+    <Hoc className="main-container block-container">
+      <Spinner
+        show={showLoader || waitingNonce}
+        className="spinner-container center full-width"
+      >
         <div>
           <div className="animate__animated animate__fadeIn">
             {step === 0 ? (
@@ -331,6 +365,7 @@ const SendTX = (props: IProps) => {
                 nextStep={openConfirmationModal}
                 transactionData={transactionData}
                 setData={setTransactionData}
+                balance={balance}
               />
             ) : isLedgerEnabled ? (
               <ConfirmLedgerTransaction {...transactionData} />

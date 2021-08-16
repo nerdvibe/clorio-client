@@ -7,13 +7,13 @@ import Logo from "../UI/logo/Logo";
 import Footer from "../UI/Footer";
 import { useQuery } from "@apollo/client";
 import { storeSession } from "../../tools";
-import LedgerLoader from "../UI/LedgerLoader";
 import { GET_ID } from "../../graphql/query";
 import { getPublicKey } from "../../tools/ledger";
 import { toast } from "react-toastify";
 import { IProps } from "./LedgerLoginTypes";
 import LedgerConfirmAddress from "./LedgerConfirmAddress";
 import { IWalletIdData } from "../../types/WalletIdData";
+import LedgerLoader from "../UI/ledgerLogin/LedgerLoader";
 
 const LedgerGetAddress = ({ accountNumber, toggleLoader, network }: IProps) => {
   const [publicKey, setPublicKey] = useState<string>("");
@@ -44,7 +44,13 @@ const LedgerGetAddress = ({ accountNumber, toggleLoader, network }: IProps) => {
         walletIdData?.public_keys?.length > 0
           ? walletIdData.public_keys[0].id
           : -1;
-      const success = await storeSession(publicKey, id, true, ledgerAccount);
+      const success = await storeSession(
+        publicKey,
+        id,
+        true,
+        ledgerAccount,
+        false
+      );
       if (success) {
         history.replace("/overview");
       }

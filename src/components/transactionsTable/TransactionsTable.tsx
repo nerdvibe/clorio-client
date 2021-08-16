@@ -17,6 +17,7 @@ import {
   transactionQueryRowToTableRow,
 } from "./TransactionsHelper";
 import WalletCreationTransaction from "./WalletCreationTransaction";
+import RefetchTransactions from "./RefetchTransactions";
 
 const TransactionsTable = ({
   transactions,
@@ -28,6 +29,7 @@ const TransactionsTable = ({
   page,
   setOffset,
   balance,
+  refetchData,
 }: ITransactionTableProps) => {
   const { data: totalData } = useQuery<ITransactionTotalQueryResult>(
     GET_TRANSACTIONS_TOTAL,
@@ -42,7 +44,7 @@ const TransactionsTable = ({
     !loading &&
     (error || !transactions || transactions.user_commands.length === 0)
   ) {
-    return TransactionsTableError(balance, error);
+    return TransactionsTableError(balance, error, refetchData);
   }
 
   /**
@@ -101,6 +103,7 @@ const TransactionsTable = ({
       <div>
         <Spinner className={"full-width"} show={loading}>
           <div id="transaction-table">
+            <RefetchTransactions refetch={refetchData} />
             <ReactTooltip multiline={true} />
             <Table
               className="animate__animated animate__fadeIn"

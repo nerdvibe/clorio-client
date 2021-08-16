@@ -36,6 +36,7 @@
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
+  transition: 0.4s;
 }
 
 .disabledButton {
@@ -71,30 +72,6 @@
 
 .darkGreenButton__whiteOutline {
   @include outlineButton($white, $dark-green);
-}
-
-/* light green Button - Full mono */
-
-.lightGreenButton__fullMono {
-  @include fullMonoButton($light-green);
-}
-
-/* light green Button - Outline mono */
-
-.lightGreenButton__outlineMono {
-  @include outlineButton($light-green, $light-green);
-}
-
-/* light green Button - Outline black */
-
-.lightGreenButton__blackOutline {
-  @include outlineButton($black, $light-green);
-}
-
-/* Light green Button - Outline white */
-
-.lightGreenButton__whiteOutline {
-  @include outlineButton($white, $light-green);
 }
 
 /* yellow Button - Full mono */
@@ -169,22 +146,52 @@
   @include outlineButton($white, $red);
 }
 
+/* light green Button - Full mono */
+
+.whiteButton__fullMono {
+  @include fullMonoButton(none);
+}
+
+/* light green Button - Full mono */
+
+.lightGreenButton__fullMono {
+  @include fullMonoButton($light-green);
+}
+
+/* light green Button - Outline mono */
+
+.lightGreenButton__outlineMono {
+  @include outlineButton($light-green, $light-green);
+}
+
+/* light green Button - Outline black */
+
+.lightGreenButton__blackOutline {
+  @include outlineButton($black, $light-green);
+}
+
+/* Light green Button - Outline white */
+
+.lightGreenButton__whiteOutline {
+  @include outlineButton($white, $light-green);
+}
+
 .link-button {
   color: $red;
   padding: 10px;
   cursor: pointer;
 }
 
-.button {
+.button,.button-animation {
   cursor: pointer;
   position: relative;
   top: 0;
   left: 0;
-  transition: 0.2s;
+  transition: 0.7s;
   margin-left: 5px;
 }
 
-.button:active {
+.button-animation:active {
   position: relative;
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
@@ -201,4 +208,50 @@
   -o-transition: 0.2s;
   transition: 0.2s;
   transition: 0.2s;
+}
+
+:root {
+  --color: #acacac;
+  --animation: colorChange 1.5s linear both infinite;
+}
+
+@keyframes colorChange {
+  0% {
+    opacity: 0.3;
+    background-color: #acacac;
+  }
+  50% {
+    background-color: #686868;
+    opacity: 0.3;
+  }
+  100% {
+    background-color: #acacac;
+    opacity: 0.3;
+  }
+}
+
+.Circle {
+  /*...*/
+  background: var(--color);
+  animation: var(--animation);
+  /*...*/
+}
+
+.LineTop,
+.LineBottom {
+  /*...*/
+  animation: var(--animation);
+  background: var(--color);
+  animation-delay: 0.2s;
+  height: 40px;
+  border-radius: 10px;
+  padding: 10px 0px;
+  min-width: 135px;
+
+  /*...*/
+}
+
+.no-padding{
+  padding-left: 0;
+  padding-right: 0;
 }
