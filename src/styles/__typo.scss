@@ -100,3 +100,20 @@ a {
     font-size: 1.15rem;
   }
 }
+
+.small-text{
+  font-size: small;
+  font-style: italic;
+  margin-bottom: 20px;
+  text-align: right !important;
+  opacity: .7;
+}
+
+.fw-400{
+  font-weight: 400;
+}
+
+.disclaimer-text{
+  font-size: large;
+  line-height: initial;
+}

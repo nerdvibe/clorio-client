@@ -6,11 +6,7 @@ import { IWalletData } from "../../types/WalletData";
 import { IWalletIdData } from "../../types/WalletIdData";
 import { DEFAULT_QUERY_REFRESH_INTERVAL } from "../../tools";
 
-interface IProps {
-  sessionData: IWalletData;
-}
-
-const UserIDUpdater = ({ sessionData }: IProps) => {
+const UserIDUpdater = () => {
   const [address, setAddress] = useState<string>("");
   const { data: userID, stopPolling } = useQuery<IWalletIdData>(GET_ID, {
     variables: { publicKey: address },
@@ -19,23 +15,20 @@ const UserIDUpdater = ({ sessionData }: IProps) => {
   });
 
   /**
-   * If wallet id is not available, set address inside the state and refetch
+   * Read the wallet address from the storage and set it inside the component state
    */
   const setUserId = async () => {
     const walletData: IWalletData = await readSession();
-    if (walletData?.id === -1) {
-      if (sessionData?.address) {
-        setAddress(sessionData.address);
-      }
+    if (walletData && address !== walletData.address) {
+      setAddress(walletData.address);
     }
   };
 
   useEffect(() => {
     setUserId();
-    // If query returns the wallet id, set it inside the storage and clear the address inside the state.
+    // If query returns the wallet id, set it inside the storage and stop polling.
     if (userID?.public_keys && userID?.public_keys?.length > 0) {
       updateUser(address, userID.public_keys[0].id);
-      setAddress("");
       stopPolling();
     }
   });

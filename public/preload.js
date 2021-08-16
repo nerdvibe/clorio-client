@@ -23,14 +23,14 @@ const allowedOnChannels = [
 function init() {
   window.isElectron = true;
   contextBridge.exposeInMainWorld("ipcBridge", {
-    invoke: (text) => {
+    invoke: (text, data) => {
       if (allowedInvokeChannels.includes(text)) {
-        return ipcRenderer.invoke(text);
+        return ipcRenderer.invoke(text, data);
       }
     },
-    send: (text) => {
+    send: (text, data) => {
       if (allowedSendChannels.includes(text)) {
-        return ipcRenderer.send(text);
+        return ipcRenderer.send(text, data);
       }
     },
     on: (text, callback) => {

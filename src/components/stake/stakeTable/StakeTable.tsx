@@ -20,6 +20,7 @@ interface IProps {
   currentDelegate: string;
   currentDelegateName: string;
   loading: boolean;
+  delegateLoading: boolean;
   page: number;
   setOffset: (page: number) => void;
 }
@@ -32,6 +33,7 @@ const StakeTable = ({
   currentDelegate,
   currentDelegateName,
   loading,
+  delegateLoading,
   setOffset,
   page,
 }: IProps) => {
@@ -58,12 +60,15 @@ const StakeTable = ({
       return (
         <tbody>
           {filteredValidators.map((el, index: number) => {
+            const isDelegating = el.publicKey === currentDelegate;
             return (
               <StakeTableRow
                 key={index}
                 element={el}
                 index={index}
                 toggleModal={toggleModal}
+                isDelegating={isDelegating}
+                loading={delegateLoading}
               />
             );
           })}

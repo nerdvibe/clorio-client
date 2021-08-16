@@ -7,14 +7,50 @@ interface IProps {
   icon?: React.ReactNode;
   disabled?: boolean;
   link?: string;
+  loading?: boolean;
+  disableAnimation?: boolean;
 }
 
-const Button = ({ className, onClick, text, icon, disabled, link }: IProps) => {
+const Button = ({
+  className,
+  onClick,
+  text,
+  icon,
+  disabled,
+  link,
+  loading,
+  disableAnimation,
+}: IProps) => {
+  const clickHandler = () => {
+    if (loading) {
+      return;
+    }
+    if (onClick) {
+      onClick();
+    }
+  };
+
   const button = (
-    <div className={className + " button"} onClick={onClick}>
-      {icon}&nbsp;{text}
+    <div
+      className={`${className} ${
+        disableAnimation ? "" : " button-animation "
+      }  button non-selectable-text`}
+      onClick={clickHandler}
+    >
+      {loading ? (
+        <div className="LoaderWrapper">
+          <div className="LineWrapper">
+            <div className="LineTop" />
+          </div>
+        </div>
+      ) : (
+        <>
+          {icon}&nbsp;{text}
+        </>
+      )}
     </div>
   );
+
   const disabledButton = (
     <div className={"disabledButton margin-auto"}>
       {icon}&nbsp;{text}

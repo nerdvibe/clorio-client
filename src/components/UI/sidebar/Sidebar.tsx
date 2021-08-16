@@ -6,14 +6,19 @@ import Logo from "../logo/Logo";
 import { clearSession } from "../../../tools";
 import { isRouteActiveClass, renderNetworkLabel } from "./SidebarHelper";
 import { INetworkData } from "../../../types/NetworkData";
+import { useState } from "react";
+import { ModalContainer } from "../modals";
+import BackupWallet from "../modals/BackupWallet";
 
 interface IProps {
+  mnemonic?: boolean;
   network?: INetworkData;
   clearSessionData: () => void;
   toggleLoader: (state?: boolean) => void;
 }
 
-const Sidebar = ({ network, clearSessionData }: IProps) => {
+const Sidebar = ({ network, clearSessionData, mnemonic }: IProps) => {
+  const [showBackupModal, setShowBackupModal] = useState(false);
   const history = useHistory();
   const statusDot = network?.nodeInfo ? (
     <span className="green-dot" />
@@ -29,6 +34,11 @@ const Sidebar = ({ network, clearSessionData }: IProps) => {
     history.replace("/");
     clearSessionData();
   };
+
+  /**
+   * Show private key backup modal
+   */
+  const toggleBackupModal = () => setShowBackupModal(!showBackupModal);
 
   return (
     <div style={{ padding: "5px" }}>
@@ -101,19 +111,28 @@ const Sidebar = ({ network, clearSessionData }: IProps) => {
               {" "}
               <strong>
                 {" "}
-                <span onClick={logout}>Logout</span>
-              </strong>{" "}
+                <span onClick={logout}>Logout </span>
+                {mnemonic && (
+                  <>
+                    {" "}
+                    | <span onClick={toggleBackupModal}>Backup</span>
+                  </>
+                )}
+              </strong>
             </Link>
           </Nav.Item>
           <div
             className="sidebar-footer-network"
             // TODO REMOVE HARDCOING!
-            data-tip={"v: 0.1.3"}
+            data-tip={"v: 0.1.4"}
           >
             {renderNetworkLabel(network?.nodeInfo)} {statusDot}
           </div>
         </div>
       </Nav>
+      <ModalContainer show={showBackupModal}>
+        <BackupWallet closeModal={toggleBackupModal} />
+      </ModalContainer>
     </div>
   );
 };
