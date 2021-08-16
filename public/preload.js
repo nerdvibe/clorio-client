@@ -28,7 +28,7 @@ function init() {
         return ipcRenderer.invoke(text, data);
       }
     },
-    send: (text) => {
+    send: (text, data) => {
       if (allowedSendChannels.includes(text)) {
         return ipcRenderer.send(text, data);
       }
