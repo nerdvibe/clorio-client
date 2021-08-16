@@ -30,7 +30,7 @@ function init() {
     },
     send: (text) => {
       if (allowedSendChannels.includes(text)) {
-        return ipcRenderer.send(text);
+        return ipcRenderer.send(text, data);
       }
     },
     on: (text, callback) => {
