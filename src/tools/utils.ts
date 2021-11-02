@@ -12,7 +12,7 @@ import { UpdateError } from "../components/UI/UpdateError";
 
 export const copyToClipboard = (content = "") => {
   const el = document.createElement("textarea");
-  el.value = content;
+  el.value = content.trim();
   document.body.appendChild(el);
   el.select();
   document.execCommand("copy");
