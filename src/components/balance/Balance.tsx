@@ -106,8 +106,8 @@ const Balance = () => {
           <Row>
             <Col xs={12}>
               <h6 className="secondaryText">This is your address</h6>
-              <h5 className="selectable-text">
-                {address} &nbsp;
+              <h5>
+                <span className="selectable-text">{address}</span>
                 <Button
                   className="inline-element"
                   icon={<Copy />}
