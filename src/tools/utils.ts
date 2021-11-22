@@ -124,6 +124,7 @@ export const electronAlerts = async () => {
           alerts.push("CHECK_FOR_UPDATE_SUCCESS");
           alerts.push("UPDATE_ERROR");
           alerts.push("DOWNLOAD_UPDATE_FAILURE");
+          alerts.push("DOWNLOAD_UPDATE_SUCCESS");
         } else {
           toast.info(`There is a new release 🎉 v${version}`, {
             toastId: "CHECK_FOR_UPDATE_SUCCESS",
