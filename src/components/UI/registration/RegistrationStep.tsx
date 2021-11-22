@@ -40,7 +40,10 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => {
                     style={{ color: "#000", fontWeight: 400 }}
                   >
                     <span className="word-index">{index + 1}.</span>
-                    <span className="selectable-text ">{word}&nbsp;</span>
+                    <span className="selectable-text ">
+                      {word}
+                      {index === 11 ? "" : " "}
+                    </span>
                   </span>
                 ))}
               </div>
