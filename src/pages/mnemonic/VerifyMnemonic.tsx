@@ -126,7 +126,7 @@ export const VerifyMnemonic = ({
               <span
                 data-tip={
                   !isElectron()
-                    ? "Feature enabled only on the desktop version"
+                    ? "For your security, you can store the passphrase only on Clorio Desktop"
                     : undefined
                 }
               >
