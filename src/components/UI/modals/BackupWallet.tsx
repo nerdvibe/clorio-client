@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
-import { deriveAccount } from "../../../tools";
+import { deriveAccount, getPassphrase } from "../../../tools";
 import Button from "../Button";
 import Input from "../input/Input";
 
@@ -16,8 +16,9 @@ interface IDerivedKeypair {
 }
 
 const BackupWallet = ({ closeModal }: IProps) => {
+  const storedPassphrase = getPassphrase();
   const [showDetails, setShowDetails] = useState(false);
-  const [mnemonic, setMnemonic] = useState("");
+  const [mnemonic, setMnemonic] = useState(storedPassphrase || "");
   const [keypair, setKeypair] = useState<IDerivedKeypair>({
     privateKey: "",
     publicKey: "",
@@ -43,7 +44,7 @@ const BackupWallet = ({ closeModal }: IProps) => {
       privateKey: "",
       publicKey: "",
     });
-    setMnemonic("");
+    setMnemonic(storedPassphrase || "");
     setShowDetails(false);
   };
 
@@ -52,7 +53,7 @@ const BackupWallet = ({ closeModal }: IProps) => {
    * @returns boolean
    */
   const disableButton = () => {
-    return mnemonic.trim().split(" ").length !== 12;
+    return !storedPassphrase && mnemonic.trim().split(" ").length !== 12;
   };
 
   if (showDetails) {
@@ -90,16 +91,20 @@ const BackupWallet = ({ closeModal }: IProps) => {
         Anyone viewing it can steal your funds from anywhere! View it in private
         with no cameras around. No one from Clorio will ever ask for it.
       </p>
-      <p className="align-center mx-auto disclaimer-text">
-        In order to continue please insert your Passphrase
-      </p>
-      <div className="v-spacer" />
-      <Input
-        inputHandler={(e) => setMnemonic(e.currentTarget.value)}
-        placeholder="Insert your Passphrase or Private key"
-        hidden={true}
-        type="text"
-      />
+      {!storedPassphrase && (
+        <>
+          <p className="align-center mx-auto disclaimer-text">
+            In order to continue please insert your Passphrase
+          </p>
+          <div className="v-spacer" />
+          <Input
+            inputHandler={(e) => setMnemonic(e.currentTarget.value)}
+            placeholder="Insert your Passphrase or Private key"
+            hidden={true}
+            type="text"
+          />
+        </>
+      )}
       <div className="v-spacer" />
       <Row>
         <Col xs={6}>

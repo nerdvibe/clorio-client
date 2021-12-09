@@ -13,6 +13,20 @@ th {
   }
 }
 
+.checkbox{
+  width: 20px;
+  height: 20px;
+}
+
+.checkbox:disabled{
+  opacity: .3;
+}
+
+.checkbox-label{
+  line-height: 20px;
+  vertical-align: middle;
+}
+
 .custom-card {
   padding: 20px;
   border-radius: 20px;
@@ -971,7 +985,7 @@ input[type="number"] {
   font-size: large !important;
   width: 30%;
   text-align: left !important;
-  .selectable-text{
+  .selectable-text {
     padding-left: 3px;
   }
 }
