@@ -1,5 +1,3 @@
-// File unused
-
 import { useEffect, useState } from "react";
 import Hoc from "../../components/UI/Hoc";
 import Footer from "../../components/UI/Footer";
@@ -7,8 +5,13 @@ import { generateMnemonic } from "bip39";
 import { VerifyMnemonic } from "./VerifyMnemonic";
 import { IKeypair, INetworkData } from "../../types";
 import RegisterStep from "../../components/UI/registration/RegistrationStep";
-import { deriveWalletByMnemonic, storeSession } from "../../tools";
+import {
+  deriveWalletByMnemonic,
+  setPassphrase,
+  storeSession,
+} from "../../tools";
 import { useHistory } from "react-router";
+import isElectron from "is-electron";
 
 interface IProps {
   network?: INetworkData;
@@ -17,12 +20,14 @@ interface IProps {
 
 const Mnemonic = ({ network, toggleLoader }: IProps) => {
   const history = useHistory();
+  const [storePassphrase, setStorePassphrase] = useState<boolean>(isElectron());
   const [mnemonic, setMnemonic] = useState(generateMnemonic());
   const [keypair, setKeypair] = useState<IKeypair>({
     privateKey: "",
     publicKey: "",
     mnemonic: "",
   });
+  const storePassphraseHandler = () => setStorePassphrase(!storePassphrase);
 
   /**
    * Generate new keypair based on the mnemonic
@@ -36,6 +41,9 @@ const Mnemonic = ({ network, toggleLoader }: IProps) => {
    */
   const completeRegistration = async () => {
     toggleLoader();
+    if (storePassphrase) {
+      setPassphrase(keypair.privateKey);
+    }
     const result = await storeSession(keypair.publicKey, -1, false, 0, true);
     if (result) {
       history.replace("/overview");
@@ -76,6 +84,8 @@ const Mnemonic = ({ network, toggleLoader }: IProps) => {
           mnemonic={mnemonic}
           closeVerification={toggleVerificationStep}
           completeRegistration={completeRegistration}
+          storePassphraseHandler={storePassphraseHandler}
+          storePassphrase={storePassphrase}
         />
       ) : (
         <RegisterStep

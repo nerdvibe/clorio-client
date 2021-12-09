@@ -5,6 +5,8 @@ import Logo from "../logo/Logo";
 import { IKeypair } from "../../../types/Keypair";
 import { PdfEncryption } from "./PdfEncryption";
 import Button from "../../UI/Button";
+import isElectron from "is-electron";
+import { isChrome } from "../../../tools";
 
 interface IProps {
   keys: IKeypair;
@@ -17,6 +19,7 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => {
     false
   );
   const [showDetails, setShowDetails] = useState(false);
+  const spaceChar = isElectron() || isChrome ? <>&nbsp;</> : " ";
   return (
     <div className="animate__animated animate__fadeIn full-width">
       <Row className="full-width">
@@ -42,7 +45,7 @@ const RegisterStep = ({ keys, generateNew, setValidation }: IProps) => {
                     <span className="word-index">{index + 1}.</span>
                     <span className="selectable-text ">
                       {word}
-                      {index === 11 ? "" : " "}
+                      {index === 11 ? "" : spaceChar}
                     </span>
                   </span>
                 ))}
