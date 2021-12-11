@@ -4,7 +4,7 @@ import { getTotalPages } from "../../tools/utils";
 import { useQuery } from "@apollo/client";
 import Pagination from "../UI/pagination/Pagination";
 import ReactTooltip from "react-tooltip";
-import { GET_TRANSACTIONS_TOTAL } from "../../graphql/query";
+import { GET_BLACKLIST, GET_TRANSACTIONS_TOTAL } from "../../graphql/query";
 import {
   ITransactionRowData,
   ITransactionTableProps,
@@ -18,6 +18,7 @@ import {
 } from "./TransactionsHelper";
 import WalletCreationTransaction from "./WalletCreationTransaction";
 import RefetchTransactions from "./RefetchTransactions";
+import { Blacklist } from "../../types/Blacklist";
 
 const TransactionsTable = ({
   transactions,
@@ -39,6 +40,10 @@ const TransactionsTable = ({
       fetchPolicy: "network-only",
     }
   );
+
+  const { data: blacklist } = useQuery<Blacklist>(GET_BLACKLIST, {
+    fetchPolicy: "network-only",
+  });
 
   if (
     !loading &&
@@ -73,13 +78,25 @@ const TransactionsTable = ({
       <tbody>
         {mempool?.mempool?.map((row, index) => {
           const rowData: ITransactionRowData = mempoolQueryRowToTableRow(row);
-          return TransactionRow(rowData, index, userAddress, true);
+          return TransactionRow(
+            rowData,
+            index,
+            userAddress,
+            blacklist?.blacklistedAddresses || [],
+            true
+          );
         })}
         {transactions?.user_commands?.map((row, index) => {
           const rowData: ITransactionRowData = transactionQueryRowToTableRow(
             row
           );
-          return TransactionRow(rowData, index, userAddress, false);
+          return TransactionRow(
+            rowData,
+            index,
+            userAddress,
+            blacklist?.blacklistedAddresses || [],
+            false
+          );
         })}
         {lastTransaction()}
       </tbody>
