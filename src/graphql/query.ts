@@ -222,3 +222,11 @@ export const GET_HOME_NEWS = gql`
     }
   }
 `;
+
+export const GET_BLACKLIST = gql`
+  query GetBlacklist {
+    blacklistedAddresses {
+      address
+    }
+  }
+`;
