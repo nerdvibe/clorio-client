@@ -1,11 +1,21 @@
-import { Check, ChevronRight, ChevronsDown, ChevronsUp } from "react-feather";
+import {
+  Check,
+  ChevronRight,
+  ChevronsDown,
+  ChevronsUp,
+  AlertTriangle,
+} from "react-feather";
 
 const TransactionIcon = (
   txType: string,
   sender: string,
   receiver: string,
-  userAddress: string
+  userAddress: string,
+  isScam: boolean
 ) => {
+  if (isScam) {
+    return <AlertTriangle data-tip="Scam transaction!" />;
+  }
   if (txType === "delegation") {
     return <Check data-tip="Delegation TX" />;
   } else {

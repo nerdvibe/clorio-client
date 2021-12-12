@@ -9,6 +9,11 @@ import { toNanoMINA } from "./mina";
 import isElectron from "is-electron";
 import { toast } from "react-toastify";
 import { UpdateError } from "../components/UI/UpdateError";
+import BadWords from "bad-words";
+import Censorify from "censorify-it";
+
+const shortUrls: string[] = [];
+const blacklist = ["onion"];
 
 export const copyToClipboard = (content = "") => {
   const el = document.createElement("textarea");
@@ -158,4 +163,56 @@ export const electronAlerts = async () => {
       }
     });
   }
+};
+
+export const isBad = (value: string): boolean => {
+  if (!value) {
+    return false;
+  }
+
+  const alphaValue = value.replace(/[^a-zA-Z0-9]/g, "");
+
+  for (const bad of blacklist.concat(shortUrls)) {
+    const badDirectly = alphaValue.includes(bad);
+    const badVariation = alphaValue.includes(bad.replace(/[^a-zA-Z0-9]/g, ""));
+
+    if (badDirectly || badVariation) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+const isAlphaNumericSpace = (text: string) => {
+  return text.match("^[\\w\\s]+$");
+};
+
+export const removeBadWords = (value: string): string => {
+  const badwords = new BadWords();
+  badwords.addWords("pedo", "pedophile");
+  if (isAlphaNumericSpace(value)) {
+    return badwords.clean(value);
+  }
+  return value;
+};
+
+export const removeSpam = (value: string): string => {
+  const censorify = new Censorify();
+  const exceptions = [(match: any) => match.url === "https://minaprotocol.com"];
+  censorify.set({ exceptions });
+  return censorify.process(value);
+};
+
+export const sanitizeString = (value: string): string => {
+  if (value && value.trim().length > 0) {
+    value = removeSpam(value);
+    value = removeBadWords(value);
+  }
+
+  if (value && isBad("value")) {
+    return "unavailable";
+  }
+
+  return value;
 };
