@@ -39,6 +39,7 @@ export const readSession = async () => {
 };
 
 export const clearSession = async () => {
+  sessionStorage.removeItem("PASSPHRASE");
   await db.remove({ type: "wallet" }, { multi: true });
 };
 
@@ -53,3 +54,8 @@ export const updateUser = async (address: string, id: number) => {
   };
   await db.insert(wallet);
 };
+
+export const getPassphrase = () => sessionStorage.getItem("PASSPHRASE") || "";
+
+export const setPassphrase = (passphrase: string) =>
+  sessionStorage.setItem("PASSPHRASE", passphrase);

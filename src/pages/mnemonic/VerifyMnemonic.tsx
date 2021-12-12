@@ -1,5 +1,7 @@
+import isElectron from "is-electron";
 import { useState } from "react";
 import { Row, Col } from "react-bootstrap";
+import ReactTooltip from "react-tooltip";
 import Button from "../../components/UI/Button";
 import Logo from "../../components/UI/logo/Logo";
 
@@ -7,12 +9,16 @@ interface IProps {
   mnemonic: string;
   closeVerification: () => void;
   completeRegistration: () => void;
+  storePassphraseHandler: () => void;
+  storePassphrase?: boolean;
 }
 
 export const VerifyMnemonic = ({
   mnemonic,
   closeVerification,
   completeRegistration,
+  storePassphraseHandler,
+  storePassphrase,
 }: IProps) => {
   const [disableButton, setDisableButton] = useState<boolean>(true);
   const [wordsFoundArray, setWordsFoundArray] = useState<string[]>([]);
@@ -116,6 +122,32 @@ export const VerifyMnemonic = ({
               </Row>
             </div>
             <div className="v-spacer" />
+            <div>
+              <span
+                data-tip={
+                  !isElectron()
+                    ? "For your security, you can store the passphrase only on Clorio Desktop"
+                    : undefined
+                }
+              >
+                <input
+                  className="checkbox"
+                  type="checkbox"
+                  name="storePassphrase"
+                  id="storePassphrase"
+                  value={isElectron() ? "show" : ""}
+                  onChange={storePassphraseHandler}
+                  checked={storePassphrase}
+                  disabled={!isElectron()}
+                />
+                <label
+                  className="ml-2 checkbox-label"
+                  htmlFor="storePassphrase"
+                >
+                  Store my passphrase for this session
+                </label>
+              </span>
+            </div>
             <Row>
               <Col xs={6}>
                 <Button
@@ -137,6 +169,7 @@ export const VerifyMnemonic = ({
           </Col>
         </Row>
       </div>
+      <ReactTooltip />
     </div>
   );
 };
