@@ -1428,10 +1428,10 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@o1labs/client-sdk@0.2.5":
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/@o1labs/client-sdk/-/client-sdk-0.2.5.tgz#e9972d1bd7c05d383f35449be78fe8c4b7cb5123"
-  integrity sha512-Ak+Ix0vcTT5VuITyySsMhXmO2y7mVvd1Yyq4oJaoe43EiIYU1jfEzHIjHkn/pSDCLCJRTF2yzeH+ZeKfk1rc/Q==
+"@o1labs/client-sdk@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@o1labs/client-sdk/-/client-sdk-1.0.1.tgz#5b2824a52fd0e839873791e4a5949aa5197a2ed1"
+  integrity sha512-fHAmY31WIKuXIgMohyf5kJkjNGNqco965YwE2Td4k+IJRswO2ymaIK2Uo4CSp8UqivGzF02i7oJJhzyWWViN5Q==
   dependencies:
     "@types/node" "^13.7.0"
 
@@ -1636,6 +1636,11 @@
   resolved "https://registry.yarnpkg.com/@types/babel__traverse/-/babel__traverse-7.11.1.tgz#654f6c4f67568e24c23b367e947098c6206fa639"
   dependencies:
     "@babel/types" "^7.3.0"
+
+"@types/bad-words@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@types/bad-words/-/bad-words-3.0.1.tgz#6a20fb08814af5e1f2428fa9e0098ca7b36f730a"
+  integrity sha512-7la3ZDJG1tlRqySO+pnXycZpacaMEw/iLEm8kc4l+I+jN8KjBfoQVwO6jm98xzXVLrxV8vDrB5TaMoop8sKclQ==
 
 "@types/big.js@^6.0.2":
   version "6.0.2"
@@ -2917,6 +2922,18 @@ backo2@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/backo2/-/backo2-1.0.2.tgz#31ab1ac8b129363463e35b3ebb69f4dfcfba7947"
 
+bad-words@3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/bad-words/-/bad-words-3.0.4.tgz#044c83935c4c363a905d47b5e0179f7241fecaec"
+  integrity sha512-v/Q9uRPH4+yzDVLL4vR1+S9KoFgOEUl5s4axd6NIAq8SV2mradgi4E8lma/Y0cw1ltVdvyegCQQKffCPRCp8fg==
+  dependencies:
+    badwords-list "^1.0.0"
+
+badwords-list@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/badwords-list/-/badwords-list-1.0.0.tgz#5e9856dbf13482a295c3b0b304afb9d4cfc5c579"
+  integrity sha1-XphW2/E0gqKVw7CzBK+51M/FxXk=
+
 balanced-match@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
@@ -3503,6 +3520,13 @@ case-sensitive-paths-webpack-plugin@2.3.0:
 caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
+
+censorify-it@3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/censorify-it/-/censorify-it-3.0.2.tgz#4ae4924239d217cbecf92b36a278787f84edeed7"
+  integrity sha512-NxKiOLXZwGebaGPgXl7yAe3YrM6PRtWqilaqkwjMgk0FPLvQu9EQ2TDkUoP/hkJhQf0HYtnoSu4D5+vyXgTTRQ==
+  dependencies:
+    linkify-it "^3.0.2"
 
 chalk@2.4.2, chalk@^2.0.0, chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"
@@ -7690,6 +7714,13 @@ lie@3.1.1:
 lines-and-columns@^1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
+
+linkify-it@^3.0.2:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/linkify-it/-/linkify-it-3.0.3.tgz#a98baf44ce45a550efb4d49c769d07524cc2fa2e"
+  integrity sha512-ynTsyrFSdE5oZ/O9GEf00kPngmOfVwazR5GKDq6EYfhlpFug3J2zybX56a2PRRpc9P+FuSoGNAwjlbDs9jJBPQ==
+  dependencies:
+    uc.micro "^1.0.1"
 
 load-json-file@^1.0.0:
   version "1.1.0"
@@ -11946,6 +11977,11 @@ typeforce@^1.11.5:
 typescript@4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.3.tgz#39062d8019912d43726298f09493d598048c1ce3"
+
+uc.micro@^1.0.1:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/uc.micro/-/uc.micro-1.0.6.tgz#9c411a802a409a91fc6cf74081baba34b24499ac"
+  integrity sha512-8Y75pvTYkLJW2hWQHXxoqRgV7qb9B+9vFEtidML+7koHUFapnVJAZ6cKs+Qjz5Aw3aZWHMC6u0wJE3At+nSGwA==
 
 ultron@~1.1.0:
   version "1.1.1"
