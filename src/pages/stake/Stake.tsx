@@ -33,6 +33,7 @@ import {
   createSignatureInputFromSignature,
   feeOrDefault,
   deriveAccount,
+  getPassphrase,
 } from "../../tools";
 import {
   BROADCAST_DELEGATION,
@@ -57,6 +58,7 @@ interface IProps {
 }
 
 export default ({ sessionData }: IProps) => {
+  const storedPassphrase = getPassphrase();
   const history = useHistory();
   const [delegateData, setDelegate] = useState<IValidatorData>(
     initialDelegateData
@@ -168,6 +170,16 @@ export default ({ sessionData }: IProps) => {
     }
     broadcastLedgerTransaction();
   }, [sendTransactionFlag, broadcastResult]);
+
+  /**
+   * Broadcast the transaction if the passphrase is stored in the session
+   */
+  useEffect(() => {
+    if (storedPassphrase && currentDelegate && selectedFee !== feeOrDefault()) {
+      setShowModal(ModalStates.BROADCASTING);
+      signDelegation();
+    }
+  }, [selectedFee]);
 
   /**
    * Get sender public key and set it inside the component state
@@ -298,7 +310,9 @@ export default ({ sessionData }: IProps) => {
    */
   const setFee = (selectedFee: number) => {
     setSelectedFee(selectedFee);
-    setShowModal(ModalStates.PASSPHRASE);
+    if (!storedPassphrase) {
+      setShowModal(ModalStates.PASSPHRASE);
+    }
   };
 
   /**
@@ -343,7 +357,9 @@ export default ({ sessionData }: IProps) => {
       }
       checkBalance(selectedFee, balance);
       const actualNonce = getNonce();
-      const derivedAccount = await deriveAccount(privateKey);
+      const derivedAccount = await deriveAccount(
+        storedPassphrase || privateKey
+      );
       const keypair = {
         privateKey: derivedAccount.privateKey,
         publicKey: derivedAccount.publicKey,

@@ -3,7 +3,7 @@ import { Link, useHistory } from "react-router-dom";
 import Hoc from "../components/UI/Hoc";
 import Footer from "../components/UI/Footer";
 import { useState, useEffect } from "react";
-import { deriveAccount, storeSession } from "../tools";
+import { deriveAccount, setPassphrase, storeSession } from "../tools";
 import { useQuery } from "@apollo/client";
 import { GET_ID } from "../graphql/query";
 import { toast } from "react-toastify";
@@ -13,6 +13,8 @@ import Logo from "../components/UI/logo/Logo";
 import { INetworkData } from "../types/NetworkData";
 import Spinner from "../components/UI/Spinner";
 import { IWalletIdData } from "../types/WalletIdData";
+import isElectron from "is-electron";
+import ReactTooltip from "react-tooltip";
 
 interface IProps {
   toggleLoader: (state: boolean) => void;
@@ -23,6 +25,7 @@ const Login = ({ toggleLoader, network }: IProps) => {
   const [publicKey, setPublicKey] = useState<string>("");
   const [privateKey, setPrivateKey] = useState<string>("");
   const [loader, setLoader] = useState<boolean>(false);
+  const [storePassphrase, setStorePassphrase] = useState<boolean>(isElectron());
   const history = useHistory();
   const {
     data: userIdData,
@@ -68,6 +71,9 @@ const Login = ({ toggleLoader, network }: IProps) => {
 
   const storeSessionAndRedirect = async (publicKey: string, id: number) => {
     const isUsingMnemonic = privateKey.trim().split(" ").length === 12;
+    if (storePassphrase) {
+      setPassphrase(privateKey);
+    }
     const success = await storeSession(
       publicKey,
       id,
@@ -108,6 +114,8 @@ const Login = ({ toggleLoader, network }: IProps) => {
       }
     }
   };
+
+  const storePassphraseHandler = () => setStorePassphrase(!storePassphrase);
 
   /**
    * If the Passphrase/Private key is empty disable button
@@ -155,6 +163,33 @@ const Login = ({ toggleLoader, network }: IProps) => {
                     type="text"
                   />
                   <div className="v-spacer" />
+                  <div>
+                    <span
+                      data-tip={
+                        !isElectron()
+                          ? "For your security, you can store the passphrase only on Clorio Desktop"
+                          : undefined
+                      }
+                    >
+                      <input
+                        className="checkbox"
+                        type="checkbox"
+                        name="storePassphrase"
+                        id="storePassphrase"
+                        onChange={storePassphraseHandler}
+                        value={isElectron() ? "show" : ""}
+                        checked={storePassphrase}
+                        disabled={!isElectron()}
+                      />
+                      <label
+                        className="ml-2 checkbox-label"
+                        htmlFor="storePassphrase"
+                      >
+                        Store my passphrase for this session
+                      </label>
+                    </span>
+                  </div>
+                  <div className="v-spacer" />
                   <Row>
                     <Col xs={6}>
                       <Link to="/">
@@ -179,6 +214,7 @@ const Login = ({ toggleLoader, network }: IProps) => {
           <Footer network={network} />
         </div>
       </Spinner>
+      <ReactTooltip />
     </Hoc>
   );
 };

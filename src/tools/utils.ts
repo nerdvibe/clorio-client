@@ -165,6 +165,9 @@ export const electronAlerts = async () => {
   }
 };
 
+export const isChrome =
+  /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+
 export const isBad = (value: string): boolean => {
   if (!value) {
     return false;

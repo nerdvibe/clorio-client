@@ -24,6 +24,7 @@ import {
   MINIMUM_NONCE,
   readSession,
   deriveAccount,
+  getPassphrase,
 } from "../../tools";
 import Spinner from "../../components/UI/Spinner";
 import { BROADCAST_TRANSACTION, GET_FEE, GET_NONCE } from "../../graphql/query";
@@ -54,6 +55,7 @@ interface IProps {
 }
 
 const SendTX = (props: IProps) => {
+  const storedPassphrase = getPassphrase();
   const history = useHistory();
   const [privateKey, setPrivateKey] = useState<string>("");
   const [waitingNonce, setWaitingNonce] = useState<boolean>(false);
@@ -105,8 +107,10 @@ const SendTX = (props: IProps) => {
     BROADCAST_TRANSACTION,
     {
       onError: (error) => {
-        toast.error(error.message);
-        clearState();
+        setTimeout(() => {
+          toast.error(error.message);
+          clearState();
+        }, 1000);
       },
     }
   );
@@ -150,12 +154,14 @@ const SendTX = (props: IProps) => {
     getAndSetAddress();
     if (showModal && broadcastResult?.data && sendTransactionFlag) {
       clearState();
-      nonceRefetch({ publicKey: senderAddress });
-      if (setShouldBalanceUpdate) {
-        setShouldBalanceUpdate(true);
-      }
-      toast.success("Transaction successfully broadcasted");
-      history.replace("/send-tx");
+      setTimeout(() => {
+        nonceRefetch({ publicKey: senderAddress });
+        if (setShouldBalanceUpdate) {
+          setShouldBalanceUpdate(true);
+        }
+        toast.success("Transaction successfully broadcasted");
+        history.replace("/send-tx");
+      }, 1000);
     }
   });
 
@@ -210,7 +216,11 @@ const SendTX = (props: IProps) => {
       if (isLedgerEnabled) {
         setStep(SendTXPageSteps.CONFIRMATION);
       } else {
-        setShowModal(ModalStates.PASSPHRASE);
+        if (storedPassphrase) {
+          setStep(SendTXPageSteps.CONFIRMATION);
+        } else {
+          setShowModal(ModalStates.PASSPHRASE);
+        }
       }
     } catch (e) {
       toast.error(e.message);
@@ -229,10 +239,10 @@ const SendTX = (props: IProps) => {
   const confirmPrivateKey = () => {
     if (!privateKey) {
       toast.error("Please insert a passphrase or a private key");
-    } else {
-      setShowModal("");
-      setStep(SendTXPageSteps.CONFIRMATION);
+      return;
     }
+    setShowModal("");
+    setStep(SendTXPageSteps.CONFIRMATION);
   };
 
   /**
@@ -316,7 +326,7 @@ const SendTX = (props: IProps) => {
     setShowModal(ModalStates.BROADCASTING);
     try {
       const actualNonce = getNonce();
-      const derivedData = await deriveAccount(privateKey);
+      const derivedData = await deriveAccount(storedPassphrase || privateKey);
       const keypair = {
         privateKey: derivedData?.privateKey,
         publicKey: derivedData?.publicKey,

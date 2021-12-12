@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Row, Col } from "react-bootstrap";
+import { getPassphrase } from "../../../tools";
 import Button from "../../UI/Button";
 import HelpHint from "../../UI/HelpHint";
 import Input from "../../UI/input/Input";
@@ -11,6 +12,7 @@ interface IProps {
 const SignMessageForm = ({ submitHandler }: IProps) => {
   const [message, setMessage] = useState<string>("");
   const [privateKey, setPrivateKey] = useState<string>("");
+  const storedPassphrase = getPassphrase();
 
   /**
    * Clean component state on component dismount
@@ -27,7 +29,7 @@ const SignMessageForm = ({ submitHandler }: IProps) => {
    * @returns boolean
    */
   const signButtonStateHandler = () => {
-    return !message || !privateKey;
+    return !message || (!privateKey && !storedPassphrase);
   };
 
   /**
@@ -36,7 +38,7 @@ const SignMessageForm = ({ submitHandler }: IProps) => {
   const createObjectAndSign = () => {
     const messageToSign = {
       message,
-      privateKey,
+      privateKey: privateKey || storedPassphrase,
     };
     submitHandler(messageToSign);
   };
@@ -73,21 +75,25 @@ const SignMessageForm = ({ submitHandler }: IProps) => {
                   inputHandler={(e) => setMessage(e.currentTarget.value)}
                 />
               </div>
-              <h3>Passphrase or Private key</h3>
-              <div
-                className="wrap-input1 validate-input"
-                data-validate="Name is required"
-              >
-                <span className="icon" />
-                <Input
-                  name="privateKey"
-                  value={privateKey}
-                  placeholder="Passphrase or Private key"
-                  inputHandler={(e) => setPrivateKey(e.currentTarget.value)}
-                  hidden={true}
-                  type="text"
-                />
-              </div>
+              {!storedPassphrase && (
+                <>
+                  <h3>Passphrase or Private key</h3>
+                  <div
+                    className="wrap-input1 validate-input"
+                    data-validate="Name is required"
+                  >
+                    <span className="icon" />
+                    <Input
+                      name="privateKey"
+                      value={privateKey}
+                      placeholder="Passphrase or Private key"
+                      inputHandler={(e) => setPrivateKey(e.currentTarget.value)}
+                      hidden={true}
+                      type="text"
+                    />
+                  </div>
+                </>
+              )}
               <div className="v-spacer" />
               <Button
                 className="lightGreenButton__fullMono mx-auto"
