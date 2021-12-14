@@ -5,7 +5,7 @@ import Logo from "../logo/Logo";
 import { ModalContainer } from "./ModalContainer";
 
 export const TermsAndConditions = () => {
-  const session = localStorage.getItem("terms-and-conditions");
+  const hasAcceptedTC = localStorage.getItem("terms-and-conditions");
   const history = useHistory();
 
   /**
@@ -18,7 +18,7 @@ export const TermsAndConditions = () => {
 
   return (
     <div className="mx-auto">
-      <ModalContainer show={!session} className="big-modal-container">
+      <ModalContainer show={!hasAcceptedTC} className="big-modal-container">
         <Logo big={true} />
         <h2 className="align-center mx-auto">👋 Welcome to Clorio Wallet</h2>
         <hr />
