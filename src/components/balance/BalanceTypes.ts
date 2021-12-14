@@ -1,6 +1,7 @@
 export interface ITicker {
   ticker: {
     BTCMINA: number | null;
+    USDTMINA: number | null;
   };
 }
 

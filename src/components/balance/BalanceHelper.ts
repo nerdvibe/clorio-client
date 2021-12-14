@@ -1,4 +1,4 @@
-import { toMINA, toBTC } from "../../tools";
+import { toMINA, toDecimal } from "../../tools";
 import { ITicker, IUserBalance } from "./BalanceTypes";
 
 /**
@@ -24,6 +24,8 @@ interface IUserBalanceToBTC {
   tickerData?: ITicker;
   tickerLoading: boolean;
   userBalance: number;
+  symbol?: "BTC" | "USDT";
+  ticker?: "BTCMINA" | "USDTMINA";
 }
 
 /**
@@ -31,17 +33,19 @@ interface IUserBalanceToBTC {
  * @param object
  * @returns string
  */
-export const userBalanceToBTCValue = ({
+export const userBalanceToSymbolValue = ({
   tickerData,
   tickerLoading,
   userBalance,
+  symbol = "BTC",
+  ticker = "BTCMINA",
 }: IUserBalanceToBTC) => {
   if (tickerLoading) {
     return "Loading ";
   }
-  if (tickerData && tickerData.ticker?.BTCMINA !== null) {
-    const amount = userBalance * tickerData.ticker.BTCMINA;
-    return toBTC(amount) + " BTC";
+  if (tickerData?.ticker && tickerData.ticker[ticker] !== null) {
+    const amount = userBalance * (tickerData.ticker[ticker] || 0);
+    return `${toDecimal(amount)} ${symbol}`;
   }
-  return "Not available";
+  return `${(0).toFixed(3)} ${symbol}`;
 };
