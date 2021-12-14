@@ -5,14 +5,14 @@ import Logo from "../logo/Logo";
 import { ModalContainer } from "./ModalContainer";
 
 export const TermsAndConditions = () => {
-  const session = sessionStorage.getItem("terms-and-conditions");
+  const session = localStorage.getItem("terms-and-conditions");
   const history = useHistory();
 
   /**
    * Store Terms and Conditions read flag
    */
   const acceptTermsAndConditions = () => {
-    sessionStorage.setItem("terms-and-conditions", "true");
+    localStorage.setItem("terms-and-conditions", "true");
     history.replace("/");
   };
 

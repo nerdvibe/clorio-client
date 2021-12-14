@@ -12,7 +12,7 @@ import {
 } from "../../tools";
 import ReactTooltip from "react-tooltip";
 import { GET_TICKER, GET_BALANCE } from "../../graphql/query";
-import { renderBalance, userBalanceToBTCValue } from "./BalanceHelper";
+import { renderBalance, userBalanceToSymbolValue } from "./BalanceHelper";
 import { IBalanceQueryResult, ITicker } from "./BalanceTypes";
 import { IBalanceContext } from "../../contexts/balance/BalanceTypes";
 import { BalanceContext } from "../../contexts/balance/BalanceContext";
@@ -138,18 +138,37 @@ const Balance = () => {
                   {renderBalance({ balanceData, balanceLoading, userBalance })}
                 </h5>
               </div>
-              <div className="inline-block-element">
+              <div className="inline-block-element ml-2">
                 <div className="v-div" />
               </div>
-              <div className="inline-block-element">
+              <div className="inline-block-element ml-2">
                 <span>
                   <h6 className="secondaryText">BTC Apx. value</h6>
                   <h5>
-                    {userBalanceToBTCValue({
+                    {userBalanceToSymbolValue({
                       tickerData,
                       tickerLoading,
                       userBalance,
-                    })}{" "}
+                      symbol: "BTC",
+                      ticker: "BTCMINA",
+                    })}
+                  </h5>
+                </span>
+              </div>
+              <div className="inline-block-element ml-2">
+                <div className="v-div" />
+              </div>
+              <div className="inline-block-element ml-2">
+                <span>
+                  <h6 className="secondaryText">USDT Apx. value</h6>
+                  <h5>
+                    {userBalanceToSymbolValue({
+                      tickerData,
+                      tickerLoading,
+                      userBalance,
+                      symbol: "USDT",
+                      ticker: "USDTMINA",
+                    })}
                   </h5>
                 </span>
               </div>
@@ -181,7 +200,7 @@ const Balance = () => {
         <div className="inline-block-element wallet-data full-width">
           <Row>
             <Col
-              md={5}
+              md={3}
               className="full-width-align-center small-screen-wallet-value"
             >
               <div className="inline-block-element full-width-align-center">
@@ -204,22 +223,47 @@ const Balance = () => {
                 </h5>
               </div>
             </Col>
-            <Col md={2} className="full-width-align-center">
+            <Col md={1} className="full-width-align-center">
               <div className="inline-block-element">
                 <div className="v-div" />
               </div>
             </Col>
-            <Col md={5} className="full-width-align-center ">
+            <Col md={3} className="full-width-align-center ">
               <div className="inline-block-element full-width-align-center small-screen-wallet-value">
                 <span>
                   <h6 className="secondaryText full-width-align-center">
-                    Apx value
+                    BTC Apx. value
                   </h6>
                   <h5 className="full-width-align-center">
-                    {userBalanceToBTCValue({
+                    {userBalanceToSymbolValue({
                       tickerData,
                       tickerLoading,
                       userBalance,
+                      symbol: "BTC",
+                      ticker: "BTCMINA",
+                    })}
+                  </h5>
+                </span>
+              </div>
+            </Col>
+            <Col md={1} className="full-width-align-center">
+              <div className="inline-block-element">
+                <div className="v-div" />
+              </div>
+            </Col>
+            <Col md={3} className="full-width-align-center ">
+              <div className="inline-block-element full-width-align-center small-screen-wallet-value">
+                <span>
+                  <h6 className="secondaryText full-width-align-center">
+                    USDT Apx. value
+                  </h6>
+                  <h5 className="full-width-align-center">
+                    {userBalanceToSymbolValue({
+                      tickerData,
+                      tickerLoading,
+                      userBalance,
+                      symbol: "USDT",
+                      ticker: "USDTMINA",
                     })}
                   </h5>
                 </span>

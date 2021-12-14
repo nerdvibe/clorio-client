@@ -48,7 +48,7 @@ export const isEmptyObject = (objectToCheck: any) => {
   );
 };
 
-export const toBTC = (amount: number) => {
+export const toDecimal = (amount: number) => {
   return Big(amount).mul(1e-9).toFixed(3);
 };
 
