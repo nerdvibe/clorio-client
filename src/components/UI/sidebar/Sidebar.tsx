@@ -124,7 +124,7 @@ const Sidebar = ({ network, clearSessionData, mnemonic }: IProps) => {
           <div
             className="sidebar-footer-network"
             // TODO REMOVE HARDCOING!
-            data-tip={"v: 0.1.4"}
+            data-tip={"v: 0.1.5"}
           >
             {renderNetworkLabel(network?.nodeInfo)} {statusDot}
           </div>
