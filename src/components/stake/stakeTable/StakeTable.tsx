@@ -11,6 +11,7 @@ import Pagination from "../../UI/pagination/Pagination";
 import { GET_VALIDATORS_TOTAL } from "../../../graphql/query";
 import { getTotalPages } from "../../../tools";
 import { useQuery } from "@apollo/client";
+import EpochBar from "../../UI/epochBar/EpochBar";
 
 interface IProps {
   error: any;
@@ -84,17 +85,43 @@ const StakeTable = ({
 
   return (
     <div className="mx-auto  ">
+      <Row>
+        <Col xs={12} xl={6}>
+          <div className="block-container min-height-200 center-content">
+            <Row className="w-100">
+              <Col xs={12} className="mb-2">
+                <h3>Staking Info</h3>
+              </Col>
+              <Col xs={12}>
+                <StakeStatus
+                  currentDelegate={currentDelegate}
+                  currentDelegateName={currentDelegateName}
+                />
+              </Col>
+            </Row>
+          </div>
+        </Col>
+        <Col xs={12} xl={6}>
+          <div className="block-container min-height-200 center-content">
+            <Row className="w-100">
+              <Col xs={12} className="mb-2">
+                <h3>Epoch Info</h3>
+              </Col>
+              <Col xs={12}>
+                <EpochBar />
+              </Col>
+            </Row>
+          </div>
+        </Col>
+      </Row>
       <div className="block-container  py-50">
         <div>
           <Row>
-            <Col md={12} lg={12} xl={8} className="stake-status-container">
-              <StakeStatus
-                currentDelegate={currentDelegate}
-                currentDelegateName={currentDelegateName}
-              />
+            <Col className="mt-0">
+              <h2>Delegates</h2>
             </Col>
             <Col
-              md={5}
+              md={3}
               lg={4}
               xl={3}
               className="align-end small-screen-align-left"
