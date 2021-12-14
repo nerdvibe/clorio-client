@@ -75,6 +75,7 @@ export const GET_VALIDATORS_NEWS = gql`
       link
       cta
       cta_color
+      visible
     }
   }
 `;
@@ -128,6 +129,7 @@ export const GET_TICKER = gql`
   query ticker {
     ticker {
       BTCMINA
+      USDTMINA
     }
   }
 `;
@@ -219,6 +221,7 @@ export const GET_HOME_NEWS = gql`
       link
       cta
       cta_color
+      visible
     }
   }
 `;
