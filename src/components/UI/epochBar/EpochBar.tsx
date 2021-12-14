@@ -76,7 +76,11 @@ const EpochBar = () => {
               <Col xs={7} className="align-end">
                 {remainingTime && (
                   <div className="value-text">
-                    {remainingTime.days} days {remainingTime.hours} hours <br />
+                    {!!remainingTime.days && `${remainingTime.days} days`}{" "}
+                    {(!!remainingTime.days || !!remainingTime.hours) &&
+                      `${remainingTime.hours} hours`}{" "}
+                    {!remainingTime.days && `${remainingTime.minutes} minutes`}{" "}
+                    <br />
                     left to the next epoch
                   </div>
                 )}
