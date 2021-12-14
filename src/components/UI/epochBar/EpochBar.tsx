@@ -45,12 +45,10 @@ const EpochBar = () => {
       .then((response) => response.json())
       .then((data) => data);
     const realSlot = +data.slot % (MAX_SLOT + 1);
-    const slotsPerEpoch = MAX_SLOT;
-    const slotDuration = SLOT_DURATION;
-    const lastTime = ((slotsPerEpoch - +realSlot) * slotDuration) / 1000;
+    const lastTime = ((MAX_SLOT - +realSlot) * SLOT_DURATION) / 1000;
     setEpochData(data);
     setRemainingTime(calculateTime(lastTime));
-    setPercentage(parseInt(((100 * +realSlot) / slotsPerEpoch).toFixed(0)));
+    setPercentage(parseInt(((100 * +realSlot) / MAX_SLOT).toFixed(0)));
   };
 
   return (
