@@ -140,6 +140,7 @@ a.github-link {
   box-shadow: inset 0 0 5px rgba(0, 0, 0, .2);
   border-radius: 4px;
   overflow: hidden;
+  margin-top: 20px;
 }
 
 .loading-after {
@@ -149,7 +150,7 @@ a.github-link {
   width: 0;
   height: 100%;
   border-radius: 4px;
-  background-color: rgb(249, 208, 108);
+  background-color: #28a745;
 }
 
 .min-height-200{
@@ -176,6 +177,28 @@ a.github-link {
   -o-text-overflow: ellipsis;
 }
 
+.label-text{
+  font-size: medium;
+  margin-bottom: 12px;
+  opacity: .6;
+}
+
+.value-text{    
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 17px;
+}
+
+.progress-bar-col{
+  max-width: 83% !important;
+  padding-left: 25px !important;
+}
+
+.flex-col-left{
+  flex-direction: column;
+  align-items: baseline;
+}
+
 .v-div {
   border-left: 1px solid rgba(0, 0, 0, 0.25);
   height: 50px;
@@ -186,6 +209,7 @@ a.github-link {
 }
 
 .block-container {
+  width: 100%;
   padding: 20px;
   border-radius: 10px;
   background: white;
