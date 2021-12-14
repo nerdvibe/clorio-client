@@ -54,38 +54,42 @@ const EpochBar = () => {
   return (
     <div className="w-100 h-80">
       <div className="progress-bar-container mx-auto w-100">
-        <Row>
+        <Row className="mx-auto">
           <Col xs={1}>
             <h6 className="light-grey-text">Epoch</h6>
-            <h4>{+epochData.epoch}</h4>
+            <h4 className="">{+epochData.epoch}</h4>
           </Col>
-          <Col xs={10}>
-            <div className="loading w-100 mt-3">
+          <Col xs={10} className="progress-bar-col">
+            <div className="loading w-100">
               <div
                 className="loading-after"
                 style={{ width: `${percentage}%` }}
               ></div>
             </div>
             <Row>
-              <Col xs={6} className="text-left">
-                <strong>{percentage}%</strong>
-                <p>
+              <Col xs={5} className="text-left">
+                <div className="value-text">{percentage}%</div>
+                <p className="value-text">
                   Slot {epochData.slot} of {MAX_SLOT}
                 </p>
               </Col>
-              <Col xs={6} className="align-end">
+              <Col xs={7} className="align-end">
                 {remainingTime && (
-                  <strong>
-                    {remainingTime.days} days {remainingTime.hours} hours{" "}
-                    {remainingTime.minutes} minutes left to the next epoch
-                  </strong>
+                  <div className="value-text">
+                    {!!remainingTime.days && `${remainingTime.days} days`}{" "}
+                    {(!!remainingTime.days || !!remainingTime.hours) &&
+                      `${remainingTime.hours} hours`}{" "}
+                    {!remainingTime.days && `${remainingTime.minutes} minutes`}{" "}
+                    <br />
+                    left to the next epoch
+                  </div>
                 )}
               </Col>
             </Row>
           </Col>
           <Col xs={1} className="pl-0">
             <h6 className="light-grey-text">Epoch</h6>
-            <h4>{+epochData.epoch + 1}</h4>
+            <h4 className="ml-2">{+epochData.epoch + 1}</h4>
           </Col>
         </Row>
       </div>

@@ -87,30 +87,26 @@ const StakeTable = ({
     <div className="mx-auto  ">
       <Row>
         <Col xs={12} xl={6}>
-          <div className="block-container min-height-200 center-content">
-            <Row className="w-100">
-              <Col xs={12} className="mb-2">
-                <h3>Staking Info</h3>
-              </Col>
-              <Col xs={12}>
-                <StakeStatus
-                  currentDelegate={currentDelegate}
-                  currentDelegateName={currentDelegateName}
-                />
-              </Col>
-            </Row>
+          <div className="block-container min-height-200 center-content flex-col-left">
+            <div>
+              <h4>Staking Info</h4>
+            </div>
+            <div className="w-100">
+              <StakeStatus
+                currentDelegate={currentDelegate}
+                currentDelegateName={currentDelegateName}
+              />
+            </div>
           </div>
         </Col>
         <Col xs={12} xl={6}>
-          <div className="block-container min-height-200 center-content">
-            <Row className="w-100">
-              <Col xs={12} className="mb-2">
-                <h3>Epoch Info</h3>
-              </Col>
-              <Col xs={12}>
-                <EpochBar />
-              </Col>
-            </Row>
+          <div className="block-container min-height-200 center-content flex-col-left">
+            <div className="w-100">
+              <h4>Epoch Info</h4>
+            </div>
+            <div className="w-100 mt-2">
+              <EpochBar />
+            </div>
           </div>
         </Col>
       </Row>
