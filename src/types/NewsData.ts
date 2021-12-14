@@ -4,6 +4,7 @@ export interface INewsData {
   link?: string;
   cta?: string;
   cta_color?: string;
+  visible?: boolean;
 }
 
 export interface IHomeNewsQuery {
