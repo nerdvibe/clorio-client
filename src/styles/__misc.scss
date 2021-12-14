@@ -130,6 +130,52 @@ a.github-link {
   padding: 0.65rem !important;
 }
 
+
+.loading {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 20px;
+  background: #f1f1f1;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, .2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.loading-after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 0;
+  height: 100%;
+  border-radius: 4px;
+  background-color: rgb(249, 208, 108);
+}
+
+.min-height-200{
+  min-height: 210px;
+}
+
+.center-content{
+  display: flex;
+  align-items: center;
+}
+
+.light-grey-text{
+  color: rgb(145, 145, 145);
+}
+
+.h-80{
+  height: fit-content;
+}
+
+.truncate-text{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  -o-text-overflow: ellipsis;
+}
+
 .v-div {
   border-left: 1px solid rgba(0, 0, 0, 0.25);
   height: 50px;
