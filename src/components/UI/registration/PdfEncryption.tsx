@@ -6,6 +6,7 @@ import Button from "../Button";
 import Input from "../input/Input";
 import { Col, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
+import { ArrowLeft, ArrowRight } from "react-feather";
 
 interface IProps {
   keypair: IKeypair;
@@ -31,9 +32,15 @@ export const PdfEncryption = ({ keypair, closeModal }: IProps) => {
   return (
     <ModalContainer show={true}>
       <div>
-        <h2>Document encryption</h2>
-        <div className="v-spacer" />
-        <h5>Please set a password to encrypt the document</h5>
+        <div className="w-100">
+          <div className="flex flex-col flex-vertical-center">
+            <h1>Document encryption</h1>
+            <p className="text-center mt-1">
+              Please set a password to encrypt the document
+            </p>
+            <div className="divider w-100" />
+          </div>
+        </div>
         <div className="v-spacer" />
         <Input
           inputHandler={(e) => setPDFPassword(e.currentTarget.value)}
@@ -45,16 +52,20 @@ export const PdfEncryption = ({ keypair, closeModal }: IProps) => {
         <Row>
           <Col xs={6}>
             <Button
-              onClick={closeModal}
-              className="link-button"
+              className="big-icon-button"
+              icon={<ArrowLeft />}
               text="Cancel"
+              onClick={closeModal}
             />
           </Col>
           <Col xs={6}>
             <Button
               onClick={downloadPdfAndCloseModal}
-              className="lightGreenButton__fullMono mx-auto"
-              text="Confirm"
+              text="Save"
+              style="primary"
+              icon={<ArrowRight />}
+              disabled={pdfPassword.length < 4}
+              appendIcon
             />
           </Col>
         </Row>

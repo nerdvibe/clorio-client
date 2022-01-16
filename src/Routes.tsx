@@ -10,6 +10,9 @@ const SignMessage = React.lazy(() => import("./pages/signMessage/SignMessage"));
 const NotFound = React.lazy(() => import("./pages/404"));
 const VerifyMessage = React.lazy(() => import("./pages/VerifyMessage"));
 const Mnemonic = React.lazy(() => import("./pages/mnemonic/Mnemonic"));
+const LoginSelection = React.lazy(
+  () => import("./pages/loginSelection/LoginSelection")
+);
 import { AuthenticatedRoute } from "./components/routes/AuthenticatedRoute";
 import { UnauthenticatedRoute } from "./components/routes/UnauthenticatedRoute";
 import { INetworkData } from "./types/NetworkData";
@@ -78,6 +81,12 @@ const Routes = (props: IRoutesProps) => {
         <UnauthenticatedRoute
           path="/ledger"
           Component={LedgerLogin}
+          appProps={props}
+          isAuthenticated={!!props.sessionData.address}
+        />
+        <UnauthenticatedRoute
+          path="/login-selection"
+          Component={LoginSelection}
           appProps={props}
           isAuthenticated={!!props.sessionData.address}
         />

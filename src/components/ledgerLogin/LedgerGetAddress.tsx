@@ -4,18 +4,21 @@ import { Link, useHistory } from "react-router-dom";
 import Button from "../UI/Button";
 import Hoc from "../UI/Hoc";
 import Logo from "../UI/logo/Logo";
-import Footer from "../UI/Footer";
 import { useQuery } from "@apollo/client";
 import { storeSession } from "../../tools";
 import { GET_ID } from "../../graphql/query";
 import { getPublicKey } from "../../tools/ledger";
 import { toast } from "react-toastify";
-import { IProps } from "./LedgerLoginTypes";
 import LedgerConfirmAddress from "./LedgerConfirmAddress";
 import { IWalletIdData } from "../../types/WalletIdData";
 import LedgerLoader from "../UI/ledgerLogin/LedgerLoader";
 
-const LedgerGetAddress = ({ accountNumber, toggleLoader, network }: IProps) => {
+interface IProps {
+  accountNumber?: number;
+  toggleLoader: () => void;
+}
+
+const LedgerGetAddress = ({ accountNumber, toggleLoader }: IProps) => {
   const [publicKey, setPublicKey] = useState<string>("");
   const [ledgerAccount] = useState<number>(accountNumber || 0);
   const history = useHistory();
@@ -113,7 +116,6 @@ const LedgerGetAddress = ({ accountNumber, toggleLoader, network }: IProps) => {
           </Row>
         </div>
       </div>
-      <Footer network={network} />
     </Hoc>
   );
 };

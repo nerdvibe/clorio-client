@@ -1,43 +1,40 @@
-import { Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Button from "./Button";
+import Footer from "./Footer";
 import Logo from "./logo/Logo";
 
-const Homepage = () => (
-  <div className="block-container no-bg real-full-page-container center no-margin">
-    <Row>
-      <Col xs={12} className="full-width-align-center">
-        <div className="mx-auto fit-content">
-          <Logo big={true} />
+const Homepage = () => {
+  return (
+    <div className="full-screen-container-center">
+      <div className="homepage-card glass-card flex md-flex-col">
+        <div className="half-card">
+          <div className="flex flex-col">
+            <Logo big />
+            <p className="text-center mt-3">
+              Access the power of the Mina Protocol Blockchain.
+            </p>
+          </div>
         </div>
-        <div className="v-spacer" />
-        <h4 className="full-width-align-center ">
-          Access the power of the Mina Protocol Blockchain.
-        </h4>
-        <div className="v-spacer" />
-        <Link to="/login">
-          <Button
-            className="lightGreenButton__fullMono mx-auto"
-            text="Access with Passphrase or Private key"
-          />
-        </Link>
-        <div className="v-spacer" />
-        <Link to="/ledger">
-          <Button
-            className="lightGreenButton__fullMono mx-auto"
-            text="Access with Ledger"
-          />
-        </Link>
-        <div className="v-spacer" />
-        <Link to="/register">
-          <Button
-            className="lightGreenButton__fullMono mx-auto"
-            text="Create a wallet"
-          />
-        </Link>
-      </Col>
-    </Row>
-  </div>
-);
+        <div className="half-card flex flex-col">
+          <Link to={"register"}>
+            <div className="button primary">
+              <span className="button-helper"></span>
+              Create new
+            </div>
+          </Link>
+          <p className="w-100 text-center mt-4 mb-4">or</p>
+          <Link to={"login-selection"}>
+            <div className="button primary">
+              <span className="button-helper"></span>
+              Log-in
+            </div>
+          </Link>
+        </div>
+        <div className="mt-4">
+          <Footer />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default Homepage;

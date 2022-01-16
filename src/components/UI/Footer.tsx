@@ -1,10 +1,16 @@
+import { useQuery } from "@apollo/client";
+import { GET_NETWORK } from "../../graphql/query";
+import { storeNetworkData } from "../../tools";
 import { INetworkData } from "../../types/NetworkData";
 
-interface IProps {
-  network?: INetworkData;
-}
-
-const Footer = ({ network }: IProps) => {
+const Footer = () => {
+  const { data: network } = useQuery<INetworkData>(GET_NETWORK, {
+    onCompleted: async (data) => {
+      if (data?.nodeInfo) {
+        await storeNetworkData(data?.nodeInfo);
+      }
+    },
+  });
   const renderNetwork = network?.nodeInfo
     ? `${network.nodeInfo.name} | ${network.nodeInfo.network}`
     : "Network unavailable";
