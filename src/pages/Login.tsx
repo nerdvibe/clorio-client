@@ -1,4 +1,4 @@
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { deriveAccount, setPassphrase, storeSession } from "../tools";
 import { useQuery } from "@apollo/client";
@@ -128,7 +128,13 @@ const Login = ({ toggleLoader }: IProps) => {
             <div className="divider w-100" />
           </div>
         </div>
-        <div className="min-height-200 pt-5">
+        <div>
+          Don&apos;t have an wallet?{" "}
+          <Link className="orange-text" to="/register">
+            Create one
+          </Link>
+        </div>
+        <div className="min-height-200 mt-3">
           <Input
             inputHandler={inputHandler}
             placeholder="Enter here"
