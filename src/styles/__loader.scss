@@ -1,8 +1,8 @@
-.small-container{
+.small-container {
   height: 100%;
 }
 
-.half-height-card{
+.half-height-card {
   background-color: white;
   height: 50vh;
   border-radius: 10px;
@@ -73,7 +73,7 @@
 }
 
 a {
-  color: $red !important;
+  color: #f4824f !important;
 }
 
 .lds-roller {
@@ -93,7 +93,7 @@ a {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #000;
+  background: #fff;
   margin: -4px 0 0 -4px;
 }
 .lds-roller div:nth-child(1) {

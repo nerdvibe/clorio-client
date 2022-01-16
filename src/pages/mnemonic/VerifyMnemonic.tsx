@@ -1,9 +1,9 @@
 import isElectron from "is-electron";
 import { useState } from "react";
 import { Row, Col } from "react-bootstrap";
+import { ArrowLeft, ArrowRight } from "react-feather";
 import ReactTooltip from "react-tooltip";
 import Button from "../../components/UI/Button";
-import Logo from "../../components/UI/logo/Logo";
 
 interface IProps {
   mnemonic: string;
@@ -11,6 +11,7 @@ interface IProps {
   completeRegistration: () => void;
   storePassphraseHandler: () => void;
   storePassphrase?: boolean;
+  goBack: () => void;
 }
 
 export const VerifyMnemonic = ({
@@ -19,6 +20,7 @@ export const VerifyMnemonic = ({
   completeRegistration,
   storePassphraseHandler,
   storePassphrase,
+  goBack,
 }: IProps) => {
   const [disableButton, setDisableButton] = useState<boolean>(true);
   const [wordsFoundArray, setWordsFoundArray] = useState<string[]>([]);
@@ -87,85 +89,87 @@ export const VerifyMnemonic = ({
   };
 
   return (
-    <div className="block-container no-bg real-full-page-container center ">
+    <div className="animate__animated animate__fadeIn glass-card registration-card">
       <div className="">
-        <Row>
-          <Col xs={8} className="offset-md-2 full-width-align-center">
-            <Logo big={true} />
-            <div className="v-spacer" />
-            <div className="v-spacer" />
-            <h4 className="full-width-align-center strong">
-              Verify your passphrase
-            </h4>
-            <div className="v-spacer" />
-            <div className="verification-container">
-              <Row>
-                {removeWords().map((el, index) => {
-                  return el !== null ? (
-                    <Col xs={3} key={index} className="validation-word-box">
-                      <span className="validation-index">{index + 1}.</span>{" "}
-                      <span className="validation-word">{el}</span>
-                    </Col>
-                  ) : (
-                    <Col xs={3} key={index} className="validation-word-box">
-                      <span className="validation-index">{index + 1}.</span>{" "}
-                      <input
-                        className="validation-input"
-                        onChange={(e) =>
-                          validateWord(index, e.currentTarget.value)
-                        }
-                        autoComplete="off"
-                      />
-                    </Col>
-                  );
-                })}
-              </Row>
-            </div>
-            <div className="v-spacer" />
-            <div>
-              <span
-                data-tip={
-                  !isElectron()
-                    ? "For your security, you can store the passphrase only on Clorio Desktop"
-                    : undefined
-                }
+        <div className="w-100">
+          <div className="flex flex-col flex-vertical-center">
+            <h1>Create new</h1>
+            <p className="text-center mt-1">Verify your passphrase</p>
+            <div className="divider" />
+          </div>
+        </div>
+        <div className="v-spacer" />
+        <div className="passphrase-box">
+          {removeWords().map((el, index) => {
+            return el !== null ? (
+              <div
+                key={index}
+                className="inline-block-element word-box align-left"
               >
+                <span className="word-index">{index + 1}.</span>{" "}
+                <span>{el}</span>
+              </div>
+            ) : (
+              <div
+                key={index}
+                className="inline-block-element word-box align-left"
+              >
+                <span className="word-index">{index + 1}.</span>{" "}
                 <input
-                  className="checkbox"
-                  type="checkbox"
-                  name="storePassphrase"
-                  id="storePassphrase"
-                  value={isElectron() ? "show" : ""}
-                  onChange={storePassphraseHandler}
-                  checked={storePassphrase}
-                  disabled={!isElectron()}
+                  className="validation-input"
+                  onChange={(e) => validateWord(index, e.currentTarget.value)}
+                  autoComplete="off"
                 />
-                <label
-                  className="ml-2 checkbox-label"
-                  htmlFor="storePassphrase"
-                >
-                  Store my passphrase for this session
-                </label>
-              </span>
-            </div>
-            <Row>
-              <Col xs={6}>
-                <Button
-                  className="link-button"
-                  text="Go back"
-                  onClick={() => closeVerification()}
-                />
-              </Col>
-              <Col>
-                <Button
-                  className={"lightGreenButton__fullMono margin-auto"}
-                  text="Next step"
-                  link={"/overview"}
-                  onClick={completeRegistration}
-                  disabled={disableButton}
-                />
-              </Col>
-            </Row>
+              </div>
+            );
+          })}
+        </div>
+        <div className="v-spacer" />
+        <div>
+          <span
+            data-tip={
+              !isElectron()
+                ? "For your security, you can store the passphrase only on Clorio Desktop"
+                : undefined
+            }
+          >
+            <input
+              className="checkbox"
+              type="checkbox"
+              name="storePassphrase"
+              id="storePassphrase"
+              value={isElectron() ? "show" : ""}
+              onChange={storePassphraseHandler}
+              checked={storePassphrase}
+              disabled={!isElectron()}
+            />
+            <label className="ml-2 checkbox-label" htmlFor="storePassphrase">
+              Store my passphrase for this session
+            </label>
+          </span>
+        </div>
+        <Row>
+          <Col xs={6}>
+            <Button
+              className="big-icon-button"
+              icon={<ArrowLeft />}
+              text="Go back"
+              onClick={() => {
+                goBack();
+                closeVerification();
+              }}
+            />
+          </Col>
+          <Col xs={6}>
+            <Button
+              text="Complete"
+              style="primary"
+              icon={<ArrowRight />}
+              appendIcon
+              link={"/overview"}
+              onClick={completeRegistration}
+              disabled={disableButton}
+            />
           </Col>
         </Row>
       </div>

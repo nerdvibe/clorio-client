@@ -18,7 +18,10 @@ export const TermsAndConditions = () => {
 
   return (
     <div className="mx-auto">
-      <ModalContainer show={!hasAcceptedTC} className="big-modal-container">
+      <ModalContainer
+        show={!hasAcceptedTC}
+        className="big-modal-container z-100"
+      >
         <Logo big={true} />
         <h2 className="align-center mx-auto">👋 Welcome to Clorio Wallet</h2>
         <hr />
@@ -61,12 +64,14 @@ export const TermsAndConditions = () => {
         </div>
         <div className="v-spacer" />
         <div className="v-spacer" />
-        <Button
-          className="lightGreenButton__fullMono mx-auto"
-          onClick={acceptTermsAndConditions}
-          text="I agree"
-          icon={<Check />}
-        />
+        <div className="w-50 mx-auto">
+          <Button
+            onClick={acceptTermsAndConditions}
+            text="I agree"
+            style="primary"
+            icon={<Check />}
+          />
+        </div>
       </ModalContainer>
     </div>
   );

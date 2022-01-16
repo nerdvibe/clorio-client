@@ -30,7 +30,8 @@
 .page-content-wrapper-scrollable {
   // background: $grey;
   overflow: hidden;
-  max-height: 94vh;
+  max-height: 99vh;
+  height: 99vh;
   overflow-y: auto;
   min-width: 0;
   width: 100%;
@@ -42,7 +43,7 @@
 }
 
 * {
-  -webkit-user-select: none;
+  // -webkit-user-select: none;
 }
 
 .selectable-text {

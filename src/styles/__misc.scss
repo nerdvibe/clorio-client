@@ -212,7 +212,7 @@ a.github-link {
   width: 100%;
   padding: 20px;
   border-radius: 10px;
-  background: white;
+  background: black;
   margin: 10px;
 }
 
@@ -320,13 +320,25 @@ textarea:-ms-input-placeholder {
   font-family: "Lato", sans-serif;
   display: block;
   width: 100%;
-  background: #e6e6e6;
   font-family: Montserrat-Bold;
   font-size: 15px;
   line-height: 1.5;
   color: #666666;
   border-radius: 10px;
   padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid #FFFFFF;
+  box-sizing: border-box;
+  border-radius: 5px;
+  transition: .3s;
+}
+
+.input1:active, .input1:focus{
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid #4DE0D8 !important;
+  box-sizing: border-box;
+  border-radius: 5px;
+  transition: .3s;
 }
 
 .show-icon {
@@ -358,11 +370,11 @@ textarea:-ms-input-placeholder {
   border-radius: 10px;
 }
 
-.input1:focus + .shadow-input1 {
-  font-family: "Lato", sans-serif;
-  -webkit-animation: anim-shadow 0.5s ease-in-out forwards;
-  animation: anim-shadow 0.5s ease-in-out forwards;
-}
+// .input1:focus + .shadow-input1 {
+//   font-family: "Lato", sans-serif;
+//   -webkit-animation: anim-shadow 0.5s ease-in-out forwards;
+//   animation: anim-shadow 0.5s ease-in-out forwards;
+// }
 
 @-webkit-keyframes anim-shadow {
   to {
@@ -465,19 +477,18 @@ a:hover {
   position: fixed;
   top: 0%;
   left: 0%;
-  opacity: 0.25;
+  opacity: 0.7;
   background-color: black;
   z-index: 4;
 }
 
 .modal-container {
-  width: 800px;
   padding: 50px 100px;
   opacity: 1;
   border-radius: 10px;
   background-color: #fafafa;
   z-index: 5;
-  position: fixed;
+  // position: fixed;
   div {
     h2,
     h5,
@@ -486,6 +497,10 @@ a:hover {
       text-align: center;
     }
   }
+}
+
+.modal-bg{
+  background-color: rgba(42, 45, 59, 0.9) !important;
 }
 
 .level-zero {
@@ -519,6 +534,10 @@ a:hover {
   width: 300px;
 }
 
+.huge-logo {
+  width: 400px;
+}
+
 .strong {
   font-weight: bold;
 }
@@ -542,6 +561,7 @@ a:hover {
   max-height: 98vh;
   overflow: -moz-hidden-unscrollable;
   overflow: unset;
+  height: 90vh;
 }
 
 .stake-row-value {
@@ -560,7 +580,7 @@ a:hover {
 }
 
 .validation-input {
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid white;
   background: none;
   width: 72%;
 }
@@ -759,13 +779,14 @@ tbody {
 }
 
 .modal-wrapper {
-  width: 100%;
+  width: 100vw;
   align-items: center;
   justify-content: center;
   display: flex;
-  height: 100%;
+  height: 100vh;
   top: 0;
   left: 0;
+  position: fixed !important;
 }
 
 .first-place {
@@ -905,9 +926,10 @@ input[type="number"] {
 }
 
 .terms {
-  height: 30vh;
+  height: 35vh;
   padding: 20px;
   border-radius: 3px;
+  overflow-y: auto;
   p,
   h1,
   h2,
@@ -1121,6 +1143,11 @@ input[type="number"] {
   .big-logo {
     width: 200px;
   }
+
+  .huge-logo {
+    width: 350px;
+  }
+  
   .register {
     .center {
       align-items: unset;
@@ -1182,10 +1209,10 @@ input[type="number"] {
     text-align: center;
   }
 
-  .modal-container {
-    left: 5%;
-    width: 90%;
-  }
+  // .modal-container {
+  //   left: 5%;
+  //   width: 90%;
+  // }
 
   .small-screen {
     display: block;
