@@ -5,6 +5,10 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  left: 0;
+  width: 100%;
+  padding-left: 10px;
 }
 
 code {
@@ -15,4 +19,9 @@ code {
 
 .word-badge{
   padding-left: 10px;
+}
+
+.container-fluid{
+  padding-left: 0;
+  padding-right: 0;
 }

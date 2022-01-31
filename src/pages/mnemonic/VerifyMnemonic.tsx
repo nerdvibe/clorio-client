@@ -93,7 +93,7 @@ export const VerifyMnemonic = ({
       <div className="">
         <div className="w-100">
           <div className="flex flex-col flex-vertical-center">
-            <h1>Create new</h1>
+            <h1>Create new wallet</h1>
             <p className="text-center mt-1">Verify your passphrase</p>
             <div className="divider" />
           </div>

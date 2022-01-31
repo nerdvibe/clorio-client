@@ -19,7 +19,7 @@ const TransactionsTableError = (
     secondaryText = "Please consult your transaction history on the explorer.";
   }
   return (
-    <div className="block-container">
+    <div className="glass-card">
       <RefetchTransactions refetch={refetchData} />
       <div className="full-width padding-y-50">
         <div className="full-width-align-center">

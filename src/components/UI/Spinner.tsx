@@ -6,7 +6,7 @@ interface IProps {
 
 const Spinner = ({ show, className, children }: IProps) => {
   return show ? (
-    <div className={"spinner-container center " + className}>
+    <div className={"spinner-container center no-max-height " + className}>
       <div className="show">
         <div className="lds-roller">
           <div></div>

@@ -62,7 +62,6 @@ const Mnemonic = ({ network, toggleLoader }: IProps) => {
         publicKey: pubKey,
         mnemonic,
       };
-      // setKeypair(keypair);
       return { ...keypair, mnemonic: mnemonic };
     }
     return undefined;

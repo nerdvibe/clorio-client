@@ -4,24 +4,10 @@ import { isEmptyObject } from "../../tools/utils";
 import Button from "./Button";
 
 const NewsBanner = (props: INewsData) => {
-  const { title, subtitle, link, cta, cta_color, visible } = props;
-  /**
-   * Returns the style based on cta_color prop
-   * @returns string Classname
-   */
-  const buttonStyle = () => {
-    switch (cta_color) {
-      case "success":
-        return "lightGreenButton__outlineMono ";
-      case "warning":
-        return "yellowButton__outlineMono ";
-      default:
-        return "lightGreenButton__outlineMono ";
-    }
-  };
+  const { title, subtitle, link, cta, visible } = props;
 
   return !isEmptyObject(props) && visible ? (
-    <div className="block-container">
+    <div className="glass-card p-4 mt-2 mb-2">
       <Row>
         <Col md={8} lg={8} xl={9}>
           <h4>{title}</h4>
@@ -32,14 +18,16 @@ const NewsBanner = (props: INewsData) => {
             {link ? (
               <a href={link} target="_blank" rel="noreferrer">
                 <Button
-                  className={`${buttonStyle()} mx-auto`}
                   text={cta || "Learn more"}
+                  style="primary"
+                  className="mx-auto text-center"
                 />
               </a>
             ) : (
               <Button
-                className={`${buttonStyle()} mx-auto`}
                 text={cta || "Learn more"}
+                style="primary"
+                className="mx-auto text-center"
               />
             )}
           </Col>

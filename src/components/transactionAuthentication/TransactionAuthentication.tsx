@@ -1,0 +1,112 @@
+import { Col, Row } from "react-bootstrap";
+import { ArrowRight, Repeat } from "react-feather";
+import Button from "../UI/Button";
+import Input from "../UI/input/Input";
+import Spinner from "../UI/Spinner";
+
+interface IProps {
+  isLedgerEnabled?: boolean;
+  ledgerError?: boolean;
+  retryLedgerTransaction: () => void;
+  setPrivateKey: (privateKey: string) => void;
+  stepBackwards?: () => void;
+  confirmPrivateKey?: () => void;
+  stepBackward: () => void;
+}
+
+const TransactionAuthentication = ({
+  isLedgerEnabled,
+  confirmPrivateKey,
+  setPrivateKey,
+  stepBackwards,
+  ledgerError,
+  stepBackward,
+  retryLedgerTransaction,
+}: IProps) => {
+  if (isLedgerEnabled && ledgerError) {
+    return (
+      <div className="mx-auto  w-75">
+        <div className="my-4 ">
+          <div className="align-left mt-3 mb-2 label text-center">
+            <strong>Signature failed</strong>
+            <br />
+          </div>
+          <p className="mx-auto mb-5">
+            The signature process through the ledger failed
+          </p>
+          <Row>
+            <Col xs={6}>
+              <Button
+                className="big-icon-button"
+                text="Go back"
+                onClick={stepBackward}
+              />
+            </Col>
+            <Col xs={6}>
+              <Button
+                text="Retry"
+                style="primary"
+                icon={<Repeat />}
+                appendIcon
+                onClick={retryLedgerTransaction}
+              />
+            </Col>
+          </Row>
+        </div>
+      </div>
+    );
+  }
+
+  return isLedgerEnabled ? (
+    <div className="mx-auto  w-75">
+      <div className="my-5">
+        <div className="spinner-container">
+          <Spinner show={true} />
+        </div>
+        <div className="align-left mt-3 mb-2 label text-center">
+          <strong>Signing</strong>
+          <br />
+          <small>Waiting for the ledger confirmation</small>
+        </div>
+      </div>
+    </div>
+  ) : (
+    <div className="mx-auto  w-75">
+      <div className="my-5">
+        <div className="align-left mt-3 mb-2 label">
+          <strong>Passphrase/Private key</strong>
+          <br />
+          <small>
+            Insert the Passphrase/Private key to sign the transaction
+          </small>
+        </div>
+        <Input
+          inputHandler={(e) => setPrivateKey(e.currentTarget.value)}
+          placeholder="Insert your Passphrase or Private key"
+          hidden={true}
+          type="text"
+        />
+        <Row>
+          <Col xs={6}>
+            <Button
+              className="big-icon-button"
+              text="Cancel"
+              onClick={stepBackwards}
+            />
+          </Col>
+          <Col xs={6}>
+            <Button
+              text="Send"
+              style="primary"
+              icon={<ArrowRight />}
+              appendIcon
+              onClick={confirmPrivateKey}
+            />
+          </Col>
+        </Row>
+      </div>
+    </div>
+  );
+};
+
+export default TransactionAuthentication;

@@ -9,6 +9,7 @@ import Input from "../components/UI/input/Input";
 import { IWalletIdData } from "../types/WalletIdData";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import isElectron from "is-electron";
+import ReactTooltip from "react-tooltip";
 
 interface IProps {
   toggleLoader: (state: boolean) => void;
@@ -186,6 +187,7 @@ const Login = ({ toggleLoader }: IProps) => {
           </div>
         </div>
       </div>
+      <ReactTooltip />
     </div>
   );
 };

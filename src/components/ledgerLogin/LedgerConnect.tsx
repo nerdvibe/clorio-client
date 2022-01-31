@@ -97,12 +97,11 @@ const LedgerConnect = (props: IProps) => {
 
   const customAccountInput = (
     <div>
-      <h6 className="full-width-align-center">
-        Please select account an number{" "}
+      <h6 className="full-width-align-center my-2">
+        Please select an account number{" "}
         <HelpHint hint="Default account number is 0. If you have created your wallet with another account index, change it here.<br/> Only change this number if you know what you are doing." />
       </h6>
-      <div className="v-spacer" />
-      <div className="mx-auto w-50">
+      <div className="mx-auto w-50 my-4">
         <Input
           type="number"
           value={accountNumber}

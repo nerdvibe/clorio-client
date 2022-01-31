@@ -64,7 +64,7 @@ export const PdfEncryption = ({ keypair, closeModal }: IProps) => {
               text="Save"
               style="primary"
               icon={<ArrowRight />}
-              disabled={pdfPassword.length < 4}
+              disabled={pdfPassword.length < 1}
               appendIcon
             />
           </Col>

@@ -6,7 +6,7 @@ import Button from "../../UI/Button";
 import isElectron from "is-electron";
 import { isChrome } from "../../../tools";
 import { INetworkData } from "../../../types";
-import { ArrowLeft, ArrowRight } from "react-feather";
+import { ArrowLeft, ArrowRight, FileText } from "react-feather";
 
 interface IProps {
   keys: IKeypair;
@@ -23,38 +23,40 @@ const RegisterStep = ({ keys, setValidation, goToNext, goBack }: IProps) => {
   const [showDetails, setShowDetails] = useState(false);
   const spaceChar = isElectron() || isChrome ? <>&nbsp;</> : " ";
   return (
-    <div className="animate__animated animate__fadeIn glass-card registration-card">
-      <div className="">
+    <div
+      className={`animate__animated animate__fadeIn glass-card registration-card ${
+        showDetails ? "py-2 mt-5" : ""
+      }`}
+    >
+      <div>
         <div id="element-to-print">
           <div className="v-spacer-big pdf-only" />
           <div className="v-spacer-big pdf-only" />
           <div className="w-100">
             <div className="flex flex-col flex-vertical-center">
-              <h1>Create new</h1>
+              <h1>Create new wallet</h1>
               <p className="text-center mt-1">Take a note of your wallet</p>
               <div className="divider" />
             </div>
           </div>
-          <div className="v-spacer no-print" />
           <Accordion>
-            <div className="align-left label">
+            <div className="align-left label mt-2">
               <Row className="lh-10">
-                <Col xs={8}>
+                <Col xs={6}>
                   <strong>Passphrase</strong>
                 </Col>
-                <Col xs={4}>
-                  <span className="half-width-align-center">
-                    <Accordion.Toggle
+                <Col xs={5}>
+                  <Accordion.Toggle
+                    eventKey="0"
+                    className={`no-style-button right-side-animation w-100`}
+                  >
+                    <Button
+                      className="font-size-medium purple-text"
                       onClick={() => setShowDetails(!showDetails)}
-                      eventKey="0"
-                      className={`no-style-button right-side-animation`}
-                    >
-                      <Button
-                        className="link-button"
-                        text={`${!showDetails ? "Show" : "Close"} details`}
-                      />
-                    </Accordion.Toggle>
-                  </span>
+                      appendIcon
+                      text={`${!showDetails ? "Show" : "Hide"} Private key`}
+                    />
+                  </Accordion.Toggle>
                 </Col>
               </Row>
               <small>
@@ -112,15 +114,14 @@ const RegisterStep = ({ keys, setValidation, goToNext, goBack }: IProps) => {
           safe keep the private key. <br />
           If you loose your private key you will not be able to access your
           funds anymore!
-        </div>
-        <div className="mt-3">
-          <a
-            className="link-button"
+          <Button
+            className="link-button purple-text px-0 ml-0"
             onClick={() => setShowEncryptionModal(true)}
-          >
-            Download a copy here
-          </a>
+            text={"Download paperwallet in PDF"}
+            icon={<FileText stroke="#c197ff" />}
+          />
         </div>
+        <div className="mt-1 mb-2"></div>
         <div className="v-spacer hide-small" />
         <div className="half-width-align-center">
           <Row className="no-print">

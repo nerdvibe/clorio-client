@@ -1,3 +1,6 @@
+@import "__stepper.scss";
+@import "__stake.scss";
+
 *,p,h1,h2,h3,h4,h5,h6{
   -webkit-user-select: none; /* Safari */        
   -moz-user-select: none; /* Firefox */
@@ -21,6 +24,38 @@
   border-top: 1px solid rgba(255, 255, 255, 0.5);
   width: 75%;
   margin: 10px 0 20px 0;
+}
+
+.h-95{
+  height: 95%;
+}
+
+.min-width-500{
+  min-width: 500px;
+}
+
+.orange-text{
+  color: orange !important;
+}
+
+.purple-text{
+  color: #c197ff !important;
+}
+
+.w-90{
+  width: 90% !important;
+}
+
+.lh-30px{
+  line-height: 30px;
+}
+
+.spinner-container{
+  max-height: 150px;
+}
+
+.no-max-height{
+  max-height: 100vh;
 }
 
 .min-height-200 {
@@ -47,7 +82,7 @@
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -86,7 +121,6 @@
   transition: 0.3s;
   opacity: 1;
   border-radius: 10px;
-  // background-color: rgba(255, 255, 255, 0.1);
   background-color: #9C89FF22;
   p{
     color: #9C89FF !important;
@@ -103,8 +137,6 @@
   max-height: 500px;
   width: clamp(610px, 60%, 900px);
   display: flex;
-  // flex-direction: column;
-  // padding: 1rem;
   padding: 5rem 5rem;
 }
 
@@ -184,7 +216,6 @@ p {
     #f6579a 81.2%,
     #ec80cd 183.07%
   );
-  // background: #f65757;
   font-weight: 900;
   font-size: large;
   width: 80%;
