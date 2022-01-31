@@ -17,7 +17,9 @@ export enum ModalStates {
 
 export enum SendTXPageSteps {
   FORM = 0,
-  CONFIRMATION = 1,
+  PRIVATE_KEY = 1,
+  CONFIRMATION = 2,
+  BROADCAST = 3,
 }
 
 export interface INonceQueryResult {
@@ -27,6 +29,7 @@ export interface INonceQueryResult {
 }
 
 export const initialTransactionData = {
+  senderAddress: "",
   amount: toNanoMINA(INITIAL_TRANSACTION_AMOUNT),
   receiverAddress: "",
   fee: toNanoMINA(DEFAULT_FEE),

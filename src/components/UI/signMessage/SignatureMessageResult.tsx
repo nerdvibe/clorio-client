@@ -9,7 +9,7 @@ interface IProps {
 
 const SignatureMessageResult = ({ result, resetForm }: IProps) => (
   <Hoc>
-    <div className="animate__animated animate__fadeIn">
+    <div className="animate__animated animate__fadeIn glass-card">
       <SignMessageResult {...result} reset={resetForm} />
     </div>
   </Hoc>

@@ -94,7 +94,7 @@ const Balance = () => {
   }
 
   return (
-    <div className="block-container">
+    <div className="glass-card px-3 pt-4">
       <ReactTooltip multiline={true} />
       <div className="align-left big-screen">
         <div className="inline-block-element walletImageContainer">
@@ -179,17 +179,19 @@ const Balance = () => {
       <div className="align-left small-screen">
         <Row>
           <Col md={12}>
-            <div className="inline-block-element walletImageContainer">
+            <div className="inline-block-element walletImageContainer d-none d-sm-inline-block vertical-align-top">
               <div className="walletImageOutline">
                 <Avatar address={address} />
               </div>
             </div>
-            <div className="inline-block-element ">
-              <h6 className="secondaryText">This is your address</h6>
-              <h5 className="small-screen-address selectable-text">
+            <div className="inline-block-element address-block-container">
+              <h6 className="secondaryText d-none d-sm-inline-block">
+                This is your address
+              </h6>
+              <h5 className="small-screen-address selectable-text truncate-text">
                 {address} &nbsp;
                 <Button
-                  className="inline-element"
+                  className="inline-element d-none d-sm-inline-block"
                   icon={<Copy />}
                   onClick={() => copyToClipboard(address)}
                 />
@@ -200,7 +202,7 @@ const Balance = () => {
         <div className="inline-block-element wallet-data full-width">
           <Row>
             <Col
-              md={3}
+              sm={3}
               className="full-width-align-center small-screen-wallet-value"
             >
               <div className="inline-block-element full-width-align-center">
@@ -223,12 +225,12 @@ const Balance = () => {
                 </h5>
               </div>
             </Col>
-            <Col md={1} className="full-width-align-center">
+            <Col sm={1} className="full-width-align-center d-none d-sm-inline">
               <div className="inline-block-element">
                 <div className="v-div" />
               </div>
             </Col>
-            <Col md={3} className="full-width-align-center ">
+            <Col sm={3} className="full-width-align-center ">
               <div className="inline-block-element full-width-align-center small-screen-wallet-value">
                 <span>
                   <h6 className="secondaryText full-width-align-center">
@@ -246,12 +248,12 @@ const Balance = () => {
                 </span>
               </div>
             </Col>
-            <Col md={1} className="full-width-align-center">
+            <Col sm={1} className="full-width-align-center d-none d-sm-inline">
               <div className="inline-block-element">
                 <div className="v-div" />
               </div>
             </Col>
-            <Col md={3} className="full-width-align-center ">
+            <Col sm={3} className="full-width-align-center ">
               <div className="inline-block-element full-width-align-center small-screen-wallet-value">
                 <span>
                   <h6 className="secondaryText full-width-align-center">

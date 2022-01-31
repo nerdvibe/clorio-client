@@ -18,7 +18,7 @@ const Homepage = () => {
           <Link to={"register"}>
             <div className="button primary">
               <span className="button-helper"></span>
-              Create new
+              Create new wallet
             </div>
           </Link>
           <p className="w-100 text-center mt-4 mb-4">or</p>

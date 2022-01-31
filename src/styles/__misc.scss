@@ -13,25 +13,44 @@ th {
   }
 }
 
-.checkbox{
+.vertical-align-top {
+  vertical-align: top;
+}
+
+.checkbox {
   width: 20px;
   height: 20px;
 }
 
-.checkbox:disabled{
-  opacity: .3;
+.checkbox:disabled {
+  opacity: 0.3;
 }
 
-.checkbox-label{
+.checkbox-label {
   line-height: 20px;
   vertical-align: middle;
+}
+
+.transaction-form-address-container {
+  width: 85%;
+}
+
+.avatar-icon {
+  max-width: 50px !important;
+}
+
+.send-tx-address-block {
+  max-width: 650px !important;
+}
+
+.transaction-form-address {
+  width: 80%;
+  max-width: 770px;
 }
 
 .custom-card {
   padding: 20px;
   border-radius: 20px;
-  // background: #fff;
-  // box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
   overflow-x: auto;
 }
 
@@ -55,21 +74,25 @@ a.github-link {
 }
 
 .small-walletImage {
-  background: #e76f51;
+  background: #fff;
   width: 30px;
   height: 30px;
   border-radius: 50%;
   top: 30px;
-  border: 2px solid #e76f51;
   position: relative;
   left: -10px;
+  box-shadow: 0px 0px 25px -5px rgba(255, 255, 255, 0.5);
+  -webkit-box-shadow: 0px 0px 25px -5px rgba(255, 255, 255, 0.5);
+  -moz-box-shadow: 0px 0px 25px -5px rgba(255, 255, 255, 0.5);
 }
 
 .walletImageOutline {
   border-radius: 50%;
-  border: 3px solid $red;
-  width: 90px;
-  height: 90px;
+  width: 80px;
+  height: 80px;
+  box-shadow: 0px 0px 25px -5px rgba(255, 255, 255, 0.5);
+  -webkit-box-shadow: 0px 0px 25px -5px rgba(255, 255, 255, 0.5);
+  -moz-box-shadow: 0px 0px 25px -5px rgba(255, 255, 255, 0.5);
 }
 
 .small-image-outline {
@@ -130,21 +153,20 @@ a.github-link {
   padding: 0.65rem !important;
 }
 
-
 .loading {
   position: relative;
   display: inline-block;
   width: 100%;
   height: 20px;
   background: #f1f1f1;
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, .2);
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   overflow: hidden;
   margin-top: 20px;
 }
 
 .loading-after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   width: 0;
@@ -153,48 +175,48 @@ a.github-link {
   background-color: #28a745;
 }
 
-.min-height-200{
+.min-height-200 {
   min-height: 210px;
 }
 
-.center-content{
+.center-content {
   display: flex;
   align-items: center;
 }
 
-.light-grey-text{
+.light-grey-text {
   color: rgb(145, 145, 145);
 }
 
-.h-80{
+.h-80 {
   height: fit-content;
 }
 
-.truncate-text{
+.truncate-text {
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; 
+  text-overflow: ellipsis;
   -o-text-overflow: ellipsis;
 }
 
-.label-text{
+.label-text {
   font-size: medium;
   margin-bottom: 12px;
-  opacity: .6;
+  opacity: 0.6;
 }
 
-.value-text{    
+.value-text {
   font-size: 16px;
   font-weight: normal;
   line-height: 17px;
 }
 
-.progress-bar-col{
+.progress-bar-col {
   max-width: 83% !important;
   padding-left: 25px !important;
 }
 
-.flex-col-left{
+.flex-col-left {
   flex-direction: column;
   align-items: baseline;
 }
@@ -316,7 +338,8 @@ textarea:-ms-input-placeholder {
   }
 }
 
-.input1 {
+.input1,
+textarea {
   font-family: "Lato", sans-serif;
   display: block;
   width: 100%;
@@ -327,18 +350,21 @@ textarea:-ms-input-placeholder {
   border-radius: 10px;
   padding: 10px 20px;
   background: rgba(255, 255, 255, 0.06);
-  border: 2px solid #FFFFFF;
+  border: 2px solid #ffffff;
   box-sizing: border-box;
   border-radius: 5px;
-  transition: .3s;
+  transition: 0.3s;
 }
 
-.input1:active, .input1:focus{
+.input1:active,
+.input1:focus,
+textarea:active,
+textarea:focus {
   background: rgba(255, 255, 255, 0.1);
-  border: 2px solid #4DE0D8 !important;
+  border: 2px solid #9e8cff !important;
   box-sizing: border-box;
   border-radius: 5px;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 .show-icon {
@@ -369,12 +395,6 @@ textarea:-ms-input-placeholder {
   color: rgba(87, 184, 70, 0.5);
   border-radius: 10px;
 }
-
-// .input1:focus + .shadow-input1 {
-//   font-family: "Lato", sans-serif;
-//   -webkit-animation: anim-shadow 0.5s ease-in-out forwards;
-//   animation: anim-shadow 0.5s ease-in-out forwards;
-// }
 
 @-webkit-keyframes anim-shadow {
   to {
@@ -415,7 +435,7 @@ textarea:-ms-input-placeholder {
 }
 
 .fit-content {
-  width: fit-content;
+  width: fit-content !important;
 }
 
 .break-text {
@@ -488,7 +508,6 @@ a:hover {
   border-radius: 10px;
   background-color: #fafafa;
   z-index: 5;
-  // position: fixed;
   div {
     h2,
     h5,
@@ -499,7 +518,7 @@ a:hover {
   }
 }
 
-.modal-bg{
+.modal-bg {
   background-color: rgba(42, 45, 59, 0.9) !important;
 }
 
@@ -508,26 +527,40 @@ a:hover {
 }
 
 .sidebar-item {
-  color: black !important;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .sidebar-item-container {
   margin: 10px;
   text-align: left;
   width: 100%;
-  color: black !important;
-  font-size: 0.94rem;
+  font-size: 0.9rem;
+  position: relative;
+  left: 0px;
+  padding: 5px;
+  padding-left: 0;
+  transition: 0.3s;
 }
 
-.sidebar-item-container-active::before {
-  width: 5px;
-  background: $orange;
-  height: 30px;
-  left: -2.5px;
-  content: "";
-  display: block;
-  position: absolute;
-  transition: 0.25s;
+.font-size-medium {
+  font-size: medium;
+}
+
+.sidebar-item-container-active {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  position: relative;
+  padding-left: 10px;
+  width: 95%;
+  transition: 0.3s;
+  span {
+    color: #9e8cff !important;
+  }
+  svg {
+    stroke: #9e8cff;
+  }
 }
 
 .big-logo {
@@ -597,7 +630,7 @@ a:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 87vh;
+  height: 90vh;
   width: 100%;
 }
 
@@ -701,7 +734,6 @@ tbody {
   padding: 8px 16px;
   text-decoration: none;
   transition: background-color 0.3s;
-  // border: 1px solid #ddd;
   cursor: pointer;
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
@@ -710,12 +742,13 @@ tbody {
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none; /* Non-prefixed version, currently
                                     supported by Chrome, Edge, Opera and Firefox */
+  border-radius: 5px;
 }
 
 .pagination p.active {
-  background-color: $orange;
+  background-color: #ffffff44;
   color: white;
-  border: 1px solid $orange;
+  border: 1px solid #ffffff44;
 }
 
 .pagination p:hover:not(.active) {
@@ -868,18 +901,18 @@ tbody {
 }
 ::-webkit-scrollbar-thumb {
   background: #e1e1e1;
-  border: 0px none #ffffff;
+  border: 0px none #ffffff11;
   border-radius: 59px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #ffffff;
+  // background: #ffffff;
 }
 ::-webkit-scrollbar-thumb:active {
   background: #000000;
 }
 ::-webkit-scrollbar-track {
   margin-top: 10px;
-  background: $grey;
+  background: #ffffff11;
   border: 0px none #ffffff;
   border-radius: 100px;
 }
@@ -910,11 +943,11 @@ input[type="number"] {
 }
 
 .sidebar-footer-block {
-  width: 20%;
-  bottom: 3vh;
+  bottom: 1vh;
   height: fit-content;
   text-align: center;
-  position: fixed;
+  position: absolute;
+  width: 100%;
 }
 
 .big-modal-container {
@@ -1147,7 +1180,7 @@ input[type="number"] {
   .huge-logo {
     width: 350px;
   }
-  
+
   .register {
     .center {
       align-items: unset;
@@ -1155,7 +1188,7 @@ input[type="number"] {
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1199px) {
   .big-modal-container {
     width: 70vw;
     height: fit-content;
@@ -1173,10 +1206,6 @@ input[type="number"] {
 
   .container {
     max-width: 100% !important;
-  }
-
-  .sidebar-footer-block {
-    width: 13.5%;
   }
 }
 
@@ -1198,7 +1227,6 @@ input[type="number"] {
 
   .walletImageOutline {
     border-radius: 50%;
-    border: 3px solid #e76f51;
     width: auto;
     height: auto;
     padding-top: 0px;
@@ -1209,21 +1237,12 @@ input[type="number"] {
     text-align: center;
   }
 
-  // .modal-container {
-  //   left: 5%;
-  //   width: 90%;
-  // }
-
   .small-screen {
     display: block;
   }
 
   .big-screen {
     display: none;
-  }
-
-  .sidebar-footer-block {
-    width: 20%;
   }
 
   table tr {
@@ -1250,5 +1269,22 @@ input[type="number"] {
 @media (max-width: 700px) {
   .terms {
     overflow-y: scroll;
+  }
+}
+
+@media screen and (max-width: 575px) {
+  .small-screen-address {
+    width: 100%;
+    font-size: 1rem !important;
+  }
+
+  .address-block-container {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 698px) {
+  .transaction-form-address-container {
+    width: 80%;
   }
 }

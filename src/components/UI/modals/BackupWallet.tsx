@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
+import { ArrowRight } from "react-feather";
 import { toast } from "react-toastify";
 import { deriveAccount, getPassphrase } from "../../../tools";
 import Button from "../Button";
@@ -58,22 +59,34 @@ const BackupWallet = ({ closeModal }: IProps) => {
   if (showDetails) {
     return (
       <div className="mx-auto">
-        <h2>Your Private Key</h2>
-        <div className="v-spacer" />
-        <p className="disclaimer-text mx-auto">
+        <div className="w-100">
+          <div className="flex flex-col flex-vertical-center">
+            <h1 className="mb-0">Your Private Key</h1>
+            <div className="divider w-100" />
+          </div>
+        </div>
+        <p className="disclaimer-text ">
           This is your private key. Make sure that you safekeep this key. <br />
           Whoever knows this string, will be able to access your funds.
         </p>
         <div>
-          <h5 className="mx-auto">Private Key</h5>
-          <h6 className="disclaimer-text fw-400 selectable-text">
-            {keypair.privateKey}
-          </h6>
+          <div className="align-left mt-3 mb-2 label">
+            <strong>Private key</strong>
+          </div>
+          <div className="wrap-input1 validate-input passphrase-box">
+            <h5 className="w-100 pl-3 selectable-text mb-0 mr-3">
+              {keypair.privateKey}
+            </h5>
+          </div>
         </div>
         <div className="v-spacer" />
         <Row>
           <Col xs={6} className="mx-auto">
-            <Button onClick={clearData} className="link-button" text="Cancel" />
+            <Button
+              className="big-icon-button"
+              text="Go back"
+              onClick={clearData}
+            />
           </Col>
         </Row>
       </div>
@@ -81,40 +94,53 @@ const BackupWallet = ({ closeModal }: IProps) => {
   }
 
   return (
-    <div className="mx-auto">
-      <h2>Private key backup... Are you alone?</h2>
-      <div className="v-spacer" />
-      <p className="align-center mx-auto disclaimer-text">
+    <div>
+      <div className="w-100">
+        <div className="flex flex-col flex-vertical-center">
+          <h1 className="mb-0">Private key backup... Are you alone? </h1>
+          <div className="divider w-100" />
+        </div>
+      </div>
+      <p className=" mx-auto disclaimer-text">
+        Anyone viewing it can steal your funds from anywhere! View it in private
+        with no cameras around.
+        <br />
         You are about to see your raw private key. Never share it with anyone!{" "}
         <br />
-        Anyone viewing it can steal your funds from anywhere! View it in private
-        with no cameras around. No one from Clorio will ever ask for it.
+        No one from Clorio will ever ask for it.
       </p>
       {!storedPassphrase && (
         <>
-          <p className="align-center mx-auto disclaimer-text">
+          <p className="disclaimer-text">
             In order to continue please insert your Passphrase
           </p>
-          <div className="v-spacer" />
+          <div className="align-left mt-3 mb-2 label">
+            <strong>Passphrase</strong>
+          </div>
           <Input
             inputHandler={(e) => setMnemonic(e.currentTarget.value)}
-            placeholder="Insert your Passphrase or Private key"
+            placeholder="Insert your Passphrase"
             hidden={true}
             type="text"
           />
         </>
       )}
-      <div className="v-spacer" />
       <Row>
         <Col xs={6}>
-          <Button onClick={closeModal} className="link-button" text="Cancel" />
+          <Button
+            className="big-icon-button"
+            text="Cancel"
+            onClick={closeModal}
+          />
         </Col>
         <Col xs={6}>
           <Button
-            onClick={deriveKeypair}
-            className="lightGreenButton__fullMono mx-auto"
             text="Confirm"
             disabled={disableButton()}
+            onClick={deriveKeypair}
+            style="primary"
+            icon={<ArrowRight />}
+            appendIcon
           />
         </Col>
       </Row>

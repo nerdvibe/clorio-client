@@ -8,6 +8,7 @@ import { ITransactionData } from "../../../types/TransactionData";
 import { checkFieldsAndProceed } from "./TransactionFormHelper";
 import { IBalanceData } from "../../../contexts/balance/BalanceTypes";
 import Big from "big.js";
+import { ArrowRight } from "react-feather";
 
 interface IProps {
   transactionData: ITransactionData;
@@ -101,86 +102,77 @@ const TransactionForm = ({
   };
 
   return (
-    <div className="mx-auto  ">
-      <div className="block-container fit-content-container">
-        <div className="transaction-form">
-          <div className="mx-auto fit-content">
-            <strong>
-              <h2>Create new transaction</h2>
-            </strong>
-          </div>
-          <div className="v-spacer" />
-          <Row>
-            <Col md={8} className="offset-md-2">
-              <h3>Recipient</h3>
-              <Input
-                value={transactionData.receiverAddress}
-                placeholder="Enter address "
-                inputHandler={(e) => addressHandler(e.currentTarget.value)}
-              />
-              <h3>Memo</h3>
-              <Input
-                value={transactionData.memo}
-                placeholder="Enter memo "
-                inputHandler={(e) => memoHandler(e.currentTarget.value)}
-              />
-              <Row>
-                <Col md={12} xl={6}>
-                  <Row>
-                    <Col>
-                      <h3>Amount</h3>
-                    </Col>
-                    <Col className="fee-label">
-                      <Button
-                        className="link-button align-end  no-padding"
-                        text="Send all"
-                        onClick={setAllFunds}
-                      />
-                    </Col>
-                  </Row>
-                  <Input
-                    placeholder="Enter an amount "
-                    value={amount}
-                    inputHandler={(e) => amountHandler(e.target.value)}
-                    type="number"
-                  />
-                </Col>
-                <Col md={12} xl={6}>
-                  <Row>
-                    <Col md={4} className="align-initial">
-                      <h3 className="inline-element ">Fee</h3>
-                    </Col>
-                    <Col className="fee-label">
-                      <Button
-                        className="link-button align-end  no-padding"
-                        text="Average"
-                        onClick={() => setFeeHandler(averageFee)}
-                      />
-                    </Col>
-                    <Col className="fee-label">
-                      <Button
-                        className="link-button align-end  no-padding"
-                        text="Fast"
-                        onClick={() => setFeeHandler(fastFee)}
-                      />
-                    </Col>
-                  </Row>
-                  <Input
-                    placeholder="Enter a fee "
-                    value={fee}
-                    inputHandler={(e) => setFeeHandler(e.target.value)}
-                    type="number"
-                  />
-                </Col>
-              </Row>
-              <div className="v-spacer" />
-              <Button
-                className="lightGreenButton__fullMono mx-auto"
-                onClick={() => checkFieldsAndProceed(transactionData, nextStep)}
-                text="Preview"
-              />
-            </Col>
-          </Row>
+    <div className="mx-auto w-75">
+      <div className="my-5">
+        <h3>Recipient</h3>
+        <Input
+          value={transactionData.receiverAddress}
+          placeholder="Enter address "
+          inputHandler={(e) => addressHandler(e.currentTarget.value)}
+        />
+        <h3>Memo</h3>
+        <Input
+          value={transactionData.memo}
+          placeholder="Enter memo "
+          inputHandler={(e) => memoHandler(e.currentTarget.value)}
+        />
+        <Row>
+          <Col md={12} xl={6}>
+            <Row>
+              <Col>
+                <h3>Amount</h3>
+              </Col>
+              <Col className="fee-label">
+                <Button
+                  className="link-button align-end  no-padding"
+                  text="Send all"
+                  onClick={setAllFunds}
+                />
+              </Col>
+            </Row>
+            <Input
+              placeholder="Enter an amount "
+              value={amount}
+              inputHandler={(e) => amountHandler(e.target.value)}
+              type="number"
+            />
+          </Col>
+          <Col md={12} xl={6}>
+            <Row>
+              <Col md={4} className="align-initial">
+                <h3 className="inline-element ">Fee</h3>
+              </Col>
+              <Col className="fee-label">
+                <Button
+                  className="link-button align-end  no-padding"
+                  text="Average"
+                  onClick={() => setFeeHandler(averageFee)}
+                />
+              </Col>
+              <Col className="fee-label">
+                <Button
+                  className="link-button align-end  no-padding"
+                  text="Fast"
+                  onClick={() => setFeeHandler(fastFee)}
+                />
+              </Col>
+            </Row>
+            <Input
+              placeholder="Enter a fee "
+              value={fee}
+              inputHandler={(e) => setFeeHandler(e.target.value)}
+              type="number"
+            />
+          </Col>
+        </Row>
+        <div className="w-50 py-3 mx-auto">
+          <Button
+            onClick={() => checkFieldsAndProceed(transactionData, nextStep)}
+            text="Preview"
+            style="primary"
+            icon={<ArrowRight />}
+            appendIcon
+          />
         </div>
       </div>
     </div>

@@ -31,7 +31,7 @@ const AccountSelection = ({
     <div className="animate__animated animate__fadeIn glass-card py-5 px-5">
       <div className="w-100">
         <div className="flex flex-col flex-vertical-center">
-          <h1>Create new</h1>
+          <h1>Create new wallet</h1>
           <p className="text-center mt-1">Select an avatar</p>
           <div className="divider" />
         </div>

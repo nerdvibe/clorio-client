@@ -7,9 +7,9 @@ import { BalanceContext } from "../contexts/balance/BalanceContext";
 import { IBalanceContext } from "../contexts/balance/BalanceTypes";
 import {
   getPageFromOffset,
+  readSession,
   TRANSACTIONS_TABLE_ITEMS_PER_PAGE,
   DEFAULT_QUERY_REFRESH_INTERVAL,
-  readSession,
   UPDATE_WALLET_ID_TIMEOUT,
 } from "../tools";
 import { GET_MEMPOOL, GET_TRANSACTIONS, GET_HOME_NEWS } from "../graphql/query";
@@ -81,7 +81,7 @@ const Overview = ({ sessionData }: IProps) => {
    */
   const readWalletData = async () => {
     const wallet = await readSession();
-    if (wallet.id !== -1) {
+    if (wallet && wallet?.id !== -1) {
       setWalletId(wallet.id);
     }
   };

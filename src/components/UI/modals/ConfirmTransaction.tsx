@@ -2,11 +2,16 @@ import { Row, Col } from "react-bootstrap";
 import { ITransactionData } from "../../../types/TransactionData";
 import { toLongMINA } from "../../../tools";
 import Button from "../Button";
+import { ArrowLeft, ArrowRight } from "react-feather";
+import Avatar from "../../../tools/avatar/avatar";
 
 interface IProps {
   transactionData: ITransactionData;
   sendTransaction: () => void;
   stepBackward: () => void;
+  walletAddress: string;
+  isLedgerEnabled?: boolean;
+  ledgerTransactionData: any;
 }
 
 export const ConfirmTransaction = ({
@@ -17,46 +22,77 @@ export const ConfirmTransaction = ({
   const { amount, fee, receiverAddress, memo } = transactionData;
   return (
     <div className="mx-auto  ">
-      <div className="block-container full-page-container">
-        <div className="vertical-center">
-          <div className="mx-auto fit-content">
-            <strong>
-              <h2>Create new transaction</h2>
-            </strong>
-          </div>
-          <div className="v-spacer" />
-          <Row>
-            <Col md={8} className="offset-md-2">
-              You are about to send <strong>{toLongMINA(amount)} Mina</strong>{" "}
-              <br />
-              with a fee of <strong>{toLongMINA(fee)} Mina</strong> <br />
-              to <strong>{receiverAddress}</strong> <br />
-              {memo ? (
-                <>
-                  with memo <strong>{memo}</strong>
-                </>
-              ) : null}
-              <div className="v-spacer" />
-              <div className="mx-auto">
-                <Row>
-                  <Col md={3} className="offset-md-3">
-                    <Button
-                      className="link-button inline-element"
-                      onClick={stepBackward}
-                      text="Cancel"
-                    />
-                  </Col>
-                  <Col md={3}>
-                    <Button
-                      className="lightGreenButton__fullMono inline-element mx-auto"
-                      onClick={sendTransaction}
-                      text="Confirm"
-                    />
-                  </Col>
-                </Row>
+      <div className="">
+        <div className="vertical-center w-75 mx-auto mt-4">
+          <Row className="justify-content-center">
+            <Col xs={12} xl={8}>
+              <div className="mt-3 mb-2 label">
+                <p className=" text-center w-100">You are going to send </p>
+              </div>
+              <Row className="justify-content-center w-100 mx-auto ">
+                <Col xs={12} md={12} lg={4}>
+                  <h3 className="selectable-text mb-0 text-center w-100">
+                    {toLongMINA(amount)} MINA
+                  </h3>
+                  <small>Amount</small>
+                </Col>
+                <Col xs={12} md={2} className="pt-3 pb-2">
+                  {" "}
+                  <h3 className="mx-auto">+</h3>{" "}
+                </Col>
+                <Col xs={12} md={12} lg={4}>
+                  <h3 className="selectable-text mb-0 text-center w-100">
+                    {toLongMINA(fee)} MINA
+                  </h3>
+                  <small>Fee</small>
+                </Col>
+              </Row>
+            </Col>
+            <Col xs={12} lg={10}>
+              <div className="align-left mt-4 mb-0 label">
+                <p className="text-center w-100">to the following address </p>
+              </div>
+              <div className="my-3">
+                <div className="inline-block-element small-avatar vertical-align-top ">
+                  <Avatar address={receiverAddress} />
+                </div>
+                <h4 className="inline-block-element lh-30px transaction-form-address truncate-text mb-0">
+                  {receiverAddress}
+                </h4>
               </div>
             </Col>
+            {memo && (
+              <Col xs={12}>
+                <div className="align-left mt-2 mb-0 label">
+                  <p className="text-center w-100">with the following memo </p>
+                </div>
+                <div className="my-3">
+                  <h4 className="inline-block-element lh-30px transaction-form-address truncate-text mb-0 text-center">
+                    {memo}
+                  </h4>
+                </div>
+              </Col>
+            )}
           </Row>
+          <div className="flex flex-row">
+            <div className="half-card py-3">
+              <Button
+                className="big-icon-button"
+                text="Go back"
+                icon={<ArrowLeft />}
+                onClick={stepBackward}
+              />
+            </div>
+            <div className="half-card py-3">
+              <Button
+                onClick={sendTransaction}
+                text="Confirm"
+                style="primary"
+                icon={<ArrowRight />}
+                appendIcon
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -21,7 +21,6 @@ h1 {
   font-family: "Lato", sans-serif;
   font-style: normal;
   font-weight: bold;
-  // font-size: 38px;
   line-height: 58px;
 }
 
@@ -29,7 +28,6 @@ h2 {
   font-family: "Lato", sans-serif;
   font-style: normal;
   font-weight: normal;
-  // font-size: 22px;
   line-height: 38px;
 }
 
@@ -37,7 +35,6 @@ h3 {
   font-family: "Lato", sans-serif;
   font-style: normal;
   font-weight: bold;
-  // font-size: 18px;
   line-height: 34px;
 }
 
@@ -45,7 +42,6 @@ h4 {
   font-family: "Lato", sans-serif;
   font-style: normal;
   font-weight: bold;
-  // font-size: 14px;
   line-height: 29px;
 }
 
@@ -53,7 +49,6 @@ h5 {
   font-family: "Lato", sans-serif;
   font-style: normal;
   font-weight: bold;
-  // font-size: 8px;
   line-height: 22px;
 }
 
@@ -80,7 +75,7 @@ a {
 .secondaryText {
   font-family: "Lato";
   font-style: normal;
-  font-weight: bold;
+  font-weight: 400;
   font-size: 14px;
   line-height: 17px;
   color: $grey;
@@ -101,19 +96,18 @@ a {
   }
 }
 
-.small-text{
+.small-text {
   font-size: small;
   font-style: italic;
-  margin-bottom: 20px;
   text-align: right !important;
-  opacity: .7;
+  opacity: 0.7;
 }
 
-.fw-400{
+.fw-400 {
   font-weight: 400;
 }
 
-.disclaimer-text{
+.disclaimer-text {
   font-size: large;
   line-height: initial;
 }

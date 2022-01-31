@@ -5,7 +5,7 @@ const SignMessageLedgerScreen = () => (
   <Hoc>
     <div className="animate__animated animate__fadeIn">
       <div className="mx-auto">
-        <div className="block-container">
+        <div className="glass-card mt-2 p-5">
           <img
             src={imageToRender}
             className="animate__animated animate__fadeIn"

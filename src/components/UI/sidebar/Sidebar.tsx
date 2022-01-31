@@ -6,9 +6,11 @@ import Logo from "../logo/Logo";
 import { clearSession } from "../../../tools";
 import { isRouteActiveClass, renderNetworkLabel } from "./SidebarHelper";
 import { INetworkData } from "../../../types/NetworkData";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ModalContainer } from "../modals";
 import BackupWallet from "../modals/BackupWallet";
+import { ILedgerContext } from "../../../contexts/ledger/LedgerTypes";
+import { LedgerContext } from "../../../contexts/ledger/LedgerContext";
 
 interface IProps {
   mnemonic?: boolean;
@@ -19,6 +21,9 @@ interface IProps {
 
 const Sidebar = ({ network, clearSessionData, mnemonic }: IProps) => {
   const [showBackupModal, setShowBackupModal] = useState(false);
+  const { isLedgerEnabled } = useContext<Partial<ILedgerContext>>(
+    LedgerContext
+  );
   const history = useHistory();
   const statusDot = network?.nodeInfo ? (
     <span className="green-dot" />
@@ -41,7 +46,7 @@ const Sidebar = ({ network, clearSessionData, mnemonic }: IProps) => {
   const toggleBackupModal = () => setShowBackupModal(!showBackupModal);
 
   return (
-    <div style={{ padding: "5px" }}>
+    <div style={{ padding: "5px" }} className="">
       <Nav
         className="col-md-12 d-none d-md-block sidebar level-zero"
         activeKey="/home"
@@ -81,18 +86,21 @@ const Sidebar = ({ network, clearSessionData, mnemonic }: IProps) => {
             </span>
           </Link>
         </Nav.Item>
-        <Nav.Item
-          className={
-            "sidebar-item-container " + isRouteActiveClass("sign-message")
-          }
-        >
-          <Link to="/sign-message" className="sidebar-item">
-            {" "}
-            <span>
-              <Edit3 /> Sign message
-            </span>
-          </Link>
-        </Nav.Item>
+
+        {!isLedgerEnabled && (
+          <Nav.Item
+            className={
+              "sidebar-item-container " + isRouteActiveClass("sign-message")
+            }
+          >
+            <Link to="/sign-message" className="sidebar-item">
+              {" "}
+              <span>
+                <Edit3 /> Sign message
+              </span>
+            </Link>
+          </Nav.Item>
+        )}
         <Nav.Item
           className={
             "sidebar-item-container " + isRouteActiveClass("verify-message")

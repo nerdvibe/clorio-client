@@ -4,7 +4,6 @@ const SendTX = React.lazy(() => import("./pages/sendTX/SendTX"));
 const Stake = React.lazy(() => import("./pages/stake/Stake"));
 const SplashScreen = React.lazy(() => import("./pages/SplashScreen"));
 const Login = React.lazy(() => import("./pages/Login"));
-// const Register = React.lazy(() => import("./pages/registration/Registration"));
 const LedgerLogin = React.lazy(() => import("./pages/LedgerLogin"));
 const SignMessage = React.lazy(() => import("./pages/signMessage/SignMessage"));
 const NotFound = React.lazy(() => import("./pages/404"));
@@ -96,12 +95,6 @@ const Routes = (props: IRoutesProps) => {
           appProps={props}
           isAuthenticated={!!props.sessionData.address}
         />
-        {/*<Route path="/register">
-          <Entropy />
-        </Route>*/}
-        {/*<Route path="/verify">
-          <VerifyMnemonic />
-        </Route>*/}
         <Route component={NotFound} />
       </Switch>
     </Suspense>

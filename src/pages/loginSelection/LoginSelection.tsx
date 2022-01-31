@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { ReactComponent as UsbDrive } from "./assets/usb-drive.svg";
 import { ReactComponent as FileLock } from "./assets/file-lock.svg";
+import Button from "../../components/UI/Button";
+import { ArrowLeft } from "react-feather";
 
 const LoginSelection = () => {
   return (
@@ -34,10 +36,13 @@ const LoginSelection = () => {
             </Link>
           </div>
         </div>
-        <div className="w-100 mt-5">
-          <Link to={"/"}>
-            <p className="text-center mt-1">Go back</p>
-          </Link>
+        <div className="w-50 mt-5">
+          <Button
+            className="big-icon-button"
+            text="Go back"
+            link="/"
+            icon={<ArrowLeft />}
+          />
         </div>
       </div>
     </div>
