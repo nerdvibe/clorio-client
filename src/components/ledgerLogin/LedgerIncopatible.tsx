@@ -19,6 +19,20 @@ const LedgerIncompatible = () => {
             ❌ Browser is incompatible, please use the last version of Chrome,
             Edge or Opera
           </h6>
+          <div className="mt-5">
+            Do you need a Ledger wallet?
+            <a
+              className="inline-block-element"
+              href={process.env.REACT_APP_LEDGER_URL}
+              target="__blank"
+            >
+              <Button
+                style="no-style"
+                className="purple-text"
+                text="Buy it here"
+              />
+            </a>
+          </div>
           <div className="v-spacer" />
         </div>
       </div>
