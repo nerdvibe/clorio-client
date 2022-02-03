@@ -14,12 +14,15 @@ const WaitingLedger = ({ closeModal }: IProps) => {
           <div className="divider w-100" />
         </div>
       </div>
-      <div className="my-5">
+      <div className="mt-5">
         <LedgerLoader width="500px" />
         <div className="my-2 text-center">
-          Waiting your hardware wallet to confirm transaction
+          Waiting for your hardware wallet to confirm the transaction
         </div>
       </div>
+      <small className="w-100 text-center mb-4">
+        This could take up to 3 minutes.
+      </small>
       <Button className="big-icon-button" text="Cancel" onClick={closeModal} />
     </div>
   );

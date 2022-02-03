@@ -16,6 +16,20 @@ const LedgerSearch = () => {
       </div>
       <div className="min-height-200 pt-5">
         <LedgerLoader width="500px" />
+        <div className="mt-3">
+          Do you need a Ledger wallet?
+          <a
+            className="inline-block-element"
+            href={process.env.REACT_APP_LEDGER_URL}
+            target="__blank"
+          >
+            <Button
+              style="no-style"
+              className="purple-text"
+              text="Buy it here"
+            />
+          </a>
+        </div>
         <Button
           className="big-icon-button mt-3"
           text="Go back"

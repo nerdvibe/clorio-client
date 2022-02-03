@@ -91,12 +91,15 @@ const LedgerGetAddress = ({ accountNumber, toggleLoader }: IProps) => {
             <div>
               <LedgerLoader width="500px" />
               <div className="v-spacer" />
-              <h6 className="full-width-align-center my-4">
+              <p className="full-width-align-center my-4">
                 Looking for the Public key. Please confirm it on your Ledger
                 device
+              </p>
+              <h6 className="w-100 text-center mb-4">
+                This could take up to one minute and a half
               </h6>
               <Button
-                className="big-icon-button"
+                className="big-icon-button w-50 mx-auto"
                 icon={<ArrowLeft />}
                 text="Go back"
                 link="login-selection"

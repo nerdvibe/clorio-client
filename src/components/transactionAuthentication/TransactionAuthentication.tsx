@@ -61,12 +61,16 @@ const TransactionAuthentication = ({
     <div className="mx-auto  w-75">
       <div className="my-5">
         <div className="spinner-container">
-          <Spinner show={true} />
+          <Spinner show={true} fullscreen={false} />
         </div>
         <div className="align-left mt-3 mb-2 label text-center">
           <strong>Signing</strong>
           <br />
-          <small>Waiting for the ledger confirmation</small>
+          <small>Waiting for the Ledger device to sign the transaction</small>
+          <br />
+          <small className="w-100 text-center mb-4">
+            This could take up to 3 minutes.
+          </small>
         </div>
       </div>
     </div>
