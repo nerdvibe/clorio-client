@@ -9,6 +9,8 @@ interface IProps {
   link?: string;
   loading?: boolean;
   disableAnimation?: boolean;
+  style?: "standard" | "no-style" | "primary";
+  appendIcon?: boolean;
 }
 
 const Button = ({
@@ -20,6 +22,8 @@ const Button = ({
   link,
   loading,
   disableAnimation,
+  style = "standard",
+  appendIcon = false,
 }: IProps) => {
   const clickHandler = () => {
     if (loading) {
@@ -30,11 +34,18 @@ const Button = ({
     }
   };
 
+  const styleClass =
+    style === "standard"
+      ? "button non-selectable-text"
+      : style === "primary"
+      ? `primary ${disabled ? "primary disabled" : ""}`
+      : "";
+
   const button = (
     <div
       className={`${className} ${
         disableAnimation ? "" : " button-animation "
-      }  button non-selectable-text`}
+      }  ${styleClass}`}
       onClick={clickHandler}
     >
       {loading ? (
@@ -45,15 +56,19 @@ const Button = ({
         </div>
       ) : (
         <>
-          {icon}&nbsp;{text}
+          {!appendIcon && icon}&nbsp;{text} &nbsp; {appendIcon && icon}
         </>
       )}
     </div>
   );
 
   const disabledButton = (
-    <div className={"disabledButton margin-auto"}>
-      {icon}&nbsp;{text}
+    <div
+      className={`${className} ${
+        disableAnimation ? "" : " button-animation "
+      }  ${styleClass}`}
+    >
+      {!appendIcon && icon}&nbsp;{text} &nbsp; {appendIcon && icon}
     </div>
   );
   if (disabled) {

@@ -38,13 +38,11 @@ const RefetchTransactions = ({ refetch }: any) => {
   };
 
   if (countdown >= 20) {
-    return (
-      <div className="full-width-align-center small-text">Just fetched</div>
-    );
+    return <div className="small-text pt-3 mb-1 px-3">Just fetched</div>;
   }
 
   return (
-    <div className="full-width-align-center small-text">
+    <div className="small-text pt-3 mb-1">
       Fetching data in {countdown}s
       <Button
         className="inline-element link-button"

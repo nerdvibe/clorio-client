@@ -1,21 +1,22 @@
 import { useState, useEffect } from "react";
-import { Row, Col } from "react-bootstrap";
-import { Link, useHistory } from "react-router-dom";
 import Button from "../UI/Button";
-import Hoc from "../UI/Hoc";
-import Logo from "../UI/logo/Logo";
-import Footer from "../UI/Footer";
 import { useQuery } from "@apollo/client";
 import { storeSession } from "../../tools";
 import { GET_ID } from "../../graphql/query";
 import { getPublicKey } from "../../tools/ledger";
 import { toast } from "react-toastify";
-import { IProps } from "./LedgerLoginTypes";
 import LedgerConfirmAddress from "./LedgerConfirmAddress";
 import { IWalletIdData } from "../../types/WalletIdData";
 import LedgerLoader from "../UI/ledgerLogin/LedgerLoader";
+import { ArrowLeft } from "react-feather";
+import { useHistory } from "react-router-dom";
 
-const LedgerGetAddress = ({ accountNumber, toggleLoader, network }: IProps) => {
+interface IProps {
+  accountNumber?: number;
+  toggleLoader: () => void;
+}
+
+const LedgerGetAddress = ({ accountNumber, toggleLoader }: IProps) => {
   const [publicKey, setPublicKey] = useState<string>("");
   const [ledgerAccount] = useState<number>(accountNumber || 0);
   const history = useHistory();
@@ -70,51 +71,49 @@ const LedgerGetAddress = ({ accountNumber, toggleLoader, network }: IProps) => {
       toast.error(
         e.message || "An error occurred while loading hardware wallet"
       );
-      history.replace("/");
     }
   };
 
   return (
-    <Hoc>
-      <div className="block-container real-full-page-container center">
-        <div className="full-width">
-          <Row>
-            <Col md={8} xl={8} className="offset-md-2 offset-xl-2 text-center">
-              <div className="mx-auto fit-content">
-                <Logo big={true} />
-              </div>
+    <div className="full-screen-container-center animate__animated animate__fadeIn">
+      <div className=" glass-card flex flex-vertical-center p-5">
+        <div>
+          <div className="w-100">
+            <div className="flex flex-col flex-vertical-center">
+              <h1>Login</h1>
+              <p className="text-center mt-1">
+                Let&apos;s verify the your address
+              </p>
+              <div className="divider w-100" />
+            </div>
+          </div>
+          {!publicKey ? (
+            <div>
+              <LedgerLoader width="500px" />
               <div className="v-spacer" />
-              <div className="v-spacer" />
-              <div className="v-spacer" />
-              {!publicKey ? (
-                <div>
-                  <h4 className="full-width-align-center">
-                    Let&apos;s verify the your address
-                  </h4>
-                  <div className="v-spacer" />
-                  <LedgerLoader />
-                  <div className="v-spacer" />
-                  <h6 className="full-width-align-center">
-                    Looking for the publicKey. Please confirm it on your Ledger
-                    device
-                  </h6>
-                  <div className="v-spacer" />
-                  <Link to="/">
-                    <Button className="link-button mx-auto" text="Go back" />
-                  </Link>
-                </div>
-              ) : (
-                <LedgerConfirmAddress
-                  publicKey={publicKey}
-                  setSession={setSession}
-                />
-              )}
-            </Col>
-          </Row>
+              <p className="full-width-align-center my-4">
+                Looking for the Public key. Please confirm it on your Ledger
+                device
+              </p>
+              <h6 className="w-100 text-center mb-4">
+                This could take up to one minute and a half
+              </h6>
+              <Button
+                className="big-icon-button w-50 mx-auto"
+                icon={<ArrowLeft />}
+                text="Go back"
+                link="login-selection"
+              />
+            </div>
+          ) : (
+            <LedgerConfirmAddress
+              publicKey={publicKey}
+              setSession={setSession}
+            />
+          )}
         </div>
       </div>
-      <Footer network={network} />
-    </Hoc>
+    </div>
   );
 };
 

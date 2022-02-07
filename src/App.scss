@@ -5,10 +5,12 @@
 @import "./styles/__loader";
 @import "./styles/__dashboard";
 @import "./styles/__table";
+@import "./styles/__homepage";
+@import "./styles/__new_design";
+@import "./styles/__accountAvatar";
+@import url("https://fonts.googleapis.com/css2?family=Mada:wght@200;300;400;500;600;700;900&display=swap");
 
 .App {
-  background: $white;
-  background-image: url("./assets/background.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -52,7 +54,11 @@
 }
 
 html {
-  background: $gradient;
+  background-color: #171717;
+  background: url('./squares-bg.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   height: 104vh;
   overflow-y: hidden;
 }

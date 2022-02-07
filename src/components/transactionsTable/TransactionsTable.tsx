@@ -116,7 +116,7 @@ const TransactionsTable = ({
   };
 
   return (
-    <div className="block-container">
+    <div className="glass-card px-4 pt-3 mb-5 pb-3">
       <div>
         <Spinner className={"full-width"} show={loading}>
           <div id="transaction-table">

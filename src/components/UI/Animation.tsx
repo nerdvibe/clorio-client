@@ -7,14 +7,18 @@ interface IProps {
   width?: string;
   animation: any;
   loop?: boolean;
+  maxWidth?: string;
+  timeout?: number;
 }
 
 const MissingAnimation = ({
+  maxWidth,
   text,
   secondaryText,
   width,
   animation,
   loop = true,
+  timeout,
 }: IProps) => {
   const options = {
     animationData: animation,
@@ -23,14 +27,15 @@ const MissingAnimation = ({
   } as LottieOptions;
 
   const { View, stop } = useLottie(options, {
-    width: width ? width : "100%",
+    width: width ? width : "80%",
     margin: "0 auto",
+    maxWidth: maxWidth,
   });
 
   useEffect(() => {
     setTimeout(() => {
       stop();
-    }, 6000);
+    }, timeout || 12000);
   }, []);
 
   return (

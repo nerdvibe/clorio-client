@@ -85,8 +85,6 @@ export default class Avatar extends React.Component<any> {
         color3,
         addressHashChunks[7] / 200000
       ),
-      // getShape(addressHashChunks[3], newSize, color5, (addressHashChunks[8] / 200000)),
-      // getShape(addressHashChunks[3], newSize, color6, (addressHashChunks[9] / 200000))
     ];
     return (
       <svg

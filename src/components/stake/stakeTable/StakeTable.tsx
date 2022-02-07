@@ -84,13 +84,10 @@ const StakeTable = ({
   }
 
   return (
-    <div className="mx-auto  ">
+    <div>
       <Row>
-        <Col xs={12} xl={6}>
-          <div className="block-container min-height-200 center-content flex-col-left">
-            <div>
-              <h4>Staking Info</h4>
-            </div>
+        <Col xs={12} xl={6} className="pr-1">
+          <div className="glass-card p-4 mt-2 center-content flex-col-left h-95 flex flex-vertical-center stake-info-left">
             <div className="w-100">
               <StakeStatus
                 currentDelegate={currentDelegate}
@@ -99,18 +96,15 @@ const StakeTable = ({
             </div>
           </div>
         </Col>
-        <Col xs={12} xl={6}>
-          <div className="block-container min-height-200 center-content flex-col-left">
-            <div className="w-100">
-              <h4>Epoch Info</h4>
-            </div>
+        <Col xs={12} xl={6} className="pl-1">
+          <div className="glass-card p-4 mt-2 center-content flex-col-left stake-info-right">
             <div className="w-100 mt-2">
               <EpochBar />
             </div>
           </div>
         </Col>
       </Row>
-      <div className="block-container  py-50">
+      <div className="glass-card p-4 mt-2  py-50">
         <div>
           <Row>
             <Col className="mt-0">
@@ -129,32 +123,9 @@ const StakeTable = ({
               />
             </Col>
           </Row>
-          <div className="v-spacer" />
           <Spinner className={"full-width"} show={loading}>
             <div id="transaction-table">
-              <Table id="rwd-table-large">
-                <thead>
-                  <tr className="th-background">
-                    <th className="th-first-stake-item stake-th">Stake</th>
-                    <th className="stake-fee-th"></th>
-                    <th className="stake-staked-th"></th>
-                    <th></th>
-                    <th className="th-last-item">
-                      {/* Search disabled for now */}
-                      {/* <input
-                        className="table-searchbar"
-                        placeholder={"Filter..."}
-                        value={searchBox}
-                        onChange={(e) =>
-                          searchBoxHandler(e.currentTarget.value)
-                        }
-                        autoComplete="off"
-                      /> */}
-                    </th>
-                  </tr>
-                </thead>
-                {tableBody()}
-              </Table>
+              <Table id="rwd-table-large">{tableBody()}</Table>
               &nbsp;
               <ReactTooltip multiline={true} />
             </div>

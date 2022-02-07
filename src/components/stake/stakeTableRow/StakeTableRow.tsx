@@ -31,15 +31,16 @@ const StakeTableRow = ({
       ? () => toggleModal(element)
       : () => null;
     const buttonColor = loading
-      ? "whiteButton__fullMono no-padding"
+      ? "whiteButton__fullMono no-padding button-small-padding"
       : isDelegating
-      ? "lightGreenButton__fullMono yellowButton__fullMono"
-      : "yellowButton__fullMono";
+      ? "lightGreenButton__fullMono yellowButton__fullMono button-small-padding"
+      : "";
     const text = isDelegating ? "Delegating" : "Delegate";
     return (
       <Button
-        className={`${buttonColor} button-small-padding`}
+        className={`${buttonColor}`}
         text={text}
+        style={!buttonColor ? "primary" : undefined}
         loading={loading}
         disableAnimation={isDelegating}
         onClick={buttonHandler}
@@ -72,17 +73,17 @@ const StakeTableRow = ({
         className="table-element"
       />
       <StakeTableValue
-        className="table-element"
+        className="table-element fee-column"
         header={"Fee"}
         text={`${element.fee}%`}
       />
       <StakeTableValue
-        className="table-element"
+        className="table-element stake-column"
         header={"Staked"}
-        text={`${parseInt(element?.stakedSum || "0")} Mina`}
+        text={`${parseInt(element?.stakedSum || "0").toLocaleString()} Mina`}
       />
       <StakeTableValue
-        className="table-element"
+        className="table-element info-column"
         header={"info"}
         text={"Website"}
         website={element.website}
