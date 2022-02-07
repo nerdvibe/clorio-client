@@ -67,6 +67,7 @@ const TransactionRow = (
             href={`${process.env.REACT_APP_EXPLORER_URL}/${urlPath}/${id}`}
             target="_blank"
             rel="noreferrer"
+            className="purple-text"
           >
             {id}
           </a>
