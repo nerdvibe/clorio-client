@@ -32,23 +32,29 @@ $global-radius: 4px;
   width: 20%;
 }
 
-.dangerous-transaction{
-  background-color: #fdd !important;
-  td{
-    border-bottom: 1px solid #fdd !important;
+.dangerous-transaction {
+  td {
+    border-bottom: 1px solid #ffdddd00 !important;
+  }
+  .table-element {
+    padding-bottom: 0px !important;
+    background: #ff65653d;
   }
 }
 
-.scam-alert-row{
-  *{
+.scam-alert-row {
+  * {
     font-style: italic;
     font-size: small;
     line-height: 10px;
-    background-color: #fdd !important;
   }
-  td{
+  td {
+    border-top: none !important;
     border-bottom: 1px solid rgb(255, 29, 29) !important;
     padding: 6px !important;
+    color: #ff1e1e !important;
+    padding-bottom: 10px !important;
+    background: #ff65653d;
   }
 }
 
@@ -56,15 +62,15 @@ $global-radius: 4px;
   background: #fffdef27;
 }
 
-.fee-column{
+.fee-column {
   width: 80px !important;
 }
 
-.info-column{
+.info-column {
   width: 150px !important;
 }
 
-.stake-table-button{
+.stake-table-button {
   width: 200px !important;
 }
 
@@ -147,7 +153,7 @@ th {
       width: 20% !important;
     }
 
-    .scam-alert-row{
+    .scam-alert-row {
       position: relative;
       border-top: red;
       top: -18px;
@@ -191,11 +197,12 @@ th {
       }
     }
 
-    .fee-column,.info-column{
+    .fee-column,
+    .info-column {
       width: 50% !important;
     }
-    
-    .stake-table-button{
+
+    .stake-table-button {
       width: 100% !important;
     }
   }
@@ -367,12 +374,38 @@ th {
 }
 
 @media (min-width: 1200px) {
-  #transaction-table{
-    .small-screen-stake-table-text,.small-screen-stake-table-text p{
+  #transaction-table {
+    .small-screen-stake-table-text,
+    .small-screen-stake-table-text p {
       text-align: left;
     }
-    .stake-table-row td{
+    .stake-table-row td {
       height: auto;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  #transaction-table #rwd-table-large tr {
+    box-shadow: none !important;
+  }
+
+  .scam-alert-row {
+    margin-top: 1px;
+    margin-bottom: 0px;
+    border-radius: 2px;
+    border-bottom: 1px solid #ff1d1d !important;
+    td {
+      padding-top: 10px !important;
+    }
+  }
+
+  .dangerous-transaction {
+    .table-element {
+      padding-bottom: 10px !important;
+    }
+    .table-icon {
+      padding-bottom: 20px !important;
     }
   }
 }
