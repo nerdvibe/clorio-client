@@ -1,6 +1,6 @@
 {
   "name": "clorio-client",
-  "version": "0.1.5",
+  "version": "1.0.0",
   "private": true,
   "homepage": "./",
   "main": "public/electron.js",
@@ -66,8 +66,8 @@
     "pack:devnet": "env-cmd -f ./.env.devnet build --dir",
     "pack:mainnet": "env-cmd -f ./.env.mainnet build --dir",
     "postinstall": "install-app-deps",
-    "package:devnet": "yarn build:devnet && electron-builder build -mwl --publish never && rm -rf dist-devnet && mv dist dist-devnet",
-    "package:mainnet": "yarn build:mainnet && electron-builder build -mwl --publish never && rm -rf dist-mainnet && mv dist dist-mainnet",
+    "package:devnet": "yarn build:devnet && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder build -mwl --publish never && rm -rf dist-devnet && mv dist dist-devnet",
+    "package:mainnet": "yarn build:mainnet && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder build -mwl --publish never && rm -rf dist-mainnet && mv dist dist-mainnet",
     "package-only:mainnet": "electron-builder build -mwl --publish never && mv dist dist-mainnet",
     "post-build": "yarn add usb-detection"
   },
