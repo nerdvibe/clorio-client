@@ -1,5 +1,5 @@
-import { INodeInfo } from "../types/NetworkData";
 import Datastore from "nedb-promises";
+import { INodeInfo } from "../types/NetworkData";
 import { IWalletData } from "../types/WalletData";
 
 const db = Datastore.create();
@@ -20,6 +20,10 @@ export const storeSession = async (
     mnemonic: isUsingMnemonic,
   };
   return db.insert(wallet);
+};
+
+export const findAll = () => {
+  return db.find({});
 };
 
 export const storeNetworkData = async (networkData: INodeInfo) => {
@@ -44,13 +48,16 @@ export const clearSession = async () => {
 };
 
 export const updateUser = async (address: string, id: number) => {
-  const walletData = await readSession();
+  let walletData = await readSession();
+  if (walletData?.ledger === undefined) {
+    walletData = await readSession();
+  }
   await db.remove({ type: "wallet" }, { multi: true });
   const wallet = {
     type: "wallet",
     address: address,
     id: id,
-    ledger: walletData.ledger,
+    ledger: walletData?.ledger || false,
   };
   await db.insert(wallet);
 };

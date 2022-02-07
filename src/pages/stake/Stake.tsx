@@ -3,9 +3,7 @@ import { useHistory } from "react-router-dom";
 import { signStakeDelegation } from "@o1labs/client-sdk";
 import { toast } from "react-toastify";
 import NewsBanner from "../../components/UI/NewsBanner";
-import LedgerLoader from "../../components/UI/ledgerLogin/LedgerLoader";
 import Hoc from "../../components/UI/Hoc";
-import Button from "../../components/UI/Button";
 import { IValidatorData } from "../../components/stake/stakeTableRow/ValidatorDataTypes";
 import StakeTable from "../../components/stake/stakeTable/StakeTable";
 import {
@@ -52,6 +50,7 @@ import { IValidatorsNewsQuery } from "../../types/NewsData";
 import { IFeeQuery } from "../../types/Fee";
 import { INonceDelegateQueryResult } from "./StakeTypes";
 import { IKeypair } from "../../types";
+import WaitingLedger from "../../components/UI/modals/WaitingLedger";
 
 interface IProps {
   sessionData: IWalletData;
@@ -411,7 +410,7 @@ export default ({ sessionData }: IProps) => {
   };
 
   return (
-    <Hoc className="main-container">
+    <Hoc>
       <div className="animate__animated animate__fadeIn">
         <NewsBanner {...latestNews} />
         <StakeTable
@@ -445,6 +444,7 @@ export default ({ sessionData }: IProps) => {
         <CustomNonce
           proceedHandler={confirmDelegate}
           setCustomNonce={setCustomNonce}
+          nonce={customNonce}
         />
       </ModalContainer>
       <ModalContainer
@@ -452,21 +452,7 @@ export default ({ sessionData }: IProps) => {
         close={closeModal}
       >
         {isLedgerEnabled ? (
-          <div className="mx-auto">
-            <h2>Please confirm transaction </h2>
-            <div className="v-spacer" />
-            <h5 className="align-center mx-auto">
-              Waiting your hardware wallet to confirm transaction
-            </h5>
-            <div className="v-spacer" />
-            <LedgerLoader />
-            <div className="v-spacer" />
-            <Button
-              onClick={closeModal}
-              className="link-button full-width-align-center"
-              text="Cancel"
-            />
-          </div>
+          <WaitingLedger closeModal={closeModal} />
         ) : (
           <PrivateKeyModal
             confirmPrivateKey={signDelegation}

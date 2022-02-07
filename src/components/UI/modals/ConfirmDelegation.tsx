@@ -1,4 +1,5 @@
 import { Row, Col } from "react-bootstrap";
+import { ArrowRight } from "react-feather";
 import Button from "../Button";
 import Spinner from "../Spinner";
 
@@ -16,23 +17,33 @@ export const ConfirmDelegation = ({
   loadingNonce,
 }: IProps) => (
   <Spinner show={loadingNonce} className="small-container">
-    <div className="mx-auto">
-      <h2>Confirm Delegation</h2>
-      <div className="v-spacer" />
-      <h5 className="align-center mx-auto">
+    <div className="min-width-500">
+      <div className="w-100">
+        <div className="flex flex-col flex-vertical-center">
+          <h1 className="mb-0">Confirm Delegation</h1>
+          <div className="divider w-100" />
+        </div>
+      </div>
+      <p className="align-center mx-auto">
         Are you sure you want to <br />
         delegate this stake to <strong>{name}</strong>
-      </h5>
+      </p>
       <div className="v-spacer" />
       <Row>
         <Col xs={6}>
-          <Button onClick={closeModal} className="link-button" text="Cancel" />
+          <Button
+            className="big-icon-button"
+            text="Cancel"
+            onClick={closeModal}
+          />
         </Col>
         <Col xs={6}>
           <Button
-            onClick={confirmDelegate}
-            className="lightGreenButton__fullMono mx-auto"
             text="Confirm"
+            style="primary"
+            icon={<ArrowRight />}
+            appendIcon
+            onClick={confirmDelegate}
           />
         </Col>
       </Row>

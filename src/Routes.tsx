@@ -4,12 +4,14 @@ const SendTX = React.lazy(() => import("./pages/sendTX/SendTX"));
 const Stake = React.lazy(() => import("./pages/stake/Stake"));
 const SplashScreen = React.lazy(() => import("./pages/SplashScreen"));
 const Login = React.lazy(() => import("./pages/Login"));
-// const Register = React.lazy(() => import("./pages/registration/Registration"));
 const LedgerLogin = React.lazy(() => import("./pages/LedgerLogin"));
 const SignMessage = React.lazy(() => import("./pages/signMessage/SignMessage"));
 const NotFound = React.lazy(() => import("./pages/404"));
 const VerifyMessage = React.lazy(() => import("./pages/VerifyMessage"));
 const Mnemonic = React.lazy(() => import("./pages/mnemonic/Mnemonic"));
+const LoginSelection = React.lazy(
+  () => import("./pages/loginSelection/LoginSelection")
+);
 import { AuthenticatedRoute } from "./components/routes/AuthenticatedRoute";
 import { UnauthenticatedRoute } from "./components/routes/UnauthenticatedRoute";
 import { INetworkData } from "./types/NetworkData";
@@ -82,17 +84,17 @@ const Routes = (props: IRoutesProps) => {
           isAuthenticated={!!props.sessionData.address}
         />
         <UnauthenticatedRoute
+          path="/login-selection"
+          Component={LoginSelection}
+          appProps={props}
+          isAuthenticated={!!props.sessionData.address}
+        />
+        <UnauthenticatedRoute
           path="/"
           Component={SplashScreen}
           appProps={props}
           isAuthenticated={!!props.sessionData.address}
         />
-        {/*<Route path="/register">
-          <Entropy />
-        </Route>*/}
-        {/*<Route path="/verify">
-          <VerifyMnemonic />
-        </Route>*/}
         <Route component={NotFound} />
       </Switch>
     </Suspense>

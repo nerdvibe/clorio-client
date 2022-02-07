@@ -2,13 +2,19 @@ import Button from "../Button";
 import Input from "../input/Input";
 import { readSession } from "../../../tools/db";
 import { useEffect, useState } from "react";
+import { ArrowRight } from "react-feather";
 
 interface IProps {
   proceedHandler: () => void;
   setCustomNonce: (customNonce: number) => void;
+  nonce: number;
 }
 
-export const CustomNonce = ({ proceedHandler, setCustomNonce }: IProps) => {
+export const CustomNonce = ({
+  proceedHandler,
+  setCustomNonce,
+  nonce,
+}: IProps) => {
   const [address, setAddress] = useState("");
   useEffect(() => {
     const readAndSetSession = async () => {
@@ -20,12 +26,24 @@ export const CustomNonce = ({ proceedHandler, setCustomNonce }: IProps) => {
     readAndSetSession();
   });
 
+  /**
+   * Checks if the mnemonic contains 12 words
+   * @returns boolean
+   */
+  const disableButton = () => {
+    return isNaN(+nonce);
+  };
+
   return (
-    <div className="mx-auto">
-      <h2>Insert nonce</h2>
-      <div className="v-spacer" />
+    <div>
+      <div className="w-100">
+        <div className="flex flex-col flex-vertical-center">
+          <h1 className="mb-0">Insert nonce </h1>
+          <div className="divider w-100" />
+        </div>
+      </div>
       <div className="">
-        <h5 className="align-center mx-auto">
+        <p className="mx-auto">
           We are not able to fetch the nonce from the blockchain. <br />
           Please insert the nonce manually, which can be <br />
           found on the explorer by clicking
@@ -39,17 +57,19 @@ export const CustomNonce = ({ proceedHandler, setCustomNonce }: IProps) => {
           </a>
           <br />
           If the nonce is &ldquo;none&ldquo; insert 0.
-        </h5>
+        </p>
         <div className="v-spacer" />
         <Input
           type="number"
           inputHandler={(e) => setCustomNonce(+e.target.value)}
         />
-        <div className="v-spacer" />
         <Button
-          className="lightGreenButton__fullMono mx-auto"
-          onClick={proceedHandler}
           text="Proceed"
+          disabled={disableButton()}
+          onClick={proceedHandler}
+          style="primary"
+          icon={<ArrowRight />}
+          appendIcon
         />
       </div>
     </div>

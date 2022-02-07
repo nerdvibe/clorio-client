@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Sidebar from "./components/UI/sidebar/Sidebar";
-import { Col, Container, Row } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import Routes from "./Routes";
 import {
   clearSession,
@@ -94,9 +94,9 @@ const Layout = () => {
     <div>
       <Container fluid>
         <TermsAndConditions />
-        <Row>
+        <div className="flex">
           {sessionData && !isEmptyObject(sessionData) && sessionData.address && (
-            <Col md={3} lg={3} xl={2} id="sidebar-wrapper">
+            <div id="sidebar-wrapper">
               <Sidebar
                 mnemonic={sessionData.mnemonic}
                 toggleLoader={toggleLoader}
@@ -104,10 +104,10 @@ const Layout = () => {
                 clearSessionData={clearSessionData}
               />
               <UserIDUpdater />
-            </Col>
+            </div>
           )}
           {}
-          <Col
+          <div
             className={
               isEmptyObject(sessionData)
                 ? "page-content-wrapper"
@@ -130,8 +130,8 @@ const Layout = () => {
                 </Spinner>
               </BalanceContextProvider>
             </Container>
-          </Col>
-        </Row>
+          </div>
+        </div>
         <Alert />
       </Container>
     </div>

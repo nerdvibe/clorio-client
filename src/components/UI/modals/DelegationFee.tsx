@@ -12,6 +12,7 @@ import {
 import Button from "../Button";
 import Input from "../input/Input";
 import { IEstimatedFee } from "../../../types/Fee";
+import { ArrowLeft, ArrowRight } from "react-feather";
 
 interface IProps {
   proceedHandler: (fee: number) => void;
@@ -21,7 +22,7 @@ interface IProps {
   };
 }
 
-export const DelegationFee = ({ proceedHandler, fees }: IProps) => {
+export const DelegationFee = ({ proceedHandler, fees, closeModal }: IProps) => {
   const averageFee = feeOrDefault(fees?.estimatedFee?.txFees?.average || 0);
   const fastFee = feeOrDefault(fees?.estimatedFee?.txFees?.fast || 0);
   const [fee, setFee] = useState<number>(feeOrDefault(averageFee));
@@ -52,55 +53,70 @@ export const DelegationFee = ({ proceedHandler, fees }: IProps) => {
   };
 
   const highFeeWarningContent = () => (
-    <div>
-      <h2>This transaction fee seems too high</h2>
-      <div className="v-spacer" />
-      <div className="">
-        <h6>
-          Are you sure that you want to pay this transaction with {fee} Mina?{" "}
-          <br />
-          This is just the transaction fee, it&apos;s not the amount that you
-          are going to delegate.
-        </h6>
+    <div className="min-width-500">
+      <div className="flex flex-col flex-vertical-center">
+        <h1 className="text-center mb-0">Fee too high</h1>
+        <div className="divider" />
       </div>
-      <div className="v-spacer" />
-      <div className="v-spacer" />
-      <div className="half-width-block">
-        <Button
-          className="lightGreenButton__fullMono mx-auto"
-          onClick={() => setHighFeeWarning(false)}
-          text="Cancel"
-        />
-      </div>
-      <Button
-        className="link-button mx-auto small-proceed-button"
-        onClick={() => proceedButtonHandler(true)}
-        text="Proceed"
-      />
+      <p className="text-center">
+        Are you sure that you want to pay
+        <br /> this transaction with <strong>{fee}</strong> Mina? <br />
+      </p>
+      <p className="text-center mb-4">
+        This is just the transaction fee, it&apos;s not <br /> the amount that
+        you are going to delegate.
+      </p>
+      <Row>
+        <Col xs={6}>
+          <Button
+            className="big-icon-button"
+            text="Cancel"
+            onClick={() => setHighFeeWarning(false)}
+          />
+        </Col>
+        <Col xs={6}>
+          <Button
+            text="Proceed"
+            style="primary"
+            icon={<ArrowRight />}
+            appendIcon
+            onClick={() => proceedButtonHandler(true)}
+          />
+        </Col>
+      </Row>
     </div>
   );
 
   return highFeeWarning ? (
     highFeeWarningContent()
   ) : (
-    <div>
-      <h2>Insert a Fee</h2>
-      <div className="v-spacer" />
-      <div className="half-width-block">
+    <div className="min-width-500">
+      <div className="w-100">
+        <div className="flex flex-col flex-vertical-center">
+          <h1 className="mb-0">Insert a Fee </h1>
+          <p className="text-center mt-1 mb-1">
+            Select a fee for the delegation transaction
+          </p>
+          <div className="divider w-100" />
+        </div>
+      </div>
+      <div className="w-75 mx-auto">
         <Row>
-          <Col md={4} className="align-initial">
-            <h3 className="inline-element">Fee</h3>
+          <Col xs={3} className="align-initial">
+            <div className="align-left mt-1 mb-2 label">
+              <strong>Fee</strong>
+            </div>
           </Col>
-          <Col className="fee-label">
+          <Col xs={4} className="fee-label offset-2">
             <Button
-              className="link-button align-end  no-padding"
+              className="orange-text"
               text="Average"
               onClick={() => setFee(averageFee)}
             />
           </Col>
-          <Col className="fee-label">
+          <Col xs={3} className="fee-label">
             <Button
-              className="link-button align-end  no-padding"
+              className="orange-text"
               text="Fast"
               onClick={() => setFee(fastFee)}
             />
@@ -112,13 +128,26 @@ export const DelegationFee = ({ proceedHandler, fees }: IProps) => {
           inputHandler={(e) => setFee(+e.target.value)}
           type="number"
         />
+        <Row>
+          <Col xs={6}>
+            <Button
+              className="big-icon-button"
+              icon={<ArrowLeft />}
+              text="Cancel"
+              onClick={closeModal}
+            />
+          </Col>
+          <Col xs={6}>
+            <Button
+              text="Proceed"
+              style="primary"
+              icon={<ArrowRight />}
+              appendIcon
+              onClick={() => proceedButtonHandler()}
+            />
+          </Col>
+        </Row>
       </div>
-      <div className="v-spacer" />
-      <Button
-        className="lightGreenButton__fullMono mx-auto"
-        onClick={() => proceedButtonHandler()}
-        text="Proceed"
-      />
     </div>
   );
 };
