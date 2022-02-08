@@ -17,7 +17,7 @@ const LedgerConfirmAddress = ({ publicKey, setSession }: IProps) => {
         <h5 className="w-100 pl-3 selectable-text mb-0 px-2">{publicKey}</h5>
       </div>
       <p className="full-width-align-center my-4">
-        Please confirm your address on ledger{" "}
+        Please confirm your address on the Ledger
       </p>
       <Row className="mt-4">
         <Col xs={6}>

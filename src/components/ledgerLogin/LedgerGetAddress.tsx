@@ -81,9 +81,7 @@ const LedgerGetAddress = ({ accountNumber, toggleLoader }: IProps) => {
           <div className="w-100">
             <div className="flex flex-col flex-vertical-center">
               <h1>Login</h1>
-              <p className="text-center mt-1">
-                Let&apos;s verify the your address
-              </p>
+              <p className="text-center mt-1">Let&apos;s verify the address</p>
               <div className="divider w-100" />
             </div>
           </div>
