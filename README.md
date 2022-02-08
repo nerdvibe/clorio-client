@@ -1,7 +1,7 @@
 # ~Clorio wallet | A Mina Protocol wallet
 
 <p align="center"> 
-<img height="300" src="https://westake.club/assets/cloriobanner_low.jpg">
+<img height="300" src="https://clor.io/index_files/meta.png">
 </p>
 
 ## Introduction
