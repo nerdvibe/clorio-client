@@ -21,12 +21,6 @@ Run electron:
 
 You can try the hosted version of Clorio wallet on [mainnet](https://mainnet.clor.io) or [devnet](https://devnet.clor.io).
 
-## Todos:
-
-- Offline support
-- Mnemonic seeds
-- Create public roadmap
-
 ## User docs
 
 User docs are available on https://docs.clor.io/
@@ -47,7 +41,7 @@ We are a small team developing blockchain ecosystems. If you are enjoying Clorio
 
 ## License
 
-Copyright 2021 Carbonara.
+Copyright 2021-2022 Carbonara.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License. Furthermore you may not remove attributions of WeStake.Club or Carbonara.
