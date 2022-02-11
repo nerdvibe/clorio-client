@@ -55,6 +55,7 @@ const VerifyForm = ({ verifyMessage }: IProps) => {
           >
             <span className="icon" />
             <textarea
+              className="selectable-text"
               name="message"
               id="message"
               onChange={(e) => setMessage(e.currentTarget.value)}
@@ -89,6 +90,7 @@ const VerifyForm = ({ verifyMessage }: IProps) => {
                 data-validate="Name is required"
               >
                 <textarea
+                  className="selectable-text"
                   name="field"
                   id="field"
                   onChange={(e) => setField(e.currentTarget.value)}
@@ -103,6 +105,7 @@ const VerifyForm = ({ verifyMessage }: IProps) => {
               </h5>
               <div className="wrap-input1 validate-input">
                 <textarea
+                  className="selectable-text"
                   name="scalar"
                   id="scalar"
                   onChange={(e) => setScalar(e.currentTarget.value)}

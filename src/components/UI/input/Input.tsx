@@ -34,7 +34,7 @@ const Input = ({
     >
       <span className="icon" />
       <input
-        className={`input1 ${hidden && "show-icon"}`}
+        className={`input1 selectable-text ${hidden && "show-icon"}`}
         type={inputTypeHandler()}
         value={value}
         name="name"

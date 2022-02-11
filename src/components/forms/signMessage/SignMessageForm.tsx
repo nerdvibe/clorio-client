@@ -112,6 +112,7 @@ const SignMessageForm = () => {
           >
             <span className="icon" />
             <textarea
+              className="selectable-text"
               name="message"
               id="message"
               onChange={(e: any) => setMessage(e.currentTarget.value)}
