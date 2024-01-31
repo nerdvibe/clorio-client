@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es6",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "baseUrl": "./src",
+    "paths": {
+      "@modules/*": ["modules/*"],
+      "@db/*": ["db/*"]
+    },
+    "typeRoots": ["./node_modules/@types", "./src/types"]
+  },
+  "lib": ["es2015"],
+  "include": ["src"]
+}
