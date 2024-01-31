@@ -73,6 +73,7 @@ typings/
 .env.devnet
 .env.development
 .env.test
+.env
 
 dist
 .idea/
