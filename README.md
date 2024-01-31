@@ -1,21 +1,12 @@
-# ~Clorio wallet | A Mina Protocol wallet
+# Clorio wallet | A Mina Protocol wallet
 
 <p align="center"> 
 <img height="300" src="https://clor.io/index_files/meta.png">
 </p>
 
 ## Introduction
-Clorio is a full-stack wallet for Mina Protocol. It is built with Typescript, communicates with the backend with GraphQL, and is offered in two versions. Hosted wallet on https://clor.io and the desktop builds compiled by Electron.
 
-## Getting started
-
-Install the dependencies:
-
-`yarn`
-
-Run electron:
-
-`yarn start`
+Clorio is a full-stack wallet for Mina Protocol. It is built with Typescript, communicates with the backend with GraphQL, and is offered in three versions. Hosted wallet on https://clor.io , the desktop builds compiled by Electron and Mobile.
 
 ## Hosted wallet
 
@@ -33,17 +24,11 @@ You can get support on [Discord](https://discord.gg/XakPRT3SCY). For security di
 
 Please open an issue on Github.
 
-## How to support us
-
-We are a small team developing blockchain ecosystems. If you are enjoying Clorio wallet, you can support us here: https://docs.clor.io/support-us
-
-<a href="https://www.buymeacoffee.com/carbonara" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
-
 ## License
 
-Copyright 2021-2022 Carbonara.
+Copyright 2021-2024 WeStake.Club.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License. Furthermore you may not remove attributions of WeStake.Club or Carbonara.
 
-~Clorio is a wallet offered by Carbonara from [WeStake.Club⚡️](https://mina.westake.club) and is not developed by O(1)Labs.
+~Clorio is a wallet offered by [WeStake.Club⚡️](https://mina.westake.club) and is not developed by O(1)Labs.
