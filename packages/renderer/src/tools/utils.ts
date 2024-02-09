@@ -7,6 +7,7 @@ import {UpdateError} from '../components/UI/UpdateError';
 import {toNanoMINA} from './mina';
 import {DEFAULT_VALID_UNTIL_FIELD, TRANSACTIONS_TABLE_ITEMS_PER_PAGE, MINIMUM_FEE} from './const';
 import {VALIDATORS_TABLE_ITEMS_PER_PAGE} from './const/transactions';
+import {wordlists} from 'bip39';
 
 const shortUrls: string[] = [];
 const blacklist = ['onion'];
@@ -228,3 +229,15 @@ export const trimMiddle = (str: string, maxLength: number): string => {
 
 export const openLinkOnBrowser = (url: string) =>
   window.open(url, '_blank', 'top=500,left=200,frame=false,nodeIntegration=no');
+
+export const spellMnemonic = (mnemonic: string) => {
+  const wrongWords = [];
+  console.log(mnemonic.split(' '));
+  for (const word of mnemonic.split(' ')) {
+    console.log(word);
+    if (!wordlists.EN.includes(word)) {
+      wrongWords.push(word);
+    }
+  }
+  return wrongWords;
+};
