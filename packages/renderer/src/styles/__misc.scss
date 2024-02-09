@@ -379,6 +379,7 @@ textarea:focus {
 .show-icon {
   width: 100%;
   display: inline-block;
+  padding-right: 50px;
 }
 
 .show-hide-icon {
@@ -386,7 +387,7 @@ textarea:focus {
   position: absolute;
   display: inline-block;
   right: 0;
-  top: 7px;
+  top: 8px;
   cursor: pointer;
 }
 
@@ -1072,6 +1073,17 @@ input[type="number"] {
 .higlight-on-hover:hover {
   transition: 0.3s;
   background-color: #6666665f;
+}
+
+.store-session-box {
+  display: flex;
+  flex-direction: column;
+  height: 70px;
+  gap: 15px;
+  justify-content: center;
+  .error {
+    color: $red !important;
+  }
 }
 
 .checkbox-container {

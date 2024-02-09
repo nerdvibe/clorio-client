@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@types/append-query": "^2.0.1",
+    "@types/bad-words": "^3.0.3",
     "@types/crypto-js": "^4.1.2",
     "@types/node": "18.18.4",
     "@typescript-eslint/eslint-plugin": "6.7.4",
@@ -141,7 +142,8 @@
     "dmg": {
       "title": "Clorio Wallet",
       "background": "assets/background.png",
-      "contents": [{
+      "contents": [
+        {
           "x": "320",
           "y": "280",
           "type": "file"

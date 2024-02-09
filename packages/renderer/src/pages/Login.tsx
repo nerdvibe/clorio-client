@@ -1,10 +1,10 @@
 import {Link, useNavigate} from 'react-router-dom';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import {useQuery} from '@apollo/client';
 import {toast} from 'react-toastify';
 import {ArrowLeft, ArrowRight} from 'react-feather';
 import isElectron from 'is-electron';
-import {deriveAccount, setPassphrase, storeAccounts, storeSession} from '/@/tools';
+import {deriveAccount, setPassphrase, spellMnemonic, storeAccounts, storeSession} from '/@/tools';
 import {GET_ID} from '/@/graphql/query';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/input/Input';
@@ -23,6 +23,7 @@ function Login({toggleLoader}: IProps) {
   const [privateKey, setPrivateKey] = useState<string>('');
   const [storePassphrase, setStorePassphrase] = useState<boolean>(isElectron());
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [passphraseError, setPassphraseError] = useState<string | null>(null);
   const navigate = useNavigate();
   const {
     data: userIdData,
@@ -96,8 +97,37 @@ function Login({toggleLoader}: IProps) {
    * @param {event} e Input text
    */
   const inputHandler = (e: React.FormEvent<HTMLInputElement>) => {
-    setPrivateKey(e.currentTarget.value);
+    const value = e.currentTarget.value.trim();
+    setPrivateKey(value);
+    debouncedVerifyMnemonicSpell(value);
   };
+
+  const debounce = (func: (...args: any[]) => void, delay: number) => {
+    let timeoutId: NodeJS.Timeout;
+    return (...args: any[]) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  };
+
+  const verifyMnemonicSpell = useCallback((mnemonic: string) => {
+    if (mnemonic.split(' ').length > 2) {
+      const mnemonicErrors = spellMnemonic(mnemonic);
+      if (mnemonicErrors.length > 0) {
+        setPassphraseError(`You misspelled the following words: ${mnemonicErrors.join(', ')}`);
+      } else {
+        setPassphraseError(null);
+      }
+    } else {
+      if (passphraseError) {
+        setPassphraseError(null);
+      }
+    }
+  }, []);
+
+  const debouncedVerifyMnemonicSpell = useCallback(debounce(verifyMnemonicSpell, 300), []);
 
   /**
    * Use MinaSDK to check if private key from input is valid
@@ -145,11 +175,11 @@ function Login({toggleLoader}: IProps) {
 
   return (
     <div className="full-screen-container-center animate__animated animate__fadeIn">
-      <div className="homepage-card glass-card flex flex-col flex-vertical-center">
+      <div className="homepage-card glass-card flex-vertical-center flex flex-col">
         <div className="w-100">
-          <div className="flex flex-col flex-vertical-center">
+          <div className="flex-vertical-center flex flex-col">
             <h1>Login</h1>
-            <p className="text-center mt-1">Sign in with your passphrase or private key</p>
+            <p className="mt-1 text-center">Sign in with your passphrase or private key</p>
             <div className="divider w-100" />
           </div>
         </div>
@@ -169,7 +199,8 @@ function Login({toggleLoader}: IProps) {
             hidden
             type="text"
           />
-          <div>
+          <div className="store-session-box">
+            {passphraseError && <div className="error">{passphraseError}</div>}
             <span
               className="checkbox-container"
               data-tip={
@@ -190,7 +221,7 @@ function Login({toggleLoader}: IProps) {
               />
               {/* TODO: Adjust tooltip */}
               <label
-                className="ml-2 checkbox-label"
+                className="checkbox-label ml-2"
                 htmlFor="storePassphrase"
               >
                 Store session
