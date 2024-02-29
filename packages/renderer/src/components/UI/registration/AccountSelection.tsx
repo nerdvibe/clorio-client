@@ -17,7 +17,7 @@ const AccountSelection = ({generateKeypair, setKeypair, goToNext, selectedKeypai
     return !selectedKeypair?.privateKey;
   };
   return (
-    <div className="animate__animated animate__fadeIn glass-card py-5 px-5">
+    <div className="animate__animated animate__fadeIn glass-card ">
       <div className="w-100">
         <div className="flex flex-col flex-vertical-center">
           <h1>Create new wallet</h1>
@@ -26,7 +26,7 @@ const AccountSelection = ({generateKeypair, setKeypair, goToNext, selectedKeypai
         </div>
       </div>
       <div className="animate__animated animate__fadeIn ">
-        <div className="flex flex-row mt-4 gap-4">
+        <div className="flex flex-row mt-4 gap-4 sm-flex-wrap">
           <AccountAvatar
             setKeypair={setKeypair}
             generateKeypair={generateKeypair}
@@ -58,7 +58,7 @@ const AccountSelection = ({generateKeypair, setKeypair, goToNext, selectedKeypai
             selectedKeypair={selectedKeypair}
           />
         </div>
-        <div className="flex flex-row mt-5 full-width">
+        <div className="flex flex-row mt-5 full-width sm-flex-wrap-reverse">
           <div className="half-card py-3">
             <Button
               className="big-icon-button"

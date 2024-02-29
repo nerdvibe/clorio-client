@@ -30,6 +30,10 @@ export const initHtmlElements = () => {
   if (loader) {
     loader.style.display = 'none';
   }
+
+  if (navigator.userAgent.indexOf('Electron') >= 0) {
+    document.getElementById('draggable-bar')?.classList.add('electron');
+  }
 };
 
 /**

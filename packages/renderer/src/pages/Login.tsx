@@ -116,7 +116,9 @@ function Login({toggleLoader}: IProps) {
     if (mnemonic.split(' ').length > 2) {
       const mnemonicErrors = spellMnemonic(mnemonic);
       if (mnemonicErrors.length > 0) {
-        setPassphraseError(`You misspelled the following words: ${mnemonicErrors.join(', ')}`);
+        setPassphraseError(
+          `You misspelled the following words: ${mnemonicErrors.join(', ')}`.slice(0, 200),
+        );
       } else {
         setPassphraseError(null);
       }
@@ -126,7 +128,7 @@ function Login({toggleLoader}: IProps) {
       }
     }
   }, []);
-
+  // Debounce the verifyMnemonicSpell function to prevent rapid, unnecessary executions
   const debouncedVerifyMnemonicSpell = useCallback(debounce(verifyMnemonicSpell, 300), []);
 
   /**
@@ -192,7 +194,7 @@ function Login({toggleLoader}: IProps) {
             Create one
           </Link>
         </div>
-        <div className="min-height-200 mt-3">
+        <div className="min-height-200 mt-3 w-100">
           <Input
             inputHandler={inputHandler}
             placeholder="Enter here"
@@ -228,7 +230,7 @@ function Login({toggleLoader}: IProps) {
               </label>
             </span>
           </div>
-          <div className="flex flex-row">
+          <div className="flex flex-row sm-flex-col sm-flex-wrap-reverse">
             <div className="half-card py-3">
               <Button
                 className="big-icon-button"
@@ -259,5 +261,4 @@ function Login({toggleLoader}: IProps) {
     </div>
   );
 }
-
 export default Login;

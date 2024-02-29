@@ -6,7 +6,7 @@ const Homepage = () => {
   return (
     <div className="full-screen-container-center">
       <div className="homepage-card glass-card flex md-flex-col">
-        <div className="half-card">
+        <div className="half-card hero-banner">
           <div className="flex flex-col">
             <Logo big />
             <p className="text-center mt-3">
@@ -14,7 +14,7 @@ const Homepage = () => {
             </p>
           </div>
         </div>
-        <div className="half-card flex flex-col">
+        <div className="half-card flex flex-col hero-buttons">
           <Link to={'register'}>
             <div className="button primary">
               <span className="button-helper"></span>
@@ -29,7 +29,7 @@ const Homepage = () => {
             </div>
           </Link>
         </div>
-        <div className="mt-4">
+        <div className="mt-4 footer-container">
           <Footer />
         </div>
       </div>

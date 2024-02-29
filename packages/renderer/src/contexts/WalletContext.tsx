@@ -1,4 +1,4 @@
-import React, {ReactNode, createContext, useContext, useState} from 'react';
+import {ReactNode, createContext, useContext, useState} from 'react';
 
 const WalletContext = createContext(null); // Remove the default value
 
@@ -12,7 +12,7 @@ export const WalletProvider = ({children}: {children: ReactNode}) => {
     accountNumber: 0,
   });
 
-  const updateWallet = newWallet => {
+  const updateWallet = (newWallet?: any) => {
     setWallet(newWallet);
   };
 

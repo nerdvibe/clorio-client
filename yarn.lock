@@ -4641,6 +4641,11 @@ react-transition-group@^4.4.5:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
+react-truncate-inside@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-truncate-inside/-/react-truncate-inside-1.0.3.tgz#43046536f0b443bed35444d23b690905508aad25"
+  integrity sha512-XwQ+9ayvygHI4WjJwaTDYFiYLrLMbHiBc5VdhWuDrCAm8MWFT6YR/+BCgq5JUwyuISYleJyZ0yCAGbXMhGr9hw==
+
 react@^18.2.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react/-/react-18.2.0.tgz"

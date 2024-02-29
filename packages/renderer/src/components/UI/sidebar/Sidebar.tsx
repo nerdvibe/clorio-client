@@ -20,9 +20,16 @@ interface IProps {
   network?: INetworkData;
   clearSessionData: () => void;
   toggleLoader: (state?: boolean) => void;
+  isAuthenticated?: boolean;
 }
 
-export const CustomSidebar = ({network, mnemonic, clearSessionData, toggleLoader}: IProps) => {
+export const CustomSidebar = ({
+  network,
+  mnemonic,
+  clearSessionData,
+  toggleLoader,
+  isAuthenticated,
+}: IProps) => {
   const [toggled, setToggled] = useState(false);
   const {updateWallet} = useWallet();
 
@@ -60,7 +67,7 @@ export const CustomSidebar = ({network, mnemonic, clearSessionData, toggleLoader
   };
 
   const root = createRoot(document.getElementById('draggable-bar'));
-  root.render(<SidebarToggle setToggled={setToggled} />);
+  isAuthenticated && root.render(<SidebarToggle setToggled={setToggled} />);
 
   return (
     <div>

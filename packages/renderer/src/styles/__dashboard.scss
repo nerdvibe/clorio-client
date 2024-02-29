@@ -53,8 +53,25 @@
 }
 
 @media screen and (max-width: 768px) {
-  #sidebar-wrapper{
+  #sidebar-wrapper {
     width: 0px;
     min-width: 0px;
+  }
+}
+@media screen and (max-width: 600px) {
+  .container-fluid {
+    margin: 0 !important;
+  }
+
+  .half-card {
+    .non-selectable-text {
+      width: 80%;
+      margin: 0 auto !important;
+    }
+  }
+
+  .hero-buttons{
+    margin-top: 50px;
+    height: auto !important;
   }
 }
