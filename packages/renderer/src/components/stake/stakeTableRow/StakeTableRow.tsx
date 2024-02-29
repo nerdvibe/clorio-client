@@ -1,7 +1,9 @@
+import Truncate from 'react-truncate-inside/es';
 import Avatar from '../../../tools/avatar/avatar';
 import Button from '../../UI/Button';
 import StakeTableValue from './StakeTableValue';
 import type {IValidatorData} from './ValidatorDataTypes';
+import {useEffect, useRef, useState} from 'react';
 
 interface IProps {
   index: number;
@@ -19,6 +21,24 @@ const StakeTableRow = ({element, index, toggleModal, isDelegating, loading}: IPr
       '~Clorio is built by Carbonara. <br>Earn rewards and support Clorio <br>by delegating to Carbonara ❤️';
     boostedClassName = 'is-boosted';
   }
+  const [width, setWidth] = useState(0);
+  const textRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (textRef.current) {
+      const observer = new ResizeObserver(entries => {
+        setWidth(entries[0].contentRect.width - 30);
+      });
+
+      observer.observe(textRef.current);
+
+      return () => {
+        if (textRef.current) {
+          observer.unobserve(textRef.current);
+        }
+      };
+    }
+  }, []);
 
   const delegateButton = () => {
     const buttonHandler = !isDelegating ? () => toggleModal(element) : () => null;
@@ -64,7 +84,13 @@ const StakeTableRow = ({element, index, toggleModal, isDelegating, loading}: IPr
           </div>
         }
         header="Validator"
-        text={element.name}
+        ref={textRef}
+        text={
+          <Truncate
+            text={element?.name || ''}
+            width={width}
+          />
+        }
         className="table-element"
       />
       <StakeTableValue

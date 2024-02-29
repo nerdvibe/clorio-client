@@ -1,19 +1,23 @@
 import {Row, Col} from 'react-bootstrap';
 // @ts-ignore Missing interface
-import React from 'react';
+import React, {LegacyRef, ReactNode, forwardRef} from 'react';
 
 interface IProps {
   avatar?: React.ReactNode;
   className?: string;
   header: string;
-  text?: string;
+  text?: string | ReactNode;
   website?: string;
 }
 
-const StakeTableValue = ({avatar, className, header, text, website}: IProps) => {
+const StakeTableValue = forwardRef(function StakeTableValue(props: IProps, ref) {
+  const {avatar, className, header, text, website} = props;
   if (avatar) {
     return (
-      <td className={className}>
+      <td
+        className={className}
+        ref={ref as LegacyRef<HTMLTableCellElement>}
+      >
         <div>
           <Row className="stake-row-value">
             <Col
@@ -33,7 +37,10 @@ const StakeTableValue = ({avatar, className, header, text, website}: IProps) => 
   }
   if (header.toLowerCase() === 'info') {
     return (
-      <td className={className}>
+      <td
+        className={className}
+        ref={ref as LegacyRef<HTMLTableCellElement>}
+      >
         <div>
           <Row className="stake-row-value">
             <Col
@@ -58,7 +65,10 @@ const StakeTableValue = ({avatar, className, header, text, website}: IProps) => 
   }
 
   return (
-    <td className={className}>
+    <td
+      className={className}
+      ref={ref as LegacyRef<HTMLTableCellElement>}
+    >
       <div>
         <Row className="stake-row-value">
           <Col
@@ -72,6 +82,6 @@ const StakeTableValue = ({avatar, className, header, text, website}: IProps) => 
       </div>
     </td>
   );
-};
+});
 
 export default StakeTableValue;
