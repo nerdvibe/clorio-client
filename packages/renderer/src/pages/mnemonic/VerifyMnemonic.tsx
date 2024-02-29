@@ -85,7 +85,7 @@ export function VerifyMnemonic({
   };
 
   return (
-    <div className="animate__animated animate__fadeIn glass-card registration-card">
+    <div className="animate__animated animate__fadeIn glass-card registration-card justify-center">
       <div className="">
         <div className="w-100">
           <div className="flex flex-col flex-vertical-center">

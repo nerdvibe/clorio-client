@@ -51,11 +51,7 @@ export default function NetworkSettings({
         show={showModal}
         close={() => setShowModal(false)}
       >
-        <div
-          style={{
-            minWidth: '400px',
-          }}
-        >
+        <div className="settings-modal-container">
           <h1 className="w-100 text-center">Settings</h1>
           <p className="w-100 text-center small">Current version: 2.0.0</p>
           <hr />

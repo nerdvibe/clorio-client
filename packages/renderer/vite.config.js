@@ -69,7 +69,7 @@ const config = {
     },
   },
   optimizeDeps: {
-    exclude: ['react-content-loader'],
+    exclude: ['react-content-loader','react-truncate-inside'],
   },
 };
 

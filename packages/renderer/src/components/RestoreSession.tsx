@@ -9,7 +9,7 @@ import {toast} from 'react-toastify';
 import {Col, Row} from 'react-bootstrap';
 import {clearSession} from '../tools';
 import {useNavigate} from 'react-router-dom';
-import { useWallet } from '../contexts/WalletContext';
+import {useWallet} from '../contexts/WalletContext';
 
 export default function RestoreSession({onLogin}: {onLogin: (privateKey: string) => void}) {
   const [password, setPassword] = useState('');
@@ -43,13 +43,15 @@ export default function RestoreSession({onLogin}: {onLogin: (privateKey: string)
   return (
     <div className="full-screen-container-center">
       <div className="homepage-card glass-card flex md-flex-col">
-        <div className="flex flex-col">
-          <div className="flex flex-col">
-            <Logo big />
-            <p className="text-center mt-3">Access the power of the Mina Protocol Blockchain.</p>
+        <div className="">
+          <div className="half-card hero-banner mx-auto">
+            <div className="flex flex-col">
+              <Logo big />
+              <p className="text-center mt-3">Access the power of the Mina Protocol Blockchain.</p>
+            </div>
           </div>
           <div className="v-spacer" />
-          <div className="half-card flex flex-col w-100">
+          <div className="half-card flex flex-col w-100 h-auto">
             <p className="text-center mt-3">Insert your password to restore the session</p>
             <Input
               type="text"
@@ -60,15 +62,21 @@ export default function RestoreSession({onLogin}: {onLogin: (privateKey: string)
               }}
             />
             <div className="v-spacer" />
-            <Row>
-              <Col>
+            <div className="flex flex-row sm-flex-col sm-flex-wrap-reverse gap-4">
+              <Col
+                xs={12}
+                sm={6}
+              >
                 <Button
                   className="big-icon-button"
                   text="Logout"
                   onClick={onLogout}
                 />
               </Col>
-              <Col>
+              <Col
+                xs={12}
+                sm={6}
+              >
                 <Button
                   onClick={onSubmitHandler}
                   text="Confirm"
@@ -78,11 +86,11 @@ export default function RestoreSession({onLogin}: {onLogin: (privateKey: string)
                   appendIcon
                 />
               </Col>
-            </Row>
+            </div>
           </div>
-        </div>
-        <div className="mt-4">
-          <Footer />
+          <div className="mt-4">
+            <Footer />
+          </div>
         </div>
       </div>
     </div>

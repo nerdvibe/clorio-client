@@ -1,9 +1,55 @@
 // @ts-nocheck
-import {app, BrowserWindow, ipcMain} from 'electron';
+import {app, BrowserWindow, ipcMain, Menu} from 'electron';
 import * as path from 'node:path';
 import {join, resolve} from 'node:path';
 const {MinaLedgerJS} = require('mina-ledger-js');
 const TransportNodeHid = require('@ledgerhq/hw-transport-node-hid-singleton');
+
+const template = [
+  {
+    label: 'Edit',
+    submenu: [
+      {role: 'undo'},
+      {role: 'redo'},
+      {type: 'separator'},
+      {role: 'cut'},
+      {role: 'copy'},
+      {role: 'paste'},
+    ],
+  },
+  {
+    label: 'View',
+    submenu: [
+      {role: 'reload'},
+      {role: 'forcereload'},
+      {type: 'separator'},
+      {role: 'resetzoom'},
+      {role: 'zoomin'},
+      {role: 'zoomout'},
+      {type: 'separator'},
+      {role: 'togglefullscreen'},
+    ],
+  },
+  {
+    label: 'Help',
+    submenu: [
+      {
+        label: 'Docs',
+        click: async () => {
+          const {shell} = require('electron');
+          await shell.openExternal('https://docs.clor.io/');
+        },
+      },
+      {
+        label: 'Discord',
+        click: async () => {
+          const {shell} = require('electron');
+          await shell.openExternal('https://discord.com/invite/s3tsT6MFE6');
+        },
+      },
+    ],
+  },
+];
 
 async function createWindow() {
   const browserWindow = new BrowserWindow({
@@ -18,12 +64,13 @@ async function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      devTools: false,
+      // devTools: false,
       sandbox: false, // Sandbox disabled because the demo of preload script depend on the Node.js api
       webviewTag: false, // The webview tag is not recommended. Consider alternatives like an iframe or Electron's BrowserView. @see https://www.electronjs.org/docs/latest/api/webview-tag#warning
       preload: join(app.getAppPath(), 'packages/preload/dist/index.cjs'),
     },
   });
+  browserWindow.openDevTools();
   /**
    * If the 'show' property of the BrowserWindow's constructor is omitted from the initialization options,
    * it then defaults to 'true'. This can cause flickering as the window loads the html content,
@@ -60,6 +107,8 @@ async function createWindow() {
      */
     await browserWindow.loadFile(resolve(__dirname, '../../renderer/dist/index.html'));
   }
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
 
   return browserWindow;
 }

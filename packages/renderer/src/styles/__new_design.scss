@@ -84,6 +84,10 @@ h6 {
   height: 100%;
 }
 
+.sm-flex-col {
+  flex-direction: column !important;
+}
+
 .flex-vertical-center {
   align-items: center;
 }
@@ -93,11 +97,11 @@ h6 {
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 50px 0px;
 }
 
-.disabled-glass-card{
+.disabled-glass-card {
   background: rgba(255, 255, 255, 0.02);
-  
 }
 
 .glass-card-blur {
@@ -306,7 +310,7 @@ p {
 
 .primary {
   min-width: 42px;
-  height: 42px;
+  min-height: 42px;
   padding-left: 8px;
   padding-right: 8px;
   line-height: 42px;
@@ -352,6 +356,11 @@ p {
   min-width: 290px;
 }
 
+.balance-avatar {
+  min-width: 50px;
+  max-width: 100px;
+}
+
 @media screen and (max-width: 850px) {
   .md-flex-col {
     flex-direction: column !important;
@@ -366,6 +375,22 @@ p {
   }
 }
 
+.justify-center {
+  justify-content: center !important;
+}
+
+.settings-modal-container {
+  min-width: 400px;
+}
+
+.h-auto {
+  height: auto;
+}
+
+.verify-message-form {
+  flex-direction: row;
+}
+
 @media screen and (max-width: 600px) {
   .homepage-card {
     height: 100vh;
@@ -373,5 +398,84 @@ p {
     top: 0;
     padding: 20%;
     position: fixed;
+  }
+
+  .glass-card {
+    width: 100%;
+    padding: 0;
+    padding: 20px 5%;
+    position: fixed;
+    top: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
+  }
+
+  .settings-modal-container {
+    min-width: auto;
+  }
+
+  .big-logo {
+    width: 50%;
+  }
+
+  .half-card {
+    min-width: auto;
+  }
+
+  .sm-flex-wrap {
+    flex-wrap: wrap;
+  }
+
+  .sm-flex-wrap-reverse {
+    flex-wrap: wrap-reverse !important;
+  }
+
+  .button-animation {
+    font-size: 0.9rem;
+  }
+
+  .button-row {
+    display: flex;
+    gap: 20px;
+  }
+
+  .container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .footer-text {
+    height: 100px;
+  }
+
+  h5 {
+    word-wrap: break-word;
+    font-size: 1rem !important;
+  }
+
+  .authenticated-view {
+    .glass-card {
+      position: static;
+    }
+  }
+
+  .verify-message-form {
+    flex-direction: column;
+  }
+
+  // .small-avatar-balance {
+  //   width: 50px;
+  //   position: abs;
+  //   margin-top: -50px;
+  //   z-index: 999999;
+  // }
+}
+
+@media screen and (max-height: 680px) {
+  .registration-card {
+    justify-content: start;
   }
 }

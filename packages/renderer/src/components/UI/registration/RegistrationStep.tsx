@@ -36,7 +36,7 @@ const RegisterStep = ({keys, setValidation, goToNext, goBack}: IProps) => {
   return (
     <div
       className={`animate__animated animate__fadeIn glass-card registration-card ${
-        showDetails ? 'py-2 mt-5' : ''
+        showDetails ? 'py-2 ' : ''
       }`}
     >
       <div>
@@ -123,8 +123,11 @@ const RegisterStep = ({keys, setValidation, goToNext, goBack}: IProps) => {
         <div className="mt-1 mb-2"></div>
         <div className="v-spacer hide-small" />
         <div className="half-width-align-center">
-          <Row className="no-print">
-            <Col xs={6}>
+          <div className="row no-print sm-flex-wrap-reverse button-row justify-center">
+            <Col
+              xs={12}
+              sm={6}
+            >
               <Button
                 className="big-icon-button"
                 icon={<ArrowLeft />}
@@ -132,7 +135,10 @@ const RegisterStep = ({keys, setValidation, goToNext, goBack}: IProps) => {
                 onClick={goBack}
               />
             </Col>
-            <Col xs={6}>
+            <Col
+              xs={12}
+              sm={6}
+            >
               <Button
                 onClick={() => {
                   goToNext();
@@ -144,7 +150,7 @@ const RegisterStep = ({keys, setValidation, goToNext, goBack}: IProps) => {
                 appendIcon
               />
             </Col>
-          </Row>
+          </div>
         </div>
       </div>
       {showEncryptionModal && (

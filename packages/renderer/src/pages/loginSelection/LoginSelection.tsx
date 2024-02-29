@@ -15,7 +15,7 @@ function LoginSelection() {
             <div className="divider" />
           </div>
         </div>
-        <div className="w-75 flex flex-row min-height-200">
+        <div className="w-75 flex flex-row min-height-200 sm-flex-col">
           <div className="half-card py-3">
             <Link to="/ledger">
               <div className="big-icon-button">

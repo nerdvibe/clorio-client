@@ -79,7 +79,7 @@ const VerifyForm = ({ verifyMessage }: IProps) => {
               inputHandler={(e) => setAddress(e.currentTarget.value)}
             />
           </div>
-          <Row>
+          <div className='flex verify-message-form gap-2'>
             <Col>
               <h5>
                 <strong>Field</strong>
@@ -111,7 +111,7 @@ const VerifyForm = ({ verifyMessage }: IProps) => {
                 />
               </div>
             </Col>
-          </Row>
+          </div>
           <Button
             text="Verify"
             style="primary"
