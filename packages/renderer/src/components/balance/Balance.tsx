@@ -23,6 +23,7 @@ const Balance = () => {
   const bigTextRef = useRef(null);
 
   const [width, setwidth] = useState(0);
+  const [widthBigText, setwidthBigText] = useState(0);
 
   useEffect(() => {
     if (textRef) {
@@ -37,7 +38,7 @@ const Balance = () => {
   useEffect(() => {
     if (bigTextRef) {
       const observer = new ResizeObserver(entries => {
-        setwidth(entries[0].contentRect.width - 150);
+        setwidthBigText(entries[0].contentRect.width - 150);
       });
       observer.observe(bigTextRef.current);
       return () => bigTextRef.current && observer.unobserve(bigTextRef.current);
@@ -148,7 +149,7 @@ const Balance = () => {
                       <h5 className="selectable-text">
                         <Truncate
                           text={address}
-                          width={width || 1000}
+                          width={widthBigText || 1000}
                         />
                       </h5>
                     </div>

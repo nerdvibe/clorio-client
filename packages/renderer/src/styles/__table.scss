@@ -32,7 +32,8 @@ $global-radius: 4px;
   width: 20%;
 }
 
-td,th{
+td,
+th {
   background: none !important;
 }
 
@@ -359,21 +360,12 @@ th {
 
   #rwd-table {
     @extend %responive-tables;
-    @include responive-tables(
-      "Heading Col 1",
-      "Heading Col 2",
-      "Heading Col 3"
-    );
+    @include responive-tables("Heading Col 1", "Heading Col 2", "Heading Col 3");
   }
 
   #rwd-table-large {
     @extend %responive-tables-large;
-    @include responive-tables-large(
-      "",
-      "Heading Col 2",
-      "Heading Col 3",
-      "Heading Col 4"
-    );
+    @include responive-tables-large("", "Heading Col 2", "Heading Col 3", "Heading Col 4");
   }
 }
 
