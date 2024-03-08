@@ -1,27 +1,42 @@
 import Logo from './UI/logo/Logo';
 import Footer from './UI/Footer';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import Input from './UI/input/Input';
 import {ArrowRight} from 'react-feather';
 import Button from './UI/Button';
 import useSecureStorage from '../hooks/useSecureStorage';
 import {toast} from 'react-toastify';
-import {Col, Row} from 'react-bootstrap';
+import {Col} from 'react-bootstrap';
 import {clearSession} from '../tools';
 import {useNavigate} from 'react-router-dom';
 import {useWallet} from '../contexts/WalletContext';
+import {useSetRecoilState} from 'recoil';
+import {configState} from '../store';
 
 export default function RestoreSession({onLogin}: {onLogin: (privateKey: string) => void}) {
   const [password, setPassword] = useState('');
   const {decryptData, clearData} = useSecureStorage();
   const navigate = useNavigate();
   const {updateWallet} = useWallet();
+  const setConfig = useSetRecoilState(configState);
+
+  useEffect(() => {
+    setConfig(prev => ({
+      ...prev,
+      isLocked: true,
+    }));
+  }, []);
 
   const onSubmitHandler = () => {
     try {
       const privateKey = decryptData(password);
       if (privateKey) {
         onLogin(privateKey);
+        setConfig(prev => ({
+          ...prev,
+          isAuthenticated: true,
+          isLocked: false,
+        }));
       } else {
         toast.error('Wrong password');
       }
@@ -35,6 +50,14 @@ export default function RestoreSession({onLogin}: {onLogin: (privateKey: string)
     await updateWallet({});
     clearData();
     navigate('/');
+    setConfig(prev => ({
+      ...prev,
+      isAuthenticated: false,
+      isLocked: false,
+      isUsingMnemonic: false,
+      isLedgerEnabled: false,
+      isUsingPassword: false,
+    }));
   };
 
   const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;

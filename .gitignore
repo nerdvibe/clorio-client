@@ -63,3 +63,5 @@ thumbs.db
 .env.mainnet
 
 build-scripts
+
+packages/mina-provider-master

@@ -1,4 +1,4 @@
-import {ReactNode, useState} from 'react';
+import {ReactNode, useEffect, useState} from 'react';
 import {Lock, LogOut, Settings} from 'react-feather';
 import {ModalContainer} from '../modals';
 import {Form} from 'react-bootstrap';
@@ -7,6 +7,7 @@ import {useNetworkSettingsContext} from '/@/contexts/NetworkContext';
 import {useNavigate} from 'react-router-dom';
 import BackupWallet from '../modals/BackupWallet';
 import {INetworkData} from '/@/types';
+import {getPassphrase} from '/@/tools';
 
 export default function NetworkSettings({
   currentNetwork,
@@ -28,8 +29,15 @@ export default function NetworkSettings({
 
   const [showBackupModal, setShowBackupModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [storedPassphrase, setStoredPassphrase] = useState('');
   const {settings, saveSettings, availableNetworks} = useNetworkSettingsContext();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getPassphrase().then(passphrase => {
+      setStoredPassphrase(passphrase);
+    });
+  }, []);
 
   const networkSelectHandler = (e: any) => {
     saveSettings(availableNetworks[e.target.value]);
@@ -73,7 +81,7 @@ export default function NetworkSettings({
                   className="w-50"
                   aria-label="Select a network"
                   onChange={networkSelectHandler}
-                  defaultValue={settings?.label.toLowerCase()}
+                  defaultValue={settings?.label?.toLowerCase()}
                 >
                   {Object.keys(availableNetworks).map(network => {
                     const networkData = availableNetworks[network];
@@ -89,18 +97,18 @@ export default function NetworkSettings({
                 </Form.Select>
               </div>
             </div>
-            {!hideBackup && (
-              <div className="flex flex-col gap-2">
-                <div className="flex flex-row gap-4 justify-between">
-                  <label className="text-start">Backup wallet</label>
-                  <Button
-                    onClick={toggleBackupModal}
-                    text="Backup"
-                    className="link-button custom-delegate-button purple-text align-end  no-padding"
-                  />
+            {!hideBackup && storedPassphrase && (
+                <div className="flex flex-col gap-2">
+                  <div className="flex flex-row gap-4 justify-between">
+                    <label className="text-start">Backup wallet</label>
+                    <Button
+                      onClick={toggleBackupModal}
+                      text="Backup"
+                      className="link-button custom-delegate-button purple-text align-end  no-padding"
+                    />
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
             <div className="flex flex-row">
               {lockSession && (
                 <div

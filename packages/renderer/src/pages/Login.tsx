@@ -3,7 +3,6 @@ import {useState, useEffect, useCallback} from 'react';
 import {useQuery} from '@apollo/client';
 import {toast} from 'react-toastify';
 import {ArrowLeft, ArrowRight} from 'react-feather';
-import isElectron from 'is-electron';
 import {deriveAccount, setPassphrase, spellMnemonic, storeAccounts, storeSession} from '/@/tools';
 import {GET_ID} from '/@/graphql/query';
 import Button from '../components/UI/Button';
@@ -13,6 +12,9 @@ import ReactTooltip from 'react-tooltip';
 import SecureDataStorageComponent from '../components/ReadSecureStorage';
 import useSecureStorage from '../hooks/useSecureStorage';
 import {useWallet} from '../contexts/WalletContext';
+import {useSetRecoilState} from 'recoil';
+import {configState} from '../store';
+import isElectron from 'is-electron';
 
 interface IProps {
   toggleLoader: (state: boolean) => void;
@@ -21,7 +23,7 @@ interface IProps {
 function Login({toggleLoader}: IProps) {
   const [publicKey, setPublicKey] = useState<string>('');
   const [privateKey, setPrivateKey] = useState<string>('');
-  const [storePassphrase, setStorePassphrase] = useState<boolean>(isElectron());
+  const [storePassphrase, setStorePassphrase] = useState<boolean>(true);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [passphraseError, setPassphraseError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -34,6 +36,7 @@ function Login({toggleLoader}: IProps) {
     variables: {publicKey},
     skip: !publicKey,
   });
+  const setConfig = useSetRecoilState(configState);
 
   const {encryptData} = useSecureStorage();
   const {updateWallet} = useWallet();
@@ -71,9 +74,7 @@ function Login({toggleLoader}: IProps) {
 
   const storeSessionAndRedirect = async (publicKey: string, id: number) => {
     const isUsingMnemonic = privateKey.trim().split(' ').length === 12;
-    if (storePassphrase) {
-      setPassphrase(privateKey);
-    }
+    setPassphrase(isUsingMnemonic);
     const success = await storeSession(publicKey, id, false, 0, isUsingMnemonic);
     await updateWallet({
       address: publicKey,
@@ -83,8 +84,14 @@ function Login({toggleLoader}: IProps) {
       mnemonic: isUsingMnemonic,
       accountNumber: 0,
     });
-    const storeAccountResult = await storeAccounts([{accountId: 0, address: publicKey}]);
+    await storeAccounts([{accountId: 0, address: publicKey}]);
     if (success) {
+      setConfig(prev => ({
+        ...prev,
+        isAuthenticated: true,
+        isUsingMnemonic,
+        isLedgerEnabled: false,
+      }));
       navigate('/overview');
       toggleLoader(false);
     }
@@ -173,6 +180,10 @@ function Login({toggleLoader}: IProps) {
       storeSessionAndRedirect(publicKey, -1);
     }
     setShowPasswordModal(false);
+    setConfig(old => ({
+      ...old,
+      isUsingPassword: true,
+    }));
   };
 
   return (
@@ -205,11 +216,7 @@ function Login({toggleLoader}: IProps) {
             {passphraseError && <div className="error">{passphraseError}</div>}
             <span
               className="checkbox-container"
-              data-tip={
-                !isElectron()
-                  ? 'For your security, you can store the passphrase only on Clorio Desktop'
-                  : undefined
-              }
+              data-tip={undefined}
             >
               <input
                 className="checkbox"
@@ -217,7 +224,7 @@ function Login({toggleLoader}: IProps) {
                 name="storePassphrase"
                 id="storePassphrase"
                 onChange={storePassphraseHandler}
-                value={isElectron() ? 'show' : ''}
+                value={'show'}
                 checked={storePassphrase}
                 disabled={!isElectron()}
               />
@@ -226,7 +233,7 @@ function Login({toggleLoader}: IProps) {
                 className="checkbox-label ml-2"
                 htmlFor="storePassphrase"
               >
-                Store session
+                Store the passphrase
               </label>
             </span>
           </div>

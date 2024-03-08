@@ -15,6 +15,7 @@ import {
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 import wasm from 'vite-plugin-wasm';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 const PACKAGE_ROOT = __dirname;
 const PROJECT_ROOT = join(PACKAGE_ROOT, '../..');
@@ -62,6 +63,7 @@ const config = {
       preloadEntry: join(PACKAGE_ROOT, '../preload/src/index.ts'),
     }),
     injectAppVersion(),
+    nodePolyfills(),
   ],
   define: {
     'process.env': {
@@ -69,7 +71,7 @@ const config = {
     },
   },
   optimizeDeps: {
-    exclude: ['react-content-loader','react-truncate-inside'],
+    exclude: ['react-content-loader', 'react-truncate-inside'],
   },
 };
 

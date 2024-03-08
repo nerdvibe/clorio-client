@@ -32,7 +32,7 @@ const httpLink = (networkSettings: INetworkOption) =>
     }),
   ]);
 
-export const apolloClient = (networkSettings: INetworkOption) =>
+export const apolloClient = (networkSettings: INetworkOption): ApolloClient<NormalizedCacheObject> =>
   new ApolloClient<NormalizedCacheObject>({
     link: httpLink(networkSettings) as any,
     cache: new InMemoryCache(),

@@ -27,7 +27,7 @@ export enum REGISTRATION_STEPS {
 function Mnemonic({network, toggleLoader}: IProps) {
   const navigate = useNavigate();
   const {updateWallet} = useWallet();
-  const [storePassphrase, setStorePassphrase] = useState<boolean>(isElectron());
+  const [storePassphrase, setStorePassphrase] = useState<boolean>(true);
   const [step, setStep] = useState(REGISTRATION_STEPS.ACCOUNT_SELECT);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const {encryptData} = useSecureStorage();
@@ -63,7 +63,7 @@ function Mnemonic({network, toggleLoader}: IProps) {
       accountNumber: 0,
     });
     await storeAccounts([{accountId: 0, address: keypair.publicKey}]);
-    setPassphrase(keypair.mnemonic);
+    setPassphrase(!!keypair.mnemonic);
     if (result) {
       navigate('/overview');
     }

@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Accordion, Col, Row, useAccordionButton} from 'react-bootstrap';
+import {Accordion, Col, useAccordionButton} from 'react-bootstrap';
 import type {IKeypair} from '../../../types/Keypair';
 import {PdfEncryption} from './PdfEncryption';
 import Button from '../../UI/Button';
@@ -110,8 +110,7 @@ const RegisterStep = ({keys, setValidation, goToNext, goBack}: IProps) => {
         <div className="v-spacer hide-small" />
         <div className="w-100 align-left">
           This is the only time you will see the private key. <br />
-          Make sure to write down your private key on a secure medium and you safe keep the private
-          key. <br />
+          Make sure to write down your private key on a secure medium and you safe keep it. <br />
           If you loose your private key you will not be able to access your funds anymore!
           <Button
             className="link-button purple-text px-0 ml-0"

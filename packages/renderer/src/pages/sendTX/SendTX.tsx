@@ -50,10 +50,10 @@ interface IProps {
 }
 
 function SendTX(props: IProps) {
-  const storedPassphrase = getPassphrase();
   const navigate = useNavigate();
   const numberOfSteps = Object.values(SendTXPageSteps).filter(val => !isNaN(+val)).length;
   const [privateKey, setPrivateKey] = useState<string>('');
+  const [key, setKeypair] = useState({publicKey: '', privateKey: ''});
   const [waitingNonce, setWaitingNonce] = useState<boolean>(false);
   const [sendTransactionFlag, setSendTransactionFlag] = useState<boolean>(false);
   const [step, setStep] = useState<number>(SendTXPageSteps.FORM);
@@ -63,6 +63,7 @@ function SendTX(props: IProps) {
   const [ledgerError, setLedgerError] = useState(false);
   const [transactionData, setTransactionData] = useState<ITransactionData>(initialTransactionData);
   const [ledgerTransactionData, setLedgerTransactionData] = useState<string>('');
+  const [storedPassphrase, setStoredPassphrase] = useState('');
   const {isLedgerEnabled} = useContext<Partial<ILedgerContext>>(LedgerContext);
   const {getBalance, setShouldBalanceUpdate} = useContext<Partial<IBalanceContext>>(BalanceContext);
   const {wallet} = useWallet();
@@ -78,6 +79,11 @@ function SendTX(props: IProps) {
     skip: !senderAddress,
     fetchPolicy: 'network-only',
   });
+  useEffect(() => {
+    getPassphrase().then(passphrase => {
+      setStoredPassphrase(passphrase);
+    });
+  }, []);
   const feeQuery = useQuery<IFeeQuery>(GET_FEE, {
     onCompleted: data => {
       if (data?.estimatedFee?.txFees?.average) {
@@ -200,13 +206,7 @@ function SendTX(props: IProps) {
       }
       checkBalanceAfterTransaction({balance, transactionData});
       checkTransactionFields(transactionData);
-      if (isLedgerEnabled) {
-        setStep(SendTXPageSteps.PRIVATE_KEY);
-      } else if (storedPassphrase) {
-        setStep(SendTXPageSteps.CONFIRMATION);
-      } else {
-        setStep(SendTXPageSteps.PRIVATE_KEY);
-      }
+      setStep(SendTXPageSteps.PRIVATE_KEY);
       setShowModal('');
     } catch (e) {
       toast.error(e.message);
@@ -216,17 +216,18 @@ function SendTX(props: IProps) {
   /**
    *  Check if Passphrase/Private key is not empty
    */
-  const confirmPrivateKey = async () => {
+  const confirmPrivateKey = async (passphrase?: string) => {
     try {
-      if (!privateKey) {
+      if (!privateKey && !passphrase) {
         throw new Error();
       }
       setShowModal('');
-      const derivedData = await deriveAccount(storedPassphrase || privateKey);
+      const derivedData = await deriveAccount(passphrase || privateKey, wallet.accountNumber);
       setTransactionData({
         ...transactionData,
         senderAddress: derivedData.publicKey || '',
       });
+      setKeypair(derivedData);
       setStep(SendTXPageSteps.CONFIRMATION);
     } catch (e) {
       toast.error('Please check your Passphrase or Private key');
@@ -310,7 +311,7 @@ function SendTX(props: IProps) {
     }
     try {
       const actualNonce = getNonce();
-      const derivedData = await deriveAccount(storedPassphrase || privateKey);
+      const derivedData = await deriveAccount(key.privateKey || privateKey, wallet.accountNumber);
       setTransactionData({
         ...transactionData,
         senderAddress: derivedData.publicKey || '',
@@ -384,6 +385,7 @@ function SendTX(props: IProps) {
                 ledgerError={ledgerError}
                 stepBackward={stepBackwards}
                 retryLedgerTransaction={retryLedgerTransaction}
+                storedPassphrase={!!storedPassphrase}
               />
             ) : step === SendTXPageSteps.CONFIRMATION ? (
               <ConfirmTransaction

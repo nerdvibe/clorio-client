@@ -12,6 +12,7 @@ import {GET_NETWORK} from './graphql/query';
 import {TermsAndConditions} from './components/UI/modals';
 import type {INetworkData} from './types';
 import {useWallet} from './contexts/WalletContext';
+import ZkappIntegration from './components/ZkappIntegration';
 
 const Layout = () => {
   const [showLoader, setShowLoader] = useState<boolean>(false);
@@ -37,6 +38,7 @@ const Layout = () => {
 
   return (
     <div>
+      <ZkappIntegration />
       <Container fluid>
         <TermsAndConditions />
         <div className="flex items-stretch">

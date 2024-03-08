@@ -1,10 +1,12 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Col, Row} from 'react-bootstrap';
 import {ArrowRight} from 'react-feather';
 import {toast} from 'react-toastify';
-import {deriveAccount, getPassphrase, readSession} from '../../../tools';
+import {deriveAccount, getPassphrase} from '../../../tools';
 import Button from '../Button';
 import Input from '../input/Input';
+import useSecureStorage from '/@/hooks/useSecureStorage';
+import {useWallet} from '/@/contexts/WalletContext';
 
 interface IProps {
   closeModal: () => void;
@@ -16,25 +18,29 @@ interface IDerivedKeypair {
 }
 
 const BackupWallet = ({closeModal}: IProps) => {
-  const storedPassphrase = getPassphrase();
   const [showDetails, setShowDetails] = useState(false);
-  const [mnemonic, setMnemonic] = useState(storedPassphrase || '');
+  const [storedPassphrase, setStoredPassphrase] = useState('');
+  const [password, setPassword] = useState('');
   const [keypair, setKeypair] = useState<IDerivedKeypair>({
     privateKey: '',
     publicKey: '',
   });
+  const {decryptData} = useSecureStorage();
+  const {wallet} = useWallet();
 
+  useEffect(() => {
+    getPassphrase().then(passphrase => {
+      setStoredPassphrase(passphrase);
+    });
+  }, []);
   /**
    * Derive the keypair from the mnemonic
    */
   const deriveKeypair = async () => {
     try {
-      const walletAddress = await readSession();
+      const mnemonic = decryptData(password);
       if (mnemonic) {
-        const derivedAccount: IDerivedKeypair = await deriveAccount(
-          mnemonic,
-          walletAddress.accountNumber,
-        );
+        const derivedAccount: IDerivedKeypair = await deriveAccount(mnemonic, wallet.accountNumber);
         setKeypair(derivedAccount);
         setShowDetails(true);
       }
@@ -48,7 +54,6 @@ const BackupWallet = ({closeModal}: IProps) => {
       privateKey: '',
       publicKey: '',
     });
-    setMnemonic(storedPassphrase || '');
     setShowDetails(false);
   };
 
@@ -57,7 +62,7 @@ const BackupWallet = ({closeModal}: IProps) => {
    * @returns boolean
    */
   const disableButton = () => {
-    return !storedPassphrase && mnemonic.trim().split(' ').length !== 12;
+    return !password && !storedPassphrase;
   };
 
   if (showDetails) {
@@ -113,20 +118,21 @@ const BackupWallet = ({closeModal}: IProps) => {
         You are about to see your raw private key. Never share it with anyone! <br />
         No one from Clorio will ever ask for it.
       </p>
-      {!storedPassphrase && (
-        <>
-          <p className="disclaimer-text">In order to continue please insert your Passphrase</p>
-          <div className="align-left mt-3 mb-2 label">
-            <strong>Passphrase</strong>
-          </div>
-          <Input
-            inputHandler={e => setMnemonic(e.currentTarget.value)}
-            placeholder="Insert your Passphrase"
-            hidden={true}
-            type="text"
-          />
-        </>
-      )}
+
+      <>
+        <p className="disclaimer-text">
+          In order to continue please insert your {storedPassphrase ? 'Password' : 'Passphrase'}
+        </p>
+        <div className="align-left mt-3 mb-2 label">
+          <strong>{storedPassphrase ? 'Password' : 'Passphrase'}</strong>
+        </div>
+        <Input
+          inputHandler={e => setPassword(e.currentTarget.value)}
+          placeholder={storedPassphrase ? 'Insert your password' : 'Insert your Passphrase'}
+          hidden={true}
+          type="text"
+        />
+      </>
       <Row>
         <Col xs={6}>
           <Button

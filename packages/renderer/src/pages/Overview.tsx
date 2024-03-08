@@ -19,6 +19,7 @@ import type {
   IMempoolQueryResult,
 } from '../components/transactionsTable/TransactionsTypes';
 import type {IHomeNewsQuery} from '/@/types/NewsData';
+import {useWallet} from '../contexts/WalletContext';
 
 interface IProps {
   sessionData: IWalletData;
@@ -27,6 +28,7 @@ interface IProps {
 const Overview = ({sessionData}: IProps) => {
   const {balanceData} = useContext<Partial<IBalanceContext>>(BalanceContext);
   const balance = balanceData?.balances[sessionData.address];
+  const {wallet} = useWallet();
   const [offset, setOffset] = useState<number>(0);
   const [walletId, setWalletId] = useState<number>(+sessionData.id);
   const {data: newsData} = useQuery<IHomeNewsQuery>(GET_HOME_NEWS);
@@ -41,7 +43,7 @@ const Overview = ({sessionData}: IProps) => {
   } = useQuery<ITransactionQueryResult>(GET_TRANSACTIONS, {
     variables: {accountId: walletId, offset},
     fetchPolicy: 'network-only',
-    skip: !walletId || walletId === -1,
+    skip: !wallet.id || wallet.id === -1,
     pollInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
   });
   const {

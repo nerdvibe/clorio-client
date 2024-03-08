@@ -7,11 +7,11 @@ export interface IAvailableNetworks {
 
 export interface INetworkOption {
   url: string;
-  network: string;
-  label: string;
-  name: string;
-  epochUrl: string;
-  explorerUrl: string;
+  network?: string;
+  label?: string;
+  name?: string;
+  epochUrl?: string;
+  explorerUrl?: string;
 }
 
 const initialAvailableNetworks: IAvailableNetworks = {

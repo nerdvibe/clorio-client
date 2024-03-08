@@ -28,16 +28,18 @@ export const TermsAndConditions = () => {
         <div className="terms">
           {' '}
           <p>
-            ~Clorio lets you use the Mina Protocol currency. You are the custodian of your own
-            private keys, this comes with the big responsibility that you have to safe-keep your
-            keys. Never ever disclose your private key to anyone, and follow the best security
-            practices such as using a hardware wallet.
+            Welcome to ~Clorio, your gateway to the Mina Protocol currency. It&apos;s essential to
+            recognize that, when using this service, you become the sole custodian of your private
+            keys. With this authority comes significant responsibility – the duty to safeguard your
+            keys diligently. Under no circumstances should you ever disclose your private key to
+            anyone. For enhanced security, we strongly recommend using a hardware wallet.
           </p>
           <p>
-            Only use ~Clorio if you accept that you alone are responsible for any loss incurred.
-            This wallet is open source, you should audit the source code before using this software
-            and you are invited to run your own infrastructure. This is an early beta of ~Clorio,
-            please report any issue on{' '}
+            By choosing to utilize ~Clorio, you acknowledge that you are assuming full
+            responsibility for any potential losses. Please note that our wallet is open source. We
+            encourage you to thoroughly review the source code before employing this software and
+            even consider running your infrastructure. Your feedback is invaluable – kindly report
+            any issues you encounter on{' '}
             <a
               href="https://discord.gg/4GnkRqwsDK"
               target="_blank"
@@ -48,15 +50,17 @@ export const TermsAndConditions = () => {
             .
           </p>
           <p>
-            By using ~Clorio Wallet you agree to the{' '}
+            When you opt for the ~Clorio Wallet, you are also agreeing to our{' '} 
             <a
               href="https://docs.clor.io/other/terms-and-conditions"
               target="_blank"
               rel="noreferrer"
             >
               terms and conditions
-            </a>{' '}
-            and you accept that <u>nobody can be held liable for any bug or security issue</u>.
+            </a>
+            . It is crucial to understand that no party can be held liable for any software bugs or
+            security concerns that may arise. Your use of this service implies your acceptance of
+            these terms and your commitment to exercising due diligence in safeguarding your assets.
           </p>
         </div>
         <div className="v-spacer" />

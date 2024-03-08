@@ -49,6 +49,7 @@ export const readSession = async () => {
 
 export const clearSession = async () => {
   sessionStorage.removeItem('PASSPHRASE');
+  await db.remove({type: 'PASSPHRASE'}, {multi: true});
   await db.remove({type: 'wallet'}, {multi: true});
 };
 
@@ -67,10 +68,19 @@ export const updateUser = async (address: string, id: number) => {
   await db.insert(wallet);
 };
 
-export const getPassphrase = () => sessionStorage.getItem('PASSPHRASE') || '';
+export const getPassphrase = async () => {
+  const storedPassphrase = await db.findOne({type: 'PASSPHRASE'});
+  if (storedPassphrase) {
+    return storedPassphrase.passphrase;
+  }
+  return undefined;
+};
 
-export const setPassphrase = (passphrase: string) =>
-  sessionStorage.setItem('PASSPHRASE', passphrase);
+// TODO: Change name to "isUsingMnemonic", return to sessionStorage
+export const setPassphrase = async (passphrase: boolean) => {
+  return await db.insert({type: 'PASSPHRASE', passphrase});
+};
+// sessionStorage.setItem('PASSPHRASE', passphrase);
 
 export const pushAccount = (account: {address: string; accountId: number}) => {
   const storedData = JSON.parse(localStorage.getItem('walletAccounts') || '[]');

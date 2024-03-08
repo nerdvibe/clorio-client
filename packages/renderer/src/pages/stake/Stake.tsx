@@ -56,7 +56,7 @@ interface IProps {
 }
 
 const Stake = ({sessionData}: IProps) => {
-  const storedPassphrase = getPassphrase();
+  const [storedPassphrase, setStoredPassphrase] = useState<boolean>(false);
   const navigate = useNavigate();
   const [delegateData, setDelegate] = useState<IValidatorData>(initialDelegateData);
   const [currentDelegate, setCurrentDelegate] = useState<string>('');
@@ -99,6 +99,12 @@ const Stake = ({sessionData}: IProps) => {
       return clearState();
     },
   });
+
+  useEffect(() => {
+    getPassphrase().then(passphrase => {
+      setStoredPassphrase(passphrase);
+    });
+  }, []);
 
   /**
    * If current delegate data arrived from the back-end, set it into the component state
@@ -151,12 +157,12 @@ const Stake = ({sessionData}: IProps) => {
   /**
    * Broadcast the transaction if the passphrase is stored in the session
    */
-  useEffect(() => {
-    if (storedPassphrase && delegateData.publicKey && selectedFee !== feeOrDefault()) {
-      setShowModal(ModalStates.BROADCASTING);
-      signDelegation();
-    }
-  }, [selectedFee]);
+  // useEffect(() => {
+  //   if (storedPassphrase && delegateData.publicKey && selectedFee !== feeOrDefault()) {
+  //     setShowModal(ModalStates.BROADCASTING);
+  //     signDelegation();
+  //   }
+  // }, [selectedFee]);
 
   const broadcastLedgerTransaction = () => {
     try {
@@ -277,9 +283,10 @@ const Stake = ({sessionData}: IProps) => {
    */
   const setFee = (selectedFee: number) => {
     setSelectedFee(selectedFee);
-    if (!storedPassphrase) {
-      setShowModal(ModalStates.PASSPHRASE);
-    }
+
+    // if (!storedPassphrase) {
+    setShowModal(ModalStates.PASSPHRASE);
+    // }
   };
 
   /**
@@ -315,14 +322,14 @@ const Stake = ({sessionData}: IProps) => {
   /**
    * Sign stake delegation using MinaSDK through passphrase or private key
    */
-  const signDelegation = async () => {
+  const signDelegation = async (passphrase?: string) => {
     try {
       if (!delegateData?.publicKey) {
         throw new Error('The Public key of the selected delegate is missing');
       }
       checkBalance(selectedFee, balance);
       const actualNonce = getNonce();
-      const derivedAccount = await deriveAccount(storedPassphrase || privateKey);
+      const derivedAccount = await deriveAccount(passphrase || privateKey, wallet.accountNumber);
       const keypair = {
         privateKey: derivedAccount.privateKey,
         publicKey: derivedAccount.publicKey,
@@ -425,6 +432,7 @@ const Stake = ({sessionData}: IProps) => {
             closeModal={closeModal}
             setPrivateKey={setPrivateKey}
             subtitle={customDelegate && `You are going to delegate ${customDelegate}`}
+            storedPassphrase={storedPassphrase}
           />
         )}
       </ModalContainer>

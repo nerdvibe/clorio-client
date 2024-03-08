@@ -1,6 +1,6 @@
 import LedgerLoader from '../UI/ledgerLogin/LedgerLoader';
 import Button from '../UI/Button';
-import { ArrowLeft } from 'react-feather';
+import {ArrowLeft} from 'react-feather';
 
 const LedgerSearch = () => {
   return (
@@ -8,9 +8,7 @@ const LedgerSearch = () => {
       <div className="w-100">
         <div className="flex flex-col flex-vertical-center">
           <h1>Login</h1>
-          <p className="text-center mt-1">
-            Connect your Ledger wallet and open the Mina app
-          </p>
+          <p className="text-center mt-1">Connect your Ledger wallet and open the Mina app</p>
           <div className="divider w-100" />
         </div>
       </div>
