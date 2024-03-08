@@ -65,10 +65,6 @@ const Routes = (props: IRoutesProps) => {
           element={!isAuthenticated ? <LedgerLogin {...props} /> : <Navigate to="/overview" />}
         />
         <Route
-          path="/ledger"
-          element={!isAuthenticated ? <LedgerLogin {...props} /> : <Navigate to="/overview" />}
-        />
-        <Route
           path="/login-selection"
           element={!isAuthenticated ? <LoginSelection /> : <Navigate to="/overview" />}
         />

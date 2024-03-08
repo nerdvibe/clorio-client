@@ -9,10 +9,13 @@ import {useNetworkSettingsContext} from './contexts/NetworkContext';
 import {BalanceContextProvider} from './contexts/balance/BalanceContext';
 import {useEffect} from 'react';
 import {WalletProvider} from './contexts/WalletContext';
+import {clearSession} from './tools';
+import {Button} from 'react-bootstrap';
 
 function App() {
   const {settings, setAvailableNetworks, saveSettings} = useNetworkSettingsContext();
   useEffect(() => {
+    clearSession();
     getNetworks();
   }, []);
 
@@ -29,11 +32,26 @@ function App() {
       }
     }
   };
+
   return (
     <div className="App">
+      <Button
+        style={{position: 'absolute', zIndex: 9999}}
+        onClick={() => {
+          (window.ipcBridge as any).invoke(
+            'open-win',
+            JSON.stringify({
+              text: '',
+              url: 'https://mina-wordle.juxdan.io/',
+            }),
+          );
+        }}
+      >
+        OPEN WORDLE
+      </Button>
       <WalletProvider>
         <BalanceContextProvider>
-          <ApolloProvider client={apolloClient(settings)}>
+          <ApolloProvider client={apolloClient(settings!)}>
             <LedgerContextProvider>
               <HashRouter>
                 <Layout />

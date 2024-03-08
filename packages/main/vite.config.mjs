@@ -1,6 +1,5 @@
-import {chrome} from '../../.electron-vendors.cache.json';
-import {preload} from 'unplugin-auto-expose';
 import {join} from 'node:path';
+import {node} from '../../.electron-vendors.cache.json';
 import {injectAppVersion} from '../../version/inject-app-version-plugin.mjs';
 
 const PACKAGE_ROOT = __dirname;
@@ -14,10 +13,15 @@ const config = {
   mode: process.env.MODE,
   root: PACKAGE_ROOT,
   envDir: PROJECT_ROOT,
+  resolve: {
+    alias: {
+      '/@/': join(PACKAGE_ROOT, 'src') + '/',
+    },
+  },
   build: {
     ssr: true,
     sourcemap: 'inline',
-    target: `chrome${chrome}`,
+    target: `node${node}`,
     outDir: 'dist',
     assetsDir: '.',
     minify: process.env.MODE !== 'development',
@@ -33,7 +37,7 @@ const config = {
     emptyOutDir: true,
     reportCompressedSize: false,
   },
-  plugins: [preload.vite(), injectAppVersion()],
+  plugins: [injectAppVersion()],
 };
 
 export default config;

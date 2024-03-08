@@ -25,6 +25,7 @@ import {toast} from 'react-toastify';
 import {useWallet} from '/@/contexts/WalletContext';
 import {useLazyQuery} from '@apollo/client';
 import {GET_ID} from '/@/graphql/query';
+import useSecureStorage from '/@/hooks/useSecureStorage';
 
 const MnemonicAccountSelection = ({
   currentAddress,
@@ -37,10 +38,12 @@ const MnemonicAccountSelection = ({
 }) => {
   const [accountId, setAccountId] = useState(1);
   const [showAddAccount, setShowAddAccount] = useState(false);
-  const [passphrase, setPassphrase] = useState(getPassphrase() || '');
+  const [passphrase, setPassphrase] = useState('');
+  const [hasMnemonic, setHasMnemonic] = useState(false);
   const [storedAccounts, setStoredAccounts] = useState<IWalletData[]>([]);
   const navigate = useNavigate();
   const {updateWallet} = useWallet();
+  const {decryptData} = useSecureStorage();
 
   const [fetchUserId] = useLazyQuery<IWalletIdData>(GET_ID, {
     variables: {publicKey: ''},
@@ -51,7 +54,25 @@ const MnemonicAccountSelection = ({
   useEffect(() => {
     const accounts = getAllAccounts();
     setStoredAccounts(accounts);
+    const maximumId = getMaximumAccountId(accounts);
+    setAccountId(+maximumId + 1);
   }, [currentAddress]);
+
+  useEffect(() => {
+    getPassphrase().then(passphrase => {
+      setHasMnemonic(passphrase);
+    });
+  }, []);
+
+  const getMaximumAccountId = (storedAccounts: IWalletData[]) => {
+    let id = 0;
+    storedAccounts.forEach(({accountId}) => {
+      if (accountId && +accountId > +id) {
+        id = +accountId;
+      }
+    });
+    return id;
+  };
 
   const addNewAccount = () => {
     setShowAddAccount(true);
@@ -74,12 +95,17 @@ const MnemonicAccountSelection = ({
     return result;
   };
 
-  const hasMnemonic = !!getPassphrase();
-
   const deriveAccount = async () => {
+    if (accountId !== 0 && !accountId) {
+      toast.warn('Select an account number');
+      throw new Error('Account number not selected');
+    }
     try {
-      const mnemonic = passphrase || (await getPassphrase());
-      const keypair = await deriveAccountFromMnemonic(mnemonic, accountId);
+      let mnemonic;
+      if (hasMnemonic) {
+        mnemonic = decryptData(passphrase);
+      }
+      const keypair = await deriveAccountFromMnemonic(mnemonic || passphrase, accountId);
       if (!accountExists(keypair?.pubKey)) {
         if (keypair) {
           const {data} = await fetchUserId({variables: {publicKey: keypair?.priKey}});
@@ -105,6 +131,15 @@ const MnemonicAccountSelection = ({
       }
     } catch (error) {
       toast.error('Check the passphrase');
+    }
+  };
+
+  const accountNumberHandler = e => {
+    const value = e.currentTarget.value.includes('#')
+      ? e.currentTarget.value.split('Account #')[1]
+      : e.currentTarget.value;
+    if (/^\d+$/.test(value) || !value) {
+      setAccountId(value);
     }
   };
 
@@ -178,26 +213,18 @@ const MnemonicAccountSelection = ({
                   value={`Account #${accountId}`}
                   placeholder="Enter account numer... "
                   className="no-mb"
+                  inputHandler={accountNumberHandler}
+                />
+                <Input
+                  value={passphrase}
+                  placeholder={hasMnemonic ? 'Password' : 'Passphrase '}
+                  type="text"
+                  hidden
+                  className="no-mb"
                   inputHandler={e => {
-                    setAccountId(
-                      e.currentTarget.value.includes('#')
-                        ? +e.currentTarget.value.split('Account #')[1]
-                        : +e.currentTarget.value,
-                    );
+                    setPassphrase(e.currentTarget.value);
                   }}
                 />
-                {!hasMnemonic && (
-                  <Input
-                    value={passphrase}
-                    placeholder="Passphrase "
-                    type="text"
-                    hidden
-                    className="no-mb"
-                    inputHandler={e => {
-                      setPassphrase(e.currentTarget.value);
-                    }}
-                  />
-                )}
               </div>
               <Button
                 className="text-center max-w-120"

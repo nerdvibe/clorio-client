@@ -4,6 +4,7 @@ import {Buffer} from 'buffer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {initHtmlElements} from './tools';
 import {NetworkSettingsProvider} from './contexts/NetworkContext';
+import {RecoilRoot} from 'recoil';
 globalThis.Buffer = Buffer;
 
 // Render your React component instead
@@ -11,6 +12,8 @@ const root = createRoot(document.getElementById('root'));
 initHtmlElements();
 root.render(
   <NetworkSettingsProvider>
-    <App />
+    <RecoilRoot>
+      <App />
+    </RecoilRoot>
   </NetworkSettingsProvider>,
 );

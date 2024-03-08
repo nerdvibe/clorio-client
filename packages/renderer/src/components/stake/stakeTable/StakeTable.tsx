@@ -57,7 +57,7 @@ const StakeTable = ({
   // };
 
   const {settings} = useNetworkSettingsContext();
-  const validatorsDisabled = !settings?.hideValidators;
+  const validatorsDisabled = settings?.hideValidators;
   const epochDisabled = !settings?.epochUrl;
 
   const tableBody = () => {

@@ -391,6 +391,11 @@ p {
   flex-direction: row;
 }
 
+.confirm-transaction-modal {
+  min-width: 600px;
+  max-width: 800px;
+}
+
 @media screen and (max-width: 600px) {
   .homepage-card {
     height: 100vh;
@@ -472,6 +477,17 @@ p {
   //   margin-top: -50px;
   //   z-index: 999999;
   // }
+
+  .confirm-transaction-modal {
+    min-width: 200px;
+    max-width: 800px;
+    .confirm-transaction-data {
+      flex-direction: column;
+    }
+    .sm-flex-reverse {
+      flex-direction: column-reverse;
+    }
+  }
 }
 
 @media screen and (max-height: 680px) {

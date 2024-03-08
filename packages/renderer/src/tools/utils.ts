@@ -8,9 +8,39 @@ import {toNanoMINA} from './mina';
 import {DEFAULT_VALID_UNTIL_FIELD, TRANSACTIONS_TABLE_ITEMS_PER_PAGE, MINIMUM_FEE} from './const';
 import {VALIDATORS_TABLE_ITEMS_PER_PAGE} from './const/transactions';
 import {wordlists} from 'bip39';
+import {NET_CONFIG_TYPE, getCurrentNetConfig} from './zkapp';
+import * as bs58check from 'bs58check';
 
 const shortUrls: string[] = [];
 const blacklist = ['onion'];
+
+export declare const DAppActions: {
+  mina_requestAccounts: string;
+  mina_accounts: string;
+  mina_sendPayment: string;
+  mina_sendStakeDelegation: string;
+  mina_signMessage: string;
+  mina_verifyMessage: string;
+  mina_requestNetwork: string;
+  mina_sendTransaction: string;
+  mina_signFields: string;
+  mina_verifyFields: string;
+  mina_sign_JsonMessage: string;
+  mina_verify_JsonMessage: string;
+  mina_switchChain: string;
+  mina_createNullifier: string;
+  mina_addChain: string;
+};
+
+/** coin config */
+export const MAIN_COIN_CONFIG = {
+  name: 'MINA',
+  segwitAvailable: true,
+  coinType: 12586,
+  network: null,
+  symbol: 'MINA',
+  decimals: 9,
+};
 
 export const copyToClipboard = (content = '') => {
   const el = document.createElement('textarea');
@@ -245,3 +275,80 @@ export const spellMnemonic = (mnemonic: string) => {
   }
   return wrongWords;
 };
+
+export function decodeMemo(encode) {
+  try {
+    const encoded = bs58check.decode(encode);
+    const res = encoded.slice(3, 3 + encoded[2]).toString('utf-8');
+    return res;
+  } catch (error) {
+    return encode;
+  }
+}
+async function getSignClient() {
+  const netConfig = await getCurrentNetConfig();
+  let netType = '';
+  const {default: Client} = await import('mina-signer');
+  if (netConfig.netType) {
+    netType = netConfig.netType;
+  }
+  let client;
+  if (netType === NET_CONFIG_TYPE.Mainnet) {
+    client = new Client({network: 'mainnet'});
+  } else {
+    client = new Client({network: 'testnet'});
+  }
+  return client;
+}
+
+/** build payment and delegation tx body */
+function buildSignTxBody(params) {
+  // const sendAction = params.sendAction;
+  const sendFee = toNanoMINA(+params.fee || 0.1);
+  const sendAmount = toNanoMINA(+params.amount || 0.1);
+  const signBody = {
+    to: params.to,
+    from: params.to,
+    fee: sendFee,
+    nonce: params.nonce || 0,
+    memo: params.memo || '',
+    amount: sendAmount,
+  };
+  // if (sendAction === DAppActions.mina_sendPayment) {
+  //   const sendAmount = new Big(params.amount).mul(decimal).toFixed();
+  //   signBody.amount = sendAmount;
+  // }
+  return signBody;
+}
+
+/** QA net sign */
+export async function signTransaction(privateKey, params) {
+  let signResult;
+  try {
+    const signClient = await getSignClient();
+    let signBody = {};
+
+    // if (params.sendAction === DAppActions.mina_signMessage) {
+    //   signBody = params.message;
+    // } else if (params.sendAction === DAppActions.mina_sendTransaction) {
+    //   const decimal = new Big(10).pow(MAIN_COIN_CONFIG.decimals);
+    //   const sendFee = new Big(params.fee).multipliedBy(decimal).toNumber();
+    //   signBody = {
+    //     zkappCommand: JSON.parse(params.transaction),
+    //     feePayer: {
+    //       feePayer: params.fromAddress,
+    //       fee: sendFee,
+    //       nonce: params.nonce,
+    //       memo: params.memo || '',
+    //     },
+    //   };
+    // } else {
+    signBody = buildSignTxBody(params);
+    // }
+    signResult = signClient.signTransaction(signBody, privateKey);
+    return signResult;
+  } catch (err) {
+    console.log('🚀 ~ signTransaction ~ err:', err);
+  }
+  return signResult;
+}

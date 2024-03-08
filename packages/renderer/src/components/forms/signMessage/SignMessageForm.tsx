@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-import {client, deriveAccount, getPassphrase, readSession} from '../../../tools';
+import {client, deriveAccount, getPassphrase} from '../../../tools';
 import Button from '../../UI/Button';
 import HelpHint from '../../UI/HelpHint';
 import Input from '../../UI/input/Input';
@@ -10,11 +10,17 @@ import type {IKeypair, IMessageToSign} from '../../../types';
 import {toast} from 'react-toastify';
 import SignMessageLedgerScreen from '../../UI/signMessage/SignMessageLedgerScreen';
 import {Edit3} from 'react-feather';
+import useSecureStorage from '/@/hooks/useSecureStorage';
+import {useWallet} from '/@/contexts/WalletContext';
 
 const SignMessageForm = () => {
   const [message, setMessage] = useState<string>('');
   const [privateKey, setPrivateKey] = useState<string>('');
-  const storedPassphrase = getPassphrase();
+  const [password, setPassword] = useState('');
+  const [storedPassphrase, setStoredPassphrase] = useState('');
+  const {decryptData} = useSecureStorage();
+  const {wallet} = useWallet();
+
   const [result, setResult] = useState({
     data: '',
     signature: {
@@ -24,6 +30,12 @@ const SignMessageForm = () => {
     publicKey: '',
   });
 
+  useEffect(() => {
+    getPassphrase().then(passphrase => {
+      setStoredPassphrase(passphrase);
+    });
+  }, []);
+
   const {isLedgerEnabled} = useContext<Partial<ILedgerContext>>(LedgerContext);
 
   /**
@@ -31,7 +43,6 @@ const SignMessageForm = () => {
    */
   const submitHandler = async (messageToSign: IMessageToSign) => {
     try {
-      const wallet = await readSession();
       const derivedKeypair = await deriveAccount(
         messageToSign.privateKey,
         wallet?.accountNumber || 0,
@@ -76,16 +87,20 @@ const SignMessageForm = () => {
    * @returns boolean
    */
   const signButtonStateHandler = () => {
-    return !message || (!privateKey && !storedPassphrase);
+    return !message || (!privateKey && !password);
   };
 
   /**
    * Create the object to be signed and sign it
    */
   const createObjectAndSign = () => {
+    let storedPrivateKey;
+    if (password) {
+      storedPrivateKey = decryptData(password);
+    }
     const messageToSign = {
       message,
-      privateKey: privateKey || storedPassphrase,
+      privateKey: storedPrivateKey || privateKey,
     };
     submitHandler(messageToSign);
   };
@@ -118,7 +133,26 @@ const SignMessageForm = () => {
               placeholder="Message "
             />
           </div>
-          {!storedPassphrase && (
+          {storedPassphrase ? (
+            <>
+              <h5>
+                <strong>Password</strong>
+              </h5>
+              <div
+                className="wrap-input1 validate-input"
+                data-validate="Name is required"
+              >
+                <Input
+                  type="text"
+                  hidden
+                  value={password}
+                  inputHandler={e => {
+                    setPassword(e.target.value);
+                  }}
+                />
+              </div>
+            </>
+          ) : (
             <>
               <h5>
                 <strong>Passphrase or Private key</strong>

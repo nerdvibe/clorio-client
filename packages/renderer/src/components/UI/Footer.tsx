@@ -18,7 +18,7 @@ const Footer = () => {
 
   return (
     <div className="full-width-align-center footer-text">
-      ~Clorio is a wallet offered by Carbonara from WeStake.Club and is not developed by O(1)Labs.
+      ~Clorio is a wallet for Mina Protocol offered by WeStake.Club.
       <br />
       <div>{renderNetwork}</div>
       <NetworkSettings
