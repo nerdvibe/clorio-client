@@ -11,9 +11,13 @@ import {useEffect} from 'react';
 import {WalletProvider} from './contexts/WalletContext';
 import {clearSession} from './tools';
 import {Button} from 'react-bootstrap';
+import {networkState} from './store';
+import {useRecoilState} from 'recoil';
 
 function App() {
   const {settings, setAvailableNetworks, saveSettings} = useNetworkSettingsContext();
+  const [{selectedNetwork}, setNetworkState] = useRecoilState(networkState);
+
   useEffect(() => {
     clearSession();
     getNetworks();
@@ -25,7 +29,28 @@ function App() {
       .then(response => response.json())
       .then(data => data);
     if (data) {
+      const newAvailableNetworks = Object.values(data).map(
+        ({network, name}: {network: string; name: string}) => {
+          return {chainId: network, name: name};
+        },
+      );
+      setNetworkState(prev => ({
+        ...prev,
+        availableNetworks: newAvailableNetworks,
+        showChangeNetworkModal: false,
+      }));
       setAvailableNetworks(data);
+
+      if (!selectedNetwork) {
+        const defaultNetwork = Object.keys(data)[0];
+        setNetworkState(prev => ({
+          ...prev,
+          selectedNetwork: {
+            chainId: data[defaultNetwork].network,
+            name: data[defaultNetwork].name,
+          },
+        }));
+      }
       if (!hasInitialSettings) {
         const network = Object.keys(data)[0];
         saveSettings(data[network]);
@@ -42,7 +67,7 @@ function App() {
             'open-win',
             JSON.stringify({
               text: '',
-              url: 'https://mina-wordle.juxdan.io/',
+              url: 'http://localhost:8080/',
             }),
           );
         }}

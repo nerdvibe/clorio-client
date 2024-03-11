@@ -266,9 +266,7 @@ export const openLinkOnBrowser = (url: string) =>
 
 export const spellMnemonic = (mnemonic: string) => {
   const wrongWords = [];
-  console.log(mnemonic.split(' '));
   for (const word of mnemonic.split(' ')) {
-    console.log(word);
     if (!wordlists.EN.includes(word)) {
       wrongWords.push(word);
     }

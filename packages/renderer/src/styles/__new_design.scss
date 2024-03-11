@@ -396,6 +396,11 @@ p {
   max-width: 800px;
 }
 
+.message-box {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
 @media screen and (max-width: 600px) {
   .homepage-card {
     height: 100vh;

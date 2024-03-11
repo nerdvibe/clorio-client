@@ -108,6 +108,7 @@ export const GET_TRANSACTIONS_TOTAL = gql`
   }
 `;
 
+// TODO: set back chainId and syncStatus, they are missing in the schema for the mocked networks
 export const GET_NETWORK = gql`
   query NodeInfo {
     nodeInfo {
@@ -115,8 +116,6 @@ export const GET_NETWORK = gql`
       name
       network
       version
-      chainId
-      syncStatus
     }
   }
 `;

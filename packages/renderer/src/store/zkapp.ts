@@ -6,6 +6,7 @@ export const zkappState = atom({
     isPendingConfirmation: false,
     txtpe: null,
     showTransactionConfirmation: false,
+    showDelegationConfirmation: false,
     transactionData: {
       from: '',
       to: '',
@@ -16,5 +17,8 @@ export const zkappState = atom({
     },
     showMessageSign: false,
     messageToSign: '',
+    isJsonMessageToSign: false,
+    isNullifier: false,
+    isFields: false,
   },
 });

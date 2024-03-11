@@ -15,44 +15,73 @@ export default function SignMessage() {
   const fromRef = useRef(null);
   const [showPassword, setShowPassword] = useState(false);
   const [fromTextWidth, setFromTextWidth] = useState(0);
-  const [{messageToSign, showMessageSign}, setZkappState] = useRecoilState(zkappState);
+  const [
+    {messageToSign, showMessageSign, isJsonMessageToSign, isNullifier, isFields},
+    setZkappState,
+  ] = useRecoilState(zkappState);
 
   const {wallet} = useWallet();
   const {address} = wallet;
+
+  const responseChannel = isFields
+    ? 'clorio-signed-fields'
+    : isNullifier
+    ? 'clorio-created-nullifier'
+    : isJsonMessageToSign
+    ? 'clorio-signed-json-message'
+    : 'clorio-signed-message';
 
   const onClose = () => {
     setZkappState(state => ({
       ...state,
       showMessageSign: false,
+      isJsonMessageToSign: false,
+      isNullifier: false,
+      isFields: false,
       messageToSign: '',
     }));
   };
 
   useEffect(() => {
     if (fromRef.current) {
-      setFromTextWidth(fromRef.current.offsetWidth + 200);
+      setFromTextWidth(fromRef.current.offsetWidth);
     }
   }, [fromRef.current]);
 
   const onConfirm = async (mnemonic: string) => {
-    if (mnemonic) {
-      let privateKey = mnemonic;
-      if (mnemonic.trim().split(' ').length > 2) {
-        privateKey = (await mnemonicToPrivateKey(mnemonic, wallet.accountNumber)) || mnemonic;
-      }
-      const signedMessage = (await client()).signMessage(messageToSign, privateKey);
-      if (signedMessage) {
-        toast.success('Message signed successfully');
-        sendResponse('clorio-signed-message', signedMessage);
-        setZkappState(prev => ({
-          ...prev,
-          messageToSign: '',
-          showMessageSign: false,
-        }));
-        setShowPassword(false);
+    if (!mnemonic) return;
+
+    let privateKey = mnemonic;
+    if (mnemonic.trim().split(' ').length > 2) {
+      privateKey = (await mnemonicToPrivateKey(mnemonic, wallet.accountNumber)) || mnemonic;
+    }
+
+    let signedMessage;
+    if (isFields || isNullifier) {
+      const nextFields = messageToSign.map(BigInt);
+      if (isFields) {
+        signedMessage = await (await client()).signFields(nextFields, privateKey);
       } else {
-        toast.error('Error signing message');
+        signedMessage = await (await client()).createNullifier(nextFields, privateKey);
       }
+    } else {
+      signedMessage = (await client()).signMessage(messageToSign, privateKey);
+    }
+
+    if (signedMessage) {
+      toast.success('Message signed successfully');
+      sendResponse(responseChannel, signedMessage);
+      setZkappState(prev => ({
+        ...prev,
+        messageToSign: '',
+        showMessageSign: false,
+        isJsonMessageToSign: false,
+        isNullifier: false,
+        isFields: false,
+      }));
+      setShowPassword(false);
+    } else {
+      toast.error('Error signing message');
     }
   };
 
@@ -87,9 +116,11 @@ export default function SignMessage() {
             </div>
           </div>
           <div className="flex justify-start w-100">
-            <div>
+            <div className="w-100">
               <h4>Message</h4>
-              <p>{messageToSign}</p>
+              <pre className="w-100 overflow-x-auto text-start message-box">
+                {JSON.stringify(messageToSign, null, 2)}
+              </pre>
             </div>
           </div>
           <div className="flex mt-2 gap-4 confirm-transaction-data sm-flex-reverse">
@@ -102,7 +133,7 @@ export default function SignMessage() {
             />
             <Button
               className="w-100"
-              text="Confirm"
+              text="Sign"
               style="primary"
               onClick={() => setShowPassword(true)}
             />

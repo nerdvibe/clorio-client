@@ -1,25 +1,25 @@
 import {useRecoilState} from 'recoil';
-import {ModalContainer} from './UI/modals';
-import {zkappState} from '../store';
+import {ModalContainer} from '..';
+import {zkappState} from '../../../../store';
 import {useEffect, useRef, useState} from 'react';
 import Truncate from 'react-truncate-inside/es';
-import Button from './UI/Button';
-import {getAccountAddress, getPrivateKey, sendResponse} from '../tools/mina-zkapp-bridge';
+import Button from '../../Button';
+import {getAccountAddress, getPrivateKey, sendResponse} from '../../../../tools/mina-zkapp-bridge';
 import {useLazyQuery} from '@apollo/client';
-import {INonceQueryResult} from '../pages/sendTX/SendTXHelper';
-import {GET_NONCE} from '../graphql/query';
-import {signTransaction} from '../tools/utils';
-import PasswordDecrypt from './PasswordDecrypt';
+import {INonceQueryResult} from '../../../../pages/sendTX/SendTXHelper';
+import {GET_NONCE} from '../../../../graphql/query';
+import {signTransaction} from '../../../../tools/utils';
+import PasswordDecrypt from '../../../PasswordDecrypt';
 import {toast} from 'react-toastify';
+import {client} from '/@/tools';
 
-export default function ConfirmZkappTransaction() {
+export default function ConfirmZkappDelegation() {
   const fromRef = useRef(null);
   const [fromTextWidth, setFromTextWidth] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const [fetchNonce, {data: nonceData, error: nonceError}] =
     useLazyQuery<INonceQueryResult>(GET_NONCE);
-  const [{transactionData, showTransactionConfirmation}, setZkappState] =
-    useRecoilState(zkappState);
+  const [{transactionData, showDelegationConfirmation}, setZkappState] = useRecoilState(zkappState);
 
   useEffect(() => {
     if (fromRef.current) {
@@ -31,6 +31,7 @@ export default function ConfirmZkappTransaction() {
     setZkappState(state => ({
       ...state,
       showTransactionConfirmation: false,
+      showDelegationConfirmation: false,
     }));
   };
 
@@ -44,13 +45,16 @@ export default function ConfirmZkappTransaction() {
       return;
     }
     const nonce = nonceData?.accountByKey?.usableNonce;
-    const signedTx = await signTransaction(privateKey, {...transactionData, nonce, from: address});
-    sendResponse('clorio-signed-payment', signedTx);
+    const stakeData = {...transactionData, nonce, from: address[0], fee: +transactionData.fee};
+    const signedTx = await (await client()).signStakeDelegation(stakeData, privateKey);
+    // TODO: Add tx broadcast
+    sendResponse('clorio-staked-delegation', {hash: 'ADD TX HASH HERE'});
     toast.success('Transaction signed successfully');
     setZkappState(state => ({
       ...state,
       isPendingConfirmation: true,
       showTransactionConfirmation: false,
+      showDelegationConfirmation: false,
       transactionData: {
         from: '',
         to: '',
@@ -65,12 +69,12 @@ export default function ConfirmZkappTransaction() {
 
   return (
     <ModalContainer
-      show={showTransactionConfirmation}
+      show={showDelegationConfirmation}
       close={onClose}
       className="confirm-transaction-modal"
     >
       <div>
-        <h1>Confirm transaction</h1>
+        <h1>Confirm stake delegation</h1>
         <hr />
       </div>
       {showPassword ? (
@@ -98,10 +102,6 @@ export default function ConfirmZkappTransaction() {
           </div>
           <div className="flex justify-start">
             <div className="flex flex-col w-100">
-              <div>
-                <h4>Amount</h4>
-                <p>{transactionData.amount} MINA</p>
-              </div>
               <div>
                 <h4>Transaction fee</h4>
                 <p>{transactionData.fee || 0.0101} MINA</p>

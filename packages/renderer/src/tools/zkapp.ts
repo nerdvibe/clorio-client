@@ -64,6 +64,7 @@ const base_dev_config = {
 };
 /** berkeley net config */
 const base_berkeley_config = {
+  chainId:NET_CONFIG_TYPE.Berkeley,
   netType: NET_CONFIG_TYPE.Berkeley,
   // url: BerkeleyUrlConfig.gql,
   // explorer: BerkeleyUrlConfig.explorer,
