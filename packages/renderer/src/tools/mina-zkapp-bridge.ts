@@ -1,8 +1,12 @@
 import {AES, enc} from 'crypto-js';
 import {deriveWalletByMnemonic} from './mina';
 
+BigInt.prototype['toJSON'] = function () {
+  return this.toString();
+};
+
 export interface NetConfig {
-  netType: string;
+  chainId: string;
   name: string;
 }
 

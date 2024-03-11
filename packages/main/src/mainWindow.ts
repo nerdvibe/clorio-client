@@ -201,46 +201,35 @@ ipcMain.handle('open-win', (_: Electron.IpcMainInvokeEvent, arg) => {
   // childWindow.webContents.executeJavaScript()
 });
 
+const createEventHandler = (type: string, response: string) => {
+  return {
+    [type]: (_: Electron.IpcMainEvent, data: any) =>
+      browserWindow.webContents.send('clorio-event', {type: `clorio-${type}`, data}),
+    [`clorio-${response}`]: (_: Electron.IpcMainEvent, data: any) =>
+      childWindow.webContents.send(response, data),
+  };
+};
+
 const eventHandlers = {
-  'get-network-config': (_: Electron.IpcMainEvent, data: any) =>
-    browserWindow.webContents.send('clorio-event', {type: 'clorio-get-network-config', data}),
-  'clorio-response-get-network-config': (_: Electron.IpcMainEvent, data: any) =>
-    childWindow.webContents.send('response-get-network-config', data),
-  'get-address': () => browserWindow.webContents.send('clorio-event', {type: 'clorio-get-address'}),
-  'clorio-set-address': (_: Electron.IpcMainEvent, data: any) =>
-    childWindow.webContents.send('response-set-address', data),
-  'sign-tx': (_: Electron.IpcMainEvent, data: any) =>
-    browserWindow.webContents.send('clorio-event', {type: 'clorio-sign-tx', data}),
-  'clorio-signed-tx': (_: Electron.IpcMainEvent, data: any) =>
-    childWindow.webContents.send('response-signed-tx', data),
-  'sign-message': async (_: Electron.IpcMainEvent, data: any) =>
-    browserWindow.webContents.send('clorio-event', {type: 'clorio-sign-message-browser', data}),
-  'clorio-signed-message': (_: Electron.IpcMainEvent, data: any) =>
-    childWindow.webContents.send('signed-message', data),
-  'get-accounts': () =>
-    browserWindow.webContents.send('clorio-event', {type: 'clorio-get-accounts'}),
-  'clorio-set-accounts': (_: Electron.IpcMainEvent, data: any) =>
-    childWindow.webContents.send('set-accounts', data),
-  'send-payment': (_: Electron.IpcMainEvent, data: any) =>
-    browserWindow.webContents.send('clorio-event', {type: 'clorio-send-payment', data}),
-  'clorio-signed-payment': (_: Electron.IpcMainEvent, data: any) =>
-    childWindow.webContents.send('signed-payment', data),
-  'add-chain': (_: Electron.IpcMainEvent, data: any) =>
-    browserWindow.webContents.send('clorio-event', {type: 'clorio-add-chain', data}),
-  'clorio-response-add-chain': (_: Electron.IpcMainEvent, data: any) =>
-    childWindow.webContents.send('response-add-chain', data),
-  'switch-chain': (_: Electron.IpcMainEvent, data: any) =>
-    browserWindow.webContents.send('clorio-event', {type: 'clorio-switch-chain', data}),
-  'clorio-response-switch-chain': (_: Electron.IpcMainEvent, data: any) =>
-    childWindow.webContents.send('response-switch-chain', data),
+  ...createEventHandler('get-network-config', 'set-network-config'),
+  ...createEventHandler('get-address', 'set-address'),
+  ...createEventHandler('sign-tx', 'signed-tx'),
+  ...createEventHandler('sign-message', 'signed-message'),
+  ...createEventHandler('get-accounts', 'set-accounts'),
+  ...createEventHandler('send-payment', 'signed-payment'),
+  ...createEventHandler('add-chain', 'added-chain'),
+  ...createEventHandler('switch-chain', 'switched-chain'),
+  ...createEventHandler('verify-message', 'verified-message'),
+  ...createEventHandler('sign-json-message', 'signed-json-message'),
+  ...createEventHandler('verify-json-message', 'verified-json-message'),
+  ...createEventHandler('create-nullifier', 'created-nullifier'),
+  ...createEventHandler('stake-delegation', 'staked-delegation'),
+  ...createEventHandler('sign-fields', 'signed-fields'),
+  ...createEventHandler('verify-fields', 'verified-fields'),
   'focus-clorio': () => {
     console.log('Focus main window');
     browserWindow.focus();
   },
-  'verify-message': (_: Electron.IpcMainEvent, data: any) =>
-    browserWindow.webContents.send('clorio-event', {type: 'clorio-verify-message', data}),
-  'clorio-verified-message': (_: Electron.IpcMainEvent, data: any) =>
-    childWindow.webContents.send('verified-message', data),
 };
 
 Object.keys(eventHandlers).forEach(eventName => {

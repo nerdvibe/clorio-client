@@ -9,12 +9,18 @@ const allowedRequestChannels = [
   'add-chain',
   'switch-chain',
   'verify-message',
+  'sign-json-message',
+  'verify-json-message',
+  'create-nullifier',
+  'stake-delegation',
+  'sign-fields',
+  'verify-fields',
 ];
 
 const allowedResponseChannels = [
-  'response-get-network-config',
-  'response-set-address',
-  'response-signed-tx',
+  'set-network-config',
+  'set-address',
+  'signed-tx',
   'signed-message',
   'set-accounts',
   'signed-payment',
@@ -22,6 +28,12 @@ const allowedResponseChannels = [
   'response-switch-chain',
   'error',
   'verified-message',
+  'signed-json-message',
+  'verified-json-message',
+  'created-nullifier',
+  'staked-delegation',
+  'signed-fields',
+  'verified-fields',
 ];
 
 interface AddChainArgs {
@@ -57,16 +69,25 @@ const sendIpcRequest = (requestChannel: string, responseChannel: string, data?: 
 };
 const zkappIntegration = {
   on: () => {},
-  requestNetwork: () => sendIpcRequest('get-network-config', 'response-get-network-config', '123'),
-  requestAccounts: () => sendIpcRequest('get-address', 'response-set-address'),
-  sendTransaction: (data: any) => sendIpcRequest('sign-tx', 'response-signed-tx', data),
-  signMessage: (data: any) => sendIpcRequest('sign-message', 'signed-message', data),
-  getAccounts: () => sendIpcRequest('get-accounts', 'set-accounts'),
-  sendPayment: (data: any) => sendIpcRequest('send-payment', 'signed-payment', data),
+  // TODO: Update network methods
+  requestNetwork: () => sendIpcRequest('get-network-config', 'set-network-config', null),
   addChain: (data: AddChainArgs) => sendIpcRequest('add-chain', 'response-add-chain', data),
   switchChain: ({chainId}: {chainId: string}) =>
     sendIpcRequest('switch-chain', 'response-switch-chain', chainId),
+
+  requestAccounts: () => sendIpcRequest('get-address', 'set-address'),
+  sendTransaction: (data: any) => sendIpcRequest('sign-tx', 'signed-tx', data),
+  signMessage: (data: any) => sendIpcRequest('sign-message', 'signed-message', data),
+  getAccounts: () => sendIpcRequest('get-accounts', 'set-accounts'),
+  sendPayment: (data: any) => sendIpcRequest('send-payment', 'signed-payment', data),
   verifyMessage: (data: any) => sendIpcRequest('verify-message', 'verified-message', data),
+  signJsonMessage: (data: any) => sendIpcRequest('sign-json-message', 'signed-json-message', data),
+  verifyJsonMessage: (data: any) =>
+    sendIpcRequest('verify-json-message', 'verified-json-message', data),
+  createNullifier: (data: any) => sendIpcRequest('create-nullifier', 'created-nullifier', data),
+  sendStakeDelegation: (data: any) => sendIpcRequest('stake-delegation', 'staked-delegation', data),
+  signFields: (data: any) => sendIpcRequest('sign-fields', 'signed-fields', data),
+  verifyFields: (data: any) => sendIpcRequest('verify-fields', 'verified-fields', data),
 };
 
 export default zkappIntegration;

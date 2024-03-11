@@ -8,6 +8,8 @@ import {useNavigate} from 'react-router-dom';
 import BackupWallet from '../modals/BackupWallet';
 import {INetworkData} from '/@/types';
 import {getPassphrase} from '/@/tools';
+import {useRecoilState} from 'recoil';
+import {networkState} from '/@/store';
 
 export default function NetworkSettings({
   currentNetwork,
@@ -32,6 +34,7 @@ export default function NetworkSettings({
   const [storedPassphrase, setStoredPassphrase] = useState('');
   const {settings, saveSettings, availableNetworks} = useNetworkSettingsContext();
   const navigate = useNavigate();
+  const [{selectedNetwork}, setNetworkState] = useRecoilState(networkState);
 
   useEffect(() => {
     getPassphrase().then(passphrase => {
@@ -40,7 +43,15 @@ export default function NetworkSettings({
   }, []);
 
   const networkSelectHandler = (e: any) => {
-    saveSettings(availableNetworks[e.target.value]);
+    const network = availableNetworks[e.target.value];
+    saveSettings(network);
+    setNetworkState(prev => ({
+      ...prev,
+      selectedNetwork: {
+        chainId: network.network!,
+        name: network.name!,
+      },
+    }));
     navigate('/overview');
   };
   return (
@@ -98,17 +109,17 @@ export default function NetworkSettings({
               </div>
             </div>
             {!hideBackup && storedPassphrase && (
-                <div className="flex flex-col gap-2">
-                  <div className="flex flex-row gap-4 justify-between">
-                    <label className="text-start">Backup wallet</label>
-                    <Button
-                      onClick={toggleBackupModal}
-                      text="Backup"
-                      className="link-button custom-delegate-button purple-text align-end  no-padding"
-                    />
-                  </div>
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-row gap-4 justify-between">
+                  <label className="text-start">Backup wallet</label>
+                  <Button
+                    onClick={toggleBackupModal}
+                    text="Backup"
+                    className="link-button custom-delegate-button purple-text align-end  no-padding"
+                  />
                 </div>
-              )}
+              </div>
+            )}
             <div className="flex flex-row">
               {lockSession && (
                 <div

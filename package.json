@@ -93,6 +93,7 @@
     "mina-signer": "^2.1.1",
     "nedb": "1.8.0",
     "nedb-promises": "^6.2.3",
+    "pretty-print-json": "^3.0.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.0",
     "react-dom": "^18.2.0",
