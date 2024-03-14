@@ -36,7 +36,7 @@ declare global {
 const WALLET_ACCOUNTS_KEY = 'walletAccounts';
 const ENCRYPTED_DATA_KEY = 'encryptedData';
 
-export const sendResponse = (eventName: string, data: any) => {
+export const sendResponse = (eventName: string, data?: any) => {
   console.log(`Sending response for event: ${eventName}`);
   window.ipcBridge.send(eventName, JSON.stringify(data));
 };

@@ -24,8 +24,8 @@ const allowedResponseChannels = [
   'signed-message',
   'set-accounts',
   'signed-payment',
-  'response-add-chain',
-  'response-switch-chain',
+  'added-chain',
+  'switched-chain',
   'error',
   'verified-message',
   'signed-json-message',
@@ -62,19 +62,18 @@ const sendIpcRequest = (requestChannel: string, responseChannel: string, data?: 
     });
 
     ipcRenderer.once('error', (event, error) => {
-      resolve(error);
-      // reject(error);
+      reject(JSON.parse(error));
     });
   });
 };
+
 const zkappIntegration = {
   on: () => {},
   // TODO: Update network methods
   requestNetwork: () => sendIpcRequest('get-network-config', 'set-network-config', null),
-  addChain: (data: AddChainArgs) => sendIpcRequest('add-chain', 'response-add-chain', data),
+  addChain: (data: AddChainArgs) => sendIpcRequest('add-chain', 'added-chain', data),
   switchChain: ({chainId}: {chainId: string}) =>
-    sendIpcRequest('switch-chain', 'response-switch-chain', chainId),
-
+    sendIpcRequest('switch-chain', 'switched-chain', chainId),
   requestAccounts: () => sendIpcRequest('get-address', 'set-address'),
   sendTransaction: (data: any) => sendIpcRequest('sign-tx', 'signed-tx', data),
   signMessage: (data: any) => sendIpcRequest('sign-message', 'signed-message', data),

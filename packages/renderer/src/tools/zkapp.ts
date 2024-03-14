@@ -64,7 +64,7 @@ const base_dev_config = {
 };
 /** berkeley net config */
 const base_berkeley_config = {
-  chainId:NET_CONFIG_TYPE.Berkeley,
+  chainId: NET_CONFIG_TYPE.Berkeley,
   netType: NET_CONFIG_TYPE.Berkeley,
   // url: BerkeleyUrlConfig.gql,
   // explorer: BerkeleyUrlConfig.explorer,
@@ -131,3 +131,18 @@ export const NET_CONFIG_NOT_SUPPORT_STAKING = [
 
 /** the netType that support zkapp */
 export const NET_CONFIG_SUPPORT_ZKAPP = [NET_CONFIG_TYPE.Berkeley, NET_CONFIG_TYPE.Testworld2];
+
+export const ERROR_CODES = {
+  userRejectedRequest: {code: 1002, message: 'User rejected the request.'},
+  userDisconnect: {code: 1001, message: 'User disconnect, please connect first.'},
+  noWallet: {code: 20001, message: 'Please create or restore wallet first.'},
+  verifyFailed: {code: 20002, message: 'Verify failed.'},
+  invalidParams: {code: 20003, message: 'Invalid method parameter(s).'},
+  notSupportChain: {code: 20004, message: 'Not support chain.'},
+  zkChainPending: {code: 20005, message: 'Request already pending. Please wait.'},
+  unsupportMethod: {code: 20006, message: 'Method not supported.'},
+  internal: {code: 21001, message: 'Transaction error.'},
+  throwError: {code: 22001, message: 'Unspecified error message. This is a bug, please report it.'},
+  originDismatch: {code: 23001, message: 'Origin dismatch.'},
+  notFound: {code: 404, message: 'Resource not found'},
+};

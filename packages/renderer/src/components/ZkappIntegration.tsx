@@ -1,25 +1,21 @@
 import {useRecoilValue, useSetRecoilState, useRecoilState} from 'recoil';
-import {useNetworkSettingsContext} from '../contexts/NetworkContext';
 import {DEFAULT_FEE, client} from '../tools';
 import {
   NetConfig,
-  SignedTransaction,
   getAccountAddress,
-  getPrivateKey,
   sendResponse,
 } from '../tools/mina-zkapp-bridge';
-import {decodeMemo, signTransaction} from '../tools/utils';
-import {getCurrentNetConfig} from '../tools/zkapp';
 import {configState, networkState, zkappState} from '../store';
 import {toast} from 'react-toastify';
 import {useEffect} from 'react';
 import SignMessage from './UI/modals/zkAppIntegration/SignMessage';
-import ConfirmZkappTransaction from './UI/modals/zkAppIntegration/ConfirmZkappTransaction';
+import ConfirmZkappPayment from './UI/modals/zkAppIntegration/ConfirmZkappPayment';
 import ConfirmZkappDelegation from './UI/modals/zkAppIntegration/ConfirmZkappDelegation';
-
+import ChangeNetwork from './UI/modals/zkAppIntegration/ChangeNetwork';
+import AddChain from './UI/modals/zkAppIntegration/AddChain';
+import ConfirmZkappTransaction from './UI/modals/zkAppIntegration/ConfirmZkappTransaction';
 
 export default function ZkappIntegration() {
-  const {settings, saveSettings} = useNetworkSettingsContext();
   const setZkappState = useSetRecoilState(zkappState);
   const config = useRecoilValue(configState);
   const [{availableNetworks, selectedNetwork}, setNetworkState] = useRecoilState(networkState);
@@ -66,11 +62,11 @@ export default function ZkappIntegration() {
           break;
 
         case 'clorio-add-chain':
-          addChain();
+          addChain(data);
           break;
 
         case 'clorio-switch-chain':
-          await switchChain(data.chainId);
+          await switchChain(data);
           break;
 
         case 'clorio-verify-message':
@@ -108,6 +104,8 @@ export default function ZkappIntegration() {
       async function getNetworkConfig() {
         console.log('Received get-network-config');
         const netConfig: NetConfig = selectedNetwork as NetConfig;
+        // Mock for Berkeley
+        // sendResponse('clorio-set-network-config', {chainId: 'berkeley', name: 'Berkeley'});
         sendResponse('clorio-set-network-config', netConfig);
       }
 
@@ -116,11 +114,10 @@ export default function ZkappIntegration() {
         console.log('Received get-address');
         const address = getAccountAddress();
         sendResponse('clorio-set-address', address);
-        return address;
       }
 
       async function signMessage(data: string) {
-        sendResponse('focus-clorio', {});
+        sendResponse('focus-clorio');
         console.log('Received sign-message-browser');
         setZkappState(prev => ({
           ...prev,
@@ -140,7 +137,7 @@ export default function ZkappIntegration() {
 
       async function sendPayment(data: any) {
         if (!config.isAuthenticated) {
-          sendResponse('focus-clorio', {});
+          sendResponse('focus-clorio');
           toast.error('Please log into your wallet first.');
           return;
         }
@@ -163,12 +160,12 @@ export default function ZkappIntegration() {
             return {
               ...prev,
               transactionData: {...data, from: sender[0]},
-              showTransactionConfirmation: true,
+              showPaymentConfirmation: true,
               isPendingConfirmation: true,
               type: 'send-payment',
             };
           });
-          sendResponse('focus-clorio', {});
+          sendResponse('focus-clorio');
           toast.info('Confirm the transaction in your wallet');
         } catch (error) {
           console.error('Error in send-payment:', error);
@@ -176,44 +173,92 @@ export default function ZkappIntegration() {
         }
       }
 
-      function addChain() {
+      function addChain(data: any) {
         console.log('Received add-chain');
-        saveSettings({settings, ...data});
-        sendResponse('clorio-added-chain', {});
+        sendResponse('focus-clorio');
+        setNetworkState(prev => ({
+          ...prev,
+          showChangeNetworkModal: true,
+          addChainData: {...data, url: decodeURIComponent(data.url)},
+          isAddingChain: true,
+        }));
       }
 
-      // TODO: Fix chain switching
-      // async function switchChain(chainId: string) {
-      async function switchChain() {
+      // TODO: CHECK IF THE MINA CLIENT IS CHANGING NETWORK
+      async function switchChain(chainId: string) {
+        const networksFound = availableNetworks.filter(network => network.chainId === chainId);
+        if (networksFound.length === 0) {
+          toast.error('Network not found');
+          sendResponse('clorio-switched-chain', {
+            code: 20004,
+            message: 'Chain not supported.',
+          });
+          return;
+        }
+        sendResponse('focus-clorio');
         console.log('Received switch-chain');
-        const netConfig: NetConfig = await getCurrentNetConfig();
-        const responseData = {chainId: netConfig.netType, name: netConfig.name};
-        sendResponse('clorio-switched-chain', responseData);
+        setNetworkState(prev => ({
+          ...prev,
+          showChangeNetworkModal: true,
+          switchNetwork: chainId,
+        }));
       }
 
       async function signTx(data: any) {
-        const password = '';
-        console.log('Received sign-tx');
-        const nextParams = {...data};
-        const privateKey = await getPrivateKey(password);
+        // if (!config.isAuthenticated) {
+        //   sendResponse('focus-clorio');
+        //   toast.error('Please log into your wallet first.');
+        //   return;
+        // }
+        try {
+          // get the current wallet address
+          const sender = getAccountAddress();
 
-        if (data.isSpeedUp) {
-          nextParams.memo = decodeMemo(data.memo);
+          // TODO: Add method from mina client
+          data.fee = data.fee || DEFAULT_FEE;
+
+          // unlockWallet();
+          console.log('🚀 ~ signTx ~ data:', data);
+          setZkappState(prev => {
+            return {
+              ...prev,
+              transactionData: {
+                ...data,
+                transaction: JSON.parse(data.transaction),
+                from: sender[0],
+              },
+              showTransactionConfirmation: true,
+              isPendingConfirmation: true,
+              type: 'sign-tx',
+              isZkappCommand: true,
+            };
+          });
+          sendResponse('focus-clorio');
+          toast.info('Confirm the transaction in your wallet');
+        } catch (error) {
+          console.error('Error in sign-tx:', error);
+          sendResponse('error', {message: "Transaction couldn't be sent"});
         }
+        // console.log('Received sign-tx');
+        // const nextParams = {...data};
 
-        const signedTx: SignedTransaction = await signTransaction(privateKey, nextParams);
+        // if (data.isSpeedUp) {
+        //   nextParams.memo = decodeMemo(data.memo);
+        // }
 
-        if (signedTx.error) {
-          console.error(`Error signing transaction: ${signedTx.error}`);
-          return {error: signedTx.error};
-        }
+        // const signedTx: SignedTransaction = await signTransaction(privateKey, nextParams);
 
-        sendResponse('clorio-signed-tx', signedTx);
+        // if (signedTx.error) {
+        //   console.error(`Error signing transaction: ${signedTx.error}`);
+        //   return {error: signedTx.error};
+        // }
+
+        // sendResponse('clorio-signed-tx', signedTx);
       }
 
       function unlockWallet() {
         if (config.isLocked) {
-          sendResponse('focus-clorio', {});
+          sendResponse('focus-clorio');
           toast.info('Please unlock your wallet first');
         }
       }
@@ -226,7 +271,7 @@ export default function ZkappIntegration() {
       }
 
       async function signJsonMessage(data: any) {
-        sendResponse('focus-clorio', {});
+        sendResponse('focus-clorio');
         console.log('Received sign-json-message');
         setZkappState(prev => ({
           ...prev,
@@ -246,7 +291,7 @@ export default function ZkappIntegration() {
       }
 
       async function createNullifier(data: any) {
-        sendResponse('focus-clorio', {});
+        sendResponse('focus-clorio');
         console.log('Received create-nullifier');
         setZkappState(prev => ({
           ...prev,
@@ -260,7 +305,7 @@ export default function ZkappIntegration() {
       async function stakeDelegation(data: any) {
         console.log('Received stake-delegation');
         if (!config.isAuthenticated) {
-          sendResponse('focus-clorio', {});
+          sendResponse('focus-clorio');
           toast.error('Please log into your wallet first.');
           return;
         }
@@ -268,13 +313,10 @@ export default function ZkappIntegration() {
           if (!data.to || typeof data.to !== 'string') {
             throw Error('Data is missing "to" or "amount" field');
           }
-          // get the current wallet address
           const sender = getAccountAddress();
 
-          // TODO: Implement automatic fee calculation from mina client
           data.fee = data.fee || DEFAULT_FEE;
 
-          // unlockWallet();
           setZkappState(prev => {
             return {
               ...prev,
@@ -284,16 +326,16 @@ export default function ZkappIntegration() {
               type: 'send-delegation',
             };
           });
-          sendResponse('focus-clorio', {});
+          sendResponse('focus-clorio');
           toast.info('Confirm the transaction in your wallet');
         } catch (error) {
-          console.error('Error in send-payment:', error);
+          console.error('Error in send-delegation:', error);
           sendResponse('error', {message: "Transaction couldn't be sent"});
         }
       }
 
       async function signFields(data: any) {
-        sendResponse('focus-clorio', {});
+        sendResponse('focus-clorio');
         setZkappState(prev => ({
           ...prev,
           showMessageSign: true,
@@ -319,8 +361,11 @@ export default function ZkappIntegration() {
   return (
     <>
       <SignMessage />
-      <ConfirmZkappTransaction />
+      <ConfirmZkappPayment />
       <ConfirmZkappDelegation />
+      <ConfirmZkappTransaction />
+      <ChangeNetwork />
+      <AddChain />
     </>
   );
 }

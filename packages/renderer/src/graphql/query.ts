@@ -19,6 +19,21 @@ export const GET_NONCE = gql`
   }
 `;
 
+export const GET_NONCE_AND_BALANCE = gql`
+  query accountByKey($publicKey: String!) {
+    accountByKey(publicKey: $publicKey) {
+      usableNonce
+      balance {
+        total
+        liquid
+        locked
+        liquidUnconfirmed
+        unconfirmedTotal
+      }
+    }
+  }
+`;
+
 export const BROADCAST_TRANSACTION = gql`
   mutation broadcastTransaction($input: SendPaymentInput!, $signature: SignatureInput!) {
     broadcastTransaction(input: $input, signature: $signature) {
