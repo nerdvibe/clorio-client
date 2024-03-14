@@ -249,6 +249,10 @@ function cleanup() {
   });
 }
 
+ipcMain.on('clorio-error', (event, data) => {
+  console.log('clorio-error', data);
+  childWindow.webContents.send('error', data);
+});
 // Call cleanup when windows are closed
 // @ts-ignore
 if (browserWindow) {

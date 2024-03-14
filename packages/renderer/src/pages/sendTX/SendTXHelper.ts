@@ -24,6 +24,19 @@ export interface INonceQueryResult {
   };
 }
 
+export interface INonceAndBalanceQueryResult {
+  accountByKey: {
+    usableNonce: number;
+    balance: {
+      liquidUnconfirmed: number;
+      total: number;
+      liquid: number;
+      locked: number;
+      unconfirmedTotal: number;
+    };
+  };
+}
+
 export const initialTransactionData = {
   senderAddress: '',
   amount: toNanoMINA(INITIAL_TRANSACTION_AMOUNT),

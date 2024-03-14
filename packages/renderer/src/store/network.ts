@@ -7,8 +7,11 @@ export interface NetworkConfigType {
 
 export interface NetworkSettingsType {
   availableNetworks: NetworkConfigType[];
-  showChangeNetworkModal: false;
+  showChangeNetworkModal: boolean;
   selectedNetwork?: NetworkConfigType;
+  switchNetwork?: string;
+  addChainData?: {name: string; url: string};
+  isAddingChain:boolean
 }
 
 export const networkState = atom<NetworkSettingsType>({
@@ -17,5 +20,8 @@ export const networkState = atom<NetworkSettingsType>({
     availableNetworks: [],
     showChangeNetworkModal: false,
     selectedNetwork: undefined,
+    switchNetwork: undefined,
+    addChainData: undefined,
+    isAddingChain: false,
   },
 });

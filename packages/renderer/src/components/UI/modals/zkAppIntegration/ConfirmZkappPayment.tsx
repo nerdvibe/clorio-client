@@ -8,29 +8,29 @@ import {getAccountAddress, sendResponse} from '../../../../tools/mina-zkapp-brid
 import {useLazyQuery} from '@apollo/client';
 import {INonceQueryResult} from '../../../../pages/sendTX/SendTXHelper';
 import {GET_NONCE} from '../../../../graphql/query';
+import {signTransaction} from '../../../../tools/utils';
 import PasswordDecrypt from '../../../PasswordDecrypt';
 import {toast} from 'react-toastify';
-import {client} from '/@/tools';
 import {mnemonicToPrivateKey} from '../../../../../../preload/src/bip';
 import {useWallet} from '/@/contexts/WalletContext';
+import {client} from '/@/tools';
 import {ERROR_CODES} from '/@/tools/zkapp';
 
-export default function ConfirmZkappTransaction() {
+export default function ConfirmZkappPayment() {
   const {wallet} = useWallet();
   const fromRef = useRef(null);
   const [fromTextWidth, setFromTextWidth] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const [fetchNonce, {data: nonceData, error: nonceError}] =
     useLazyQuery<INonceQueryResult>(GET_NONCE);
-  const [{transactionData, showTransactionConfirmation, isZkappCommand}, setZkappState] =
-    useRecoilState(zkappState);
+  const [{transactionData, showPaymentConfirmation}, setZkappState] = useRecoilState(zkappState);
 
   useEffect(() => {
-    if (showTransactionConfirmation) {
+    if (showPaymentConfirmation) {
       const address = getAccountAddress();
       fetchNonce({variables: {publicKey: address[0]}});
     }
-  }, [showTransactionConfirmation]);
+  }, [showPaymentConfirmation]);
 
   useEffect(() => {
     if (fromRef.current) {
@@ -38,58 +38,38 @@ export default function ConfirmZkappTransaction() {
     }
   }, [fromRef.current]);
 
-  const shortTransactionData = () => {
-    if (transactionData?.transaction) {
-      return {
-        feePayer: {
-          publicKey: transactionData?.transaction?.feePayer?.body?.publicKey,
-          fee: transactionData?.transaction?.feePayer?.body?.publicKey,
-        },
-        accountUpdates: transactionData?.transaction?.accountUpdates?.map(accountUpdate => {
-          return {
-            publicKey: accountUpdate.body.publicKey,
-            tokenId: accountUpdate.body.tokenId,
-            balanceChange: accountUpdate.body.balanceChange.magnitude,
-          };
-        }),
-      };
-    }
-  };
-
   const onClose = () => {
     setZkappState(state => ({
       ...state,
-      showTransactionConfirmation: false,
+      showPaymentConfirmation: false,
       showDelegationConfirmation: false,
+      showTransactionConfirmation: false,
     }));
     setShowPassword(false);
     sendResponse('clorio-error', ERROR_CODES.userRejectedRequest);
   };
 
-  const onConfirm = async (mnemonic: string) => {
-    let privateKey = mnemonic;
-    if (mnemonic.trim().split(' ').length > 2) {
-      privateKey = (await mnemonicToPrivateKey(mnemonic, wallet.accountNumber)) || mnemonic;
+  // TODO: Fix amount and fee
+  const onConfirm = async (password: string) => {
+    let privateKey = password;
+    const address = getAccountAddress();
+    if (password.trim().split(' ').length > 2) {
+      privateKey = (await mnemonicToPrivateKey(password, wallet.accountNumber)) || password;
     }
-
-    // const address = getAccountAddress();
-    // await fetchNonce({variables: {publicKey: address[0]}});
     if (nonceError) {
       console.error('Error in send-payment:', nonceError);
       sendResponse('error', {error: nonceError});
       return;
     }
-    // const nonce = nonceData?.accountByKey?.usableNonce;
-    const feePayer = {
-      ...transactionData?.transaction?.feePayer?.body,
-      publicKey: undefined,
-      feePayer: transactionData?.from,
-      fee: 1,
-    };
-    const payload = {zkappCommand: transactionData?.transaction, feePayer};
-    console.log('🚀 ~ onConfirm ~ payload:', payload);
-    await (await client()).signZkappCommand(payload, privateKey);
-    sendResponse('clorio-signed-tx', {hash: 'ADD TX HASH HERE'});
+    const nonce = nonceData?.accountByKey?.usableNonce;
+    const signedTx = await signTransaction(privateKey, {
+      ...transactionData,
+      nonce,
+      from: address[0],
+    });
+    const hashedTx = await (await client()).hashPayment(signedTx);
+    // TODO: Add tx broadcast
+    sendResponse('clorio-signed-payment', {hash: hashedTx});
     toast.success('Transaction signed successfully');
     setZkappState(state => ({
       ...state,
@@ -112,7 +92,7 @@ export default function ConfirmZkappTransaction() {
 
   return (
     <ModalContainer
-      show={showTransactionConfirmation}
+      show={showPaymentConfirmation}
       close={onClose}
       className="confirm-transaction-modal"
     >
@@ -143,23 +123,21 @@ export default function ConfirmZkappTransaction() {
               />
             </div>
           </div>
-          <div className="flex flex-col justify-start">
-            <div className="flex w-100">
-              <div className="w-100">
+          <div className="flex justify-start">
+            <div className="flex flex-col w-100">
+              <div>
                 <h4>Amount</h4>
                 <p>{transactionData.amount} MINA</p>
               </div>
-              <div className="w-100">
+              <div>
                 <h4>Transaction fee</h4>
                 <p>{transactionData.fee || 0.0101} MINA</p>
               </div>
             </div>
-            {isZkappCommand && (
+            {transactionData.memo && (
               <div className="flex flex-col w-100">
-                <h4>Content</h4>
-                <pre className="w-100 overflow-x-auto text-start message-box">
-                  {JSON.stringify(shortTransactionData(), null, 2)}
-                </pre>
+                <h4>Memo</h4>
+                <p>{transactionData.memo}</p>
               </div>
             )}
           </div>
