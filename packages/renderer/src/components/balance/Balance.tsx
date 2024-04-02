@@ -13,11 +13,12 @@ import type {IBalanceContext} from '../../contexts/balance/BalanceTypes';
 import {BalanceContext} from '../../contexts/balance/BalanceContext';
 import {balanceTooltip} from './util';
 import CustomSkeleton from '../CustomSkeleton';
-import {useWallet} from '/@/contexts/WalletContext';
 import Truncate from 'react-truncate-inside';
+import { useRecoilValue } from 'recoil';
+import { walletState } from '/@/store';
 
 const Balance = () => {
-  const {wallet} = useWallet();
+  const wallet = useRecoilValue(walletState);
   const {address} = wallet;
   const textRef = useRef(null);
   const bigTextRef = useRef(null);

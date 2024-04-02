@@ -11,9 +11,8 @@ import type {IWalletIdData} from '/@/types/WalletIdData';
 import ReactTooltip from 'react-tooltip';
 import SecureDataStorageComponent from '../components/ReadSecureStorage';
 import useSecureStorage from '../hooks/useSecureStorage';
-import {useWallet} from '../contexts/WalletContext';
 import {useSetRecoilState} from 'recoil';
-import {configState} from '../store';
+import {configState, walletState} from '../store';
 import isElectron from 'is-electron';
 
 interface IProps {
@@ -39,7 +38,20 @@ function Login({toggleLoader}: IProps) {
   const setConfig = useSetRecoilState(configState);
 
   const {encryptData} = useSecureStorage();
-  const {updateWallet} = useWallet();
+  const updateWallet = useSetRecoilState(walletState);
+
+  useEffect(() => {
+    const listener = async (event: KeyboardEvent) => {
+      if (event.code === 'Enter' || event.code === 'NumpadEnter') {
+        await checkCredentials();
+      }
+    };
+    document.addEventListener('keydown', listener);
+    return () => {
+      document.removeEventListener('keydown', listener);
+    };
+  }, [privateKey]);
+
   /**
    * Clean component state on component dismount
    */

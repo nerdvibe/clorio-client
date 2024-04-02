@@ -13,7 +13,8 @@ import {ModalContainer} from '../modals';
 import NetworkSettings from './NetworkSettings';
 import {renderNetworkLabel} from './SidebarHelper';
 import {Repeat} from 'react-feather';
-import {useWallet} from '/@/contexts/WalletContext';
+import {walletState} from '/@/store';
+import {useRecoilState} from 'recoil';
 
 export default function AppSettings({
   toggleLoader,
@@ -23,7 +24,7 @@ export default function AppSettings({
   network,
 }: any | {toggleLoader: (state?: boolean) => void}) {
   const [showModal, setShowModal] = useState(false);
-  const {updateWallet, wallet} = useWallet();
+  const [wallet, updateWallet] = useRecoilState(walletState);
   const {address, mnemonic: isUsingMnemonic} = wallet;
   const {addBalance, shouldBalanceUpdate, setShouldBalanceUpdate} =
     useContext<Partial<IBalanceContext>>(BalanceContext);

@@ -1,4 +1,4 @@
-import {ledger} from '/@/assets/';
+import ledger from './assets/ledger.svg';
 
 interface IProps {
   width?: string;

@@ -204,7 +204,11 @@ ipcMain.handle('open-win', (_: Electron.IpcMainInvokeEvent, arg) => {
 const createEventHandler = (type: string, response: string) => {
   return {
     [type]: (_: Electron.IpcMainEvent, data: any) =>
-      browserWindow.webContents.send('clorio-event', {type: `clorio-${type}`, data}),
+      browserWindow.webContents.send('clorio-event', {
+        type: `clorio-${type}`,
+        data,
+        source: childWindow.webContents.getURL(),
+      }),
     [`clorio-${response}`]: (_: Electron.IpcMainEvent, data: any) =>
       childWindow.webContents.send(response, data),
   };
@@ -213,9 +217,9 @@ const createEventHandler = (type: string, response: string) => {
 const eventHandlers = {
   ...createEventHandler('get-network-config', 'set-network-config'),
   ...createEventHandler('get-address', 'set-address'),
+  ...createEventHandler('get-accounts', 'set-accounts'),
   ...createEventHandler('sign-tx', 'signed-tx'),
   ...createEventHandler('sign-message', 'signed-message'),
-  ...createEventHandler('get-accounts', 'set-accounts'),
   ...createEventHandler('send-payment', 'signed-payment'),
   ...createEventHandler('add-chain', 'added-chain'),
   ...createEventHandler('switch-chain', 'switched-chain'),

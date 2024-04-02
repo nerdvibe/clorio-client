@@ -9,15 +9,16 @@ import {toast} from 'react-toastify';
 import {Col} from 'react-bootstrap';
 import {clearSession} from '../tools';
 import {useNavigate} from 'react-router-dom';
-import {useWallet} from '../contexts/WalletContext';
 import {useSetRecoilState} from 'recoil';
-import {configState} from '../store';
+import {configState, walletState} from '../store';
+import {initialWalletState} from '../store/wallet';
 
 export default function RestoreSession({onLogin}: {onLogin: (privateKey: string) => void}) {
   const [password, setPassword] = useState('');
   const {decryptData, clearData} = useSecureStorage();
   const navigate = useNavigate();
-  const {updateWallet} = useWallet();
+  // const {updateWallet} = useWallet();
+  const updateWallet = useSetRecoilState(walletState);
   const setConfig = useSetRecoilState(configState);
 
   useEffect(() => {
@@ -26,6 +27,18 @@ export default function RestoreSession({onLogin}: {onLogin: (privateKey: string)
       isLocked: true,
     }));
   }, []);
+
+  useEffect(() => {
+    const listener = (event: KeyboardEvent) => {
+      if (event.code === 'Enter' || event.code === 'NumpadEnter') {
+        onSubmitHandler();
+      }
+    };
+    document.addEventListener('keydown', listener);
+    return () => {
+      document.removeEventListener('keydown', listener);
+    };
+  }, [password]);
 
   const onSubmitHandler = () => {
     try {
@@ -47,7 +60,7 @@ export default function RestoreSession({onLogin}: {onLogin: (privateKey: string)
 
   const onLogout = async () => {
     await clearSession();
-    await updateWallet({});
+    updateWallet(initialWalletState);
     clearData();
     navigate('/');
     setConfig(prev => ({

@@ -11,12 +11,16 @@ import Balance from './components/balance/Balance';
 import {GET_NETWORK} from './graphql/query';
 import {TermsAndConditions} from './components/UI/modals';
 import type {INetworkData} from './types';
-import {useWallet} from './contexts/WalletContext';
 import ZkappIntegration from './components/ZkappIntegration';
+import {useRecoilState} from 'recoil';
+import {walletState} from './store';
+import {initialWalletState} from './store/wallet';
+import isElectron from 'is-electron';
 
 const Layout = () => {
   const [showLoader, setShowLoader] = useState<boolean>(false);
-  const {updateWallet, wallet: sessionData} = useWallet();
+  // const {updateWallet, wallet: sessionData} = useWallet();
+  const [sessionData, updateWallet] = useRecoilState(walletState);
 
   const {data: networkData} = useQuery<INetworkData>(GET_NETWORK, {
     onCompleted: async data => {
@@ -31,14 +35,14 @@ const Layout = () => {
   };
 
   const clearSessionData = () => {
-    updateWallet({});
+    updateWallet(initialWalletState);
     setShowLoader(true);
   };
   const isAuthenticated = !!sessionData.address;
 
   return (
     <div>
-      <ZkappIntegration />
+      {isElectron() && <ZkappIntegration />}
       <Container fluid>
         <TermsAndConditions />
         <div className="flex items-stretch">

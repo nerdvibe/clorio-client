@@ -1,17 +1,18 @@
-import {useRecoilState} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import {ModalContainer} from '../ModalContainer';
-import {zkappState} from '/@/store';
+import {walletState, zkappState} from '/@/store';
 import {sendResponse} from '/@/tools/mina-zkapp-bridge';
 import Button from '../../Button';
 import PasswordDecrypt from '/@/components/PasswordDecrypt';
 import {useEffect, useRef, useState} from 'react';
 import {client} from '/@/tools';
 import Truncate from 'react-truncate-inside/es';
-import {useWallet} from '/@/contexts/WalletContext';
 import {mnemonicToPrivateKey} from '../../../../../../preload/src/bip';
 import {toast} from 'react-toastify';
 
 export default function SignMessage() {
+  const wallet = useRecoilValue(walletState);
+  const {address} = wallet;
   const fromRef = useRef(null);
   const [showPassword, setShowPassword] = useState(false);
   const [fromTextWidth, setFromTextWidth] = useState(0);
@@ -19,9 +20,6 @@ export default function SignMessage() {
     {messageToSign, showMessageSign, isJsonMessageToSign, isNullifier, isFields},
     setZkappState,
   ] = useRecoilState(zkappState);
-
-  const {wallet} = useWallet();
-  const {address} = wallet;
 
   const responseChannel = isFields
     ? 'clorio-signed-fields'

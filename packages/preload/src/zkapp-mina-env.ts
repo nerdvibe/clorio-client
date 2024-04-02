@@ -74,10 +74,10 @@ const zkappIntegration = {
   addChain: (data: AddChainArgs) => sendIpcRequest('add-chain', 'added-chain', data),
   switchChain: ({chainId}: {chainId: string}) =>
     sendIpcRequest('switch-chain', 'switched-chain', chainId),
+  getAccounts: () => sendIpcRequest('get-accounts', 'set-accounts'),
   requestAccounts: () => sendIpcRequest('get-address', 'set-address'),
   sendTransaction: (data: any) => sendIpcRequest('sign-tx', 'signed-tx', data),
   signMessage: (data: any) => sendIpcRequest('sign-message', 'signed-message', data),
-  getAccounts: () => sendIpcRequest('get-accounts', 'set-accounts'),
   sendPayment: (data: any) => sendIpcRequest('send-payment', 'signed-payment', data),
   verifyMessage: (data: any) => sendIpcRequest('verify-message', 'verified-message', data),
   signJsonMessage: (data: any) => sendIpcRequest('sign-json-message', 'signed-json-message', data),

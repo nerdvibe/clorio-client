@@ -5309,7 +5309,7 @@ readdirp@~3.6.0:
 
 recoil-persist@^5.1.0:
   version "5.1.0"
-  resolved "https://registry.npmjs.org/recoil-persist/-/recoil-persist-5.1.0.tgz"
+  resolved "https://registry.yarnpkg.com/recoil-persist/-/recoil-persist-5.1.0.tgz#c4232fe04f2e4b6afcc815baff56f2521f6dcde1"
   integrity sha512-sew4k3uBVJjRWKCSFuBw07Y1p1pBOb0UxLJPxn4G2bX/9xNj+r2xlqYy/BRfyofR/ANfqBU04MIvulppU4ZC0w==
 
 recoil@^0.7.7:
