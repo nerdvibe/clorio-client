@@ -19,7 +19,6 @@ import {
   toNanoMINA,
   createPaymentInputFromPayload,
   createSignatureInputFromSignature,
-  signTransaction,
   MINIMUM_NONCE,
   deriveAccount,
   getPassphrase,
@@ -44,6 +43,7 @@ import {BalanceContext} from '/@/contexts/balance/BalanceContext';
 import Stepper from '/@/components/UI/stepper/Stepper';
 import TransactionAuthentication from '/@/components/transactionAuthentication/TransactionAuthentication';
 import {useWallet} from '/@/contexts/WalletContext';
+import {signTransaction} from '/@/tools/utils';
 
 interface IProps {
   sessionData: IWalletData;

@@ -8,7 +8,8 @@ import {useLazyQuery} from '@apollo/client';
 import {IWalletIdData} from '../types';
 import {GET_ID} from '../graphql/query';
 import {useNavigate} from 'react-router-dom';
-import {useWallet} from '../contexts/WalletContext';
+import {useSetRecoilState} from 'recoil';
+import {walletState} from '../store';
 
 interface IProps {
   toggleLoader: (state: boolean) => void;
@@ -22,7 +23,7 @@ const SplashScreen = ({toggleLoader}: IProps) => {
     },
   });
 
-  const {updateWallet} = useWallet();
+  const updateWallet = useSetRecoilState(walletState);
 
   const {hasEncryptedData} = useSecureStorage();
   const onLogin = async (privateKey: string) => {
@@ -37,7 +38,7 @@ const SplashScreen = ({toggleLoader}: IProps) => {
         const isUsingMnemonic = privateKey.trim().split(' ').length === 12;
         setPassphrase(isUsingMnemonic);
         const success = await storeSession(derivedAccount.publicKey, id, false, 0, isUsingMnemonic);
-        await updateWallet({
+        updateWallet({
           address: derivedAccount.publicKey,
           id,
           ledger: false,

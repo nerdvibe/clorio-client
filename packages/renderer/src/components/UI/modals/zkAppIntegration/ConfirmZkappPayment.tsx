@@ -1,6 +1,6 @@
-import {useRecoilState} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import {ModalContainer} from '..';
-import {zkappState} from '../../../../store';
+import {walletState, zkappState} from '../../../../store';
 import {useEffect, useRef, useState} from 'react';
 import Truncate from 'react-truncate-inside/es';
 import Button from '../../Button';
@@ -12,12 +12,11 @@ import {signTransaction} from '../../../../tools/utils';
 import PasswordDecrypt from '../../../PasswordDecrypt';
 import {toast} from 'react-toastify';
 import {mnemonicToPrivateKey} from '../../../../../../preload/src/bip';
-import {useWallet} from '/@/contexts/WalletContext';
 import {client} from '/@/tools';
 import {ERROR_CODES} from '/@/tools/zkapp';
 
 export default function ConfirmZkappPayment() {
-  const {wallet} = useWallet();
+  const wallet = useRecoilValue(walletState);
   const fromRef = useRef(null);
   const [fromTextWidth, setFromTextWidth] = useState(0);
   const [showPassword, setShowPassword] = useState(false);

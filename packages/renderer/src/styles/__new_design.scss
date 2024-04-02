@@ -401,6 +401,24 @@ p {
   overflow-y: auto;
 }
 
+.website-block {
+  width: 100%;
+  // border: 1px solid #ffffffaa;
+  background-color: #ffffff22;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  p {
+    width: 100%;
+    text-align: start;
+    margin-bottom: 0;
+  }
+}
+
 @media screen and (max-width: 600px) {
   .homepage-card {
     height: 100vh;

@@ -1,8 +1,5 @@
-import {Row, Col} from 'react-bootstrap';
 import Hoc from '../components/UI/Hoc';
-import Rocket from '../assets/rocket.json';
-import Animation from '../components/UI/Animation';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 
 function ZkApps() {
   const [contentRef, setContentRef] = useState(null);
@@ -26,23 +23,20 @@ function ZkApps() {
   };
 
   return (
-    <Hoc className="glass-card">
+    <Hoc className="glass-card p-0">
       <div
         className="no-bg flex items-center"
         style={{minHeight: '500px'}}
       >
-        <Row>
-          <Col xs={12}>
-            <iframe
-              ref={setContentRef}
-              id="your-iframe-id"
-              src="http://localhost:3001/"
-              frameBorder="0"
-              style={{width: '800px', height: '800px'}}
-              onLoad={addListener}
-            ></iframe>
-          </Col>
-        </Row>
+        <iframe
+          ref={setContentRef}
+          id="your-iframe-id"
+          src="https://zkapp.store"
+          // src="http://localhost:3001/"
+          frameBorder="0"
+          style={{width: '100%', height: '100%', minHeight: '80vh', borderRadius: '16px'}}
+          onLoad={addListener}
+        ></iframe>
       </div>
     </Hoc>
   );

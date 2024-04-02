@@ -89,7 +89,6 @@ export default function AddChain() {
         isAddingChain: false,
       }));
       sendResponse('clorio-added-chain', {
-        // ...network,
         chainId: addChainData?.name ?? '',
         name: addChainData?.name ?? '',
       });

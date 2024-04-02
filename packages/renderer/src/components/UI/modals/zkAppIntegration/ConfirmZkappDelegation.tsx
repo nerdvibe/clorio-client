@@ -1,6 +1,6 @@
-import {useRecoilState} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import {ModalContainer} from '..';
-import {zkappState} from '../../../../store';
+import {walletState, zkappState} from '../../../../store';
 import {useContext, useEffect, useRef, useState} from 'react';
 import Truncate from 'react-truncate-inside/es';
 import Button from '../../Button';
@@ -12,14 +12,13 @@ import PasswordDecrypt from '../../../PasswordDecrypt';
 import {toast} from 'react-toastify';
 import {client} from '/@/tools';
 import {mnemonicToPrivateKey} from '../../../../../../preload/src/bip';
-import {useWallet} from '/@/contexts/WalletContext';
 import Big from 'big.js';
 import {IBalanceContext} from '/@/contexts/balance/BalanceTypes';
 import {BalanceContext} from '/@/contexts/balance/BalanceContext';
 import {ERROR_CODES} from '/@/tools/zkapp';
 
 export default function ConfirmZkappDelegation() {
-  const {wallet} = useWallet();
+  const wallet = useRecoilValue(walletState);
   const fromRef = useRef(null);
   const [fromTextWidth, setFromTextWidth] = useState(0);
   const [showPassword, setShowPassword] = useState(false);

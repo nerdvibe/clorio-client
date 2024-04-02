@@ -1,6 +1,6 @@
-import {useRecoilState} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import {ModalContainer} from '..';
-import {zkappState} from '../../../../store';
+import {walletState, zkappState} from '../../../../store';
 import {useEffect, useRef, useState} from 'react';
 import Truncate from 'react-truncate-inside/es';
 import Button from '../../Button';
@@ -12,11 +12,10 @@ import PasswordDecrypt from '../../../PasswordDecrypt';
 import {toast} from 'react-toastify';
 import {client} from '/@/tools';
 import {mnemonicToPrivateKey} from '../../../../../../preload/src/bip';
-import {useWallet} from '/@/contexts/WalletContext';
 import {ERROR_CODES} from '/@/tools/zkapp';
 
 export default function ConfirmZkappTransaction() {
-  const {wallet} = useWallet();
+  const wallet = useRecoilValue(walletState);
   const fromRef = useRef(null);
   const [fromTextWidth, setFromTextWidth] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
@@ -87,9 +86,7 @@ export default function ConfirmZkappTransaction() {
       fee: 1,
     };
     const payload = {zkappCommand: transactionData?.transaction, feePayer};
-    console.log('🚀 ~ onConfirm ~ payload:', payload);
     await (await client()).signZkappCommand(payload, privateKey);
-    sendResponse('clorio-signed-tx', {hash: 'ADD TX HASH HERE'});
     toast.success('Transaction signed successfully');
     setZkappState(state => ({
       ...state,

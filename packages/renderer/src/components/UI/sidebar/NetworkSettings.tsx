@@ -10,6 +10,7 @@ import {INetworkData} from '/@/types';
 import {getPassphrase} from '/@/tools';
 import {useRecoilState} from 'recoil';
 import {networkState} from '/@/store';
+import {ConnectedZkapps} from './ConnectedZkapps';
 
 export default function NetworkSettings({
   currentNetwork,
@@ -86,27 +87,10 @@ export default function NetworkSettings({
                   {network.nodeInfo.syncStatus}
                 </div>
               )}
-              <div className="flex flex-row justify-between items-center">
-                <label className="text-start">Network</label>
-                <Form.Select
-                  className="w-50"
-                  aria-label="Select a network"
-                  onChange={networkSelectHandler}
-                  defaultValue={settings?.label?.toLowerCase()}
-                >
-                  {Object.keys(availableNetworks).map(network => {
-                    const networkData = availableNetworks[network];
-                    return (
-                      <option
-                        key={networkData.label}
-                        value={network}
-                      >
-                        {networkData.label}
-                      </option>
-                    );
-                  })}
-                </Form.Select>
-              </div>
+            </div>
+            <div className="flex flex-row justify-between items-center">
+              <label className="text-start">Connected zkapps</label>
+              <ConnectedZkapps />
             </div>
             {!hideBackup && storedPassphrase && (
               <div className="flex flex-col gap-2">
@@ -120,6 +104,28 @@ export default function NetworkSettings({
                 </div>
               </div>
             )}
+
+            <div className="flex flex-row justify-between items-center">
+              <label className="text-start">Network</label>
+              <Form.Select
+                className="w-50"
+                aria-label="Select a network"
+                onChange={networkSelectHandler}
+                defaultValue={settings?.label?.toLowerCase()}
+              >
+                {Object.keys(availableNetworks).map(network => {
+                  const networkData = availableNetworks[network];
+                  return (
+                    <option
+                      key={networkData.label}
+                      value={network}
+                    >
+                      {networkData.label}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
             <div className="flex flex-row">
               {lockSession && (
                 <div
