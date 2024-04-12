@@ -379,6 +379,10 @@ p {
   justify-content: center !important;
 }
 
+.justify-stretch {
+  justify-content: stretch;
+}
+
 .settings-modal-container {
   min-width: 400px;
 }
@@ -417,6 +421,28 @@ p {
     text-align: start;
     margin-bottom: 0;
   }
+}
+
+.ledger-sign-error-animation {
+  height: 200px;
+}
+
+.detail {
+  font-weight: 200;
+  font-size: 16px;
+}
+
+.global-loader {
+  width: 100vw;
+  height: 110vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #00000033;
+  position: absolute;
+  z-index: 10;
+  top: -20px;
 }
 
 @media screen and (max-width: 600px) {

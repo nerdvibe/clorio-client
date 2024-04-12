@@ -1,6 +1,6 @@
 import Big from 'big.js';
 import * as bip39 from 'bip39';
-import {mnemonicToPrivateKey, mnemonicToSeed} from '#preload';
+import {mnemonicToPrivateKey} from '#preload';
 // @ts-ignore
 import * as bs58check from 'bs58check';
 // @ts-ignore
@@ -9,11 +9,12 @@ import Client from 'mina-signer';
 import isElectron from 'is-electron';
 
 export const client = async () => {
+  const network =
+    JSON.parse(localStorage.getItem('networkSettings'))?.network ||
+    import.meta.env.VITE_REACT_APP_NETWORK ||
+    'mainnet';
   return await new Client({
-    network:
-      JSON.parse(localStorage.getItem('networkSettings'))?.network ||
-      import.meta.env.VITE_REACT_APP_NETWORK ||
-      'mainnet',
+    network,
   });
 };
 

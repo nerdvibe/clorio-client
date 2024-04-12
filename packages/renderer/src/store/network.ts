@@ -1,4 +1,5 @@
 import {atom} from 'recoil';
+import {INetworkOption} from '../hooks/useNetworkSettings';
 
 export interface NetworkConfigType {
   chainId: string;
@@ -11,7 +12,8 @@ export interface NetworkSettingsType {
   selectedNetwork?: NetworkConfigType;
   switchNetwork?: string;
   addChainData?: {name: string; url: string};
-  isAddingChain:boolean
+  isAddingChain: boolean;
+  selectedNode?: INetworkOption;
 }
 
 export const networkState = atom<NetworkSettingsType>({
@@ -23,5 +25,6 @@ export const networkState = atom<NetworkSettingsType>({
     switchNetwork: undefined,
     addChainData: undefined,
     isAddingChain: false,
+    selectedNode: undefined,
   },
 });

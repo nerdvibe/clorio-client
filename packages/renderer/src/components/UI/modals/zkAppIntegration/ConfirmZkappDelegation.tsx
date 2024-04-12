@@ -1,21 +1,38 @@
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {ModalContainer} from '..';
 import {walletState, zkappState} from '../../../../store';
+import {zkappInitialState} from '../../../../store/zkapp';
 import {useContext, useEffect, useRef, useState} from 'react';
 import Truncate from 'react-truncate-inside/es';
 import Button from '../../Button';
 import {getAccountAddress, sendResponse} from '../../../../tools/mina-zkapp-bridge';
-import {useLazyQuery} from '@apollo/client';
+import {useLazyQuery, useMutation} from '@apollo/client';
 import {INonceAndBalanceQueryResult} from '../../../../pages/sendTX/SendTXHelper';
-import {GET_NONCE_AND_BALANCE} from '../../../../graphql/query';
+import {BROADCAST_DELEGATION, GET_NONCE_AND_BALANCE} from '../../../../graphql/query';
 import PasswordDecrypt from '../../../PasswordDecrypt';
 import {toast} from 'react-toastify';
-import {client} from '/@/tools';
+import {client, toNanoMINA} from '/@/tools';
 import {mnemonicToPrivateKey} from '../../../../../../preload/src/bip';
 import Big from 'big.js';
 import {IBalanceContext} from '/@/contexts/balance/BalanceTypes';
 import {BalanceContext} from '/@/contexts/balance/BalanceContext';
 import {ERROR_CODES} from '/@/tools/zkapp';
+
+interface SignedTx {
+  signature: {
+    field: string;
+    scalar: string;
+  };
+  publicKey: string;
+  data: {
+    to: string;
+    from: string;
+    fee: string;
+    nonce: string;
+    memo: string;
+    validUntil: string;
+  };
+}
 
 export default function ConfirmZkappDelegation() {
   const wallet = useRecoilValue(walletState);
@@ -26,6 +43,12 @@ export default function ConfirmZkappDelegation() {
     useLazyQuery<INonceAndBalanceQueryResult>(GET_NONCE_AND_BALANCE);
   const [{transactionData, showDelegationConfirmation}, setZkappState] = useRecoilState(zkappState);
   const {getBalance} = useContext<Partial<IBalanceContext>>(BalanceContext);
+  const [broadcastDelegation] = useMutation(BROADCAST_DELEGATION, {
+    onError: error => {
+      toast.error(error.message);
+      return onClose();
+    },
+  });
 
   useEffect(() => {
     if (fromRef.current) {
@@ -33,12 +56,6 @@ export default function ConfirmZkappDelegation() {
     }
   }, [fromRef.current, showDelegationConfirmation]);
 
-  useEffect(() => {
-    if (showDelegationConfirmation) {
-      const address = getAccountAddress();
-      fetchNonce({variables: {publicKey: address[0]}});
-    }
-  }, [showDelegationConfirmation]);
 
   const onClose = () => {
     setZkappState(state => ({
@@ -64,11 +81,9 @@ export default function ConfirmZkappDelegation() {
   };
 
   const onSign = async () => {
-    // Define the required balance
-    const {fee} = transactionData; // Replace 10 with your actual required balance
+    const {fee} = transactionData;
     // Check if the current balance is sufficient
     if (checkBalance(fee)) {
-      // If the balance is sufficient, change the state
       setShowPassword(true);
     } else {
       // If the balance is not sufficient, show an error message or handle it as per your requirement
@@ -81,74 +96,62 @@ export default function ConfirmZkappDelegation() {
     try {
       // Get the account address
       const address = getAccountAddress();
-
       if (!address) {
         throw new Error('Account address not found');
       }
-
       // Determine the private key based on the password
       let privateKey = password;
       if (password.trim().split(' ').length > 2) {
         privateKey = (await mnemonicToPrivateKey(password, wallet.accountNumber)) || password;
       }
-
       // Handle nonce error
       if (nonceError) {
         console.error('Error in send-payment:', nonceError);
         sendResponse('error', {error: nonceError});
         return;
       }
-
+      // TODO: Add custom nonce
       // Get the nonce
-      const nonce = nonceData?.accountByKey?.usableNonce;
 
-      if (!nonce) {
+      const nonceResponse = await fetchNonce({variables: {publicKey: address[0]}});
+      const nonce = nonceResponse?.data?.accountByKey?.usableNonce;
+      if (!nonce && nonce !== 0) {
         throw new Error('Nonce not found');
       }
-
       // Prepare the stake data
       const stakeData = {
         ...transactionData,
         nonce,
         from: address[0],
-        fee: +transactionData.fee,
+        fee: toNanoMINA(transactionData.fee),
       };
-
       // Sign the stake delegation
       const clientInstance = await client();
       const signedTx = await clientInstance.signStakeDelegation(stakeData, privateKey);
-
-      // Hash the stake delegation
       const hashedTx = await clientInstance.hashStakeDelegation(signedTx);
-
-      // TODO: Add tx broadcast
+      await broadcastDelegationTx(signedTx);
       sendResponse('clorio-staked-delegation', {hash: hashedTx});
-
-      // Show success message
-      toast.success('Transaction signed successfully');
-
-      // Update the zkapp state
-      setZkappState(state => ({
-        ...state,
-        isPendingConfirmation: true,
-        showTransactionConfirmation: false,
-        showDelegationConfirmation: false,
-        transactionData: {
-          from: '',
-          to: '',
-          amount: '',
-          fee: '',
-          nonce: '',
-          memo: '',
-        },
-      }));
-
-      // Hide the password
-      setShowPassword(false);
+      onPostSign();
     } catch (error) {
       console.error('Error in onConfirm:', error);
       toast.error('An error occurred while confirming the transaction');
     }
+  };
+
+  const broadcastDelegationTx = async (signedTx: SignedTx) => {
+    await broadcastDelegation({
+      variables: {input: signedTx.data, signature: signedTx.signature},
+    });
+  };
+
+  const onPostSign = () => {
+    setZkappState(state => ({
+      ...state,
+      ...zkappInitialState,
+      isPendingConfirmation: true,
+    }));
+    setShowPassword(false);
+    toast.success('Transaction signed successfully');
   };
 
   return (

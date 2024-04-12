@@ -83,6 +83,7 @@ export default function AddChain() {
           chainId: addChainData?.name ?? '',
           name: addChainData?.name ?? '',
         },
+        selectedNode: networkData,
         addChainData: undefined,
         switchNetwork: undefined,
         showChangeNetworkModal: false,

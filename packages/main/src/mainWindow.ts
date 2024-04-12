@@ -169,13 +169,8 @@ ipcMain.handle('open-win', (_: Electron.IpcMainInvokeEvent, arg) => {
     },
   });
 
-  const indexHtml = 'index.html';
 
-  if (process.env.VITE_DEV_SERVER_URL) {
-    childWindow.loadURL(`${browserUrl}`);
-  } else {
-    childWindow.loadFile(indexHtml, {hash: arg});
-  }
+  childWindow.loadURL(`${browserUrl}`);
   childWindow.webContents.openDevTools();
 
   childWindow.webContents.executeJavaScript(`

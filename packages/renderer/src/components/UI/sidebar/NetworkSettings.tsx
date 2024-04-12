@@ -52,6 +52,7 @@ export default function NetworkSettings({
         chainId: network.network!,
         name: network.name!,
       },
+      selectedNode: network,
     }));
     navigate('/overview');
   };

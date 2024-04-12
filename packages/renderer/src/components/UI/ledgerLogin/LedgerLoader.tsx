@@ -1,4 +1,5 @@
-import ledger from './assets/ledger.svg';
+import Lottie from 'lottie-react';
+import ledger from './assets/ledger.json';
 
 interface IProps {
   width?: string;
@@ -6,10 +7,7 @@ interface IProps {
 
 const LedgerLoader = ({width}: IProps) => (
   <div className="ledger-animation">
-    <img
-      src={ledger}
-      width={width || '50px'}
-    />
+    <Lottie animationData={ledger} loop={2}  />
   </div>
 );
 

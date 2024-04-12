@@ -125,20 +125,24 @@ export default function ConfirmZkappTransaction() {
       ) : (
         <div className="flex flex-col gap-4">
           <div className="flex gap-4 confirm-transaction-data">
-            <div ref={fromRef}>
-              <h4>From</h4>
-              <Truncate
-                text={transactionData.from}
-                width={fromTextWidth || 250}
-              />
-            </div>
-            <div>
-              <h4>To</h4>
-              <Truncate
-                text={transactionData.to}
-                width={fromTextWidth || 250}
-              />
-            </div>
+            {transactionData?.from && (
+              <div ref={fromRef}>
+                <h4>From</h4>
+                <Truncate
+                  text={transactionData?.from || ''}
+                  width={fromTextWidth || 250}
+                />
+              </div>
+            )}
+            {transactionData?.to && (
+              <div>
+                <h4>To</h4>
+                <Truncate
+                  text={transactionData?.to || ''}
+                  width={fromTextWidth || 250}
+                />
+              </div>
+            )}
           </div>
           <div className="flex flex-col justify-start">
             <div className="flex w-100">

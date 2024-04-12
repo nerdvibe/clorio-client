@@ -83,6 +83,21 @@ export const signTransaction = async (transaction: ILedgerTransaction) => {
   return ledgerTransaction;
 };
 
+export const reEncodeRawSignature = (rawSignature: string) => {
+  function shuffleBytes(hex) {
+    const bytes = hex.match(/.{2}/g);
+    bytes.reverse();
+    return bytes.join('');
+  }
+
+  if (rawSignature.length !== 128) {
+    throw 'Invalid raw signature input';
+  }
+  const field = rawSignature.substring(0, 64);
+  const scalar = rawSignature.substring(64);
+  return shuffleBytes(field) + shuffleBytes(scalar);
+};
+
 /**
  * converts emoji to unicode
  * @param str

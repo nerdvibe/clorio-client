@@ -158,7 +158,7 @@ const MnemonicAccountSelection = ({
               key={address}
             >
               <div
-                className="flex flex-row items-center justify-center gap-4 higlight-on-hover justify-start"
+                className="flex flex-row items-center justify-stretch gap-4 higlight-on-hover justify-start"
                 onClick={() => {
                   const wallet = getAccountByAddress(address);
                   if (wallet) {

@@ -1,17 +1,16 @@
 import Hoc from '../components/UI/Hoc';
-import {useState} from 'react';
+import {useEffect} from 'react';
 
 function ZkApps() {
-  const [contentRef, setContentRef] = useState(null);
-
-  const addListener = () => {
-    if (contentRef?.contentWindow) {
-      contentRef?.contentWindow.document.querySelector('#root').setAttribute('electron', 'true');
-    }
-    contentRef?.contentWindow.addEventListener('openApp', function (e) {
-      openLink(e.detail);
-    });
-  };
+  useEffect(() => {
+    window.addEventListener(
+      'message',
+      event => {
+        openLink(event.data.detail);
+      },
+      false,
+    );
+  }, []);
 
   const openLink = (url: string) => {
     (window.ipcBridge as any).invoke(
@@ -21,7 +20,6 @@ function ZkApps() {
       }),
     );
   };
-
   return (
     <Hoc className="glass-card p-0">
       <div
@@ -29,13 +27,9 @@ function ZkApps() {
         style={{minHeight: '500px'}}
       >
         <iframe
-          ref={setContentRef}
-          id="your-iframe-id"
-          src="https://zkapp.store"
-          // src="http://localhost:3001/"
+          src="http://localhost:3001/"
           frameBorder="0"
           style={{width: '100%', height: '100%', minHeight: '80vh', borderRadius: '16px'}}
-          onLoad={addListener}
         ></iframe>
       </div>
     </Hoc>
