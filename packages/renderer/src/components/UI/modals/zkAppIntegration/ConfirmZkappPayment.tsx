@@ -1,28 +1,42 @@
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {ModalContainer} from '..';
-import {walletState, zkappState} from '../../../../store';
-import {useEffect, useRef, useState} from 'react';
-import Truncate from 'react-truncate-inside/es';
+import {configState, walletState, zkappState} from '../../../../store';
+import {zkappInitialState} from '../../../../store/zkapp';
+import {useContext, useEffect, useState} from 'react';
 import Button from '../../Button';
 import {getAccountAddress, sendResponse} from '../../../../tools/mina-zkapp-bridge';
-import {useLazyQuery} from '@apollo/client';
+import {useLazyQuery, useMutation} from '@apollo/client';
 import {INonceQueryResult} from '../../../../pages/sendTX/SendTXHelper';
-import {GET_NONCE} from '../../../../graphql/query';
+import {BROADCAST_TRANSACTION, GET_NONCE} from '../../../../graphql/query';
 import {signTransaction} from '../../../../tools/utils';
 import PasswordDecrypt from '../../../PasswordDecrypt';
 import {toast} from 'react-toastify';
 import {mnemonicToPrivateKey} from '../../../../../../preload/src/bip';
-import {client} from '/@/tools';
+import {client, createPaymentInputFromPayload, createSignatureInputFromSignature} from '/@/tools';
 import {ERROR_CODES} from '/@/tools/zkapp';
+import ConfirmZkappLedger from './ConfirmZkappLedger';
+import TransactionData from './TransactionData';
+import {IBalanceContext} from '/@/contexts/balance/BalanceTypes';
+import {BalanceContext} from '/@/contexts/balance/BalanceContext';
+import * as Big from 'big.js';
 
 export default function ConfirmZkappPayment() {
   const wallet = useRecoilValue(walletState);
-  const fromRef = useRef(null);
-  const [fromTextWidth, setFromTextWidth] = useState(0);
+  const {isLedgerEnabled} = useRecoilValue(configState);
   const [showPassword, setShowPassword] = useState(false);
   const [fetchNonce, {data: nonceData, error: nonceError}] =
     useLazyQuery<INonceQueryResult>(GET_NONCE);
   const [{transactionData, showPaymentConfirmation}, setZkappState] = useRecoilState(zkappState);
+  const {getBalance} = useContext<Partial<IBalanceContext>>(BalanceContext);
+
+  const [broadcastTransaction] = useMutation(BROADCAST_TRANSACTION, {
+    onError: error => {
+      setTimeout(() => {
+        toast.error(error.message);
+        onClose();
+      }, 1000);
+    },
+  });
 
   useEffect(() => {
     if (showPaymentConfirmation) {
@@ -31,21 +45,23 @@ export default function ConfirmZkappPayment() {
     }
   }, [showPaymentConfirmation]);
 
-  useEffect(() => {
-    if (fromRef.current) {
-      setFromTextWidth(fromRef.current.offsetWidth - 350);
-    }
-  }, [fromRef.current]);
-
   const onClose = () => {
-    setZkappState(state => ({
-      ...state,
-      showPaymentConfirmation: false,
-      showDelegationConfirmation: false,
-      showTransactionConfirmation: false,
-    }));
+    setZkappState(zkappInitialState);
     setShowPassword(false);
     sendResponse('clorio-error', ERROR_CODES.userRejectedRequest);
+  };
+
+  // Check with BigJs if the balance is enough
+  const checkBalance = (fee: number | string) => {
+    if (getBalance) {
+      const address = getAccountAddress();
+      const balance = getBalance(address[0]);
+      const available = +(balance?.liquidUnconfirmed || 0);
+      if (+available > 0 && +Big(+available).sub(fee) >= 0) {
+        return true;
+      }
+    }
+    return false;
   };
 
   // TODO: Fix amount and fee
@@ -66,28 +82,50 @@ export default function ConfirmZkappPayment() {
       nonce,
       from: address[0],
     });
+    completePayment(signedTx);
+  };
+
+  const completePayment = async (signedTx: unknown) => {
     const hashedTx = await (await client()).hashPayment(signedTx);
     // TODO: Add tx broadcast
     sendResponse('clorio-signed-payment', {hash: hashedTx});
-    toast.success('Transaction signed successfully');
+    toast.success('Transaction signed successfully, waiting for broadcast.');
     setZkappState(state => ({
       ...state,
+      ...zkappInitialState,
       isPendingConfirmation: true,
-      showPaymentConfirmation: false,
-      showDelegationConfirmation: false,
-      showTransactionConfirmation: false,
-      isZkappCommand: false,
-      transactionData: {
-        from: '',
-        to: '',
-        amount: '',
-        fee: '',
-        nonce: '',
-        memo: '',
-      },
     }));
     setShowPassword(false);
+    broadcastPayment(signedTx);
   };
+
+  const broadcastPayment = async (signedTx: unknown) => {
+    const signatureInput = createSignatureInputFromSignature(signedTx.signature);
+    const paymentInput = createPaymentInputFromPayload(signedTx.data);
+    await broadcastTransaction({
+      variables: {input: paymentInput, signature: signatureInput},
+    });
+  };
+
+  const onSign = async () => {
+    // Define the required balance
+    const {fee} = transactionData;
+    // Check if the current balance is sufficient
+    if (checkBalance(fee)) {
+      // If the balance is sufficient, change the state
+      setShowPassword(true);
+    } else {
+      // If the balance is not sufficient, show an error message or handle it as per your requirement
+      toast.error('Insufficient balance');
+      console.error('Insufficient balance');
+    }
+  };
+
+  const modalTitle = showPassword
+    ? isLedgerEnabled
+      ? 'Signing transaction'
+      : 'Enter your password'
+    : 'Confirm transaction';
 
   return (
     <ModalContainer
@@ -96,50 +134,24 @@ export default function ConfirmZkappPayment() {
       className="confirm-transaction-modal"
     >
       <div>
-        <h1>Confirm transaction</h1>
+        <h1>{modalTitle}</h1>
         <hr />
       </div>
       {showPassword ? (
-        <PasswordDecrypt
-          onClose={() => setShowPassword(false)}
-          onSuccess={onConfirm}
-        />
+        isLedgerEnabled ? (
+          <ConfirmZkappLedger
+            onClose={() => setShowPassword(false)}
+            onSuccess={completePayment}
+          />
+        ) : (
+          <PasswordDecrypt
+            onClose={() => setShowPassword(false)}
+            onSuccess={onConfirm}
+          />
+        )
       ) : (
         <div className="flex flex-col gap-4">
-          <div className="flex gap-4 confirm-transaction-data">
-            <div ref={fromRef}>
-              <h4>From</h4>
-              <Truncate
-                text={transactionData.from}
-                width={fromTextWidth || 250}
-              />
-            </div>
-            <div>
-              <h4>To</h4>
-              <Truncate
-                text={transactionData.to}
-                width={fromTextWidth || 250}
-              />
-            </div>
-          </div>
-          <div className="flex justify-start">
-            <div className="flex flex-col w-100">
-              <div>
-                <h4>Amount</h4>
-                <p>{transactionData.amount} MINA</p>
-              </div>
-              <div>
-                <h4>Transaction fee</h4>
-                <p>{transactionData.fee || 0.0101} MINA</p>
-              </div>
-            </div>
-            {transactionData.memo && (
-              <div className="flex flex-col w-100">
-                <h4>Memo</h4>
-                <p>{transactionData.memo}</p>
-              </div>
-            )}
-          </div>
+          <TransactionData transactionData={transactionData} />
           <div className="flex mt-2 gap-4 confirm-transaction-data sm-flex-reverse">
             <Button
               className="w-100"
@@ -152,7 +164,7 @@ export default function ConfirmZkappPayment() {
               className="w-100"
               text="Confirm"
               style="primary"
-              onClick={() => setShowPassword(true)}
+              onClick={onSign}
             />
           </div>
         </div>

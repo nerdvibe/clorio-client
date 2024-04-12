@@ -114,6 +114,15 @@ export default function ZkappIntegration() {
 
   const checkSource = (source: string) => source && sites.includes(source);
 
+  const rejectIfLedger = () => {
+    if (config.isLedgerEnabled) {
+      sendResponse('clorio-error', ERROR_CODES.unsupportMethod);
+      sendResponse('focus-clorio');
+      toast.error('Ledger does not support this method.');
+      throw new Error('Ledger is not supported');
+    }
+  };
+
   const getNetworkConfig = async () => {
     console.log('Received get-network-config');
     const netConfig: NetConfig = selectedNetwork as NetConfig;
@@ -151,6 +160,7 @@ export default function ZkappIntegration() {
   };
 
   const signMessage = async (data: string) => {
+    rejectIfLedger();
     sendResponse('focus-clorio');
     console.log('Received sign-message-browser');
     setZkappState(prev => ({
@@ -177,11 +187,6 @@ export default function ZkappIntegration() {
       ) {
         throw Error('Data is missing "to" or "amount" field');
       }
-      // get the current wallet address
-
-      data.fee = data.fee || DEFAULT_FEE;
-
-      // unlockWallet();
       setZkappState(prev => {
         return {
           ...prev,
@@ -228,11 +233,8 @@ export default function ZkappIntegration() {
   };
 
   const signTx = async (data: any) => {
-    // if (!config.isAuthenticated) {
-    //   sendResponse('focus-clorio');
-    //   toast.error('Please log into your wallet first.');
-    //   return;
-    // }
+    rejectIfLedger();
+
     try {
       // get the current wallet address
 
@@ -285,6 +287,7 @@ export default function ZkappIntegration() {
   };
 
   const verifyMessage = async (data: any) => {
+    rejectIfLedger();
     console.log('Received verify-message');
     const parsedDocument = {...data, signature: JSON.parse(data.signature)};
     const verified = await (await client()).verifyMessage(parsedDocument);
@@ -292,6 +295,7 @@ export default function ZkappIntegration() {
   };
 
   const signJsonMessage = async (data: any) => {
+    rejectIfLedger();
     sendResponse('focus-clorio');
     console.log('Received sign-json-message');
     setZkappState(prev => ({
@@ -304,14 +308,15 @@ export default function ZkappIntegration() {
   };
 
   const verifyJsonMessage = async (data: any) => {
+    rejectIfLedger();
     console.log('Received verify-json-message');
     const parsedDocument = {...data, signature: JSON.parse(data.signature)};
     const verified = await (await client()).verifyMessage(parsedDocument);
-    // const verified = await (await client()).verifyJsonMessage(data);
     sendResponse('clorio-verified-json-message', verified);
   };
 
   const createNullifier = async (data: any) => {
+    rejectIfLedger();
     sendResponse('focus-clorio');
     console.log('Received create-nullifier');
     setZkappState(prev => ({
@@ -331,10 +336,6 @@ export default function ZkappIntegration() {
       return;
     }
     try {
-      if (!data.to || typeof data.to !== 'string') {
-        throw Error('Data is missing "to" or "amount" field');
-      }
-
       data.fee = data.fee || DEFAULT_FEE;
       setZkappState(prev => {
         return {
@@ -354,6 +355,7 @@ export default function ZkappIntegration() {
   };
 
   const signFields = async (data: any) => {
+    rejectIfLedger();
     sendResponse('focus-clorio');
     setZkappState(prev => ({
       ...prev,
@@ -364,6 +366,7 @@ export default function ZkappIntegration() {
   };
 
   const verifyFields = async ({data, publicKey, signature}: any) => {
+    rejectIfLedger();
     const nextFields = data.map(BigInt);
     const verifyBody = {
       data: nextFields,

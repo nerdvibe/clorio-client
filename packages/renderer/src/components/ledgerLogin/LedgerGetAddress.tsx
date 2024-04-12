@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import Button from '../UI/Button';
 import {useQuery} from '@apollo/client';
-import {storeSession} from '../../tools';
+import {storeAccounts, storeSession} from '../../tools';
 import {GET_ID} from '../../graphql/query';
 import {toast} from 'react-toastify';
 import LedgerConfirmAddress from './LedgerConfirmAddress';
@@ -10,7 +10,8 @@ import LedgerLoader from '../UI/ledgerLogin/LedgerLoader';
 import {ArrowLeft} from 'react-feather';
 import {getPublicKey} from '/@/tools/ledger/ledgerElectronAPI';
 import {useNavigate} from 'react-router-dom';
-import {useWallet} from '/@/contexts/WalletContext';
+import {useSetRecoilState} from 'recoil';
+import {configState, walletState} from '/@/store';
 
 interface IProps {
   accountNumber?: number;
@@ -25,7 +26,8 @@ const LedgerGetAddress = ({accountNumber, toggleLoader}: IProps) => {
     variables: {publicKey: publicKey},
     skip: !publicKey,
   });
-  const {updateWallet} = useWallet();
+  const setConfig = useSetRecoilState(configState);
+  const updateWallet = useSetRecoilState(walletState);
 
   /**
    * On component load get the wallet data from the Ledger
@@ -53,7 +55,15 @@ const LedgerGetAddress = ({accountNumber, toggleLoader}: IProps) => {
         mnemonic: false,
         accountNumber: 0,
       });
+
+      storeAccounts([{accountId: 0, address: publicKey}]);
       if (success) {
+        setConfig(prev => ({
+          ...prev,
+          isAuthenticated: true,
+          isUsingMnemonic: false,
+          isLedgerEnabled: true,
+        }));
         navigate('/overview');
       }
     }
@@ -87,7 +97,6 @@ const LedgerGetAddress = ({accountNumber, toggleLoader}: IProps) => {
           {!publicKey ? (
             <div>
               <LedgerLoader width="500px" />
-              <div className="v-spacer" />
               <p className="full-width-align-center my-4">
                 Looking for the Public key. Please confirm it on your Ledger device
               </p>

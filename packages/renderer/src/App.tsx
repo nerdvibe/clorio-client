@@ -16,7 +16,7 @@ import {useRecoilState} from 'recoil';
 
 function App() {
   const {settings, setAvailableNetworks, saveSettings} = useNetworkSettingsContext();
-  const [{selectedNetwork}, setNetworkState] = useRecoilState(networkState);
+  const [{selectedNetwork, selectedNode}, setNetworkState] = useRecoilState(networkState);
 
   useEffect(() => {
     clearSession();
@@ -54,6 +54,7 @@ function App() {
       if (!hasInitialSettings) {
         const network = Object.keys(data)[0];
         saveSettings(data[network]);
+        setNetworkState(prev => ({...prev, selectedNode: data[network]}));
       }
     }
   };
@@ -76,7 +77,7 @@ function App() {
       </Button>
       <WalletProvider>
         <BalanceContextProvider>
-          <ApolloProvider client={apolloClient(settings!)}>
+          <ApolloProvider client={apolloClient(selectedNode!)}>
             <LedgerContextProvider>
               <HashRouter>
                 <Layout />

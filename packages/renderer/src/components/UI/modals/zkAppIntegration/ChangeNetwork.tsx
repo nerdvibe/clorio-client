@@ -65,6 +65,7 @@ export default function ChangeNetwork() {
         switchNetwork: undefined,
         showChangeNetworkModal: false,
         isAddingChain: false,
+        selectedNode: availableNetworks[switchNetwork],
       }));
       sendResponse('clorio-switched-chain', {
         ...network,
