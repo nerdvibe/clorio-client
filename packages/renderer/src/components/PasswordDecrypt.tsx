@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import useSecureStorage from '../hooks/useSecureStorage';
 import {toast} from 'react-toastify';
 import Input from './UI/input/Input';
@@ -17,6 +17,18 @@ export default function PasswordDecrypt({onSuccess, onClose}: IPasswordDecrypt) 
 
   const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
   const disableButton = !passwordRegex.test(password);
+
+  useEffect(() => {
+    const listener = (event: KeyboardEvent) => {
+      if (event.code === 'Enter' || event.code === 'NumpadEnter') {
+        onSubmitHandler();
+      }
+    };
+    document.addEventListener('keydown', listener);
+    return () => {
+      document.removeEventListener('keydown', listener);
+    };
+  }, [password]);
 
   const onSubmitHandler = () => {
     try {

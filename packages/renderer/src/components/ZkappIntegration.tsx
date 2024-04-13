@@ -44,6 +44,15 @@ export default function ZkappIntegration() {
   const setListeners = () => {
     window.ipcBridge.on('clorio-event', async (event, payload) => {
       const {type, data, source} = payload;
+      if (!checkSource(source)) {
+        sendResponse('focus-clorio');
+        updateConnectZkapp(prev => ({
+          ...prev,
+          showConnectZkapp: true,
+          source,
+        }));
+        return;
+      }
 
       switch (type) {
         case 'clorio-get-network-config':
