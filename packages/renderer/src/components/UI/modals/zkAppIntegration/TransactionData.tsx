@@ -12,14 +12,14 @@ export default function TransactionData({transactionData}: {transactionData: any
   return (
     <>
       <div className="flex gap-4 confirm-transaction-data">
-        <div ref={fromRef}>
+        <div className='transaction-data' ref={fromRef}>
           <h4>From</h4>
           <Truncate
             text={transactionData.from}
             width={fromTextWidth || 250}
           />
         </div>
-        <div>
+        <div className='transaction-data'>
           <h4>To</h4>
           <Truncate
             text={transactionData.to}

@@ -445,6 +445,12 @@ p {
   top: -20px;
 }
 
+.transaction-data{
+  div{
+    text-align: left;
+  }
+}
+
 @media screen and (max-width: 600px) {
   .homepage-card {
     height: 100vh;

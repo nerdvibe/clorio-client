@@ -4,18 +4,15 @@ import {walletState, zkappState} from '/@/store';
 import {sendResponse} from '/@/tools/mina-zkapp-bridge';
 import Button from '../../Button';
 import PasswordDecrypt from '/@/components/PasswordDecrypt';
-import {useEffect, useRef, useState} from 'react';
+import {useState} from 'react';
 import {client} from '/@/tools';
-import Truncate from 'react-truncate-inside/es';
 import {mnemonicToPrivateKey} from '../../../../../../preload/src/bip';
 import {toast} from 'react-toastify';
+import MessageData from './MessageData';
 
 export default function SignMessage() {
   const wallet = useRecoilValue(walletState);
-  const {address} = wallet;
-  const fromRef = useRef(null);
   const [showPassword, setShowPassword] = useState(false);
-  const [fromTextWidth, setFromTextWidth] = useState(0);
   const [
     {messageToSign, showMessageSign, isJsonMessageToSign, isNullifier, isFields},
     setZkappState,
@@ -39,12 +36,6 @@ export default function SignMessage() {
       messageToSign: '',
     }));
   };
-
-  useEffect(() => {
-    if (fromRef.current) {
-      setFromTextWidth(fromRef.current.offsetWidth);
-    }
-  }, [fromRef.current]);
 
   const onConfirm = async (mnemonic: string) => {
     if (!mnemonic) return;
@@ -101,26 +92,7 @@ export default function SignMessage() {
         />
       ) : (
         <div className="flex flex-col gap-4">
-          <div className="flex gap-4 confirm-transaction-data">
-            <div
-              ref={fromRef}
-              className="w-100"
-            >
-              <h4>From</h4>
-              <Truncate
-                text={address}
-                width={fromTextWidth || 450}
-              />
-            </div>
-          </div>
-          <div className="flex justify-start w-100">
-            <div className="w-100">
-              <h4>Message</h4>
-              <pre className="w-100 overflow-x-auto text-start message-box">
-                {JSON.stringify(messageToSign, null, 2)}
-              </pre>
-            </div>
-          </div>
+          <MessageData messageToSign={messageToSign} />
           <div className="flex mt-2 gap-4 confirm-transaction-data sm-flex-reverse">
             <Button
               className="w-100"
