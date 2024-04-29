@@ -17,6 +17,7 @@ import Big from 'big.js';
 import {IBalanceContext} from '/@/contexts/balance/BalanceTypes';
 import {BalanceContext} from '/@/contexts/balance/BalanceContext';
 import {ERROR_CODES} from '/@/tools/zkapp';
+import TransactionData from './TransactionData';
 
 interface SignedTx {
   signature: {
@@ -55,7 +56,6 @@ export default function ConfirmZkappDelegation() {
       setFromTextWidth(fromRef.current.offsetWidth - 250);
     }
   }, [fromRef.current, showDelegationConfirmation]);
-
 
   const onClose = () => {
     setZkappState(state => ({
@@ -154,11 +154,32 @@ export default function ConfirmZkappDelegation() {
     toast.success('Transaction signed successfully');
   };
 
+  const onFeeEdit = (fee: number) => {
+    setZkappState(state => ({
+      ...state,
+      transactionData: {
+        ...state.transactionData,
+        fee,
+      },
+    }));
+  };
+
+  const onNonceEdit = (nonce: number) => {
+    setZkappState(state => ({
+      ...state,
+      transactionData: {
+        ...state.transactionData,
+        nonce,
+      },
+    }));
+  };
+
   return (
     <ModalContainer
       show={showDelegationConfirmation}
       close={onClose}
       className="confirm-transaction-modal"
+      closeOnBackgroundClick={false}
     >
       <div>
         <h1>Confirm stake delegation</h1>
@@ -171,36 +192,12 @@ export default function ConfirmZkappDelegation() {
         />
       ) : (
         <div className="flex flex-col gap-4">
-          <div className="flex gap-4 confirm-transaction-data">
-            <div ref={fromRef}>
-              <h4>From</h4>
-              <Truncate
-                text={transactionData.from}
-                width={fromTextWidth || 250}
-              />
-            </div>
-            <div>
-              <h4>To</h4>
-              <Truncate
-                text={transactionData.to}
-                width={fromTextWidth || 250}
-              />
-            </div>
-          </div>
-          <div className="flex justify-start">
-            <div className="flex flex-col w-100">
-              <div>
-                <h4>Transaction fee</h4>
-                <p>{transactionData.fee || 0.0101} MINA</p>
-              </div>
-            </div>
-            {transactionData.memo && (
-              <div className="flex flex-col w-100">
-                <h4>Memo</h4>
-                <p>{transactionData.memo}</p>
-              </div>
-            )}
-          </div>
+          <TransactionData
+            transactionData={transactionData}
+            onFeeEdit={onFeeEdit}
+            onNonceEdit={onNonceEdit}
+            isDelegation
+          />
           <div className="flex mt-2 gap-4 confirm-transaction-data sm-flex-reverse">
             <Button
               className="w-100"

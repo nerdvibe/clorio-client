@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import type { IInputProps } from './InputProps';
-import { Eye, EyeOff } from 'react-feather';
+import {useState} from 'react';
+import type {IInputProps} from './InputProps';
+import {Eye, EyeOff} from 'react-feather';
 
 const Input = ({
   type,
@@ -9,6 +9,7 @@ const Input = ({
   placeholder,
   small,
   hidden,
+  appendIcon,
 }: IInputProps) => {
   const [showText, setShowText] = useState<boolean>(false);
 
@@ -25,11 +26,7 @@ const Input = ({
 
   return (
     <div
-      className={
-        small
-          ? 'small-wrap-input1 validate-input '
-          : 'wrap-input1 validate-input'
-      }
+      className={small ? 'small-wrap-input1 validate-input ' : 'wrap-input1 validate-input'}
       data-validate="Name is required"
     >
       <span className="icon" />
@@ -43,14 +40,11 @@ const Input = ({
         autoComplete="off"
         min="0"
       />
+      {appendIcon && <span className="append-icon">{appendIcon}</span>}
       {hidden && (
         <span
           className="show-hide-icon"
-          data-tip={
-            showText
-              ? 'Hide Passphrase/Private key'
-              : 'Show Passphrase/Private key'
-          }
+          data-tip={showText ? 'Hide Passphrase/Private key' : 'Show Passphrase/Private key'}
         >
           {!showText ? (
             <Eye onClick={() => setShowText(!showText)} />

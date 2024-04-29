@@ -16,6 +16,7 @@ import {useRecoilState} from 'recoil';
 import {walletState} from './store';
 import {initialWalletState} from './store/wallet';
 import isElectron from 'is-electron';
+import {GlobalLoader} from './components/GlobalLoader';
 
 const Layout = () => {
   const [showLoader, setShowLoader] = useState<boolean>(false);
@@ -43,6 +44,7 @@ const Layout = () => {
   return (
     <div>
       {isElectron() && <ZkappIntegration />}
+      <GlobalLoader />
       <Container fluid>
         <TermsAndConditions />
         <div className="flex items-stretch">

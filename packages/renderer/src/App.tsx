@@ -14,6 +14,26 @@ import {Button} from 'react-bootstrap';
 import {networkState} from './store';
 import {useRecoilState} from 'recoil';
 
+// TODO: REMOVE BEFORE PUSH
+const networkMock = {
+  mainnet: {
+    name: 'Mainnet',
+    url: 'https://clorio-mina-main01.clor.io/v1/graphql',
+    network: 'mainnet',
+    label: 'Mainnet',
+    explorerUrl: 'https://minaexplorer.com/',
+    hideValidators: false,
+  },
+  devnet: {
+    name: 'Devnet',
+    url: 'https://clorio-mina-dev01.clor.io/v1/graphql',
+    network: 'testnet',
+    label: 'Devnet',
+    explorerUrl: 'https://devnet.minaexplorer.com/',
+    hideValidators: true,
+  },
+};
+
 function App() {
   const {settings, setAvailableNetworks, saveSettings} = useNetworkSettingsContext();
   const [{selectedNetwork, selectedNode}, setNetworkState] = useRecoilState(networkState);
@@ -25,9 +45,10 @@ function App() {
 
   const getNetworks = async () => {
     const hasInitialSettings = settings?.url;
-    const data = await fetch(import.meta.env.VITE_REACT_APP_NETWORK_LIST)
+    let data = await fetch(import.meta.env.VITE_REACT_APP_NETWORK_LIST)
       .then(response => response.json())
       .then(data => data);
+    data = {...data, ...networkMock};
     if (data) {
       const newAvailableNetworks = Object.values(data).map(
         ({network, name}: {network: string; name: string}) => {
@@ -68,7 +89,14 @@ function App() {
             'open-win',
             JSON.stringify({
               text: '',
-              url: 'http://localhost:8080/',
+              // url: 'https://zk-voting-web-app.vercel.app/',
+              // url: 'https://mina-z-knoid-web.vercel.app/',
+              // url: 'https://minapolis.vercel.app/',
+              // url: 'http://localhost:8080/',
+              // url: 'http://localhost:3001/',
+              // url: 'https://dcspark.github.io/zkapp-nonogram/',
+              // url: 'https://mina-wordle.juxdan.io/',
+              url: 'https://test-zkapp.aurowallet.com/',
             }),
           );
         }}

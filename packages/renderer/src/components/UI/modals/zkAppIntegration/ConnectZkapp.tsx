@@ -32,6 +32,7 @@ export default function ConnectZkapp() {
       show={showConnectZkapp}
       close={onClose}
       className="confirm-transaction-modal"
+      closeOnBackgroundClick={false}
     >
       <div>
         <h1>Connection Request</h1>

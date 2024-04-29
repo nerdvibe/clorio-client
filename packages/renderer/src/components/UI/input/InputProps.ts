@@ -1,3 +1,5 @@
+import {ReactNode} from 'react';
+
 export interface IInputProps {
   type?: string;
   value?: string | number;
@@ -7,4 +9,5 @@ export interface IInputProps {
   className?: string;
   name?: string;
   hidden?: boolean;
+  appendIcon?: ReactNode;
 }

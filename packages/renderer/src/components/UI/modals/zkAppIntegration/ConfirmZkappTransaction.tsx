@@ -111,6 +111,7 @@ export default function ConfirmZkappTransaction() {
     <ModalContainer
       show={showTransactionConfirmation}
       close={onClose}
+      closeOnBackgroundClick={false}
       className="confirm-transaction-modal"
     >
       <div>

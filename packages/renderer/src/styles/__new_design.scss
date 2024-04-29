@@ -427,9 +427,24 @@ p {
   height: 200px;
 }
 
+.transaction-fee{
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  .wrap-input1{
+    margin: 0;
+  }
+}
+
 .detail {
   font-weight: 200;
   font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  height: 30px;
 }
 
 .global-loader {
