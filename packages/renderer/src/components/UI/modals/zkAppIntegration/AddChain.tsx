@@ -7,6 +7,17 @@ import {toast} from 'react-toastify';
 import {useNavigate} from 'react-router-dom';
 import {useNetworkSettingsContext} from '/@/contexts/NetworkContext';
 import {ERROR_CODES} from '/@/tools/zkapp';
+import {AlertOctagon} from 'react-feather';
+
+const NODE_INFO: string = `
+query NodeInfo {
+    nodeInfo {
+      height
+      name
+      network
+      version
+    }
+  }`;
 
 export default function AddChain() {
   const {saveSettings, availableNetworks, setAvailableNetworks} = useNetworkSettingsContext();
@@ -25,7 +36,9 @@ export default function AddChain() {
   };
 
   const onConfirm = async () => {
-    networkSelectHandler();
+    if (await testNetworkNode()) {
+      networkSelectHandler();
+    }
   };
 
   const trimSpace = (str: string) => {
@@ -101,6 +114,27 @@ export default function AddChain() {
     }
   };
 
+  // Test network node quering for the network details before switching
+  const testNetworkNode = async () => {
+    try {
+      const resp = await fetch(addChainData?.url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: NODE_INFO,
+        }),
+      }).then(res => res.json());
+      if (resp.errors) {
+        throw new Error(resp.errors[0].message);
+      }
+      return true;
+    } catch (error) {
+      toast.error('Invalid node');
+    }
+  };
+
   return (
     <ModalContainer
       show={isAddingChain}
@@ -112,14 +146,8 @@ export default function AddChain() {
         <hr />
       </div>
       <div className="flex flex-col gap-4">
-        <div className="disclaimer">
-          <p>
-            You are about to add a new network to your wallet. Please ensure that the network you
-            are adding is secure and reliable.
-          </p>
-        </div>
         <p>Allow this site to add a network?</p>
-        <div className="flex gap-4 confirm-transaction-data">
+        <div className="flex gap-4 flex-col confirm-transaction-data">
           <div className="w-100">
             <h4>Node name</h4>
             <p>{addChainData?.name}</p>
@@ -128,6 +156,16 @@ export default function AddChain() {
             <h4>Node URL</h4>
             <p>{addChainData?.url}</p>
           </div>
+        </div>
+        <div
+          className="alert alert-warning flex flex-row items-center gap-2"
+          role="alert"
+        >
+          <AlertOctagon />
+          <p className="small m-0">
+            You are about to add a new network to your wallet. <br />
+            Please ensure that the network you are adding is secure and reliable.
+          </p>
         </div>
         <div className="flex mt-2 gap-4 confirm-transaction-data sm-flex-reverse">
           <Button

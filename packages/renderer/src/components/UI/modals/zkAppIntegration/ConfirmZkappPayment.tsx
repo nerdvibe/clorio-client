@@ -87,7 +87,6 @@ export default function ConfirmZkappPayment() {
 
   const completePayment = async (signedTx: unknown) => {
     const hashedTx = await (await client()).hashPayment(signedTx);
-    // TODO: Add tx broadcast
     sendResponse('clorio-signed-payment', {hash: hashedTx});
     toast.success('Transaction signed successfully, waiting for broadcast.');
     setZkappState(state => ({
@@ -121,6 +120,26 @@ export default function ConfirmZkappPayment() {
     }
   };
 
+  const onFeeEdit = (fee: number) => {
+    setZkappState(state => ({
+      ...state,
+      transactionData: {
+        ...state.transactionData,
+        fee,
+      },
+    }));
+  };
+
+  const onNonceEdit = (nonce: number) => {
+    setZkappState(state => ({
+      ...state,
+      transactionData: {
+        ...state.transactionData,
+        nonce,
+      },
+    }));
+  };
+
   const modalTitle = showPassword
     ? isLedgerEnabled
       ? 'Signing transaction'
@@ -132,6 +151,7 @@ export default function ConfirmZkappPayment() {
       show={showPaymentConfirmation}
       close={onClose}
       className="confirm-transaction-modal"
+      closeOnBackgroundClick={false}
     >
       <div>
         <h1>{modalTitle}</h1>
@@ -151,7 +171,11 @@ export default function ConfirmZkappPayment() {
         )
       ) : (
         <div className="flex flex-col gap-4">
-          <TransactionData transactionData={transactionData} />
+          <TransactionData
+            transactionData={transactionData}
+            onFeeEdit={onFeeEdit}
+            onNonceEdit={onNonceEdit}
+          />
           <div className="flex mt-2 gap-4 confirm-transaction-data sm-flex-reverse">
             <Button
               className="w-100"

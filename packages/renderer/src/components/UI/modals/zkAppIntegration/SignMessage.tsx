@@ -79,6 +79,7 @@ export default function SignMessage() {
       show={showMessageSign}
       close={onClose}
       className="confirm-transaction-modal"
+      closeOnBackgroundClick={false}
     >
       <div>
         <h1>Sign message</h1>

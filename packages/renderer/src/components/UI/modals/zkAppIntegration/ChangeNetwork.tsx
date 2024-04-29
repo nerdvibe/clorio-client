@@ -88,12 +88,13 @@ export default function ChangeNetwork() {
         <hr />
       </div>
       <div className="flex flex-col gap-4">
+        <p>Clorio will switch to the following network</p>
         <div className="flex gap-4 confirm-transaction-data">
-          <div>
+          <div className="w-100">
             <h4>Current</h4>
             <p>{selectedNetwork?.name}</p>
           </div>
-          <div>
+          <div className="w-100">
             <h4>Target</h4>
             <p>{networkName}</p>
           </div>

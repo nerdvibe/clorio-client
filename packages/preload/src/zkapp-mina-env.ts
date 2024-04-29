@@ -1,4 +1,6 @@
 import {ipcRenderer} from 'electron';
+import EventEmitter from 'eventemitter3';
+
 const allowedRequestChannels = [
   'get-network-config',
   'get-address',
@@ -67,9 +69,14 @@ const sendIpcRequest = (requestChannel: string, responseChannel: string, data?: 
   });
 };
 
+// const EE = new EventEmitter(),
+//   context = {foo: 'bar'};
+//   const channel = new MessageChannel("webhook");
+
 const zkappIntegration = {
-  on: () => {},
-  // TODO: Update network methods
+  on: (data: any) => {
+    // EE.emit('chainChanged', data);
+  },
   requestNetwork: () => sendIpcRequest('get-network-config', 'set-network-config', null),
   addChain: (data: AddChainArgs) => sendIpcRequest('add-chain', 'added-chain', data),
   switchChain: ({chainId}: {chainId: string}) =>

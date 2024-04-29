@@ -196,6 +196,9 @@ export default function ZkappIntegration() {
       ) {
         throw Error('Data is missing "to" or "amount" field');
       }
+      if (!data.fee) {
+        data.fee = DEFAULT_FEE;
+      }
       setZkappState(prev => {
         return {
           ...prev,
@@ -299,6 +302,7 @@ export default function ZkappIntegration() {
     rejectIfLedger();
     console.log('Received verify-message');
     const parsedDocument = {...data, signature: JSON.parse(data.signature)};
+    console.log('🚀 ~ verifyMessage ~ parsedDocument:', parsedDocument);
     const verified = await (await client()).verifyMessage(parsedDocument);
     sendResponse('clorio-verified-message', verified);
   };
