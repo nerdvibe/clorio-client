@@ -1,0 +1,13 @@
+{
+  "name": "renderer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "react-scripts": "^5.0.1"
+  },
+  "scripts": {
+    "build": "npx vite build",
+    "start": "npx vite --host"
+  }
+}

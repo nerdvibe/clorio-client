@@ -1,0 +1,22 @@
+.account-dropdown-item {
+  display: flex;
+  justify-content: start;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+}
+
+a.dropdown-item:hover {
+  background: #f9f9f93f;
+}
+
+a.dropdown-item {
+  color: white !important;
+}
+
+.account-dropdown-item>p {
+  width: 100%;
+  margin: 0;
+  font-size: medium;
+  font-weight: lighter;
+}

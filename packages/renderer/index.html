@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  data-bs-theme="dark"
+>
+  <head>
+    <meta charset="utf-8" />
+    <link
+      rel="icon"
+      href="favicon.ico"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <meta
+      name="theme-color"
+      content="#000000"
+    />
+    <meta
+      name="description"
+      content="~Clorio | A Mina Protocol wallet"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="logo.svg"
+    />
+    <link
+      rel="manifest"
+      href="manifest.json"
+    />
+    <link
+      rel="stylesheet"
+      href="index.css"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, minimum-scale=1"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <title>~Clorio | A Mina Protocol wallet</title>
+
+    <!-- Open Graph data -->
+    <meta
+      prefix="og: http://ogp.me/ns#"
+      property="og:title"
+      content="~Clorio | A Mina Protocol wallet."
+    />
+    <meta
+      itemprop="description"
+      content="Access the power of the Mina Protocol Blockchain with ~Clorio. Wallet available for Browser, Windows, Linux, OSX and Ledger Hardware Wallets."
+    />
+    <meta
+      prefix="og: http://ogp.me/ns#"
+      property="og:image"
+      content="https://clor.io/assets/cloriobanner.png"
+    />
+    <meta
+      prefix="og: http://ogp.me/ns#"
+      property="og:url"
+      content="https://clor.io"
+    />
+    <meta
+      prefix="og: http://ogp.me/ns#"
+      property="og:site_name"
+      content="~Clorio | A Mina Protocol wallet."
+    />
+
+    <!-- Twitter Card data -->
+    <meta
+      name="twitter:card"
+      content="summary_large_image"
+    />
+    <meta
+      name="twitter:site"
+      content="@carbonaraCrypto"
+    />
+    <meta
+      name="twitter:title"
+      content="~Clorio | A Mina Protocol wallet."
+    />
+    <meta
+      name="twitter:description"
+      content="Access the power of the Mina Protocol Blockchain with ~Clorio. Wallet available for Browser, Windows, Linux, OSX and Ledger Hardware Wallets."
+    />
+    <meta
+      name="twitter:creator"
+      content="@carbonaraCrypto"
+    />
+    <meta
+      name="twitter:image"
+      content="https://clor.io/assets/cloriobanner.png"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="~Clorio | A Mina Protocol wallet."
+    />
+
+    <!-- Schema.org markup for Google+ -->
+    <meta
+      itemprop="name"
+      content="~Clorio | A Mina Protocol wallet."
+    />
+    <meta
+      itemprop="description"
+      content="Access the power of the Mina Protocol Blockchain with ~Clorio. Wallet available for Browser, Windows, Linux, OSX and Ledger Hardware Wallets."
+    />
+    <meta
+      itemprop="image"
+      content="https://clor.io/assets/cloriobanner.png"
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content=" default-src: 'self' https://*.clor.io https://fonts.googleapis.com https://api.mina.tools https://minaprotocol.com;connect-src:'self' https://*.clor.io/v1/graphql https://api.mina.tools/v1/epoch https://minaprotocol.com;img-src: https://*.staketab.com 'self';script-src:'self';style-src:'self' https://fonts.googleapis.com;object-src:'self';font-src: https://fonts.googleapis.com https://fonts.gstatic.com;"
+    />
+    <base href="./" />
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="draggable-bar"></div>
+    <div
+      id="initial-loader"
+      class="loader"
+    >
+      <div>
+        <object
+          data="wallet-loading.svg"
+          type="image/svg+xml"
+          alt="clorio-wallet-logo"
+          width="250px"
+          height="250px"
+        ></object>
+      </div>
+    </div>
+    <div
+      id="root"
+      class="hidden-mob"
+    ></div>
+    <div id="toast"></div>
+    <div class="show-on-load">
+      <div id="full-page-container">
+        <div id="full-page-content">
+          <div id="central-text">
+            <p class="small-screen-text"> Smaller screen support is coming soon </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script
+      src="./src/index.tsx"
+      type="module"
+    ></script>
+  </body>
+</html>

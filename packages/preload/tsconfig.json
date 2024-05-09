@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "esnext",
+    "sourceMap": false,
+    "moduleResolution": "Node",
+    "skipLibCheck": true,
+    "strict": true,
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "types": ["node"],
+    "baseUrl": ".",
+  "jsx": "react-jsx"
+  },
+  "include": ["src/**/*.ts", "../../types/**/*.d.ts"],
+  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
+}

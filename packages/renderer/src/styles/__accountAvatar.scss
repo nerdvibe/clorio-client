@@ -1,0 +1,35 @@
+.flex-row {
+  flex-direction: row;
+}
+
+.account-avatar-selected {
+  border-radius: 100%;
+  transition: 0.3s;
+  -webkit-box-shadow: 0px 0px 20px 4px #ffffff;
+  box-shadow: 0px 0px 20px 4px #ffffff;
+  opacity: 1 !important;
+  min-width: 75px;
+  div {
+    border-radius: 100%;
+    transition: 0.3s;
+    position: absolute;
+  }
+}
+
+.account-avatar-button {
+  opacity: 0.8;
+  transition: 0.3s;
+  border-radius: 100%;
+  cursor: pointer;
+  div {
+    border-radius: 100%;
+  }
+}
+
+.account-avatar-button:hover {
+  opacity: 1;
+  transition: 0.3s;
+  -webkit-box-shadow: 0px 0px 20px 0px #ffffff;
+  box-shadow: 0px 0px 20px 0px #ffffff;
+  border-radius: 100%;
+}
