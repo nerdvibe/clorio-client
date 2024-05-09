@@ -53,9 +53,9 @@ export default function TransactionData({
   const MemoField = () => (
     <>
       {transactionData.memo ? (
-        <div className="flex flex-col w-100">
+        <div className="flex flex-col w-100 mt-2">
           <h4>Memo</h4>
-          <p className="detail">{transactionData.memo}</p>
+          <p className="data-field-large">{transactionData.memo}</p>
         </div>
       ) : (
         <></>
@@ -71,17 +71,27 @@ export default function TransactionData({
           ref={fromRef}
         >
           <h4>From</h4>
-          <Truncate
-            text={transactionData.from}
-            width={fromTextWidth || 250}
-          />
+          <span
+            className="data-field"
+            style={{minWidth: '250px'}}
+          >
+            <Truncate
+              text={transactionData.from}
+              width={fromTextWidth || 250}
+            />
+          </span>
         </div>
         <div className="transaction-data">
           <h4>To</h4>
-          <Truncate
-            text={transactionData.to}
-            width={fromTextWidth || 250}
-          />
+          <span
+            className="data-field"
+            style={{minWidth: '250px'}}
+          >
+            <Truncate
+              text={transactionData.to}
+              width={fromTextWidth || 250}
+            />
+          </span>
         </div>
       </div>
       <div className="flex justify-start flex-col">
@@ -90,7 +100,7 @@ export default function TransactionData({
             <div className="flex flex-row w-100 gap-4">
               <div className="w-100">
                 <h4>Transaction fee</h4>
-                <p className="detail transaction-fee">
+                <p className="data-field transaction-fee">
                   {showEdit ? (
                     <Input
                       type="text"
@@ -115,11 +125,11 @@ export default function TransactionData({
             <div className="flex flex-row w-100 gap-4">
               <div className="w-100">
                 <h4>Amount</h4>
-                <p className="detail">{transactionData.amount} MINA</p>
+                <p className="data-field">{transactionData.amount} MINA</p>
               </div>
               <div className="w-100">
                 <h4>Transaction fee</h4>
-                <p className="detail transaction-fee">
+                <p className="data-field transaction-fee">
                   {showEdit ? (
                     <Input
                       type="text"
@@ -145,7 +155,7 @@ export default function TransactionData({
         (showEditNonce ? (
           <div className="w-100">
             <h4>Nonce</h4>
-            <p className="detail transaction-fee">
+            <p className="text-border detail transaction-fee">
               <Input
                 type="text"
                 value={nonce}

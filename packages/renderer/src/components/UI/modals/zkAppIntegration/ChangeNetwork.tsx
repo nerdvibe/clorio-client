@@ -87,19 +87,19 @@ export default function ChangeNetwork() {
         <h1>Confirm network switch</h1>
         <hr />
       </div>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
         <p>Clorio will switch to the following network</p>
         <div className="flex gap-4 confirm-transaction-data">
           <div className="w-100">
             <h4>Current</h4>
-            <p>{selectedNetwork?.name}</p>
+            <p className='data-field'>{selectedNetwork?.name}</p>
           </div>
           <div className="w-100">
             <h4>Target</h4>
-            <p>{networkName}</p>
+            <p className='data-field'>{networkName}</p>
           </div>
         </div>
-        <div className="flex mt-2 gap-4 confirm-transaction-data sm-flex-reverse">
+        <div className="flex mt-4 gap-4 confirm-transaction-data sm-flex-reverse">
           <Button
             className="w-100"
             text="Cancel"

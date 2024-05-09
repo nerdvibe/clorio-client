@@ -11,7 +11,7 @@ export const ConnectedZkapps = () => {
   const onClose = (site: string) => {
     setConnectedSites(prev => ({
       ...prev,
-      sites: prev.sites.filter((s: string) => s !== site),
+      sites: prev.sites.filter(({source}: {source: string}) => source !== site),
     }));
   };
 
@@ -31,16 +31,16 @@ export const ConnectedZkapps = () => {
           <hr />
           <div className="connected-sites">
             {connectedSites.sites.length ? (
-              connectedSites.sites.map((site: string) => (
+              connectedSites.sites.map(({source}: {source: string}) => (
                 <>
                   <div
-                    key={site}
+                    key={source}
                     className="connected-site flex flex-row justify-between items-center gap-4"
                   >
-                    <span>{site}</span>
+                    <span>{source}</span>
                     <Trash
                       cursor={'pointer'}
-                      onClick={() => onClose(site)}
+                      onClick={() => onClose(source)}
                       color="rgb(209, 117, 122)"
                       width={20}
                       height={20}

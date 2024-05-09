@@ -149,11 +149,11 @@ export default function ConfirmZkappTransaction() {
             <div className="flex w-100">
               <div className="w-100">
                 <h4>Amount</h4>
-                <p>{transactionData.amount} MINA</p>
+                <p className='data-field'>{transactionData.amount} MINA</p>
               </div>
               <div className="w-100">
                 <h4>Transaction fee</h4>
-                <p>{transactionData.fee || 0.0101} MINA</p>
+                <p className='data-field'>{transactionData.fee || 0.0101} MINA</p>
               </div>
             </div>
             {isZkappCommand && (

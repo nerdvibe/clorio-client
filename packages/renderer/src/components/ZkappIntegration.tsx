@@ -43,13 +43,22 @@ export default function ZkappIntegration() {
 
   const setListeners = () => {
     window.ipcBridge.on('clorio-event', async (event, payload) => {
-      const {type, data, source} = payload;
+      const {type, data, source, title} = payload;
       if (!checkSource(source)) {
+        if (type === 'clorio-get-network-config') {
+          getNetworkConfig();
+          return;
+        }
+        if (type === 'clorio-get-accounts') {
+          sendResponse('clorio-set-accounts', []);
+          return;
+        }
         sendResponse('focus-clorio');
         updateConnectZkapp(prev => ({
           ...prev,
           showConnectZkapp: true,
           source,
+          title,
         }));
         return;
       }
@@ -64,7 +73,7 @@ export default function ZkappIntegration() {
           break;
 
         case 'clorio-get-address':
-          await getAddress(source);
+          await getAddress(source, title);
           break;
 
         case 'clorio-sign-tx':
@@ -121,7 +130,8 @@ export default function ZkappIntegration() {
     });
   };
 
-  const checkSource = (source: string) => source && sites.includes(source);
+  const checkSource = (source: string) =>
+    source && sites.filter(({source: savedSite}) => savedSite === source).length > 0;
 
   const rejectIfLedger = () => {
     if (config.isLedgerEnabled) {
@@ -140,7 +150,7 @@ export default function ZkappIntegration() {
     sendResponse('clorio-set-network-config', netConfig);
   };
 
-  const getAddress = async (source: string) => {
+  const getAddress = async (source: string, title: string) => {
     console.log('Received get-address');
     if (!config.isAuthenticated) {
       sendResponse('focus-clorio');
@@ -155,6 +165,7 @@ export default function ZkappIntegration() {
         ...prev,
         showConnectZkapp: true,
         source,
+        title,
       }));
     }
   };
@@ -165,6 +176,8 @@ export default function ZkappIntegration() {
     if (checkSource(source)) {
       unlockWallet();
       sendResponse('clorio-set-accounts', [sender]);
+    } else {
+      sendResponse('clorio-set-accounts', []);
     }
   };
 

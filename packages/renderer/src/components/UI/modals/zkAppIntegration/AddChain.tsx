@@ -146,19 +146,18 @@ export default function AddChain() {
         <hr />
       </div>
       <div className="flex flex-col gap-4">
-        <p>Allow this site to add a network?</p>
         <div className="flex gap-4 flex-col confirm-transaction-data">
           <div className="w-100">
             <h4>Node name</h4>
-            <p>{addChainData?.name}</p>
+            <p className="data-field">{addChainData?.name}</p>
           </div>
           <div className="w-100">
             <h4>Node URL</h4>
-            <p>{addChainData?.url}</p>
+            <p className="data-field">{addChainData?.url}</p>
           </div>
         </div>
         <div
-          className="alert alert-warning flex flex-row items-center gap-2"
+          className="alert alert-warning flex flex-row items-center justify-start gap-2"
           role="alert"
         >
           <AlertOctagon />

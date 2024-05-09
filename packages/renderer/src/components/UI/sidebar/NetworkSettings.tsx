@@ -11,6 +11,7 @@ import {getPassphrase} from '/@/tools';
 import {useRecoilState} from 'recoil';
 import {networkState} from '/@/store';
 import {ConnectedZkapps} from './ConnectedZkapps';
+import {NetConfig, sendResponse} from '/@/tools/mina-zkapp-bridge';
 
 export default function NetworkSettings({
   currentNetwork,
@@ -54,6 +55,10 @@ export default function NetworkSettings({
       },
       selectedNode: network,
     }));
+    sendResponse('chain-change', {
+      chainId: network.network!,
+      name: network.name!,
+    } as NetConfig);
     navigate('/overview');
   };
   return (
