@@ -1,0 +1,113 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
+
+* {
+  font-family: "Roboto", "Lato", sans-serif !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  text-align: left;
+  color: #000000;
+  width: fit-content;
+}
+
+h1 {
+  font-family: "Lato", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 58px;
+}
+
+h2 {
+  font-family: "Lato", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 38px;
+}
+
+h3 {
+  font-family: "Lato", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 34px;
+}
+
+h4 {
+  font-family: "Lato", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 29px;
+}
+
+h5 {
+  font-family: "Lato", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 22px;
+}
+
+h6 {
+  font-family: "Lato", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  width: 108px;
+  height: 7px;
+}
+
+p {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.secondaryText {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: $grey;
+  width: 100%;
+}
+
+.no-bottom {
+  margin-bottom: 0px !important;
+}
+
+.align-center {
+  text-align: center;
+}
+
+.wrap-input1 {
+  h5 {
+    font-size: 1.15rem;
+  }
+}
+
+.small-text {
+  font-size: small;
+  font-style: italic;
+  text-align: right !important;
+  opacity: 0.7;
+}
+
+.fw-400 {
+  font-weight: 400;
+}
+
+.disclaimer-text {
+  font-size: large;
+  line-height: initial;
+}

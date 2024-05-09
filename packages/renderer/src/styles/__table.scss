@@ -1,0 +1,415 @@
+$primary-color: #008cba;
+$gray-color: #ddd;
+$medium-up: 600px;
+$large-up: 1200px;
+$global-radius: 4px;
+
+.th-first-item {
+  border-radius: 10px 0px 0px 0px;
+  width: 10%;
+}
+.stake-th {
+  width: 33%;
+}
+
+.stake-fee-th {
+  width: 10%;
+}
+
+.stake-staked-th {
+  width: 20%;
+}
+
+.th-last-item {
+  border-radius: 0px 10px 0px 0px;
+}
+
+.th-background {
+  border-top: 0px;
+}
+
+.table-icon {
+  width: 20%;
+}
+
+td,th{
+  background: none !important;
+}
+
+.dangerous-transaction {
+  td {
+    border-bottom: 1px solid #ffdddd00 !important;
+  }
+  .table-element {
+    padding-bottom: 0px !important;
+    background: #ff65653d;
+  }
+}
+
+.scam-alert-row {
+  * {
+    font-style: italic;
+    font-size: small;
+    line-height: 10px;
+  }
+  td {
+    border-top: none !important;
+    border-bottom: 1px solid rgb(255, 29, 29) !important;
+    padding: 6px !important;
+    color: #ff1e1e !important;
+    padding-bottom: 10px !important;
+    background: #ff65653d;
+  }
+}
+
+.is-boosted {
+  background: #fffdef27;
+}
+
+.fee-column {
+  width: 80px !important;
+}
+
+.info-column {
+  width: 150px !important;
+}
+
+.stake-table-button {
+  width: 200px !important;
+}
+
+.table-hash {
+  a {
+    max-width: 90%;
+    padding-top: 3px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+
+th {
+  text-align: center !important;
+}
+
+#transaction-table {
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    float: left;
+    margin: 0 0 2em;
+    thead {
+      th {
+        padding: 0.35em 0 0.35em;
+        font-weight: 400;
+        text-align: left;
+        font-size: 1.25em;
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 2px solid #ddd;
+        td {
+          padding: 0.75em 0;
+
+          a {
+            color: $primary-color;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0 0.5em 0 0;
+            &:hover,
+            &:active,
+            &:focus {
+              color: darken($primary-color, 10%);
+              border: none;
+            }
+          }
+        }
+      }
+    }
+
+    tfoot {
+      td {
+        padding: 0.35em 0 0.35em;
+
+        text-align: left;
+        font-size: 1.25em;
+      }
+    }
+  }
+
+  @media screen and (max-width: 1199px) {
+    .table-element {
+      max-width: 50%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .full-width-table-cell {
+      max-width: 100%;
+    }
+
+    .force-right {
+      float: right !important;
+    }
+
+    .table-icon {
+      width: 20% !important;
+    }
+
+    .scam-alert-row {
+      position: relative;
+      border-top: red;
+      top: -18px;
+    }
+
+    .table-hash {
+      width: 80% !important;
+      max-width: 80% !important;
+      a {
+        max-width: 100%;
+        padding-top: 3px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+
+    .stake-table-row {
+      td {
+        height: 80px;
+      }
+    }
+    .small-screen-stake-table-text {
+      margin: 0 auto;
+      text-align: center;
+      p,
+      h5 {
+        width: 100%;
+        text-align: center;
+      }
+      .small-walletImage {
+        top: 28px;
+      }
+    }
+
+    .stake-table-button {
+      max-width: 100%;
+      div {
+        text-align: center;
+        width: 100%;
+        margin-left: 0;
+      }
+    }
+
+    .fee-column,
+    .info-column {
+      width: 50% !important;
+    }
+
+    .stake-table-button {
+      width: 100% !important;
+    }
+  }
+
+  ///RWD MIXIN BELOW
+  @mixin rwd-first {
+    display: block;
+
+    tbody {
+      border: none;
+    }
+    tbody,
+    th,
+    td,
+    tr,
+    tfoot {
+      display: block;
+    }
+
+    thead {
+      display: none;
+    }
+    tr {
+      float: left;
+      width: 100%;
+      margin: 0 0 1em;
+      border: 1px solid $gray-color;
+      box-shadow: 0px 2px 5px 0px $gray-color;
+      border-radius: $global-radius;
+
+      td {
+        padding: 0.5em 0.5em 0.5em 50%;
+        float: left;
+        width: 100%;
+        &:before {
+          width: 100%;
+          display: block;
+          float: left;
+          padding: 0.5em 0.5em 0.5em 0;
+          clear: both;
+          margin: -0.5em 0 0 -100%;
+          font-size: 1.125em;
+        }
+      }
+    }
+
+    tr:nth-of-type(even) {
+      td {
+        &:before {
+        }
+      }
+    }
+  }
+
+  @mixin rwd-second {
+    display: table;
+    border: none;
+
+    th,
+    td {
+      display: table-cell;
+    }
+
+    tr {
+      display: table-row;
+      border: none;
+      border-bottom: 1px solid #eee;
+      float: none;
+      margin: 0;
+      box-shadow: none;
+
+      td {
+        padding: 0.75em 0 0.75em 0.25em;
+        float: none;
+        width: auto;
+
+        &:before {
+          padding: 0 !important;
+        }
+      }
+    }
+
+    thead {
+      display: table-header-group;
+    }
+
+    tbody,
+    tfoot {
+      display: table-row-group;
+    }
+
+    tr:nth-of-type(even) {
+      background: none;
+      td {
+        &:before {
+        }
+      }
+    }
+  }
+
+  %responive-tables {
+    @include rwd-first;
+
+    @media screen and (min-width: $medium-up) {
+      @include rwd-second;
+    }
+  }
+
+  %responive-tables-large {
+    @include rwd-first;
+
+    @media screen and (min-width: $large-up) {
+      @include rwd-second;
+    }
+  }
+
+  @mixin responive-tables($headings...) {
+    $list: $headings;
+
+    @each $list-headings in $list {
+      $i: index($list, $list-headings);
+      tbody tr td:nth-of-type(#{$i}):before {
+        content: $list-headings;
+      }
+
+      @media screen and (min-width: $medium-up) {
+        tbody tr td:nth-of-type(#{$i}):before {
+          content: "";
+        }
+      }
+    }
+  }
+
+  @mixin responive-tables-large($headings...) {
+    $list: $headings;
+
+    @each $list-headings in $list {
+      $i: index($list, $list-headings);
+      tbody tr td:nth-of-type(#{$i}):before {
+        content: $list-headings;
+      }
+
+      @media screen and (min-width: $large-up) {
+        tbody tr td:nth-of-type(#{$i}):before {
+          content: "";
+        }
+      }
+    }
+  }
+
+  #rwd-table {
+    @extend %responive-tables;
+    @include responive-tables(
+      "Heading Col 1",
+      "Heading Col 2",
+      "Heading Col 3"
+    );
+  }
+
+  #rwd-table-large {
+    @extend %responive-tables-large;
+    @include responive-tables-large(
+      "",
+      "Heading Col 2",
+      "Heading Col 3",
+      "Heading Col 4"
+    );
+  }
+}
+
+@media (min-width: 1200px) {
+  #transaction-table {
+    .small-screen-stake-table-text,
+    .small-screen-stake-table-text p {
+      text-align: left;
+    }
+    .stake-table-row td {
+      height: auto;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  #transaction-table #rwd-table-large tr {
+    box-shadow: none !important;
+  }
+
+  .scam-alert-row {
+    margin-top: 1px;
+    margin-bottom: 0px;
+    border-radius: 2px;
+    border-bottom: 1px solid #ff1d1d !important;
+    td {
+      padding-top: 10px !important;
+    }
+  }
+
+  .dangerous-transaction {
+    .table-element {
+      padding-bottom: 10px !important;
+    }
+    .table-icon {
+      padding-bottom: 20px !important;
+    }
+  }
+}

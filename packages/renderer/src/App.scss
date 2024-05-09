@@ -1,0 +1,79 @@
+@import "./styles/__vars";
+@import "./styles/__typo";
+@import "./styles/__buttons";
+@import "./styles/__misc";
+@import "./styles/__loader";
+@import "./styles/__dashboard";
+@import "./styles/__table";
+@import "./styles/__homepage";
+@import "./styles/__new_design";
+@import "./styles/__accountAvatar";
+@import "./styles/__sidebar";
+@import url("https://fonts.googleapis.com/css2?family=Mada:wght@200;300;400;500;600;700;900&display=swap");
+
+a {
+  text-decoration: none !important;
+}
+
+.App {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.App-logo {
+  height: 10vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 20vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+html {
+  background-color: #171717;
+  background: url("./squares-bg.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 104vh;
+  overflow-y: hidden;
+}
+
+body {
+  background: none !important;
+  position: relative;
+  // left: 1vw;
+  width: 99vw;
+  top: 1vh;
+  bottom: 1vh;
+  height: 98vh;
+}
