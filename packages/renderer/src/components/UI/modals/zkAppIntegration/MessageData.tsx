@@ -22,16 +22,18 @@ export default function MessageData({messageToSign}: {messageToSign: string}) {
           className="w-100 transaction-data"
         >
           <h4>From</h4>
-          <Truncate
-            text={address}
-            width={fromTextWidth || 450}
-          />
+          <span className='data-field' style={{minWidth: '350px'}}>
+            <Truncate
+              text={address}
+              width={fromTextWidth || 450}
+            />
+          </span>
         </div>
       </div>
       <div className="flex justify-start w-100">
         <div className="w-100">
           <h4>Message</h4>
-          <pre className="w-100 overflow-x-auto text-start message-box">
+          <pre className="w-100 overflow-x-auto text-start message-box data-field-large">
             {JSON.stringify(messageToSign, null, 2)}
           </pre>
         </div>

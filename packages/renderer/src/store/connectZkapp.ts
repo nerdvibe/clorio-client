@@ -5,5 +5,6 @@ export const connectZkappState = atom({
   default: {
     showConnectZkapp: false,
     source: '',
+    title: '',
   },
 });

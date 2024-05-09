@@ -10,10 +10,27 @@ const {MinaLedgerJS} = require('mina-ledger-js');
 const TransportNodeHid = require('@ledgerhq/hw-transport-node-hid-singleton');
 import {shell} from 'electron';
 
+const isMac = process.platform === 'darwin';
 let browserWindow: BrowserWindow;
 let childWindow: BrowserWindow;
 
-const template: Electron.MenuItemConstructorOptions[] = [
+const template = [
+  ...(isMac
+    ? [
+        {
+          label: app.name,
+          submenu: [
+            {role: 'about'},
+            {type: 'separator'},
+            {role: 'hide'},
+            {role: 'hideOthers'},
+            {role: 'unhide'},
+            {type: 'separator'},
+            {role: 'quit'},
+          ],
+        },
+      ]
+    : []),
   {
     label: 'Edit',
     submenu: [
@@ -63,7 +80,7 @@ async function createWindow() {
     height: 1000,
     minWidth: 600,
     show: false, // Use the 'ready-to-show' event to show the instantiated BrowserWindow.
-    titleBarStyle: 'hidden',
+    titleBarStyle: 'hiddenInset',
     title: 'Clorio Wallet',
     backgroundColor: '#ffffff',
     icon: path.join(__dirname, 'icon.png'),
@@ -115,6 +132,8 @@ async function createWindow() {
      */
     await browserWindow.loadFile(resolve(__dirname, '../../renderer/dist/index.html'));
   }
+  browserWindow.removeMenu();
+  // @ts-ignore
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 
@@ -160,52 +179,225 @@ ipcMain.handle('open-win', (_: Electron.IpcMainInvokeEvent, arg) => {
     frame: true,
     width: 1500,
     height: 1000,
+    titleBarStyle: 'hiddenInset',
     webPreferences: {
       preload: join(app.getAppPath(), 'packages/preload/dist/index.cjs'),
       nodeIntegration: true,
-      // contextIsolation: false,
+      contextIsolation: true,
       sandbox: false, // Sandbox disabled because the demo of preload script depend on the Node.js api
       webSecurity: false,
     },
   });
 
-
   childWindow.loadURL(`${browserUrl}`);
-  childWindow.webContents.openDevTools();
+  // childWindow.webContents.openDevTools();
+  childWindow.webContents.executeJavaScript(`
+    const draggableBar = document.createElement('div');
+    draggableBar.style.position = 'fixed';
+    draggableBar.style.top = '0';
+    draggableBar.style.left = '0';
+    draggableBar.style.width = '100%';
+    draggableBar.style.height = '40px';
+    draggableBar.style.background = '#ccc000000';
+    draggableBar.style.webkitAppRegion = 'drag';
+    draggableBar.style.display = 'flex';
+    draggableBar.style.alignItems = 'center';
+    draggableBar.style.justifyContent = 'center';
+    draggableBar.style.color = '#fff';
+    draggableBar.style.margin = '0';
+    draggableBar.style.padding = '0';
+    
+    document.body.appendChild(draggableBar);
+    document.body.style.paddingTop = '40px'; // Push the content below the bar
+  `);
+  childWindow.webContents.executeJavaScript(`
+  const style = document.createElement('style');
+  style.textContent = \`
+    .bar {
+      align-items: center;
+      background-image: linear-gradient(144deg,#AF40FF, #5B42F3 50%,#00DDEB);
+      border: 0;
+      box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+      box-sizing: border-box;
+      color: #FFFFFF;
+      display: flex;
+      font-family: Phantomsans, sans-serif;
+      font-size: 20px;
+      justify-content: center;
+      line-height: 1em;
+      padding: 3px;
+      text-decoration: none;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      white-space: nowrap;
+      cursor: pointer;
+      margin: 0 !important;
+    }
+    
+    .bar:active,
+    .bar:hover {
+      outline: 0;
+    }
+    
+    .bar span {
+      background-color: rgb(5, 6, 45);
+      // padding: 16px 24px;
+      // width: 100%;
+      height: 100%;
+      transition: 300ms;
+      font-size: 14px;
+    }
+    .bar div{
+      background-color: rgb(5, 6, 45);
+      transition: 300ms;
+      align-items:center;
+      height: 100%;
+      flex:1;
+      padding: 0 10px;
+    }
+    .bar div span{
+      background: none;
+      height: auto
+    }
+    .bar:hover span,.bar:hover div {
+      background: none;
+    }
+
+    .right-string{
+      text-align: right;
+    }
+    
+    @media (min-width: 768px) {
+      .bar {
+        font-size: 24px;
+        min-width: 196px;
+      }
+    }
+  \`;
+  document.head.appendChild(style);
+
+`);
 
   childWindow.webContents.executeJavaScript(`
-  window.communicator = {
-    request: function(data) {
-      const url = 'prefix://?data=' + encodeURIComponent(JSON.stringify(data))
-      const req = new XMLHttpRequest()
-      req.open('GET', url)
-      req.send();
-    },
-    receive: function(data) {
-      // alert('Data received from the main window: ' + data)
-      window.text = data.text
+  const bar = document.createElement('div');
+  bar.style.position = 'fixed';
+  bar.style.left = '0';
+  bar.style.bottom = '0';
+  bar.style.width = '100%';
+  bar.style.height = '50px';
+  bar.style.backgroundColor = '#333';
+  bar.style.color = '#fff';
+  bar.style.display = 'flex';
+  bar.style.justifyContent = 'space-between';
+  bar.style.padding = '0 4px';
+  bar.style.alignItems = 'center';
+  bar.style.position = 'fixed';
+  bar.style.zIndex = '9999';
+  bar.className = 'bar';
+
+  (async () => {
+    const leftContainer = document.createElement('div');
+    const rightContainer = document.createElement('div');
+    leftContainer.style.display = 'flex';
+    leftContainer.style.flexDirection = 'row';
+    leftContainer.style.gap = '5px';
+    leftContainer.style.justifyContent = 'start';
+    const leftStringTitle = document.createElement('span');
+    const leftString = document.createElement('span');
+    leftString.textContent = 'Loading...';
+    const account = await window.mina.getAccounts();
+    leftStringTitle.style.fontWeight = 'bold';
+    if(account.length>0){
+      leftString.textContent = account;
+      leftStringTitle.textContent = 'Account: ';
+      leftString.textContent = leftString.textContent.slice(0, 10) + '...' + leftString.textContent.slice(-10);
+    } else {
+      leftStringTitle.textContent = '';
+      leftString.textContent = "Clorio wallet not connected";
     }
-  };
+    
+    leftContainer.appendChild(leftStringTitle);
+    leftContainer.appendChild(leftString);
+    bar.appendChild(leftContainer);
+    
+    const rightString = document.createElement('span');
+    rightContainer.style.display = 'flex';
+    rightContainer.style.flexDirection = 'row';
+    rightContainer.style.gap = '5px';
+    rightContainer.style.justifyContent = 'end';
+    rightString.className = 'right-string';
+    rightString.textContent = '';
+    const network = await window.mina.requestNetwork()
+    if(network.name) {
+      rightString.textContent = (account.length>0 ? 'Clorio connected | ': '') + network.name;
+    } 
+    rightContainer.appendChild(rightString);
+    bar.appendChild(rightContainer);
+
+    if(window.mina){
+      window.mina.on('accountsChanged', (data) => {
+        leftStringTitle.textContent = 'Account: ';
+        leftString.textContent = data[0];
+        leftString.textContent = leftString.textContent.slice(0, 10) + '...' + leftString.textContent.slice(-10);
+        if(!rightString.textContent.includes('Clorio connected')){
+          rightString.textContent = 'Clorio connected | ' + rightString.textContent;
+        }
+      })
+      window.mina.on('chainChanged', (data) => {
+        rightString.textContent = 'Clorio connected | ' + data.name;
+      })
+    }
+  
+    document.body.appendChild(bar);
+    
+    bar.addEventListener('click', () => {
+      window.mina.focusClorio();
+    });
+
+  })()
 `);
+
+  childWindow.webContents.executeJavaScript(`
+    window.communicator = {
+      request: function(data) {
+        const url = 'prefix://?data=' + encodeURIComponent(JSON.stringify(data))
+        const req = new XMLHttpRequest()
+        req.open('GET', url)
+        req.send();
+      },
+      receive: function(data) {
+        window.text = data.text
+      }
+    };
+  `);
 
   const setContent = (data: any) =>
     childWindow.webContents.executeJavaScript(
       `window.communicator.receive(${JSON.stringify(data)})`,
     );
   setContent(JSON.parse(arg));
-  // childWindow.webContents.executeJavaScript()
 });
 
 const createEventHandler = (type: string, response: string) => {
+  const getBaseUrl = (url: string) => {
+    const urlObj = new URL(url);
+    return `${urlObj.protocol}//${urlObj.host}`;
+  };
+
   return {
     [type]: (_: Electron.IpcMainEvent, data: any) =>
       browserWindow.webContents.send('clorio-event', {
         type: `clorio-${type}`,
         data,
-        source: childWindow.webContents.getURL(),
+        title: childWindow.webContents.getTitle(),
+        // Get the base url of the child window
+        source: getBaseUrl(childWindow.webContents.getURL()),
       }),
-    [`clorio-${response}`]: (_: Electron.IpcMainEvent, data: any) =>
-      childWindow.webContents.send(response, data),
+    [`clorio-${response}`]: (_: Electron.IpcMainEvent, data: any) => {
+      childWindow.webContents.send(response, data);
+      childWindow.focus();
+    },
   };
 };
 
@@ -239,6 +431,14 @@ Object.keys(eventHandlers).forEach(eventName => {
       data: any,
     ) => void,
   );
+});
+
+ipcMain.on('account-change', (_: Electron.IpcMainInvokeEvent, arg) => {
+  childWindow.webContents.send('accountsChanged', arg);
+});
+
+ipcMain.on('chain-change', (_: Electron.IpcMainInvokeEvent, arg) => {
+  childWindow.webContents.send('chainChanged', arg);
 });
 
 // Cleanup function

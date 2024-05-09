@@ -14,6 +14,9 @@ import {createRoot} from 'react-dom/client';
 import {SidebarToggle} from './SidebarToggle';
 import AppSettings from './AppSettings';
 import {useWallet} from '/@/contexts/WalletContext';
+import {Badge} from 'react-bootstrap';
+import ReactTooltip from 'react-tooltip';
+import {toast} from 'react-toastify';
 
 interface IProps {
   mnemonic?: boolean;
@@ -68,6 +71,8 @@ export const CustomSidebar = ({
 
   const root = createRoot(document.getElementById('draggable-bar'));
   isAuthenticated && root.render(<SidebarToggle setToggled={setToggled} />);
+
+  const isElectron = navigator.userAgent.toLowerCase().indexOf(' electron/') > -1;
 
   return (
     <div>
@@ -140,21 +145,46 @@ export const CustomSidebar = ({
             </MenuItem>
           </Link>
 
-          <Link
-            to="/zkapps"
-            className="sidebar-item"
-          >
-            <MenuItem
-              className={'sidebar-item-container ' + isRouteActiveClass('zkapps')}
-              disabled
+          {isElectron ? (
+            <Link
+              to="/zkapps"
+              className={`sidebar-item ${!isElectron ? 'disabled-sidebar-item' : ''}}`}
             >
-              {' '}
-              <span>
-                <Code /> zkApps
-              </span>
+              <MenuItem
+                className={`${'sidebar-item-container ' + isRouteActiveClass('zkapps')}`}
+                disabled
+              >
+                <span>
+                  <Code /> Zkapps
+                </span>
+                <Badge
+                  bg="secondary"
+                  className="beta-tag"
+                >
+                  Beta
+                </Badge>
+              </MenuItem>
+            </Link>
+          ) : (
+            <MenuItem
+              className={`sidebar-item-container ${!isElectron ? 'disabled-sidebar-item' : ''}`}
+              onClick={() => toast.error('Zkapp feature is available only in Clorio Desktop')}
+            >
+              <>
+                <span>
+                  <Code /> zkApps
+                </span>
+                <Badge
+                  bg="secondary"
+                  className="beta-tag"
+                >
+                  Beta
+                </Badge>
+              </>
             </MenuItem>
-          </Link>
+          )}
         </Menu>
+        <ReactTooltip />
         <div className="sidebar-footer-block">
           <div>
             <AppSettings

@@ -15,6 +15,10 @@ h6 {
   user-select: none; /* Standard */
 }
 
+.flex-1 {
+  flex: 1;
+}
+
 .z-100 {
   z-index: 100;
 }
@@ -231,6 +235,12 @@ h6 {
   text-align: center;
 }
 
+.beta-tag,
+.sidebar-item-container-active .beta-tag {
+  color: white !important;
+  margin-left: 10px;
+}
+
 h1,
 h2,
 h3,
@@ -427,12 +437,12 @@ p {
   height: 200px;
 }
 
-.transaction-fee{
+.transaction-fee {
   display: flex;
   align-items: center;
   gap: 4px;
   margin: 0;
-  .wrap-input1{
+  .wrap-input1 {
     margin: 0;
   }
 }
@@ -460,10 +470,42 @@ p {
   top: -20px;
 }
 
-.transaction-data{
-  div{
+.transaction-data {
+  div {
     text-align: left;
   }
+}
+
+.min-w-500 {
+  min-width: 500px;
+}
+
+.data-field,.data-field-large {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 50px 0px;
+  font-weight: 200;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  width: 100%;
+  margin-bottom: 0%;
+  padding: 1rem !important;
+  padding-top: 1.5rem !important;
+  padding-bottom: 1.5rem !important;
+  justify-content: start;
+}
+
+.data-field{
+  height: 30px;
+}
+
+.data-field-large{
+  align-items: start;
 }
 
 @media screen and (max-width: 600px) {

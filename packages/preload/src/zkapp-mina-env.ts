@@ -1,7 +1,6 @@
 import {ipcRenderer} from 'electron';
-import EventEmitter from 'eventemitter3';
 
-const allowedRequestChannels = [
+const allowedRequestChannels: string[] = [
   'get-network-config',
   'get-address',
   'sign-tx',
@@ -17,6 +16,7 @@ const allowedRequestChannels = [
   'stake-delegation',
   'sign-fields',
   'verify-fields',
+  'focus-clorio',
 ];
 
 const allowedResponseChannels = [
@@ -36,6 +36,7 @@ const allowedResponseChannels = [
   'staked-delegation',
   'signed-fields',
   'verified-fields',
+  'focus-clorio',
 ];
 
 interface AddChainArgs {
@@ -69,13 +70,21 @@ const sendIpcRequest = (requestChannel: string, responseChannel: string, data?: 
   });
 };
 
-// const EE = new EventEmitter(),
-//   context = {foo: 'bar'};
-//   const channel = new MessageChannel("webhook");
-
 const zkappIntegration = {
-  on: (data: any) => {
-    // EE.emit('chainChanged', data);
+  on: (channel: string, resp: (data: unknown) => void) => {
+    console.log('channel', channel);
+    switch (channel) {
+      case 'accountsChanged':
+        ipcRenderer.on('accountsChanged', (_, responseData) => {
+          resp([responseData]);
+        });
+        break;
+      case 'chainChanged':
+        ipcRenderer.on('chainChanged', (_, responseData) => {
+          resp(JSON.parse(responseData));
+        });
+        break;
+    }
   },
   requestNetwork: () => sendIpcRequest('get-network-config', 'set-network-config', null),
   addChain: (data: AddChainArgs) => sendIpcRequest('add-chain', 'added-chain', data),
@@ -94,6 +103,7 @@ const zkappIntegration = {
   sendStakeDelegation: (data: any) => sendIpcRequest('stake-delegation', 'staked-delegation', data),
   signFields: (data: any) => sendIpcRequest('sign-fields', 'signed-fields', data),
   verifyFields: (data: any) => sendIpcRequest('verify-fields', 'verified-fields', data),
+  focusClorio: () => sendIpcRequest('focus-clorio', 'focus-clorio'),
 };
 
 export default zkappIntegration;

@@ -38,7 +38,7 @@ const ENCRYPTED_DATA_KEY = 'encryptedData';
 
 export const sendResponse = (eventName: string, data?: any) => {
   console.log(`Sending response for event: ${eventName}`);
-  window.ipcBridge.send(eventName, JSON.stringify(data));
+  window.ipcBridge.send(eventName, typeof data !== 'string' ? JSON.stringify(data) : data);
 };
 
 export const getAccountAddress = (): string => {

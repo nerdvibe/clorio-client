@@ -9,20 +9,22 @@ export default function ConnectZkapp() {
   const wallet = useRecoilValue(walletState);
   const updateConnectedSites = useSetRecoilState(connectedSitesState);
   const {address: sender} = wallet;
-  const [{showConnectZkapp, source}, updateConnectZkapp] = useRecoilState(connectZkappState);
+  const [{showConnectZkapp, source, title}, updateConnectZkapp] = useRecoilState(connectZkappState);
   const onClose = () => {
     updateConnectZkapp(prev => ({
       ...prev,
       showConnectZkapp: false,
       source: '',
+      title: '',
     }));
   };
 
   const onConfirm = async () => {
     updateConnectedSites((prev: any) => ({
       ...prev,
-      sites: [...prev.sites, source],
+      sites: [...prev.sites, {source, title}],
     }));
+    sendResponse('account-change', sender);
     sendResponse('clorio-set-address', [sender]);
     onClose();
   };
@@ -41,9 +43,7 @@ export default function ConnectZkapp() {
       <div className="flex flex-col gap-4">
         <div className="flex flex-col w-100">
           <h4>This website would like to view account:</h4>
-          <div className="website-block">
-            <p>{source}</p>
-          </div>
+          <p className="data-field mb-4 mt-2">{source}</p>
           <div
             className="alert alert-warning flex flex-row items-center gap-2"
             role="alert"

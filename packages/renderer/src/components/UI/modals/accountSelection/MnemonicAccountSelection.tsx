@@ -26,6 +26,7 @@ import {useWallet} from '/@/contexts/WalletContext';
 import {useLazyQuery} from '@apollo/client';
 import {GET_ID} from '/@/graphql/query';
 import useSecureStorage from '/@/hooks/useSecureStorage';
+import {sendResponse} from '/@/tools/mina-zkapp-bridge';
 
 const MnemonicAccountSelection = ({
   currentAddress,
@@ -164,6 +165,7 @@ const MnemonicAccountSelection = ({
                   if (wallet) {
                     onAccountChange({accountId: wallet.accountId, publicKey: address});
                     setShouldBalanceUpdate(true);
+                    sendResponse('account-change', address);
                     navigate('/');
                     toggleLoader(true);
                   }
