@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {Accordion, Col, useAccordionButton} from 'react-bootstrap';
 import type {IKeypair} from '../../../types/Keypair';
 import {PdfEncryption} from './PdfEncryption';
-import Button from '../../UI/Button';
+import Button from '../Button';
 import isElectron from 'is-electron';
 import {isChrome} from '../../../tools';
 import type {INetworkData} from '../../../types';

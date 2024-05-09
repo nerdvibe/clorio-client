@@ -1,4 +1,10 @@
-build
-build-devnet
-build-mainnet
-node_modules
+**/node_modules
+**/dist
+**/*.svg
+
+package.json
+package-lock.json
+.electron-vendors.cache.json
+
+.github
+.idea

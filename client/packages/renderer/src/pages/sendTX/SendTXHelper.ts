@@ -1,6 +1,6 @@
 import {Big} from 'big.js';
 import type {IBalanceData} from '../../contexts/balance/BalanceTypes';
-import type {ITransactionData} from './../../types/TransactionData';
+import type {ITransactionData} from '../../types/TransactionData';
 import {DEFAULT_FEE, INITIAL_TRANSACTION_AMOUNT, MINIMUM_NONCE} from '../../tools';
 import {toNanoMINA} from '../../tools';
 import {emojiToUnicode, escapeUnicode} from '../../tools/ledger';
