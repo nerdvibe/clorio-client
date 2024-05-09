@@ -1,5 +1,5 @@
 import Button from '../Button';
-import LedgerLoader from '../../../components/UI/ledgerLogin/LedgerLoader';
+import LedgerLoader from '../ledgerLogin/LedgerLoader';
 
 interface IProps {
   closeModal: () => void;
