@@ -13,7 +13,6 @@ import {clearSession} from './tools';
 import {networkState} from './store';
 import {useRecoilState} from 'recoil';
 
-
 function App() {
   const {settings, setAvailableNetworks, saveSettings} = useNetworkSettingsContext();
   const [{selectedNetwork, selectedNode}, setNetworkState] = useRecoilState(networkState);

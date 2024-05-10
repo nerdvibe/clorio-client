@@ -190,7 +190,6 @@ ipcMain.handle('open-win', (_: Electron.IpcMainInvokeEvent, arg) => {
   });
 
   childWindow.loadURL(`${browserUrl}`);
-  // childWindow.webContents.openDevTools();
   childWindow.webContents.executeJavaScript(`
     const draggableBar = document.createElement('div');
     draggableBar.style.position = 'fixed';
@@ -210,6 +209,7 @@ ipcMain.handle('open-win', (_: Electron.IpcMainInvokeEvent, arg) => {
     document.body.appendChild(draggableBar);
     document.body.style.paddingTop = '40px'; // Push the content below the bar
   `);
+
   childWindow.webContents.executeJavaScript(`
   const style = document.createElement('style');
   style.textContent = \`
@@ -295,6 +295,7 @@ ipcMain.handle('open-win', (_: Electron.IpcMainInvokeEvent, arg) => {
   bar.style.position = 'fixed';
   bar.style.zIndex = '9999';
   bar.className = 'bar';
+  document.body.appendChild(bar);
 
   (async () => {
     const leftContainer = document.createElement('div');
@@ -349,7 +350,6 @@ ipcMain.handle('open-win', (_: Electron.IpcMainInvokeEvent, arg) => {
       })
     }
   
-    document.body.appendChild(bar);
     
     bar.addEventListener('click', () => {
       window.mina.focusClorio();
