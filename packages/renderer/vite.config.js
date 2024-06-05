@@ -53,6 +53,7 @@ const config = {
     },
     emptyOutDir: true,
     reportCompressedSize: false,
+    publicDir:join(PACKAGE_ROOT, 'resources'),
   },
   test: {
     environment: 'happy-dom',

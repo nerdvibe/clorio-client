@@ -88,13 +88,13 @@ async function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       webSecurity: false,
-      // devTools: false,
+      devTools: false,
       sandbox: false, // Sandbox disabled because the demo of preload script depend on the Node.js api
       webviewTag: false, // The webview tag is not recommended. Consider alternatives like an iframe or Electron's BrowserView. @see https://www.electronjs.org/docs/latest/api/webview-tag#warning
       preload: join(app.getAppPath(), 'packages/preload/dist/index.cjs'),
     },
   });
-  browserWindow.webContents.openDevTools();
+  // browserWindow.webContents.openDevTools();
   /**
    * If the 'show' property of the BrowserWindow's constructor is omitted from the initialization options,
    * it then defaults to 'true'. This can cause flickering as the window loads the html content,
@@ -109,7 +109,7 @@ async function createWindow() {
     if (import.meta.env.DEV) {
       browserWindow?.webContents.openDevTools();
     }
-    browserWindow?.webContents.openDevTools();
+    // browserWindow?.webContents.openDevTools();
   });
 
   /**
@@ -434,11 +434,19 @@ Object.keys(eventHandlers).forEach(eventName => {
 });
 
 ipcMain.on('account-change', (_: Electron.IpcMainInvokeEvent, arg) => {
-  childWindow.webContents.send('accountsChanged', arg);
+  try{
+    childWindow.webContents.send('accountsChanged', arg);
+  } catch(e){
+    console.log('Child window not connected');
+  }
 });
 
 ipcMain.on('chain-change', (_: Electron.IpcMainInvokeEvent, arg) => {
-  childWindow.webContents.send('chainChanged', arg);
+  try{
+    childWindow.webContents.send('chainChanged', arg);
+  } catch(e){
+    console.log('Child window not connected');
+  }
 });
 
 // Cleanup function

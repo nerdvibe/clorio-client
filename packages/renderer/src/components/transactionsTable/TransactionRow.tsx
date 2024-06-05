@@ -42,7 +42,7 @@ const TransactionRow = (
       : 'red-text'
     : 'green-text';
 
-  const urlPath = isMempool ? 'payment' : 'transaction';
+  const urlPath = isMempool ? 'payment' : 'tx';
   const {settings} = useNetworkSettingsContext();
 
   return (
@@ -60,7 +60,7 @@ const TransactionRow = (
           data-tip={memo ? `Memo: ${sanitizeString(memo)}` : null}
         >
           <a
-            onClick={() => openLinkOnBrowser(`${settings?.explorerUrl}/${urlPath}/${id}`)}
+            onClick={() => openLinkOnBrowser(`${settings?.explorerUrl}${urlPath}/${id}`)}
             target="_blank"
             rel="noreferrer"
             className="purple-text"

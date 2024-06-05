@@ -22,12 +22,27 @@ function App() {
     getNetworks();
   }, []);
 
+  const selectDefaultNetwork = (networks: string[]) => {
+    // const urlEnv = window.location.href.split('//')[1].split('.clor')[0];
+    // if (networks.includes(urlEnv)) {
+    //   return urlEnv;
+    // } else
+    if (networks.includes('mainnet')) {
+      return 'mainnet';
+    } else if (networks.includes('devnet')) {
+      return 'devnet';
+    } else if (networks.includes('berkeley')) {
+      return 'berkeley';
+    } else {
+      return networks[0];
+    }
+  };
+
   const getNetworks = async () => {
     const hasInitialSettings = settings?.url;
-    let data = await fetch(import.meta.env.VITE_REACT_APP_NETWORK_LIST)
+    const data = await fetch(import.meta.env.VITE_REACT_APP_NETWORK_LIST)
       .then(response => response.json())
       .then(data => data);
-    data = {...data, ...networkMock};
     if (data) {
       const newAvailableNetworks = Object.values(data).map(
         ({network, name}: {network: string; name: string}) => {
@@ -42,7 +57,7 @@ function App() {
       setAvailableNetworks(data);
 
       if (!selectedNetwork) {
-        const defaultNetwork = Object.keys(data)[0];
+        const defaultNetwork = selectDefaultNetwork(Object.keys(data));
         setNetworkState(prev => ({
           ...prev,
           selectedNetwork: {
@@ -52,7 +67,7 @@ function App() {
         }));
       }
       if (!hasInitialSettings) {
-        const network = Object.keys(data)[0];
+        const network = selectDefaultNetwork(Object.keys(data));
         saveSettings(data[network]);
         setNetworkState(prev => ({...prev, selectedNode: data[network]}));
       }

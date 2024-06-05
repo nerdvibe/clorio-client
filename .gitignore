@@ -65,3 +65,6 @@ thumbs.db
 build-scripts
 
 packages/mina-provider-master
+
+out/
+.eslintcache
