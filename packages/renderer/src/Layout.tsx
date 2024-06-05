@@ -68,18 +68,14 @@ const Layout = () => {
             }
           >
             <Container className="contentWrapper animate__animated animate__fadeIn">
-              <Spinner show={showLoader}>
-                <div
-                  className={`flex gap-4 flex-col ${isAuthenticated ? 'authenticated-view' : ''}`}
-                >
-                  {sessionData && !isEmptyObject(sessionData) && sessionData.address && <Balance />}
-                  <Routes
-                    sessionData={sessionData}
-                    toggleLoader={toggleLoader}
-                    network={networkData}
-                  />
-                </div>
-              </Spinner>
+              <div className={`flex gap-4 flex-col ${isAuthenticated ? 'authenticated-view' : ''}`}>
+                {sessionData && !isEmptyObject(sessionData) && sessionData.address && <Balance />}
+                <Routes
+                  sessionData={sessionData}
+                  toggleLoader={toggleLoader}
+                  network={networkData}
+                />
+              </div>
             </Container>
           </div>
         </div>

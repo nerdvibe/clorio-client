@@ -434,17 +434,17 @@ Object.keys(eventHandlers).forEach(eventName => {
 });
 
 ipcMain.on('account-change', (_: Electron.IpcMainInvokeEvent, arg) => {
-  try{
+  try {
     childWindow.webContents.send('accountsChanged', arg);
-  } catch(e){
+  } catch (e) {
     console.log('Child window not connected');
   }
 });
 
 ipcMain.on('chain-change', (_: Electron.IpcMainInvokeEvent, arg) => {
-  try{
+  try {
     childWindow.webContents.send('chainChanged', arg);
-  } catch(e){
+  } catch (e) {
     console.log('Child window not connected');
   }
 });

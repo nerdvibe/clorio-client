@@ -11,13 +11,13 @@ interface IProps {
 const Spinner = ({show, className, children, fullscreen = true}: IProps) => {
   const [deelayedShow, setDeelayedShow] = useState(show);
   useEffect(() => {
-    if (show) {
+    if (!show && deelayedShow) {
       setTimeout(() => {
         setDeelayedShow(false);
       }, 500);
     }
-  }, [show]);
-  return deelayedShow ? (
+  }, [show, deelayedShow]);
+  return show ? (
     <div
       className={`spinner-container center animate__animated animate__fadeIn ${
         fullscreen ? 'no-max-height' : ''
@@ -27,18 +27,6 @@ const Spinner = ({show, className, children, fullscreen = true}: IProps) => {
         color="#9e8cff"
         className="show"
       />
-      {/* <div className="show">
-        <div className="lds-roller">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-      </div> */}
     </div>
   ) : (
     <div className="animate__animated animate__fadeIn">{children || <></>}</div>

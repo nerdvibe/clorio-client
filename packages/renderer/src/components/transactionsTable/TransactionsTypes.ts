@@ -1,7 +1,7 @@
 export interface ITransactionQueryData {
   type: string;
-  sender_public_key?:string;
-  receiver_public_key?:string;
+  sender_public_key?: string;
+  receiver_public_key?: string;
   fee?: number;
   memo: string;
   amount: string;
@@ -56,9 +56,7 @@ export interface IMempoolQueryResult {
 }
 
 export interface ITransactionTotalQueryResult {
-  user_commands_aggregate: {
-    aggregate: {
-      count: number;
-    };
+  transactionsCount: {
+    count: number;
   };
 }

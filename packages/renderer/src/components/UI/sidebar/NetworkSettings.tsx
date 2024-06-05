@@ -79,7 +79,7 @@ export default function NetworkSettings({
       >
         <div className="settings-modal-container">
           <h1 className="w-100 text-center">Settings</h1>
-          <p className="w-100 text-center small">Current version: 2.0.0</p>
+          <p className="w-100 text-center small">Current version: 2.1.1</p>
           <hr />
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">

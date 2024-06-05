@@ -16,6 +16,7 @@ import {mempoolQueryRowToTableRow, transactionQueryRowToTableRow} from './Transa
 import WalletCreationTransaction from './WalletCreationTransaction';
 import RefetchTransactions from './RefetchTransactions';
 import type {Blacklist} from '../../types/Blacklist';
+import {TRANSACTIONS_TABLE_ITEMS_PER_PAGE} from '/@/tools';
 
 const TransactionsTable = ({
   transactions,
@@ -44,7 +45,9 @@ const TransactionsTable = ({
     (error ||
       !transactions ||
       transactions?.transactions === null ||
-      (transactions?.transactions && transactions?.transactions.length === 0))
+      (transactions?.transactions && transactions?.transactions.length === 0) ||
+      !totalData ||
+      totalData?.transactionsCount?.count === 0)
   ) {
     return TransactionsTableError(balance, error, refetchData);
   }
@@ -103,10 +106,12 @@ const TransactionsTable = ({
    * @returns HTMLElement
    */
   const lastTransaction = () => {
-    const totalRows = totalData?.user_commands_aggregate?.aggregate?.count || 0;
+    const totalRows = totalData?.transactionsCount?.count || 0;
     const isLastPage = +page === +getTotalPages(totalRows);
-    if (isLastPage) {
-      return WalletCreationTransaction(totalRows + 1);
+    if (transactions?.transactions?.length) {
+      if (transactions?.transactions?.length < TRANSACTIONS_TABLE_ITEMS_PER_PAGE || isLastPage) {
+        return WalletCreationTransaction(totalRows + 1);
+      }
     }
   };
 
@@ -132,7 +137,7 @@ const TransactionsTable = ({
         <Pagination
           page={page}
           setOffset={setOffset}
-          total={getTotalPages(totalData?.user_commands_aggregate?.aggregate?.count || 0)}
+          total={getTotalPages(totalData?.transactionsCount?.count || 0)}
         />
       </div>
     </div>

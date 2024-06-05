@@ -11,7 +11,7 @@ import {
   TRANSACTIONS_TABLE_ITEMS_PER_PAGE,
   DEFAULT_QUERY_REFRESH_INTERVAL,
 } from '/@/tools';
-import {GET_MEMPOOL, GET_TRANSACTIONS, GET_HOME_NEWS} from '/@/graphql/query';
+import {GET_MEMPOOL, GET_TRANSACTIONS, GET_HOME_NEWS, GET_ID} from '/@/graphql/query';
 import NewsBanner from '../components/UI/NewsBanner';
 import type {IWalletData} from '/@/types/WalletData';
 import type {
@@ -20,8 +20,9 @@ import type {
 } from '../components/transactionsTable/TransactionsTypes';
 import type {IHomeNewsQuery} from '/@/types/NewsData';
 import {useWallet} from '../contexts/WalletContext';
-import {useRecoilValue} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import {walletState} from '../store';
+import {IWalletIdData} from '../types';
 
 interface IProps {
   sessionData: IWalletData;
@@ -31,10 +32,16 @@ const Overview = ({sessionData}: IProps) => {
   const {balanceData} = useContext<Partial<IBalanceContext>>(BalanceContext);
   const balance = balanceData?.balances[sessionData.address];
   const {wallet} = useWallet();
-  const {id} = useRecoilValue(walletState);
+  const [{id, address}, updateWalletState] = useRecoilState(walletState);
   const [offset, setOffset] = useState<number>(0);
   const [walletId, setWalletId] = useState<number>(+sessionData.id);
+  const [loading, setLoading] = useState(true);
   const {data: newsData} = useQuery<IHomeNewsQuery>(GET_HOME_NEWS);
+  const {data: walletIDData} = useQuery<IWalletIdData>(GET_ID, {
+    variables: {
+      publicKey: address,
+    },
+  });
   const lastNews = newsData?.newsHome && newsData?.newsHome.length > 0 && newsData?.newsHome[0];
   const {
     data: transactionsData,
@@ -68,6 +75,24 @@ const Overview = ({sessionData}: IProps) => {
     readWalletData();
   });
 
+  useEffect(() => {
+    if (walletIDData) {
+      const newId = walletIDData?.idByPublicKey?.id;
+      if (newId && newId !== id) {
+        updateWalletState(state => ({
+          ...state,
+          id: newId,
+        }));
+      }
+      if (newId === null) {
+        updateWalletState(state => ({
+          ...state,
+          id: -1,
+        }));
+      }
+    }
+  }, [walletIDData]);
+
   /**
    * Read session data and set the wallet id in the component state
    */
@@ -83,6 +108,7 @@ const Overview = ({sessionData}: IProps) => {
    * @param {number} page Page number
    */
   const changeOffset = (page: number) => {
+    setLoading(true);
     const data = (page - 1) * TRANSACTIONS_TABLE_ITEMS_PER_PAGE;
     setOffset(data);
   };
@@ -104,6 +130,12 @@ const Overview = ({sessionData}: IProps) => {
     }, 500);
   };
 
+  useEffect(() => {
+    if (transactionsData && mempoolData) {
+      setLoading(false);
+    }
+  }, [transactionsData, mempoolData]);
+
   return (
     <Hoc className="main-container">
       <div>
@@ -112,7 +144,7 @@ const Overview = ({sessionData}: IProps) => {
           transactions={transactionsData}
           mempool={mempoolData}
           error={transactionsError}
-          loading={transactionsLoading || mempoolLoading}
+          loading={loading}
           balance={+(balance?.total || 0)}
           setOffset={changeOffset}
           page={getPageFromOffset(offset)}

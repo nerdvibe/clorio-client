@@ -305,7 +305,7 @@ function buildSignTxBody(params) {
   const sendAmount = +params.amount || 0.1;
   const signBody = {
     to: params.to || params.receiverAddress,
-    from: params.to || params.senderAddress,
+    from: params.from || params.senderAddress,
     fee: sendFee,
     nonce: params.nonce || 0,
     memo: params.memo || '',
@@ -341,7 +341,6 @@ export async function signTransaction(privateKey: string, params: unknown) {
     //   };
     // } else {
     signBody = buildSignTxBody(params);
-    console.log('🚀 ~ signTransaction ~ signBody:', signBody);
     // }
     signResult = signClient.signTransaction(signBody, privateKey);
     return signResult;
