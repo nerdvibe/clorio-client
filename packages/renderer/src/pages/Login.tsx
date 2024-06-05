@@ -22,7 +22,7 @@ interface IProps {
 function Login({toggleLoader}: IProps) {
   const [publicKey, setPublicKey] = useState<string>('');
   const [privateKey, setPrivateKey] = useState<string>('');
-  const [storePassphrase, setStorePassphrase] = useState<boolean>(true);
+  const [storePassphrase, setStorePassphrase] = useState<boolean>(isElectron());
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [passphraseError, setPassphraseError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -85,8 +85,11 @@ function Login({toggleLoader}: IProps) {
   }, [userIdError]);
 
   const storeSessionAndRedirect = async (publicKey: string, id: number) => {
+    await userIdRefetch({publicKey});
     const isUsingMnemonic = privateKey.trim().split(' ').length === 12;
-    setPassphrase(isUsingMnemonic);
+    if (storePassphrase) {
+      setPassphrase(isUsingMnemonic);
+    }
     const success = await storeSession(publicKey, id, false, 0, isUsingMnemonic);
     await updateWallet({
       address: publicKey,
@@ -244,9 +247,11 @@ function Login({toggleLoader}: IProps) {
               <label
                 className="checkbox-label ml-2"
                 htmlFor="storePassphrase"
+                data-tip="Available only on desktop version"
               >
                 Store the passphrase
               </label>
+              <ReactTooltip multiline />
             </span>
           </div>
           <div className="flex flex-row sm-flex-col sm-flex-wrap-reverse">

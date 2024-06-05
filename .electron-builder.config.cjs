@@ -20,7 +20,7 @@ module.exports = async function () {
     extraMetadata: {
       version: getVersion(),
     },
-
+    productName: "Clorio Wallet",
     // Specify linux target just for disabling snap compilation
     linux: {
       target: 'deb',
