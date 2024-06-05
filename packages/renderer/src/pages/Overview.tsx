@@ -20,6 +20,8 @@ import type {
 } from '../components/transactionsTable/TransactionsTypes';
 import type {IHomeNewsQuery} from '/@/types/NewsData';
 import {useWallet} from '../contexts/WalletContext';
+import {useRecoilValue} from 'recoil';
+import {walletState} from '../store';
 
 interface IProps {
   sessionData: IWalletData;
@@ -29,6 +31,7 @@ const Overview = ({sessionData}: IProps) => {
   const {balanceData} = useContext<Partial<IBalanceContext>>(BalanceContext);
   const balance = balanceData?.balances[sessionData.address];
   const {wallet} = useWallet();
+  const {id} = useRecoilValue(walletState);
   const [offset, setOffset] = useState<number>(0);
   const [walletId, setWalletId] = useState<number>(+sessionData.id);
   const {data: newsData} = useQuery<IHomeNewsQuery>(GET_HOME_NEWS);
@@ -41,9 +44,9 @@ const Overview = ({sessionData}: IProps) => {
     stopPolling: transactionStopPolling,
     startPolling: transactionStartPolling,
   } = useQuery<ITransactionQueryResult>(GET_TRANSACTIONS, {
-    variables: {accountId: walletId, offset},
+    variables: {accountId: +id || walletId, offset},
     fetchPolicy: 'network-only',
-    skip: !wallet.id || wallet.id === -1,
+    skip: !id,
     pollInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
   });
   const {

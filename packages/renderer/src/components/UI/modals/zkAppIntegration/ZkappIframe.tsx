@@ -32,7 +32,7 @@ export const ZkappIframe = () => {
         <iframe
           id="zkapp-iframe"
           loading="lazy"
-          src="http://localhost:3001/"
+          src={import.meta.env.VITE_REACT_APP_ZKAPP_STORE}
           frameBorder="0"
           style={{width: '100%', height: '85vh', borderRadius: '16px'}}
         ></iframe>

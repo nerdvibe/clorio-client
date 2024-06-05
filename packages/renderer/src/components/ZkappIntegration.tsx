@@ -1,5 +1,5 @@
 import {useRecoilValue, useSetRecoilState, useRecoilState} from 'recoil';
-import {DEFAULT_FEE, client} from '../tools';
+import {DEFAULT_FEE, client, toNanoMINA} from '../tools';
 import {NetConfig, sendResponse} from '../tools/mina-zkapp-bridge';
 import {
   configState,
@@ -27,7 +27,7 @@ export default function ZkappIntegration() {
   const {address: sender} = wallet;
   const setZkappState = useSetRecoilState(zkappState);
   const config = useRecoilValue(configState);
-  const [{availableNetworks, selectedNetwork}, setNetworkState] = useRecoilState(networkState);
+  const [{availableNetworks, selectedNetwork, selectedNode}, setNetworkState] = useRecoilState(networkState);
 
   useEffect(() => {
     setListeners();
@@ -144,9 +144,10 @@ export default function ZkappIntegration() {
 
   const getNetworkConfig = async () => {
     console.log('Received get-network-config');
-    const netConfig: NetConfig = selectedNetwork as NetConfig;
-    // Mock for Berkeley
-    // sendResponse('clorio-set-network-config', {chainId: 'berkeley', name: 'Berkeley'});
+    const netConfig: NetConfig = {
+      chainId: selectedNode?.label,
+      name: selectedNetwork?.name,
+    } as NetConfig;
     sendResponse('clorio-set-network-config', netConfig);
   };
 
@@ -215,7 +216,12 @@ export default function ZkappIntegration() {
       setZkappState(prev => {
         return {
           ...prev,
-          transactionData: {...data, from: sender},
+          transactionData: {
+            ...data,
+            from: sender,
+            fee: data.fee || DEFAULT_FEE,
+            amount: data.amount,
+          },
           showPaymentConfirmation: true,
           isPendingConfirmation: true,
           type: 'send-payment',
@@ -315,7 +321,6 @@ export default function ZkappIntegration() {
     rejectIfLedger();
     console.log('Received verify-message');
     const parsedDocument = {...data, signature: JSON.parse(data.signature)};
-    console.log('🚀 ~ verifyMessage ~ parsedDocument:', parsedDocument);
     const verified = await (await client()).verifyMessage(parsedDocument);
     sendResponse('clorio-verified-message', verified);
   };

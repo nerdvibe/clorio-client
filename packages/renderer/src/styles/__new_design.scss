@@ -508,6 +508,11 @@ p {
   align-items: start;
 }
 
+.password-input{
+  width: 500px;
+  margin: 0 auto;
+}
+
 @media screen and (max-width: 600px) {
   .homepage-card {
     height: 100vh;

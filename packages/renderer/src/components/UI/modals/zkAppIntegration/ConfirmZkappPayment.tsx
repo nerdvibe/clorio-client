@@ -12,13 +12,13 @@ import {signTransaction} from '../../../../tools/utils';
 import PasswordDecrypt from '../../../PasswordDecrypt';
 import {toast} from 'react-toastify';
 import {mnemonicToPrivateKey} from '../../../../../../preload/src/bip';
-import {client, createPaymentInputFromPayload, createSignatureInputFromSignature} from '/@/tools';
+import {client, createPaymentInputFromPayload, createSignatureInputFromSignature, toNanoMINA} from '/@/tools';
 import {ERROR_CODES} from '/@/tools/zkapp';
 import ConfirmZkappLedger from './ConfirmZkappLedger';
 import TransactionData from './TransactionData';
 import {IBalanceContext} from '/@/contexts/balance/BalanceTypes';
 import {BalanceContext} from '/@/contexts/balance/BalanceContext';
-import * as Big from 'big.js';
+import Big from 'big.js';
 
 export default function ConfirmZkappPayment() {
   const wallet = useRecoilValue(walletState);
@@ -57,7 +57,7 @@ export default function ConfirmZkappPayment() {
       const address = getAccountAddress();
       const balance = getBalance(address[0]);
       const available = +(balance?.liquidUnconfirmed || 0);
-      if (+available > 0 && +Big(+available).sub(fee) >= 0) {
+      if (+available > 0 && (+Big(available).sub(fee)) >= 0) {
         return true;
       }
     }
@@ -81,6 +81,8 @@ export default function ConfirmZkappPayment() {
       ...transactionData,
       nonce,
       from: address[0],
+      amount: toNanoMINA(transactionData.amount),
+      fee: toNanoMINA(transactionData.fee),
     });
     completePayment(signedTx);
   };
@@ -110,7 +112,7 @@ export default function ConfirmZkappPayment() {
     // Define the required balance
     const {fee} = transactionData;
     // Check if the current balance is sufficient
-    if (checkBalance(fee)) {
+    if (checkBalance(toNanoMINA(fee))) {
       // If the balance is sufficient, change the state
       setShowPassword(true);
     } else {

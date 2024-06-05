@@ -9,7 +9,7 @@ export interface NetworkConfigType {
 export interface NetworkSettingsType {
   availableNetworks: NetworkConfigType[];
   showChangeNetworkModal: boolean;
-  selectedNetwork?: NetworkConfigType;
+  selectedNetwork?: NetworkConfigType | INetworkOption;
   switchNetwork?: string;
   addChainData?: {name: string; url: string};
   isAddingChain: boolean;

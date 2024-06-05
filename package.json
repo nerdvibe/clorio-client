@@ -175,6 +175,9 @@
       "window": {
         "height": "450"
       }
+    },
+    "linux": {
+      "target": "AppImage"
     }
   }
 }

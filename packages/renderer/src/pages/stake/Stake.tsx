@@ -49,7 +49,8 @@ import {IFeeQuery} from '/@/types/Fee';
 import {INonceDelegateQueryResult} from './StakeTypes';
 import {IKeypair} from '/@/types';
 import WaitingLedger from '/@/components/UI/modals/WaitingLedger';
-import {useWallet} from '/@/contexts/WalletContext';
+import {useRecoilValue} from 'recoil';
+import {walletState} from '/@/store';
 
 interface IProps {
   sessionData: IWalletData;
@@ -71,8 +72,8 @@ const Stake = ({sessionData}: IProps) => {
   const [sendTransactionFlag, setSendTransactionFlag] = useState<boolean>(false);
   const {isLedgerEnabled} = useContext<Partial<ILedgerContext>>(LedgerContext);
   const {getBalance, setShouldBalanceUpdate} = useContext<Partial<IBalanceContext>>(BalanceContext);
-  const {wallet} = useWallet();
-  const {address} = wallet;
+  const {address, accountNumber} = useRecoilValue(walletState);
+
   const balance = getBalance && getBalance(address);
   const {
     data: validatorsData,
@@ -329,14 +330,14 @@ const Stake = ({sessionData}: IProps) => {
       }
       checkBalance(selectedFee, balance);
       const actualNonce = getNonce();
-      const derivedAccount = await deriveAccount(passphrase || privateKey, wallet.accountNumber);
+      const derivedAccount = await deriveAccount(passphrase?.trim() || privateKey.trim(), accountNumber);
       const keypair = {
         privateKey: derivedAccount.privateKey,
         publicKey: derivedAccount.publicKey,
       } as IKeypair;
       const stakeDelegation = {
         to: delegateData.publicKey,
-        from: address,
+        from: address || keypair.publicKey,
         fee: selectedFee,
         nonce: actualNonce,
       };
@@ -344,7 +345,7 @@ const Stake = ({sessionData}: IProps) => {
         stakeDelegation,
         keypair.privateKey,
       );
-      (await client()).verifyStakeDelegation(signedTransaction);
+      const verify = (await client()).verifyStakeDelegation(signedTransaction);
       if (signedTransaction) {
         const signatureInput = createSignatureInputFromSignature(signedTransaction.signature);
         const sendPaymentInput = createDelegationPaymentInputFromPayload(signedTransaction.data);

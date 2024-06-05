@@ -158,7 +158,7 @@ function Login({toggleLoader}: IProps) {
    */
   const checkCredentials = async () => {
     try {
-      const derivedAccount = await deriveAccount(privateKey);
+      const derivedAccount = await deriveAccount(privateKey.trim());
       if (derivedAccount.publicKey) {
         setPublicKey(derivedAccount.publicKey);
         await userIdRefetch({publicKey: derivedAccount.publicKey});
@@ -187,7 +187,7 @@ function Login({toggleLoader}: IProps) {
   };
 
   const onSecureStorageSubmit = (key: string) => {
-    encryptData({key, data: privateKey});
+    encryptData({key, data: privateKey.trim()});
     if (userIdData) {
       saveAndStoreSession();
     } else {

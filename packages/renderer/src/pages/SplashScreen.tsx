@@ -34,10 +34,10 @@ const SplashScreen = ({toggleLoader}: IProps) => {
         variables: {publicKey: derivedAccount.publicKey as string},
       });
       if (called) {
-        const id = +data ? data.idByPublicKey.id || -1 : -1;
+        const id = data?.idByPublicKey.id || -1;
         const isUsingMnemonic = privateKey.trim().split(' ').length === 12;
         setPassphrase(isUsingMnemonic);
-        const success = await storeSession(derivedAccount.publicKey, id, false, 0, isUsingMnemonic);
+        const success = await storeSession(derivedAccount.publicKey, +id, false, 0, isUsingMnemonic);
         updateWallet({
           address: derivedAccount.publicKey,
           id,

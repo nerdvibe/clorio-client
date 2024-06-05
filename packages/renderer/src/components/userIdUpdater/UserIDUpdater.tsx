@@ -5,6 +5,8 @@ import {GET_ID} from '../../graphql/query';
 import type {IWalletIdData} from '../../types/WalletIdData';
 import {DEFAULT_QUERY_REFRESH_INTERVAL} from '../../tools';
 import {useWallet} from '/@/contexts/WalletContext';
+import {useRecoilState, useRecoilValue} from 'recoil';
+import {walletState} from '/@/store';
 
 const UserIDUpdater = () => {
   const [address, setAddress] = useState<string>('');
@@ -13,7 +15,8 @@ const UserIDUpdater = () => {
     skip: !address,
     pollInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
   });
-  const {wallet, updateWallet} = useWallet();
+  // const {wallet, updateWallet} = useWallet();
+  const [wallet, updateWallet] = useRecoilState(walletState);
 
   /**
    * Read the wallet address from the storage and set it inside the component state
@@ -34,9 +37,9 @@ const UserIDUpdater = () => {
     if (userID?.idByPublicKey) {
       updateUser(address, +userID.idByPublicKey.id);
       if ((userID && !wallet.id) || +wallet.id === -1) {
-        updateWallet({...wallet, id: +userID.idByPublicKey.id});
+        updateWallet(state => ({...state, id: +userID.idByPublicKey.id}));
       }
-      stopPolling();
+      // stopPolling();
     }
   }, [userID]);
 

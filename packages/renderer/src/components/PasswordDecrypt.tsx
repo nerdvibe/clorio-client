@@ -46,14 +46,16 @@ export default function PasswordDecrypt({onSuccess, onClose}: IPasswordDecrypt) 
   return (
     <div>
       <p className="mt-3 text-center">Insert your password to proceed</p>
-      <Input
-        type="text"
-        hidden
-        value={password}
-        inputHandler={e => {
-          setPassword(e.target.value);
-        }}
-      />
+      <div className="password-input">
+        <Input
+          type="text"
+          hidden
+          value={password}
+          inputHandler={e => {
+            setPassword(e.target.value);
+          }}
+        />
+      </div>
       <div className="v-spacer" />
       <Row>
         <Col>

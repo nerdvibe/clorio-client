@@ -290,23 +290,22 @@ async function getSignClient() {
   if (netConfig.netType) {
     netType = netConfig.netType;
   }
-  let client;
-  if (netType === NET_CONFIG_TYPE.Mainnet) {
-    client = new Client({network: 'mainnet'});
-  } else {
-    client = new Client({network: 'testnet'});
-  }
+  const client = await new Client({
+    network:
+      JSON.parse(localStorage.getItem('networkSettings'))?.network ||
+      import.meta.env.VITE_REACT_APP_NETWORK,
+  });
   return client;
 }
 
 /** build payment and delegation tx body */
 function buildSignTxBody(params) {
   // const sendAction = params.sendAction;
-  const sendFee = toNanoMINA(+params.fee || 0.1);
-  const sendAmount = toNanoMINA(+params.amount || 0.1);
+  const sendFee = +params.fee || 0.1;
+  const sendAmount = +params.amount || 0.1;
   const signBody = {
-    to: params.to,
-    from: params.to,
+    to: params.to || params.receiverAddress,
+    from: params.to || params.senderAddress,
     fee: sendFee,
     nonce: params.nonce || 0,
     memo: params.memo || '',
@@ -320,7 +319,7 @@ function buildSignTxBody(params) {
 }
 
 /** QA net sign */
-export async function signTransaction(privateKey, params) {
+export async function signTransaction(privateKey: string, params: unknown) {
   let signResult;
   try {
     const signClient = await getSignClient();
@@ -342,6 +341,7 @@ export async function signTransaction(privateKey, params) {
     //   };
     // } else {
     signBody = buildSignTxBody(params);
+    console.log('🚀 ~ signTransaction ~ signBody:', signBody);
     // }
     signResult = signClient.signTransaction(signBody, privateKey);
     return signResult;

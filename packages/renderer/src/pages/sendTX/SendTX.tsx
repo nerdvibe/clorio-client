@@ -1,5 +1,5 @@
 import {useState, useEffect, useContext} from 'react';
-import {useQuery, useMutation} from '@apollo/client';
+import {useQuery, useMutation, useLazyQuery} from '@apollo/client';
 import {useNavigate} from 'react-router-dom';
 import {toast} from 'react-toastify';
 import TransactionForm from '/@/components/forms/transactionForm/TransactionForm';
@@ -22,9 +22,10 @@ import {
   MINIMUM_NONCE,
   deriveAccount,
   getPassphrase,
+  toMINA,
 } from '/@/tools';
 import Spinner from '/@/components/UI/Spinner';
-import {BROADCAST_TRANSACTION, GET_FEE, GET_NONCE} from '/@/graphql/query';
+import {BROADCAST_TRANSACTION, GET_BALANCE, GET_FEE, GET_NONCE} from '/@/graphql/query';
 import type {INonceQueryResult} from './SendTXHelper';
 import {
   checkBalanceAfterTransaction,
@@ -44,6 +45,9 @@ import Stepper from '/@/components/UI/stepper/Stepper';
 import TransactionAuthentication from '/@/components/transactionAuthentication/TransactionAuthentication';
 import {useWallet} from '/@/contexts/WalletContext';
 import {signTransaction} from '/@/tools/utils';
+import {IBalanceQueryResult} from '/@/components/balance/BalanceTypes';
+import {useRecoilState, useRecoilValue} from 'recoil';
+import {walletState} from '/@/store';
 
 interface IProps {
   sessionData: IWalletData;
@@ -66,9 +70,10 @@ function SendTX(props: IProps) {
   const [storedPassphrase, setStoredPassphrase] = useState('');
   const {isLedgerEnabled} = useContext<Partial<ILedgerContext>>(LedgerContext);
   const {getBalance, setShouldBalanceUpdate} = useContext<Partial<IBalanceContext>>(BalanceContext);
-  const {wallet} = useWallet();
+  // const {wallet} = useWallet();
+  const wallet = useRecoilValue(walletState);
   const senderAddress = wallet.address;
-  const balance = getBalance && getBalance(senderAddress);
+  const balance = getBalance && getBalance(wallet.address);
   const {
     data: nonceData,
     refetch: nonceRefetch,
@@ -79,6 +84,7 @@ function SendTX(props: IProps) {
     skip: !senderAddress,
     fetchPolicy: 'network-only',
   });
+  const [fetchBalance] = useLazyQuery<IBalanceQueryResult>(GET_BALANCE);
   useEffect(() => {
     getPassphrase().then(passphrase => {
       setStoredPassphrase(passphrase);
@@ -195,7 +201,7 @@ function SendTX(props: IProps) {
    * Check if nonce is available, if not ask the user for a custom nonce.
    * After the nonce is set, proceed with transaction data verification and Passphrase/Private key verification
    */
-  const openConfirmationModal = () => {
+  const openConfirmationModal = async () => {
     if (nonceLoading) {
       setWaitingNonce(true);
       return;
@@ -204,10 +210,16 @@ function SendTX(props: IProps) {
       if (!nonceData && !customNonce) {
         return setShowModal(ModalStates.NONCE);
       }
-      checkBalanceAfterTransaction({balance, transactionData});
-      checkTransactionFields(transactionData);
-      setStep(SendTXPageSteps.PRIVATE_KEY);
-      setShowModal('');
+      if (getBalance) {
+        const {data} = await fetchBalance({variables: {publicKey: wallet.address}});
+        checkBalanceAfterTransaction({
+          balance: data?.accountByKey?.balance,
+          transactionData,
+        });
+        checkTransactionFields(transactionData);
+        setStep(SendTXPageSteps.PRIVATE_KEY);
+        setShowModal('');
+      }
     } catch (e) {
       toast.error(e.message);
     }
@@ -222,7 +234,10 @@ function SendTX(props: IProps) {
         throw new Error();
       }
       setShowModal('');
-      const derivedData = await deriveAccount(passphrase || privateKey, wallet.accountNumber);
+      const derivedData = await deriveAccount(
+        passphrase?.trim() || privateKey.trim(),
+        wallet.accountNumber,
+      );
       setTransactionData({
         ...transactionData,
         senderAddress: derivedData.publicKey || '',
@@ -311,7 +326,10 @@ function SendTX(props: IProps) {
     }
     try {
       const actualNonce = getNonce();
-      const derivedData = await deriveAccount(key.privateKey || privateKey, wallet.accountNumber);
+      const derivedData = await deriveAccount(
+        key.privateKey.trim() || privateKey.trim(),
+        wallet.accountNumber,
+      );
       setTransactionData({
         ...transactionData,
         senderAddress: derivedData.publicKey || '',
@@ -320,11 +338,13 @@ function SendTX(props: IProps) {
         privateKey: derivedData?.privateKey,
         publicKey: derivedData?.publicKey,
       } as IKeypair;
-      const signedPayment = await signTransaction({
-        transactionData,
-        keypair,
-        sender: derivedData?.publicKey || senderAddress,
-        actualNonce,
+      const signedPayment = await signTransaction(keypair.privateKey, {
+        ...transactionData,
+        from: derivedData?.publicKey || senderAddress,
+        to: transactionData.receiverAddress,
+        nonce: actualNonce,
+        fee: transactionData.fee,
+        amoun: transactionData.amount,
       });
 
       if (signedPayment) {
