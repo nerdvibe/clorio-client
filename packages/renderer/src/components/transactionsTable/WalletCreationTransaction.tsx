@@ -1,16 +1,14 @@
-import { ChevronsUp } from 'react-feather';
+import {ChevronsUp} from 'react-feather';
 
 const WalletCreationTransaction = (index: number) => {
   return (
     <tr key={index}>
-      <td className="table-element table-icon">
-        {' '}
-        <ChevronsUp data-tip="Outgoing TX" color="red" height={36} />
-      </td>
-      <td className="table-element table-hash" colSpan={4}>
+      <td
+        className="table-element table-hash w-100"
+        colSpan={6}
+      >
         1 Mina wallet creation fee
       </td>
-      {/* <td className="table-element full-width-table-cell red-text">1 Mina</td> */}
     </tr>
   );
 };

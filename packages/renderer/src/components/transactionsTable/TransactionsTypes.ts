@@ -7,6 +7,9 @@ export interface ITransactionQueryData {
   amount: string;
   hash: string;
   timestamp: string;
+  status: string;
+  command_type: string;
+  failure_reason: string;
 }
 
 export interface IMempoolQueryData {
@@ -20,6 +23,7 @@ export interface IMempoolQueryData {
   fee?: number;
   memo: string;
   id: string;
+  kind: string;
 }
 
 export interface ITransactionTableProps {
@@ -45,6 +49,9 @@ export interface ITransactionRowData {
   memo: string;
   type: string;
   timestamp?: number;
+  status: string;
+  failure_reason?: string;
+  failed: boolean;
 }
 
 export interface ITransactionQueryResult {

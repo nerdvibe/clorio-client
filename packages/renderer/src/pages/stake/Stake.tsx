@@ -70,9 +70,9 @@ const Stake = ({sessionData}: IProps) => {
   const [selectedFee, setSelectedFee] = useState<number>(0);
   const [ledgerTransactionData, setLedgerTransactionData] = useState<string>('');
   const [sendTransactionFlag, setSendTransactionFlag] = useState<boolean>(false);
-  const {isLedgerEnabled} = useContext<Partial<ILedgerContext>>(LedgerContext);
+  // const {isLedgerEnabled} = useContext<Partial<ILedgerContext>>(LedgerContext);
   const {getBalance, setShouldBalanceUpdate} = useContext<Partial<IBalanceContext>>(BalanceContext);
-  const {address, accountNumber} = useRecoilValue(walletState);
+  const {address, accountNumber,ledger:isLedgerEnabled} = useRecoilValue(walletState);
 
   const balance = getBalance && getBalance(address);
   const {

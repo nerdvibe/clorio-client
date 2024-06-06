@@ -13,6 +13,7 @@ interface RemainingTime {
 
 const EpochBar = () => {
   const {settings} = useNetworkSettingsContext();
+  const [epochError, setEpochError] = useState(false);
   const [epochData, setEpochData] = useState({
     slot: 0,
     epoch: 0,
@@ -42,17 +43,21 @@ const EpochBar = () => {
   }, []);
 
   const fetchEpochData = async () => {
-    const data = await fetch(settings?.epochUrl || '')
-      .then(response => response.json())
-      .then(data => data);
-    const realSlot = +data.slot % (MAX_SLOT + 1);
-    const lastTime = ((MAX_SLOT - +realSlot) * SLOT_DURATION) / 1000;
-    setEpochData(data);
-    setRemainingTime(calculateTime(lastTime));
-    setPercentage(parseInt(((100 * +realSlot) / MAX_SLOT).toFixed(0)));
+    try {
+      const data = await fetch(settings?.epochUrl || '')
+        .then(response => response.json())
+        .then(data => data);
+      const realSlot = +data.slot % (MAX_SLOT + 1);
+      const lastTime = ((MAX_SLOT - +realSlot) * SLOT_DURATION) / 1000;
+      setEpochData(data);
+      setRemainingTime(calculateTime(lastTime));
+      setPercentage(parseInt(((100 * +realSlot) / MAX_SLOT).toFixed(0)));
+    } catch (error) {
+      setEpochError(true);
+    }
   };
 
-  if (!settings?.epochUrl) {
+  if (!settings?.epochUrl || epochError) {
     return (
       <div
         className="w-100 h-80"

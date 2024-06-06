@@ -12,7 +12,12 @@ import {signTransaction} from '../../../../tools/utils';
 import PasswordDecrypt from '../../../PasswordDecrypt';
 import {toast} from 'react-toastify';
 import {mnemonicToPrivateKey} from '../../../../../../preload/src/bip';
-import {client, createPaymentInputFromPayload, createSignatureInputFromSignature, toNanoMINA} from '/@/tools';
+import {
+  client,
+  createPaymentInputFromPayload,
+  createSignatureInputFromSignature,
+  toNanoMINA,
+} from '/@/tools';
 import {ERROR_CODES} from '/@/tools/zkapp';
 import ConfirmZkappLedger from './ConfirmZkappLedger';
 import TransactionData from './TransactionData';
@@ -39,11 +44,23 @@ export default function ConfirmZkappPayment() {
   });
 
   useEffect(() => {
-    if (showPaymentConfirmation) {
-      const address = getAccountAddress();
-      fetchNonce({variables: {publicKey: address[0]}});
-    }
+    fetchAndSetNonce();
   }, [showPaymentConfirmation]);
+
+  const fetchAndSetNonce = async () => {
+    if (showPaymentConfirmation) {
+      const {data: nonceData} = await fetchNonce({variables: {publicKey: wallet.address}});
+      if (nonceData?.accountByKey?.usableNonce || nonceData?.accountByKey?.usableNonce === 0) {
+        setZkappState(state => ({
+          ...state,
+          transactionData: {
+            ...state.transactionData,
+            nonce: nonceData.accountByKey.usableNonce,
+          },
+        }));
+      }
+    }
+  };
 
   const onClose = () => {
     setZkappState(zkappInitialState);
@@ -57,7 +74,7 @@ export default function ConfirmZkappPayment() {
       const address = getAccountAddress();
       const balance = getBalance(address[0]);
       const available = +(balance?.liquidUnconfirmed || 0);
-      if (+available > 0 && (+Big(available).sub(fee)) >= 0) {
+      if (+available > 0 && +Big(available).sub(fee) >= 0) {
         return true;
       }
     }
@@ -76,10 +93,8 @@ export default function ConfirmZkappPayment() {
       sendResponse('error', {error: nonceError});
       return;
     }
-    const nonce = nonceData?.accountByKey?.usableNonce;
     const signedTx = await signTransaction(privateKey, {
       ...transactionData,
-      nonce,
       from: address[0],
       amount: toNanoMINA(transactionData.amount),
       fee: toNanoMINA(transactionData.fee),
@@ -88,8 +103,13 @@ export default function ConfirmZkappPayment() {
   };
 
   const completePayment = async (signedTx: unknown) => {
-    const hashedTx = await (await client()).hashPayment(signedTx);
-    sendResponse('clorio-signed-payment', {hash: hashedTx});
+    if (isLedgerEnabled) {
+      // TODO: Implement ledger hash from BE
+      sendResponse('clorio-signed-payment', {hash: ''});
+    } else {
+      const hashedTx = await (await client()).hashPayment(signedTx);
+      sendResponse('clorio-signed-payment', {hash: hashedTx});
+    }
     toast.success('Transaction signed successfully, waiting for broadcast.');
     setZkappState(state => ({
       ...state,
@@ -101,7 +121,12 @@ export default function ConfirmZkappPayment() {
   };
 
   const broadcastPayment = async (signedTx: unknown) => {
-    const signatureInput = createSignatureInputFromSignature(signedTx.signature);
+    let signatureInput;
+    if (isLedgerEnabled) {
+      signatureInput = {rawSignature: signedTx.rawSignature};
+    } else {
+      signatureInput = createSignatureInputFromSignature(signedTx.signature);
+    }
     const paymentInput = createPaymentInputFromPayload(signedTx.data);
     await broadcastTransaction({
       variables: {input: paymentInput, signature: signatureInput},

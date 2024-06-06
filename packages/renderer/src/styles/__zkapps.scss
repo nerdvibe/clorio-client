@@ -1,0 +1,43 @@
+.zkapps-list-container {
+  gap: 40px;
+  margin-top: 50px;
+  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+}
+
+.zkapp-favicon {
+  width: 30px;
+  position: relative;
+  top: -20px;
+}
+
+.zkapp-input {
+  max-width: 1200px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.zkapp-open-button {
+  height: 45px;
+  max-width: 250px;
+}
+
+.zkapp-warning-alert {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 20px;
+}
+
+.zkapp-list-item {
+  transition: all 0.3s;
+  min-width: 350px;
+  margin: 0 auto;
+}
+
+.zkapp-list-item:hover {
+  margin-top: -5px;
+}

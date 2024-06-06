@@ -9,7 +9,9 @@
  * @see https://www.electron.build/configuration/configuration
  */
 module.exports = async function () {
-  const {getVersion} = await import('./version/getVersion.mjs');
+  const {
+    getVersion
+  } = await import('./version/getVersion.mjs');
 
   return {
     directories: {
@@ -23,7 +25,27 @@ module.exports = async function () {
     productName: "Clorio Wallet",
     // Specify linux target just for disabling snap compilation
     linux: {
-      target: 'deb',
+      target: [{
+          target: "deb",
+        },
+        {
+          target: "AppImage",
+        },
+      ]
+    },
+    dmg: {
+      contents: [{
+          x: 340,
+          y: 270,
+          type: 'file',
+        },
+        {
+          x: 560,
+          y: 270,
+          type: 'link',
+          path: '/Applications',
+        },
+      ],
     },
   };
 };

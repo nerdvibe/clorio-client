@@ -131,10 +131,16 @@ const Overview = ({sessionData}: IProps) => {
   };
 
   useEffect(() => {
-    if (transactionsData && mempoolData) {
+    if (transactionsData) {
       setLoading(false);
     }
   }, [transactionsData, mempoolData]);
+
+  useEffect(() => {
+    if (transactionsError) {
+      setLoading(false);
+    }
+  }, [transactionsError]);
 
   return (
     <Hoc className="main-container">

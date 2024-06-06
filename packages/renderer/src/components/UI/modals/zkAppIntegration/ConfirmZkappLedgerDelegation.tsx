@@ -2,21 +2,23 @@ import {useEffect, useState} from 'react';
 import {useRecoilValue} from 'recoil';
 import {walletState, zkappState} from '/@/store';
 import {
-  createAndSignLedgerTransaction,
+  createLedgerDelegationTransaction,
   isMinaAppOpen,
-  reEncodeRawSignature,
+  signTransaction,
 } from '/@/tools/ledger/ledger';
 import {toast} from 'react-toastify';
 import {toNanoMINA} from '/@/tools';
 import LedgerSignError from './LedgerSignError';
 import LedgerSingPending from './LedgerSingPending';
-import {checkMemoLength} from '/@/pages/sendTX/SendTXHelper';
 
-interface IConfirmZkappLedger {
+interface IConfirmZkappLedgerDelegation {
   onSuccess: (signedTx: unknown) => void;
   onClose: () => void;
 }
-export default function ConfirmZkappLedger({onSuccess, onClose}: IConfirmZkappLedger) {
+export default function ConfirmZkappLedgerDelegation({
+  onSuccess,
+  onClose,
+}: IConfirmZkappLedgerDelegation) {
   const {transactionData} = useRecoilValue(zkappState);
   const {ledgerAccount} = useRecoilValue(walletState);
   const [showError, setShowError] = useState(false);
@@ -33,21 +35,18 @@ export default function ConfirmZkappLedger({onSuccess, onClose}: IConfirmZkappLe
     try {
       await isMinaAppOpen();
       const senderAccount = ledgerAccount || 0;
-      const signature = await createAndSignLedgerTransaction({
-        senderAccount,
+      const transactionToSend = await createLedgerDelegationTransaction({
         senderAddress: transactionData.from,
-        transactionData: {
-          senderAddress: transactionData.from,
-          receiverAddress: transactionData.to,
-          amount: toNanoMINA(transactionData.amount),
-          fee: toNanoMINA(transactionData.fee),
-          memo: transactionData.memo,
-          nonce: +transactionData.nonce || 0,
-        },
+        receiverAddress: transactionData.to,
+        fee: toNanoMINA(transactionData.fee),
         nonce: +transactionData.nonce || 0,
+        senderAccount,
       });
+
+      const signature = await signTransaction(transactionToSend);
       completeSignature(signature.signature);
     } catch (e) {
+      console.log('🚀 ~ sendLedgerTransaction ~ e:', e);
       setShowError(true);
       setErrorMessage(e.message || 'An error occurred while loading hardware wallet');
       toast.error(e.message || 'An error occurred while loading hardware wallet');
@@ -56,14 +55,12 @@ export default function ConfirmZkappLedger({onSuccess, onClose}: IConfirmZkappLe
 
   const completeSignature = signature => {
     const data = {
-      rawSignature: signature,
+      signature: {rawSignature: signature},
       publicKey: transactionData.from,
       data: {
         from: transactionData.from,
         to: transactionData.to,
-        amount: '' + toNanoMINA(transactionData.amount),
         fee: '' + toNanoMINA(transactionData.fee),
-        memo: transactionData.memo,
         nonce: '' + transactionData.nonce || 0,
       },
     };
@@ -78,7 +75,10 @@ export default function ConfirmZkappLedger({onSuccess, onClose}: IConfirmZkappLe
             {showError ? (
               <LedgerSignError message={errorMessage} />
             ) : (
-              <LedgerSingPending transactionData={transactionData} />
+              <LedgerSingPending
+                transactionData={transactionData}
+                isDelegation
+              />
             )}
           </div>
         </div>

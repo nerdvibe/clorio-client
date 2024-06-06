@@ -68,12 +68,12 @@ function SendTX(props: IProps) {
   const [transactionData, setTransactionData] = useState<ITransactionData>(initialTransactionData);
   const [ledgerTransactionData, setLedgerTransactionData] = useState<string>('');
   const [storedPassphrase, setStoredPassphrase] = useState('');
-  const {isLedgerEnabled} = useContext<Partial<ILedgerContext>>(LedgerContext);
   const {getBalance, setShouldBalanceUpdate} = useContext<Partial<IBalanceContext>>(BalanceContext);
   // const {wallet} = useWallet();
   const wallet = useRecoilValue(walletState);
   const senderAddress = wallet.address;
   const balance = getBalance && getBalance(wallet.address);
+  const isLedgerEnabled = wallet.ledger;
   const {
     data: nonceData,
     refetch: nonceRefetch,

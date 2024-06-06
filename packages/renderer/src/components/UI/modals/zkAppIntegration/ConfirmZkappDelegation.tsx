@@ -18,6 +18,7 @@ import {IBalanceContext} from '/@/contexts/balance/BalanceTypes';
 import {BalanceContext} from '/@/contexts/balance/BalanceContext';
 import {ERROR_CODES} from '/@/tools/zkapp';
 import TransactionData from './TransactionData';
+import ConfirmZkappLedgerDelegation from './ConfirmZkappLedgerDelegation';
 
 interface SignedTx {
   signature: {
@@ -37,6 +38,7 @@ interface SignedTx {
 
 export default function ConfirmZkappDelegation() {
   const wallet = useRecoilValue(walletState);
+  const isLedgerEnabled = wallet.ledger;
   const fromRef = useRef(null);
   const [fromTextWidth, setFromTextWidth] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
@@ -52,6 +54,10 @@ export default function ConfirmZkappDelegation() {
   });
 
   useEffect(() => {
+    fetchAndSetNonce();
+  }, [showDelegationConfirmation]);
+
+  useEffect(() => {
     if (fromRef.current) {
       setFromTextWidth(fromRef.current.offsetWidth - 250);
     }
@@ -65,6 +71,21 @@ export default function ConfirmZkappDelegation() {
     }));
     setShowPassword(false);
     sendResponse('clorio-error', ERROR_CODES.userRejectedRequest);
+  };
+
+  const fetchAndSetNonce = async () => {
+    if (showDelegationConfirmation) {
+      const {data: nonceData} = await fetchNonce({variables: {publicKey: wallet.address}});
+      if (nonceData?.accountByKey?.usableNonce || nonceData?.accountByKey?.usableNonce === 0) {
+        setZkappState(state => ({
+          ...state,
+          transactionData: {
+            ...state.transactionData,
+            nonce: nonceData.accountByKey.usableNonce,
+          },
+        }));
+      }
+    }
   };
 
   // Check with BigJs if the balance is enough
@@ -110,18 +131,10 @@ export default function ConfirmZkappDelegation() {
         sendResponse('error', {error: nonceError});
         return;
       }
-      // TODO: Add custom nonce
-      // Get the nonce
-
-      const nonceResponse = await fetchNonce({variables: {publicKey: address[0]}});
-      const nonce = nonceResponse?.data?.accountByKey?.usableNonce;
-      if (!nonce && nonce !== 0) {
-        throw new Error('Nonce not found');
-      }
       // Prepare the stake data
       const stakeData = {
         ...transactionData,
-        nonce,
+        // nonce,
         from: address[0],
         fee: toNanoMINA(transactionData.fee),
       };
@@ -129,19 +142,19 @@ export default function ConfirmZkappDelegation() {
       const clientInstance = await client();
       const signedTx = await clientInstance.signStakeDelegation(stakeData, privateKey);
       const hashedTx = await clientInstance.hashStakeDelegation(signedTx);
-      await broadcastDelegationTx(signedTx);
-      sendResponse('clorio-staked-delegation', {hash: hashedTx});
-      onPostSign();
+      await broadcastDelegationTx(signedTx, hashedTx);
     } catch (error) {
       console.error('Error in onConfirm:', error);
       toast.error('An error occurred while confirming the transaction');
     }
   };
 
-  const broadcastDelegationTx = async (signedTx: SignedTx) => {
+  const broadcastDelegationTx = async (signedTx: SignedTx, hashedTx?: any) => {
     await broadcastDelegation({
       variables: {input: signedTx.data, signature: signedTx.signature},
     });
+    sendResponse('clorio-staked-delegation', {hash: hashedTx || ''});
+    onPostSign();
   };
 
   const onPostSign = () => {
@@ -186,10 +199,17 @@ export default function ConfirmZkappDelegation() {
         <hr />
       </div>
       {showPassword ? (
-        <PasswordDecrypt
-          onClose={() => setShowPassword(false)}
-          onSuccess={onConfirm}
-        />
+        isLedgerEnabled ? (
+          <ConfirmZkappLedgerDelegation
+            onClose={() => setShowPassword(false)}
+            onSuccess={broadcastDelegationTx}
+          />
+        ) : (
+          <PasswordDecrypt
+            onClose={() => setShowPassword(false)}
+            onSuccess={onConfirm}
+          />
+        )
       ) : (
         <div className="flex flex-col gap-4">
           <TransactionData

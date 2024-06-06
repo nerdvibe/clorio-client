@@ -12,6 +12,7 @@ import {useRecoilState} from 'recoil';
 import {networkState} from '/@/store';
 import {ConnectedZkapps} from './ConnectedZkapps';
 import {NetConfig, sendResponse} from '/@/tools/mina-zkapp-bridge';
+import isElectron from 'is-electron';
 
 export default function NetworkSettings({
   currentNetwork,
@@ -79,7 +80,7 @@ export default function NetworkSettings({
       >
         <div className="settings-modal-container">
           <h1 className="w-100 text-center">Settings</h1>
-          <p className="w-100 text-center small">Current version: 2.1.1</p>
+          <p className="w-100 text-center small">Current version: 2.1.2</p>
           <hr />
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
@@ -133,7 +134,7 @@ export default function NetworkSettings({
               </Form.Select>
             </div>
             <div className="flex flex-row">
-              {lockSession && (
+              {lockSession && isElectron() && (
                 <div
                   className="large-icon-button"
                   onClick={lockSession}

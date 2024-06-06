@@ -1,6 +1,6 @@
 import {Link, useNavigate} from 'react-router-dom';
 import {useState, useEffect, useCallback} from 'react';
-import {useQuery} from '@apollo/client';
+import {useLazyQuery, useQuery} from '@apollo/client';
 import {toast} from 'react-toastify';
 import {ArrowLeft, ArrowRight} from 'react-feather';
 import {deriveAccount, setPassphrase, spellMnemonic, storeAccounts, storeSession} from '/@/tools';
@@ -26,15 +26,10 @@ function Login({toggleLoader}: IProps) {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [passphraseError, setPassphraseError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const {
-    data: userIdData,
-    error: userIdError,
-    loading: userIdLoading,
-    refetch: userIdRefetch,
-  } = useQuery<IWalletIdData>(GET_ID, {
-    variables: {publicKey},
-    skip: !publicKey,
-  });
+  const [userIdFetch, {data: userIdData, error: userIdError, loading: userIdLoading}] =
+    useLazyQuery<IWalletIdData>(GET_ID, {
+      variables: {publicKey},
+    });
   const setConfig = useSetRecoilState(configState);
 
   const {encryptData} = useSecureStorage();
@@ -62,11 +57,15 @@ function Login({toggleLoader}: IProps) {
     };
   }, []);
 
-  const saveAndStoreSession = () => {
+  const saveAndStoreSession = (userId?: string | number, derivedPublicKey?: string) => {
     if (publicKey && publicKey !== '' && !userIdLoading && userIdData) {
       toggleLoader(true);
       const id = +userIdData?.idByPublicKey.id || -1;
-      storeSessionAndRedirect(publicKey, id);
+      storeSessionAndRedirect(derivedPublicKey || publicKey, id);
+    } else if (derivedPublicKey) {
+      toggleLoader(true);
+      const id = +userId || -1;
+      storeSessionAndRedirect(derivedPublicKey || publicKey, id);
     }
   };
 
@@ -85,7 +84,7 @@ function Login({toggleLoader}: IProps) {
   }, [userIdError]);
 
   const storeSessionAndRedirect = async (publicKey: string, id: number) => {
-    await userIdRefetch({publicKey});
+    await userIdFetch({variables: {publicKey}});
     const isUsingMnemonic = privateKey.trim().split(' ').length === 12;
     if (storePassphrase) {
       setPassphrase(isUsingMnemonic);
@@ -161,11 +160,11 @@ function Login({toggleLoader}: IProps) {
       const derivedAccount = await deriveAccount(privateKey.trim());
       if (derivedAccount.publicKey) {
         setPublicKey(derivedAccount.publicKey);
-        await userIdRefetch({publicKey: derivedAccount.publicKey});
+        const {data} = await userIdFetch({variables: {publicKey: derivedAccount.publicKey}});
         if (storePassphrase) {
           setShowPasswordModal(true);
         } else {
-          saveAndStoreSession();
+          saveAndStoreSession(data?.idByPublicKey?.id, derivedAccount.publicKey);
         }
       }
     } catch (e) {

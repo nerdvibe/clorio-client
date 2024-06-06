@@ -8,10 +8,10 @@ import LedgerConfirmAddress from './LedgerConfirmAddress';
 import type {IWalletIdData} from '../../types/WalletIdData';
 import LedgerLoader from '../UI/ledgerLogin/LedgerLoader';
 import {ArrowLeft} from 'react-feather';
-import {getPublicKey} from '/@/tools/ledger/ledgerElectronAPI';
 import {useNavigate} from 'react-router-dom';
 import {useSetRecoilState} from 'recoil';
 import {configState, walletState} from '/@/store';
+import { getPublicKey } from '/@/tools/ledger/ledger';
 
 interface IProps {
   accountNumber?: number;

@@ -900,11 +900,12 @@ tbody {
 
 #draggable-bar {
   width: 100vw;
-  min-height: 2vh;
-  position: none;
+  min-height: 4vh;
+  position: absolute;
   left: 0px;
   top: 0;
   -webkit-app-region: drag;
+  z-index: 9999;
 }
 
 .huge-text {

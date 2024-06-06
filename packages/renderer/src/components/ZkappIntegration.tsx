@@ -246,7 +246,6 @@ export default function ZkappIntegration() {
     }));
   };
 
-  // TODO: CHECK IF THE MINA CLIENT IS CHANGING NETWORK
   const switchChain = async (chainId: string) => {
     const networksFound = availableNetworks.filter(network => network.chainId === chainId);
     if (networksFound.length === 0) {
@@ -358,7 +357,6 @@ export default function ZkappIntegration() {
     }));
   };
 
-  // TODO: Implement stake delegation
   const stakeDelegation = async (data: any) => {
     console.log('Received stake-delegation');
     if (!config.isAuthenticated) {

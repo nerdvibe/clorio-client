@@ -1,7 +1,7 @@
 {
   "name": "clorio-wallet",
   "description": "Clorio wallet",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "private": true,
   "main": "packages/main/dist/index.cjs",
   "author": {
@@ -19,6 +19,7 @@
     "compile:mac": "yarn build && ./node_modules/.bin/electron-builder --config .electron-builder.config.cjs --publish never",
     "compile:all": "CSC_IDENTITY_AUTO_DISCOVERY=false yarn build && ./node_modules/.bin/electron-builder -mwl --config .electron-builder.config.cjs --publish never",
     "compile:linux": "CSC_IDENTITY_AUTO_DISCOVERY=false yarn build && ./node_modules/.bin/electron-builder -l --config .electron-builder.config.cjs --publish never",
+    "compile:ml": "CSC_IDENTITY_AUTO_DISCOVERY=false yarn build && ./node_modules/.bin/electron-builder -ml --config .electron-builder.config.cjs --publish never",
     "test": "npm run test:main && npm run test:preload && npm run test:renderer && npm run test:e2e",
     "test:e2e": "npm run build && vitest run",
     "test:main": "vitest run -r packages/main --passWithNoTests",

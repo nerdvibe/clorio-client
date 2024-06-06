@@ -4,9 +4,21 @@ import type {BlacklistedAddress} from '../../types/Blacklist';
 import TransactionIcon from './TransactionIcon';
 import type {ITransactionRowData} from './TransactionsTypes';
 import {useNetworkSettingsContext} from '/@/contexts/NetworkContext';
+import {formatUrl} from './TransactionsHelper';
 
 const TransactionRow = (
-  {timestamp, amount, sender, receiver, fee, memo, id, type}: ITransactionRowData,
+  {
+    timestamp,
+    amount,
+    sender,
+    receiver,
+    fee,
+    memo,
+    id,
+    type,
+    failed,
+    failure_reason,
+  }: ITransactionRowData,
   index: number,
   userAddress: string,
   blacklist: BlacklistedAddress[],
@@ -53,14 +65,22 @@ const TransactionRow = (
       >
         <td className="table-element table-icon">
           {' '}
-          {TransactionIcon(type, sender, receiver, userAddress, isScam)}{' '}
+          {TransactionIcon(
+            type,
+            sender,
+            receiver,
+            userAddress,
+            isScam,
+            failed,
+            failure_reason,
+          )}{' '}
         </td>
         <td
           className="table-element table-hash"
           data-tip={memo ? `Memo: ${sanitizeString(memo)}` : null}
         >
           <a
-            onClick={() => openLinkOnBrowser(`${settings?.explorerUrl}${urlPath}/${id}`)}
+            onClick={() => !isMempool && openLinkOnBrowser(formatUrl(id, settings?.explorerUrl))}
             target="_blank"
             rel="noreferrer"
             className="purple-text"
