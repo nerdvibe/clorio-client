@@ -1,7 +1,8 @@
-import {app} from 'electron';
+import { app, dialog, BrowserWindow } from 'electron';
 import './security-restrictions';
 import {restoreOrCreateWindow} from '/@/mainWindow';
 import {platform} from 'node:process';
+import * as path from 'node:path';
 
 /**
  * Prevent electron from running multiple instances.
@@ -11,6 +12,15 @@ if (!isSingleInstance) {
   app.quit();
   process.exit(0);
 }
+
+if (process.defaultApp) {
+  if (process.argv.length >= 2) {
+    app.setAsDefaultProtocolClient('clorio', process.execPath, [path.resolve(process.argv[1])]);
+  }
+} else {
+  app.setAsDefaultProtocolClient('electron-fiddle');
+}
+
 app.on('second-instance', restoreOrCreateWindow);
 
 /**

@@ -82,6 +82,14 @@ contextBridge.exposeInMainWorld('ipcBridge', {
   },
 });
 
+contextBridge.exposeInMainWorld('deeplink', {
+  onDeeplink: (callback: (url: string) => void) => {
+    ipcRenderer.on('deeplink', (event, url) => {
+      callback(url);
+    });
+  },
+});
+
 contextBridge.exposeInMainWorld('mina', zkappIntegration);
 
 const appendQueryParams = (url: string, params: string | Query) => {
