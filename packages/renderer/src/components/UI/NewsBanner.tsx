@@ -1,4 +1,3 @@
-import {Row, Col} from 'react-bootstrap';
 import type {INewsData} from '../../types/NewsData';
 import {isEmptyObject, openLinkOnBrowser} from '../../tools/utils';
 import Button from './Button';
@@ -8,17 +7,11 @@ const NewsBanner = (props: INewsData) => {
 
   return !isEmptyObject(props) ? (
     <div className="glass-card p-4 mb-4">
-      <Row>
-        <Col
-          md={8}
-          lg={8}
-          xl={9}
-        >
-          <h4>{title}</h4>
-          <p>{subtitle}</p>
-        </Col>
+      <div className="flex flex-col">
+        <h4>{title}</h4>
+        <p style={{fontSize: 'medium', maxHeight: '60px'}}>{subtitle}</p>
         {cta && link && (
-          <Col className="align-end ml-auto pt-20p">
+          <div>
             {link ? (
               <a
                 onClick={() => openLinkOnBrowser(link)}
@@ -38,9 +31,9 @@ const NewsBanner = (props: INewsData) => {
                 className="mx-auto text-center"
               />
             )}
-          </Col>
+          </div>
         )}
-      </Row>
+      </div>
     </div>
   ) : (
     <></>

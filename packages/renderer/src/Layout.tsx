@@ -1,9 +1,8 @@
 import {useState} from 'react';
 import {CustomSidebar} from './components/UI/sidebar/Sidebar';
-import {Container} from 'react-bootstrap';
+import {Col, Container, Row} from 'react-bootstrap';
 import Routes from './Routes';
 import {storeNetworkData, isEmptyObject} from './tools';
-import Spinner from './components/UI/Spinner';
 import UserIDUpdater from './components/userIdUpdater/UserIDUpdater';
 import {useQuery} from '@apollo/client';
 import Alert from './components/UI/Alert';
@@ -17,6 +16,7 @@ import {walletState} from './store';
 import {initialWalletState} from './store/wallet';
 import isElectron from 'is-electron';
 import {GlobalLoader} from './components/GlobalLoader';
+import NewsSelector from './components/NewsSelector';
 
 const Layout = () => {
   const [showLoader, setShowLoader] = useState<boolean>(false);
@@ -68,8 +68,27 @@ const Layout = () => {
             }
           >
             <Container className="contentWrapper animate__animated animate__fadeIn">
-              <div className={`flex gap-4 flex-col ${isAuthenticated ? 'authenticated-view' : ''}`}>
-                {sessionData && !isEmptyObject(sessionData) && sessionData.address && <Balance />}
+              <div className={`flex flex-col ${isAuthenticated ? 'authenticated-view' : ''}`}>
+                {isAuthenticated && (
+                  <Row>
+                    <Col
+                      sm={12}
+                      lg={12}
+                      xl={6}
+                    >
+                      {sessionData && !isEmptyObject(sessionData) && sessionData.address && (
+                        <Balance />
+                      )}
+                    </Col>
+                    <Col
+                      sm={12}
+                      lg={12}
+                      xl={6}
+                    >
+                      <NewsSelector />
+                    </Col>
+                  </Row>
+                )}
                 <Routes
                   sessionData={sessionData}
                   toggleLoader={toggleLoader}
