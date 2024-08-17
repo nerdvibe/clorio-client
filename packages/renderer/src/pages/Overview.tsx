@@ -145,8 +145,7 @@ const Overview = ({sessionData}: IProps) => {
   return (
     <Hoc className="main-container">
       <div>
-        {lastNews && <NewsBanner {...lastNews} />}
-        <TransactionsTable
+        <TransactionsTable    
           transactions={transactionsData}
           mempool={mempoolData}
           error={transactionsError}

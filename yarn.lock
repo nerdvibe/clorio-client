@@ -1105,6 +1105,11 @@
   resolved "https://registry.npmjs.org/@popperjs/core/-/core-2.11.8.tgz"
   integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
+"@re-dev/react-truncate@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@re-dev/react-truncate/-/react-truncate-0.4.2.tgz#58a0086362fa2b2cdecc0c8f94aefeb0770a189b"
+  integrity sha512-IOwjqMLCZd1puNeNVfepc6KNcan7pW40xdAe85TijLXshr2Wgww4MtofdYsA0YYYvXxnz9Q1xYGVP8Iw8N5ybA==
+
 "@react-aria/ssr@^3.5.0":
   version "3.8.0"
   resolved "https://registry.npmjs.org/@react-aria/ssr/-/ssr-3.8.0.tgz"
@@ -3986,6 +3991,13 @@ form-data@^4.0.0:
     asynckit "^0.4.0"
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
+
+framer-motion@^11.3.30:
+  version "11.3.30"
+  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-11.3.30.tgz#9c82ea5e0318592a7046d91d8ba29060d5c4a9cc"
+  integrity sha512-9VmqGe9OIjfMoCcs+ZsKXlv6JaG5QagKX2F1uSbkG3Z33wgjnz60Kw+CngC1M49rDYau+Y9aL+8jGagAwrbVyw==
+  dependencies:
+    tslib "^2.4.0"
 
 fs-constants@^1.0.0:
   version "1.0.0"

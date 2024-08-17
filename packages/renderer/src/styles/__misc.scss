@@ -1289,6 +1289,80 @@ input[type="number"] {
   left: 0%;
 }
 
+.address-text {
+  font-size: large;
+}
+
+.balance_container {
+  .show-small-balance {
+    display: none;
+  }
+  @media screen and (max-width: 1410px) {
+    .hide-small-balance {
+      display: none;
+    }
+    .show-small-balance {
+      height: 50px;
+      display: block;
+    }
+  }
+  @media screen and (max-width: 1250px) {
+    .balance-card {
+      margin-bottom: 20px;
+    }
+
+    .hide-small-balance {
+      display: block;
+    }
+    .show-small-balance {
+      // height: 50px;
+      display: none;
+    }
+  }
+  @media screen and (max-width: 560px) {
+    .hide-small-balance {
+      display: none;
+    }
+    .show-small-balance {
+      height: 50px;
+      display: block;
+    }
+  }
+}
+
+.balance-card {
+  height: 200px;
+  .copy-icon{
+    left: 10px;
+    position: relative;
+    width: 15px;
+    opacity: .8;
+    transition: .3s;
+  }
+  .copy-icon:hover{
+    opacity: 1;
+    transition: .3s;
+  }
+  .avatar > svg {
+    width: 125px;
+    height: 125px;
+  }
+  .balance-data{
+    gap:15px
+  }
+}
+
+@media screen and (max-width: 1199px) {
+  .balance-card {
+    margin-bottom: 40px;
+    height: 150px;
+    .avatar > svg {
+      width: 100px;
+      height: 100px;
+    }
+  }
+}
+
 @media screen and (max-height: 899px) {
   .big-modal-container {
     top: 8vh;

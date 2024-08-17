@@ -53,7 +53,7 @@ const config = {
     },
     emptyOutDir: true,
     reportCompressedSize: false,
-    publicDir:join(PACKAGE_ROOT, 'resources'),
+    publicDir: join(PACKAGE_ROOT, 'resources'),
   },
   test: {
     environment: 'happy-dom',
@@ -74,7 +74,7 @@ const config = {
     },
   },
   optimizeDeps: {
-    exclude: ['react-content-loader', 'react-truncate-inside'],
+    exclude: ['react-content-loader'],
   },
 };
 

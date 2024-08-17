@@ -1,52 +1,27 @@
-import {useEffect, useContext, useRef, useState} from 'react';
-import {Row, Col} from 'react-bootstrap';
-import Button from '../UI/Button';
+import {useEffect, useContext, useRef, useState, useMemo} from 'react';
 import {Copy} from 'react-feather';
 import {useQuery} from '@apollo/client';
 import Avatar from '../../tools/avatar/avatar';
 import {copyToClipboard, DEFAULT_QUERY_REFRESH_INTERVAL} from '../../tools';
 import ReactTooltip from 'react-tooltip';
 import {GET_TICKER, GET_BALANCE} from '../../graphql/query';
-import {renderBalance, userBalanceToSymbolValue} from './BalanceHelper';
+import {formatBalance} from './BalanceHelper';
 import type {IBalanceQueryResult, ITicker} from './BalanceTypes';
 import type {IBalanceContext} from '../../contexts/balance/BalanceTypes';
 import {BalanceContext} from '../../contexts/balance/BalanceContext';
 import {balanceTooltip} from './util';
 import CustomSkeleton from '../CustomSkeleton';
-import Truncate from 'react-truncate-inside';
-import { useRecoilValue } from 'recoil';
-import { walletState } from '/@/store';
+import {useRecoilValue} from 'recoil';
+import {walletState} from '/@/store';
+import {MiddleTruncate} from '@re-dev/react-truncate';
+import {AnimatePresence, motion} from 'framer-motion';
 
 const Balance = () => {
   const wallet = useRecoilValue(walletState);
   const {address} = wallet;
-  const textRef = useRef(null);
-  const bigTextRef = useRef(null);
-
-  const [width, setwidth] = useState(0);
-  const [widthBigText, setwidthBigText] = useState(0);
-
-  useEffect(() => {
-    if (textRef) {
-      const observer = new ResizeObserver(entries => {
-        setwidth(entries[0].contentRect.width - 150);
-      });
-      observer.observe(textRef.current);
-      return () => textRef.current && observer.unobserve(textRef.current);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (bigTextRef) {
-      const observer = new ResizeObserver(entries => {
-        setwidthBigText(entries[0].contentRect.width - 150);
-      });
-      observer.observe(bigTextRef.current);
-      return () => bigTextRef.current && observer.unobserve(bigTextRef.current);
-    }
-  }, []);
-
-  // const [userBalance, setUserBalance] = useState<number>(0);
+  const addressContainerRef = useRef(null);
+  const [currentBalanceLabelIndex, setCurrentBalanceLabelIndex] = useState(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const {
     addBalance,
     setBalanceContext,
@@ -54,11 +29,6 @@ const Balance = () => {
     setShouldBalanceUpdate,
     balanceData: balance,
   } = useContext<Partial<IBalanceContext>>(BalanceContext);
-  const {
-    data: tickerData,
-    loading: tickerLoading,
-    error: tickerError,
-  } = useQuery<ITicker>(GET_TICKER);
   const {
     data: balanceData,
     loading: balanceLoading,
@@ -79,6 +49,57 @@ const Balance = () => {
       }
     },
   });
+  const {
+    data: tickerData,
+    loading: tickerLoading,
+    error: tickerError,
+  } = useQuery<ITicker>(GET_TICKER);
+
+  const isLoadingBalance = balanceLoading;
+  const storedUserBalance =
+    (balance?.balances[address] && balance?.balances[address].unconfirmedTotal) || 0;
+  const userBalance =
+    balanceData?.accountByKey?.balance?.unconfirmedTotal || storedUserBalance || 0;
+
+  const memoBalance = useMemo(
+    () => formatBalance({balanceData, userBalance, tickerData}),
+    [balanceData, balanceLoading, userBalance, tickerData, tickerLoading],
+  );
+  const memoBalanceLabels = {
+    mina: 'Balance',
+    btc: 'BTC Apx. value',
+    usdt: 'USDT Apx. value',
+  };
+
+  const currentBalanceLabel = Object.keys(memoBalanceLabels)[currentBalanceLabelIndex];
+
+  const updateBalanceLabel = () => {
+    setCurrentBalanceLabelIndex(prevIndex => {
+      const newIndex = (prevIndex + 1) % 3;
+      return newIndex;
+    });
+  };
+
+  const startInterval = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    intervalRef.current = setInterval(updateBalanceLabel, 5000);
+  };
+
+  useEffect(() => {
+    startInterval();
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
+
+  const handleButtonClick = () => {
+    updateBalanceLabel();
+    startInterval();
+  };
 
   useEffect(() => {
     refetchBalance();
@@ -102,232 +123,101 @@ const Balance = () => {
     }
   };
 
-  const storedUserBalance =
-    (balance?.balances[address] && balance?.balances[address].unconfirmedTotal) || 0;
-  const userBalance =
-    balanceData?.accountByKey?.balance?.unconfirmedTotal || storedUserBalance || 0;
-
   return (
-    <div className="glass-card px-3 py-2">
-      <ReactTooltip multiline={true} />
-      <div
-        className="big-screen"
-        ref={bigTextRef}
-      >
-        <div className="flex flex-row justify-start gap-4">
-          <div className="inline-block-element mt-2">
-            <CustomSkeleton
-              show={address}
-              altProps={{height: 75, width: 75, circle: true}}
-            >
-              <div className="walletImageOutline">
-                <Avatar
-                  address={address}
-                  className="balance-avatar"
-                />
-              </div>
-            </CustomSkeleton>
+    <AnimatePresence>
+      <div className="glass-card px-3 py-2 flex justify-center balance-card">
+        <ReactTooltip multiline={true} />
+        <div className="flex flex-row w-100 justify-start gap-4 py-4">
+          <div>
+            <Avatar
+              address={address}
+              size={100}
+              radius={20}
+            />
           </div>
-          <div className="inline-block-element wallet-data flex gap-2 flex-col">
-            <Row>
-              <Col xs={12}>
-                <div className="flex my-2 items-center justify-start gap-2">
-                  <h6 className="secondaryText width-fit">
-                    This is your address
-                    <Button
-                      className="inline-element"
-                      icon={<Copy size={20} />}
+          <div className="flex w-100">
+            <div className="flex flex-col justify-content-center w-100">
+              <div className="flex flex-col w-100 balance-data">
+                <div
+                  className="flex flex-col justify-start w-100"
+                  ref={addressContainerRef}
+                >
+                  <div className="text-sm text-start text-muted">
+                    Address
+                    <Copy
+                      className="cursor-pointer copy-icon"
                       onClick={() => copyToClipboard(address)}
                     />
-                  </h6>
+                  </div>
+                  <span className="flex flex-row text-start address-text">
+                    <MiddleTruncate end={15}>{address}</MiddleTruncate>
+                  </span>
                 </div>
-                <div className="flex flex-row justify-start">
-                  <CustomSkeleton
-                    show={address}
-                    altProps={{height: 20, width: 300}}
-                  >
-                    <div className="flex flex-row">
-                      <h5 className="selectable-text">
-                        <Truncate
-                          text={address}
-                          width={widthBigText || 1000}
-                        />
-                      </h5>
+                <div className="flex flex-row gap-4 w-100 justify-start balance_container">
+                  {Object.keys(memoBalanceLabels).map(key => (
+                    <div
+                      key={key}
+                      className="flex flex-col hide-small-balance"
+                    >
+                      <div className="text-sm text-start text-muted">{memoBalanceLabels[key]}</div>
+                      <CustomSkeleton
+                        show={isLoadingBalance}
+                        altProps={{height: 20, width: 150}}
+                      >
+                        <h4
+                          data-tip={balanceTooltip(balanceData)}
+                          className="animate__animated animate__fadeIn"
+                        >
+                          {memoBalance[key] || 'Not available'}
+                        </h4>
+                      </CustomSkeleton>
                     </div>
-                  </CustomSkeleton>
+                  ))}
+                  <div
+                    className="flex flex-col show-small-balance"
+                    onClick={handleButtonClick}
+                  >
+                    {currentBalanceLabel && (
+                      <>
+                        <div className="text-sm text-start text-muted">
+                          <motion.div
+                            className="text-sm text-start text-muted"
+                            initial={{opacity: 0}}
+                            animate={{opacity: 1}}
+                            exit={{opacity: 0}}
+                            key={currentBalanceLabel}
+                            transition={{
+                              duration: 0.25,
+                              delay: 0.2,
+                            }}
+                          >
+                            {memoBalanceLabels[currentBalanceLabel]}
+                          </motion.div>
+                        </div>
+                        <motion.h4
+                          // data-tip={balanceTooltip(balanceData)}
+                          className="animate__animated animate__fadeIn"
+                          initial={{opacity: 0}}
+                          animate={{opacity: 1}}
+                          exit={{opacity: 0}}
+                          key={currentBalanceLabel}
+                          transition={{
+                            duration: 0.25,
+                            delay: 0.4,
+                          }}
+                        >
+                          {memoBalance[currentBalanceLabel]}
+                        </motion.h4>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </Col>
-            </Row>
-            <div className="flex flex-row justify-start">
-              <div className="inline-block-element">
-                <h6 className="secondaryText">Your balance</h6>
-                <CustomSkeleton
-                  show={(!balanceLoading && balanceData && userBalance) || balanceError}
-                  altProps={{height: 20, width: 150}}
-                >
-                  <h5
-                    data-tip={balanceTooltip(balanceData)}
-                    className="animate__animated animate__fadeIn"
-                  >
-                    {balanceError
-                      ? 'Not available'
-                      : renderBalance({balanceData, balanceLoading, userBalance})}
-                  </h5>
-                </CustomSkeleton>
-              </div>
-              <div className="inline-block-element ml-2">
-                <div className="v-div" />
-              </div>
-              <div className="inline-block-element ml-2">
-                <span>
-                  <h6 className="secondaryText">BTC Apx. value</h6>
-                  <CustomSkeleton
-                    show={(!tickerLoading && tickerData && userBalance) || tickerError}
-                    altProps={{height: 20, width: 150}}
-                  >
-                    <h5 data-tip={balanceTooltip(balanceData)}>
-                      {tickerError
-                        ? 'Not available'
-                        : userBalanceToSymbolValue({
-                            tickerData,
-                            tickerLoading,
-                            userBalance,
-                            symbol: 'BTC',
-                            ticker: 'BTCMINA',
-                          })}
-                    </h5>
-                  </CustomSkeleton>
-                </span>
-              </div>
-              <div className="inline-block-element ml-2">
-                <div className="v-div" />
-              </div>
-              <div className="inline-block-element ml-2">
-                <span>
-                  <h6 className="secondaryText">USDT Apx. value</h6>
-                  <CustomSkeleton
-                    show={(!tickerLoading && tickerData && userBalance) || tickerError}
-                    altProps={{height: 20, width: 150}}
-                  >
-                    <h5 data-tip={balanceTooltip(balanceData)}>
-                      {tickerError
-                        ? 'Not available'
-                        : userBalanceToSymbolValue({
-                            tickerData,
-                            tickerLoading,
-                            userBalance,
-                            symbol: 'USDT',
-                            ticker: 'USDTMINA',
-                          })}
-                    </h5>
-                  </CustomSkeleton>
-                </span>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div
-        className="flex flex-col w-full items-center small-screen"
-        style={{display: 'none'}}
-        ref={textRef}
-      >
-        <div className="flex flex-row justify-start gap-4">
-          <div className="inline-block-element mt-2">
-            <CustomSkeleton
-              show={address}
-              altProps={{height: 75, width: 75, circle: true}}
-            >
-              <div className="walletImageOutline">
-                <Avatar
-                  address={address}
-                  className="balance-avatar"
-                  size={60}
-                />
-              </div>
-            </CustomSkeleton>
-          </div>
-          <div className="inline-block-element wallet-data flex gap-2 flex-col">
-            <Row>
-              <Col xs={12}>
-                <div className="flex my-2 items-center justify-start gap-2">
-                  <h6 className="secondaryText width-fit">
-                    This is your address
-                    <Button
-                      className="inline-element"
-                      icon={<Copy size={18} />}
-                      onClick={() => copyToClipboard(address)}
-                    />
-                  </h6>
-                </div>
-                <div className="flex flex-row justify-start">
-                  <CustomSkeleton
-                    show={address}
-                    altProps={{height: 20, width: 300}}
-                  >
-                    <div className="flex flex-row">
-                      <h5 className="selectable-text">
-                        <Truncate
-                          text={address}
-                          width={width || 1000}
-                        />
-                      </h5>
-                    </div>
-                  </CustomSkeleton>
-                </div>
-              </Col>
-            </Row>
-          </div>
-        </div>
-        <div>
-          <div className="flex flex-row justify-between px-4 mt-4">
-            <div className="inline-block-element text-center w-100">
-              <h6 className="secondaryText text-center">Your balance</h6>
-              <CustomSkeleton
-                show={(!balanceLoading && balanceData && userBalance) || balanceError}
-                altProps={{height: 20, width: 150}}
-              >
-                <h6
-                  data-tip={balanceTooltip(balanceData)}
-                  className="animate__animated animate__fadeIn text-center"
-                >
-                  {balanceError
-                    ? 'Not available'
-                    : renderBalance({balanceData, balanceLoading, userBalance})}
-                </h6>
-              </CustomSkeleton>
-            </div>
-            <div className="inline-block-element ml-2">
-              <div className="v-div" />
-            </div>
-            <div className="inline-block-element ml-2 w-100">
-              <span>
-                <h6 className="secondaryText text-center">BTC Apx. value</h6>
-                <CustomSkeleton
-                  show={(!tickerLoading && tickerData && userBalance) || tickerError}
-                  altProps={{height: 20, width: 150}}
-                >
-                  <h6
-                    data-tip={balanceTooltip(balanceData)}
-                    className="text-center"
-                  >
-                    {tickerError
-                      ? 'Not available'
-                      : userBalanceToSymbolValue({
-                          tickerData,
-                          tickerLoading,
-                          userBalance,
-                          symbol: 'BTC',
-                          ticker: 'BTCMINA',
-                        })}
-                  </h6>
-                </CustomSkeleton>
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    </AnimatePresence>
   );
 };
 

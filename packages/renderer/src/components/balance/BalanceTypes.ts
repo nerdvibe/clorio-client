@@ -19,6 +19,5 @@ export interface IBalanceQueryResult {
 
 export interface IUserBalance {
   balanceData?: IBalanceQueryResult;
-  balanceLoading: boolean;
   userBalance: number;
 }

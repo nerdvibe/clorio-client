@@ -385,7 +385,6 @@ const Stake = ({sessionData}: IProps) => {
   return (
     <Hoc>
       <div className="animate__animated animate__fadeIn">
-        <NewsBanner {...latestNews} />
         <StakeTable
           address={address}
           toggleModal={openModal}
