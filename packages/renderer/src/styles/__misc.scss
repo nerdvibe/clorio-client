@@ -1330,25 +1330,35 @@ input[type="number"] {
   }
 }
 
+.eye-icon {
+  opacity: 0.8;
+  transition: 0.3s;
+}
+
+.eye-icon:hover {
+  opacity: 1;
+  transition: 0.3s;
+}
+
 .balance-card {
   height: 200px;
-  .copy-icon{
+  .copy-icon {
     left: 10px;
     position: relative;
     width: 15px;
-    opacity: .8;
-    transition: .3s;
+    opacity: 0.8;
+    transition: 0.3s;
   }
-  .copy-icon:hover{
+  .copy-icon:hover {
     opacity: 1;
-    transition: .3s;
+    transition: 0.3s;
   }
   .avatar > svg {
     width: 125px;
     height: 125px;
   }
-  .balance-data{
-    gap:15px
+  .balance-data {
+    gap: 15px;
   }
 }
 

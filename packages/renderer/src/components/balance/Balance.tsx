@@ -1,5 +1,5 @@
 import {useEffect, useContext, useRef, useState, useMemo} from 'react';
-import {Copy} from 'react-feather';
+import {Copy, Eye, EyeOff} from 'react-feather';
 import {useQuery} from '@apollo/client';
 import Avatar from '../../tools/avatar/avatar';
 import {copyToClipboard, DEFAULT_QUERY_REFRESH_INTERVAL} from '../../tools';
@@ -21,6 +21,7 @@ const Balance = () => {
   const {address} = wallet;
   const addressContainerRef = useRef(null);
   const [currentBalanceLabelIndex, setCurrentBalanceLabelIndex] = useState(0);
+  const [hideBalance, setHideBalance] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const {
     addBalance,
@@ -44,7 +45,6 @@ const Balance = () => {
     pollInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
     onCompleted: data => {
       if (addBalance && data) {
-        // setBalanceContext(data?.accountByKey?.balance || {});
         addBalance(address, data?.accountByKey?.balance || {});
       }
     },
@@ -123,6 +123,10 @@ const Balance = () => {
     }
   };
 
+  const toggleHideBalance = () => {
+    setHideBalance(!hideBalance);
+  };
+
   return (
     <AnimatePresence>
       <div className="glass-card px-3 py-2 flex justify-center balance-card">
@@ -168,7 +172,7 @@ const Balance = () => {
                           data-tip={balanceTooltip(balanceData)}
                           className="animate__animated animate__fadeIn"
                         >
-                          {memoBalance[key] || 'Not available'}
+                          {hideBalance ? ' * * * * * * * ' : memoBalance[key] || 'Not available'}
                         </h4>
                       </CustomSkeleton>
                     </div>
@@ -206,11 +210,22 @@ const Balance = () => {
                             delay: 0.4,
                           }}
                         >
-                          {memoBalance[currentBalanceLabel]}
+                          {hideBalance ? ' * * * * * * * ' : memoBalance[currentBalanceLabel]}
                         </motion.h4>
                       </>
                     )}
                   </div>
+                  {hideBalance ? (
+                    <EyeOff
+                      className="cursor-pointer eye-icon"
+                      onClick={toggleHideBalance}
+                    />
+                  ) : (
+                    <Eye
+                      className="cursor-pointer eye-icon"
+                      onClick={toggleHideBalance}
+                    />
+                  )}
                 </div>
               </div>
             </div>
