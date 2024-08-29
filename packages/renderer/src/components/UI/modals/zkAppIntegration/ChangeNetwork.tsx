@@ -67,9 +67,7 @@ export default function ChangeNetwork() {
         isAddingChain: false,
         selectedNode: availableNetworks[switchNetwork],
       }));
-      sendResponse('clorio-switched-chain', {
-        ...network,
-      });
+      sendResponse('clorio-switched-chain', {newtorkID: `mina:${switchNetwork}`});
       navigate('/overview');
       toast.success('Network switched successfully');
     } catch (error) {
@@ -92,11 +90,11 @@ export default function ChangeNetwork() {
         <div className="flex gap-4 confirm-transaction-data">
           <div className="w-100">
             <h4>Current</h4>
-            <p className='data-field'>{selectedNetwork?.name}</p>
+            <p className="data-field">{selectedNetwork?.name}</p>
           </div>
           <div className="w-100">
             <h4>Target</h4>
-            <p className='data-field'>{networkName}</p>
+            <p className="data-field">{networkName}</p>
           </div>
         </div>
         <div className="flex mt-4 gap-4 confirm-transaction-data sm-flex-reverse">
