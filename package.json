@@ -100,7 +100,7 @@
     "jspdf": "^2.5.1",
     "lottie-react": "^2.4.0",
     "mina-ledger-js": "^1.0.6",
-    "mina-signer": "^2.1.1",
+    "mina-signer": "3.0.7",
     "nedb": "1.8.0",
     "nedb-promises": "^6.2.3",
     "pretty-print-json": "^3.0.0",
