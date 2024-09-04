@@ -28,10 +28,14 @@ export default function ChangeNetwork() {
       isAddingChain: false,
     }));
   };
+  const networksFound =
+    (switchNetwork &&
+      availableNetworks.filter(network => network.networkID === switchNetwork)[0]) ||
+    'Network not found';
 
   const networkName =
-    switchNetwork && availableNetworks[switchNetwork]
-      ? availableNetworks[switchNetwork].name
+    switchNetwork && availableNetworks[switchNetwork.split(':')[1]]
+      ? availableNetworks[switchNetwork.split(':')[1]].name
       : 'Network not found';
 
   const onConfirm = async () => {
@@ -39,17 +43,13 @@ export default function ChangeNetwork() {
   };
 
   const getNetworkData = () => {
-    let networkToSwitch = {};
-    availableNetworksFromStore.forEach(network => {
-      if (network.chainId === switchNetwork) {
-        networkToSwitch = network;
-      }
-    });
-    if (!networkToSwitch) {
+    const networksFound =
+      switchNetwork && availableNetworks.filter(network => network.networkID === switchNetwork)[0];
+    if (!networksFound) {
       toast.error('Network not found');
       return;
     }
-    return networkToSwitch;
+    return networksFound;
   };
 
   const networkSelectHandler = async () => {
@@ -58,14 +58,17 @@ export default function ChangeNetwork() {
       return;
     }
     try {
-      await saveSettings(availableNetworks[switchNetwork]);
+      const networksFound =
+        switchNetwork &&
+        availableNetworks.filter(network => network.networkID === switchNetwork)[0];
+      await saveSettings(networksFound);
       setNetworkState(prev => ({
         ...prev,
         selectedNetwork: network,
         switchNetwork: undefined,
         showChangeNetworkModal: false,
         isAddingChain: false,
-        selectedNode: availableNetworks[switchNetwork],
+        selectedNode: networksFound,
       }));
       sendResponse('clorio-switched-chain', {newtorkID: `mina:${switchNetwork}`});
       navigate('/overview');
@@ -94,7 +97,7 @@ export default function ChangeNetwork() {
           </div>
           <div className="w-100">
             <h4>Target</h4>
-            <p className="data-field">{networkName}</p>
+            <p className="data-field">{networksFound.name || 'Network not found'}</p>
           </div>
         </div>
         <div className="flex mt-4 gap-4 confirm-transaction-data sm-flex-reverse">
