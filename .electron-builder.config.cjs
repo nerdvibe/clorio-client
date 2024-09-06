@@ -14,6 +14,10 @@ module.exports = async function () {
   } = await import('./version/getVersion.mjs');
 
   return {
+    protocols: {
+      name: "Clorio Wallet",
+      schemes: ["clorio-wallet"]
+    },
     directories: {
       output: 'dist',
       buildResources: 'buildResources',
@@ -23,28 +27,16 @@ module.exports = async function () {
       version: getVersion(),
     },
     productName: "Clorio Wallet",
-    // Specify linux target just for disabling snap compilation
     linux: {
-      target: [{
-          target: "deb",
-        },
-        {
-          target: "AppImage",
-        },
+      target: [
+        { target: "deb" },
+        { target: "AppImage" },
       ]
     },
     dmg: {
-      contents: [{
-          x: 340,
-          y: 270,
-          type: 'file',
-        },
-        {
-          x: 560,
-          y: 270,
-          type: 'link',
-          path: '/Applications',
-        },
+      contents: [
+        { x: 340, y: 270, type: 'file' },
+        { x: 560, y: 270, type: 'link', path: '/Applications' },
       ],
     },
   };

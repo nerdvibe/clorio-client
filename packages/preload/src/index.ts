@@ -50,6 +50,17 @@ window.ipcRenderer = ipcRenderer;
 //   'REQUEST_NETWORK',
 // ];
 
+contextBridge.exposeInMainWorld('deeplink', {
+  onDeeplink: (callback: (url: string) => void) => {
+    ipcRenderer.on('deeplink', (event, url) => {
+      callback(url);
+    });
+  },
+  off: (channel: string, callback: (...args: any[]) => void) => {
+    ipcRenderer.removeListener(channel, callback);
+  },
+});
+
 contextBridge.exposeInMainWorld('ipcBridge', {
   invoke: (text: string, data: unknown) => {
     // if (allowedInvokeChannels.includes(text)) {
@@ -79,14 +90,6 @@ contextBridge.exposeInMainWorld('ipcBridge', {
   },
   listenerCount: (text: string) => {
     return ipcRenderer.listenerCount(text);
-  },
-});
-
-contextBridge.exposeInMainWorld('deeplink', {
-  onDeeplink: (callback: (url: string) => void) => {
-    ipcRenderer.on('deeplink', (event, url) => {
-      callback(url);
-    });
   },
 });
 
