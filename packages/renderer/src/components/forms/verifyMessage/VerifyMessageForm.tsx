@@ -1,20 +1,30 @@
-import { useState } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import {useEffect, useState} from 'react';
+import {Col} from 'react-bootstrap';
 import Button from '../../UI/Button';
 import HelpHint from '../../UI/HelpHint';
 import Input from '../../UI/input/Input';
-import type { IMessageToVerify } from '../../../types/MessageToVerify';
-import { CheckCircle } from 'react-feather';
+import type {IMessageToVerify} from '../../../types/MessageToVerify';
+import {CheckCircle} from 'react-feather';
 
 interface IProps {
   verifyMessage: (messageToVerify: IMessageToVerify) => void;
+  initialData?: IMessageToVerify;
 }
 
-const VerifyForm = ({ verifyMessage }: IProps) => {
-  const [message, setMessage] = useState<string>('');
-  const [address, setAddress] = useState<string>('');
-  const [field, setField] = useState<string>('');
-  const [scalar, setScalar] = useState<string>('');
+const VerifyForm = ({verifyMessage, initialData}: IProps) => {
+  const [message, setMessage] = useState<string>(initialData?.message || '');
+  const [address, setAddress] = useState<string>(initialData?.address || '');
+  const [field, setField] = useState<string>(initialData?.field || '');
+  const [scalar, setScalar] = useState<string>(initialData?.scalar || '');
+
+  useEffect(() => {
+    if (initialData) {
+      setMessage(initialData.message || '');
+      setAddress(initialData.address || '');
+      setField(initialData.field || '');
+      setScalar(initialData.scalar || '');
+    }
+  }, [initialData]);
 
   /**
    * If one between address,message,field or scalar is empty button is disabled
@@ -57,7 +67,7 @@ const VerifyForm = ({ verifyMessage }: IProps) => {
             <textarea
               name="message"
               id="message"
-              onChange={(e) => setMessage(e.currentTarget.value)}
+              onChange={e => setMessage(e.currentTarget.value)}
               value={message}
               placeholder="Message "
             />
@@ -76,10 +86,10 @@ const VerifyForm = ({ verifyMessage }: IProps) => {
               name="message"
               value={address}
               placeholder="Public key "
-              inputHandler={(e) => setAddress(e.currentTarget.value)}
+              inputHandler={e => setAddress(e.currentTarget.value)}
             />
           </div>
-          <div className='flex verify-message-form gap-2'>
+          <div className="flex verify-message-form gap-2">
             <Col>
               <h5>
                 <strong>Field</strong>
@@ -91,7 +101,7 @@ const VerifyForm = ({ verifyMessage }: IProps) => {
                 <textarea
                   name="field"
                   id="field"
-                  onChange={(e) => setField(e.currentTarget.value)}
+                  onChange={e => setField(e.currentTarget.value)}
                   value={field}
                   placeholder="Field "
                 />
@@ -105,7 +115,7 @@ const VerifyForm = ({ verifyMessage }: IProps) => {
                 <textarea
                   name="scalar"
                   id="scalar"
-                  onChange={(e) => setScalar(e.currentTarget.value)}
+                  onChange={e => setScalar(e.currentTarget.value)}
                   value={scalar}
                   placeholder="Scalar "
                 />
