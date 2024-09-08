@@ -1,35 +1,13 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useRecoilState} from 'recoil';
-import {deeplinkState} from '../store';
+import {deeplinkState} from '../store/deeplink';
 import {URLSearchParams} from 'url';
+import {IMessageToVerify} from '../types';
 
 enum DeeplinkType {
   NULL = '',
   VERIFY_MESSAGE = 'verify-message',
-}
-
-export default function useDeeplinkHandler() {
-  const [_, setDeeplinkState] = useRecoilState(deeplinkState);
-  useEffect(() => {
-    const handleDeeplink = (url: string) => {
-      const newState = parseDeeplink(url);
-      console.log('🚀 ~ handleDeeplink ~ newState:', newState);
-      setDeeplinkState(state => {
-        return newState;
-      });
-    };
-
-    // Add event listener to handle deeplinks
-    window.addEventListener('deeplink', (event: CustomEvent) => {
-      console.log('🚀 ~ window.addEventListener ~ event:', event);
-      handleDeeplink(event.detail);
-    });
-
-    // Clean up the event listener when the component unmounts
-    return () => {
-      window.removeEventListener('deeplink', handleDeeplink);
-    };
-  }, []);
+  DELEGATION = 'delegation',
 }
 
 const parseDeeplink = (url: string) => {
@@ -41,8 +19,20 @@ const parseDeeplink = (url: string) => {
   if (url.includes('verify-message')) {
     payload.data = parseVerifyMessageDeeplink(params);
     payload.type = DeeplinkType.VERIFY_MESSAGE;
+  } else if (url.includes('delegation')) {
+    payload.data = parseDelegationDeeplink(params);
+    payload.type = DeeplinkType.DELEGATION;
   }
   return payload;
+};
+
+const parseDelegationDeeplink = (params: URLSearchParams) => {
+  const delegator = params.get('delegator');
+  const fee = params.get('fee');
+  return {
+    delegator,
+    fee,
+  };
 };
 
 const parseVerifyMessageDeeplink = (params: URLSearchParams) => {
@@ -57,3 +47,34 @@ const parseVerifyMessageDeeplink = (params: URLSearchParams) => {
     scalar,
   };
 };
+
+function useDeeplinkHandler() {
+  const [_, setDeeplinkState] = useRecoilState(deeplinkState);
+  const [deeplinkData, setDeeplinkData] = useState<IMessageToVerify | null>(null);
+
+  useEffect(() => {
+    const handleDeeplink = (event: any, url: string) => {
+      alert(url);
+      console.log('🚀 ~ handleDeeplink ~ url:', url);
+      const payload = parseDeeplink(url);
+      setDeeplinkState(payload);
+      if (payload.type === DeeplinkType.VERIFY_MESSAGE) {
+        setDeeplinkData(payload.data as IMessageToVerify);
+      }
+    };
+
+    if (window.deeplink) {
+      window.deeplink.onDeeplink(handleDeeplink);
+    }
+
+    return () => {
+      if (window.deeplink) {
+        window.deeplink.off('deeplink', handleDeeplink);
+      }
+    };
+  }, [setDeeplinkState]);
+
+  return {deeplinkData};
+}
+
+export default useDeeplinkHandler;
