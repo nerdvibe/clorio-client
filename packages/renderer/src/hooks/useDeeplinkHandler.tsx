@@ -8,6 +8,7 @@ enum DeeplinkType {
   NULL = '',
   VERIFY_MESSAGE = 'verify-message',
   DELEGATION = 'delegation',
+  SEND_TX = 'sendtx',
 }
 
 const parseDeeplink = (url: string) => {
@@ -22,6 +23,9 @@ const parseDeeplink = (url: string) => {
   } else if (url.includes('delegation')) {
     payload.data = parseDelegationDeeplink(params);
     payload.type = DeeplinkType.DELEGATION;
+  } else if (url.includes('sendtx')) {
+    payload.data = parseSendTxDeeplink(params);
+    payload.type = DeeplinkType.SEND_TX;
   }
   return payload;
 };
@@ -45,6 +49,19 @@ const parseVerifyMessageDeeplink = (params: URLSearchParams) => {
     message,
     field,
     scalar,
+  };
+};
+
+const parseSendTxDeeplink = (params: URLSearchParams) => {
+  const to = params.get('to');
+  const amount = params.get('amount');
+  const fee = params.get('fee');
+  const memo = params.get('memo');
+  return {
+    to,
+    amount,
+    fee,
+    memo,
   };
 };
 

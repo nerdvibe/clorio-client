@@ -47,7 +47,7 @@ import {useWallet} from '/@/contexts/WalletContext';
 import {signTransaction} from '/@/tools/utils';
 import {IBalanceQueryResult} from '/@/components/balance/BalanceTypes';
 import {useRecoilState, useRecoilValue} from 'recoil';
-import {walletState} from '/@/store';
+import {deeplinkState, walletState} from '/@/store';
 
 interface IProps {
   sessionData: IWalletData;
@@ -109,6 +109,14 @@ function SendTX(props: IProps) {
       }, 1000);
     },
   });
+
+  const deeplinkData = useRecoilValue(deeplinkState);
+
+  useEffect(() => {
+    if (deeplinkData.type === 'sendtx') {
+      // TODO: Implement this
+    }
+  }, [deeplinkData]);
 
   /**
    * Listen for ledger action
