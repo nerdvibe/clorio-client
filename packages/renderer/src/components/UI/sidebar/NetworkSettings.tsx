@@ -6,6 +6,7 @@ import Button from '../Button';
 import {useNetworkSettingsContext} from '/@/contexts/NetworkContext';
 import {useNavigate} from 'react-router-dom';
 import BackupWallet from '../modals/BackupWallet';
+import AddressBook from '../modals/AddressBook';
 import {INetworkData} from '/@/types';
 import {getPassphrase} from '/@/tools';
 import {useRecoilState} from 'recoil';
@@ -31,8 +32,10 @@ export default function NetworkSettings({
    * Show private key backup modal
    */
   const toggleBackupModal = () => setShowBackupModal(!showBackupModal);
+  const toggleAddressBookModal = () => setShowAddressBookModal(!showAddressBookModal);
 
   const [showBackupModal, setShowBackupModal] = useState(false);
+  const [showAddressBookModal, setShowAddressBookModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [storedPassphrase, setStoredPassphrase] = useState('');
   const {settings, saveSettings, availableNetworks} = useNetworkSettingsContext();
@@ -99,6 +102,16 @@ export default function NetworkSettings({
               <label className="text-start">Connected zkapps</label>
               <ConnectedZkapps />
             </div>
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-row gap-4 justify-between">
+                <label className="text-start">Address book</label>
+                <Button
+                  onClick={toggleAddressBookModal}
+                  text="Show"
+                  className="link-button custom-delegate-button purple-text align-end  no-padding"
+                />
+              </div>
+            </div>
             {!hideBackup && storedPassphrase && (
               <div className="flex flex-col gap-2">
                 <div className="flex flex-row gap-4 justify-between">
@@ -157,6 +170,13 @@ export default function NetworkSettings({
         </div>
         <ModalContainer show={showBackupModal}>
           <BackupWallet closeModal={toggleBackupModal} />
+        </ModalContainer>
+        <ModalContainer
+          show={showAddressBookModal}
+          close={toggleAddressBookModal}
+          closeOnBackgroundClick
+        >
+          <AddressBook />
         </ModalContainer>
       </ModalContainer>
     </>

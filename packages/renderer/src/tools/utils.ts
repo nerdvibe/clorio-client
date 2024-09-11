@@ -349,3 +349,57 @@ export async function signTransaction(privateKey: string, params: unknown) {
   }
   return signResult;
 }
+
+export const saveNewAddress = (address: string, alias: string) => {
+  try {
+    const addresses = localStorage.getItem('addresses');
+    if (addresses) {
+      const addressesArray = JSON.parse(addresses);
+      const existingAddress = addressesArray.find((item: any) => item.address === address);
+      if (existingAddress) {
+        existingAddress.alias = alias;
+      } else {
+        addressesArray.push({address, alias});
+      }
+      localStorage.setItem('addresses', JSON.stringify(addressesArray));
+    } else {
+      localStorage.setItem('addresses', JSON.stringify([{address, alias}]));
+    }
+  } catch (error) {
+    console.error('Error saving new address:', error);
+  }
+};
+
+export const getAddresses = () => {
+  try {
+    const addresses = localStorage.getItem('addresses');
+    if (addresses) {
+      return JSON.parse(addresses);
+    }
+    return [];
+  } catch (error) {
+    console.error('Error getting addresses:', error);
+    return [];
+  }
+};
+
+export const removeAddress = (address: string) => {
+  try {
+    const addresses = localStorage.getItem('addresses');
+    if (addresses) {
+      const addressesArray = JSON.parse(addresses);
+      const newAddresses = addressesArray.filter((item: any) => item.address !== address);
+      localStorage.setItem('addresses', JSON.stringify(newAddresses));
+    }
+  } catch (error) {
+    console.error('Error removing address:', error);
+  }
+};
+
+export const clearAllAddresses = () => {
+  try {
+    localStorage.removeItem('addresses');
+  } catch (error) {
+    console.error('Error clearing addresses:', error);
+  }
+};
