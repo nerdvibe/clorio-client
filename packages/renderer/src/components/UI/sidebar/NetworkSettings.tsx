@@ -176,7 +176,7 @@ export default function NetworkSettings({
           close={toggleAddressBookModal}
           closeOnBackgroundClick
         >
-          <AddressBook />
+          <AddressBook editable />
         </ModalContainer>
       </ModalContainer>
     </>

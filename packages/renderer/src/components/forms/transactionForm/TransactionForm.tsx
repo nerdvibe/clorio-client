@@ -9,6 +9,8 @@ import {checkFieldsAndProceed} from './TransactionFormHelper';
 import type {IBalanceData} from '../../../contexts/balance/BalanceTypes';
 import Big from 'big.js';
 import {ArrowRight} from 'react-feather';
+import {ModalContainer} from '../../UI/modals';
+import AddressBook from '../../UI/modals/AddressBook';
 
 interface IProps {
   transactionData: ITransactionData;
@@ -29,6 +31,9 @@ const TransactionForm = ({
 }: IProps) => {
   const [amount, setAmount] = useState<number | string>(toLongMINA(transactionData.amount));
   const [fee, setFee] = useState<number | string>(toLongMINA(transactionData.fee));
+  const [showAddressBookModal, setShowAddressBookModal] = useState(false);
+
+  const toggleAddressBookModal = () => setShowAddressBookModal(!showAddressBookModal);
 
   /**
    * If a fee button has been selected (average or fast) or a fee has been entered from the input
@@ -119,7 +124,14 @@ const TransactionForm = ({
   return (
     <div className="mx-auto w-75">
       <div className="my-5">
-        <h3>Recipient</h3>
+        <div className="flex flex-row justify-between">
+          <h3>Recipient</h3>
+          <Button
+            className="link-button custom-delegate-button purple-text align-end  no-padding"
+            text="Address book"
+            onClick={toggleAddressBookModal}
+          />
+        </div>
         <Input
           value={transactionData.receiverAddress}
           placeholder="Enter address "
@@ -195,6 +207,19 @@ const TransactionForm = ({
           />
         </div>
       </div>
+      <ModalContainer
+        show={showAddressBookModal}
+        close={toggleAddressBookModal}
+        closeOnBackgroundClick
+      >
+        <AddressBook
+          selectable
+          onSelect={address => {
+            addressHandler(address);
+            toggleAddressBookModal();
+          }}
+        />
+      </ModalContainer>
     </div>
   );
 };
