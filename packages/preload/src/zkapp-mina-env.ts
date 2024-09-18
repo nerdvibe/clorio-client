@@ -88,8 +88,8 @@ const zkappIntegration = {
   },
   requestNetwork: () => sendIpcRequest('get-network-config', 'set-network-config', null),
   addChain: (data: AddChainArgs) => sendIpcRequest('add-chain', 'added-chain', data),
-  switchChain: ({chainId}: {chainId: string}) =>
-    sendIpcRequest('switch-chain', 'switched-chain', chainId),
+  switchChain: ({networkID, chainId}: {networkID: string; chainId: string}) =>
+    sendIpcRequest('switch-chain', 'switched-chain', networkID || chainId),
   getAccounts: () => sendIpcRequest('get-accounts', 'set-accounts'),
   requestAccounts: () => sendIpcRequest('get-address', 'set-address'),
   sendTransaction: (data: any) => sendIpcRequest('sign-tx', 'signed-tx', data),
