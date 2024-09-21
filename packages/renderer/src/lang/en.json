@@ -1,1 +1,74 @@
-{}
+{
+  "terms_and_conditions": {
+    "welcome_message": "👋 Welcome to Clorio Wallet",
+    "terms_paragraph_1": "Welcome to ~Clorio, your gateway to the Mina Protocol currency. It's essential to recognize that, when using this service, you become the sole custodian of your private keys. With this authority comes significant responsibility – the duty to safeguard your keys diligently. Under no circumstances should you ever disclose your private key to anyone. For enhanced security, we strongly recommend using a hardware wallet.",
+    "terms_paragraph_2": "By choosing to utilize ~Clorio, you acknowledge that you are assuming full responsibility for any potential losses. Please note that our wallet is open source. We encourage you to thoroughly review the source code before employing this software and even consider running your infrastructure. Your feedback is invaluable – kindly report any issues you encounter on ",
+    "terms_paragraph_3": "When you opt for the ~Clorio Wallet, you are also agreeing to our ",
+    "terms_paragraph_4": ". It is crucial to understand that no party can be held liable for any software bugs or security concerns that may arise.Your use of this service implies your acceptance of these terms and your commitment to exercising due diligence in safeguarding your assets.",
+    "link1": "WeStake.Club's discord",
+    "link2": "terms and conditions",
+    "agree_button": "I agree"
+  },
+  "waiting_ledger": {
+    "confirm_transaction": "Please confirm transaction",
+    "waiting_message": "Waiting for your hardware wallet to confirm the transaction",
+    "time_notice": "This could take up to 3 minutes.",
+    "cancel_button": "Cancel"
+  },
+  "private_key_modal": {
+    "password_required": "Password required",
+    "passphrase_or_private_key": "Passphrase or Private key",
+    "description": "To confirm the transaction insert the passphrase or private key",
+    "placeholder": "Insert your Passphrase or Private key",
+    "cancel_button": "Cancel",
+    "send_button": "Send"
+  },
+  "delegation_fee": {
+    "title": "Delegation Fee",
+    "description": "Please enter the delegation fee details.",
+    "submit_button": "Submit",
+    "cancel_button": "Cancel",
+    "error_message": "Invalid fee details. Please try again."
+  },
+  "custom_nonce": {
+    "insert_nonce": "Insert nonce",
+    "fetch_nonce_error": "We are not able to fetch the nonce from the blockchain.",
+    "insert_nonce_manually": "Please insert the nonce manually, which can be found on the explorer by clicking",
+    "here": "here",
+    "insert_zero_if_none": "If the nonce is \"none\" insert 0.",
+    "proceed": "Proceed"
+  },
+  "confirm_custom_delegation": {
+    "custom_delegation": "Custom delegation",
+    "delegate_to_someone": "Delegate to someone that is not in the list",
+    "public_key": "Public key",
+    "insert_public_key": "Insert public key",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "confirm_transaction": {
+    "title": "Confirm Transaction",
+    "description": "Please review the details of your transaction before confirming.",
+    "amount_label": "Amount",
+    "recipient_label": "Recipient",
+    "confirm_button": "Confirm",
+    "cancel_button": "Cancel"
+  },
+  "confirm_ledger_transaction": {
+    "create_new_transaction": "Create new transaction",
+    "send_amount": "You are about to send",
+    "with_fee": "with a fee of",
+    "to_address": "to",
+    "with_memo": "with memo",
+    "check_hardware_wallet": "Check your hardware wallet to proceed"
+  },
+  "confirm_delegation": {
+    "confirm_delegation": "Confirm Delegation",
+    "are_you_sure_you_want_to_delegate_this_stake_to": "Are you sure you want to delegate this stake to",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "broadcast_translation": {
+    "we_are_broadcasting_your_transaction_to_the_network": "We are broadcasting your transaction to the network"
+  }
+}

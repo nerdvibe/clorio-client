@@ -3,10 +3,12 @@ import {Check} from 'react-feather';
 import Logo from '../logo/Logo';
 import {ModalContainer} from './ModalContainer';
 import {useNavigate} from 'react-router-dom';
+import {useTranslation} from 'react-i18next';
 
 export const TermsAndConditions = () => {
   const hasAcceptedTC = localStorage.getItem('terms-and-conditions');
   const navigate = useNavigate();
+  const {t} = useTranslation();
 
   /**
    * Store Terms and Conditions read flag
@@ -27,40 +29,28 @@ export const TermsAndConditions = () => {
         <hr />
         <div className="terms">
           {' '}
+          <p>{t('terms_and_conditions.terms_paragraph_1')}</p>
           <p>
-            Welcome to ~Clorio, your gateway to the Mina Protocol currency. It&apos;s essential to
-            recognize that, when using this service, you become the sole custodian of your private
-            keys. With this authority comes significant responsibility – the duty to safeguard your
-            keys diligently. Under no circumstances should you ever disclose your private key to
-            anyone. For enhanced security, we strongly recommend using a hardware wallet.
-          </p>
-          <p>
-            By choosing to utilize ~Clorio, you acknowledge that you are assuming full
-            responsibility for any potential losses. Please note that our wallet is open source. We
-            encourage you to thoroughly review the source code before employing this software and
-            even consider running your infrastructure. Your feedback is invaluable – kindly report
-            any issues you encounter on{' '}
+            {t('terms_and_conditions.terms_paragraph_2')}
             <a
               href="https://discord.gg/4GnkRqwsDK"
               target="_blank"
               rel="noreferrer"
             >
-              WeStake.Club&apos;s discord
+              {t('terms_and_conditions.link1')}
             </a>
             .
           </p>
           <p>
-            When you opt for the ~Clorio Wallet, you are also agreeing to our{' '} 
+            {t('terms_and_conditions.terms_paragraph_3')}
             <a
               href="https://docs.clor.io/other/terms-and-conditions"
               target="_blank"
               rel="noreferrer"
             >
-              terms and conditions
+              {t('terms_and_conditions.link2')}
             </a>
-            . It is crucial to understand that no party can be held liable for any software bugs or
-            security concerns that may arise. Your use of this service implies your acceptance of
-            these terms and your commitment to exercising due diligence in safeguarding your assets.
+            {t('terms_and_conditions.terms_paragraph_4')}
           </p>
         </div>
         <div className="v-spacer" />
