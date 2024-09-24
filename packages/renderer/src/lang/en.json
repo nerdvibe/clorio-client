@@ -70,5 +70,42 @@
   },
   "broadcast_translation": {
     "we_are_broadcasting_your_transaction_to_the_network": "We are broadcasting your transaction to the network"
+  },
+  "update_error": {
+    "there_is_a_new_release": "There is a new release 🎉 v",
+    "click_here": "Click here",
+    "to_download_the_update": "to download the update."
+  },
+  "password_decrypt": {
+    "insert_your_password_to_proceed": "Insert your password to proceed",
+    "wrong_password": "Wrong password",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "connected_zkapps": {
+    "show_button_text": "Show",
+    "modal_title": "Connected Zkapps",
+    "no_connected_zkapps": "There are no zkapps connected"
+  },
+  "account_selection": {
+    "create_new_wallet": "Create new wallet",
+    "select_an_avatar": "Select an avatar",
+    "go_back": "Go back",
+    "next": "Next"
+  },
+  "pdf_encryption": {
+    "document_encryption": "Document encryption",
+    "set_password": "Please set a password to encrypt the document",
+    "insert_password": "Insert a password",
+    "cancel": "Cancel",
+    "save": "Save",
+    "download_success": "Downloading Clorio Paper Wallet",
+    "password_empty_error": "Password cannot be empty"
+  },
+  "validation_step": {
+    "verify_private_key": "Verify your Private key",
+    "private_key_placeholder": "Private key",
+    "cancel": "Cancel",
+    "continue": "Continue"
   }
 }

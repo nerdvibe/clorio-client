@@ -4,8 +4,10 @@ import {ModalContainer} from '../modals';
 import {useState} from 'react';
 import Button from '../Button';
 import {Trash} from 'react-feather';
+import {useTranslation} from 'react-i18next';
 
 export const ConnectedZkapps = () => {
+  const {t} = useTranslation();
   const [showModal, setShowModal] = useState(false);
   const [connectedSites, setConnectedSites] = useRecoilState(connectedSitesState);
   const onClose = (site: string) => {
@@ -18,7 +20,7 @@ export const ConnectedZkapps = () => {
   return (
     <>
       <Button
-        text="Show"
+        text={t('connected_zkapps.show_button_text')}
         onClick={() => setShowModal(true)}
         className="link-button custom-delegate-button purple-text align-end  no-padding"
       />
@@ -27,7 +29,7 @@ export const ConnectedZkapps = () => {
         close={() => setShowModal(false)}
       >
         <div className="connected-zkapps">
-          <h1>Connected Zkapps</h1>
+          <h1>{t('connected_zkapps.modal_title')}</h1>
           <hr />
           <div className="connected-sites">
             {connectedSites.sites.length ? (
@@ -51,7 +53,7 @@ export const ConnectedZkapps = () => {
                 </>
               ))
             ) : (
-              <p className="pt-3">There are no zkapps connected</p>
+              <p className="pt-3">{t('connected_zkapps.no_connected_zkapps')}</p>
             )}
           </div>
         </div>
