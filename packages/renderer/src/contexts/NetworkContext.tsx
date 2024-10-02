@@ -31,3 +31,12 @@ export function useNetworkSettingsContext() {
   }
   return context;
 }
+
+export function formatNetworks(data) {
+  return Object.values(data).map(network => {
+    return {
+      ...network,
+      networkID: `mina:${network.network}`,
+    };
+  });
+}

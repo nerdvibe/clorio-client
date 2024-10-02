@@ -5,7 +5,7 @@ import {LedgerContextProvider} from './contexts/ledger/LedgerContext';
 import {apolloClient} from './graphql/api';
 import 'react-loading-skeleton/dist/skeleton.css';
 import './App.scss';
-import {useNetworkSettingsContext} from './contexts/NetworkContext';
+import {formatNetworks, useNetworkSettingsContext} from './contexts/NetworkContext';
 import {BalanceContextProvider} from './contexts/balance/BalanceContext';
 import {useEffect} from 'react';
 import {WalletProvider} from './contexts/WalletContext';
@@ -44,9 +44,10 @@ function App() {
       .then(response => response.json())
       .then(data => data);
     if (data) {
-      const newAvailableNetworks = Object.values(data).map(
+      const formattedNetworks = formatNetworks(data);
+      const newAvailableNetworks = Object.values(formattedNetworks).map(
         ({network, name}: {network: string; name: string}) => {
-          return {chainId: network, name: name};
+          return {chainId: network, name: name, networkID: `mina:${network}`};
         },
       );
       setNetworkState(prev => ({
@@ -54,22 +55,23 @@ function App() {
         availableNetworks: newAvailableNetworks,
         showChangeNetworkModal: false,
       }));
-      setAvailableNetworks(data);
+      setAvailableNetworks(formattedNetworks);
 
       if (!selectedNetwork) {
-        const defaultNetwork = selectDefaultNetwork(Object.keys(data));
+        const defaultNetwork = selectDefaultNetwork(Object.keys(formattedNetworks));
         setNetworkState(prev => ({
           ...prev,
           selectedNetwork: {
-            chainId: data[defaultNetwork].network,
-            name: data[defaultNetwork].name,
+            chainId: formattedNetworks[defaultNetwork].network,
+            name: formattedNetworks[defaultNetwork].name,
+            networkID: formattedNetworks[defaultNetwork].networkID,
           },
         }));
       }
       if (!hasInitialSettings) {
-        const network = selectDefaultNetwork(Object.keys(data));
-        saveSettings(data[network]);
-        setNetworkState(prev => ({...prev, selectedNode: data[network]}));
+        const network = selectDefaultNetwork(Object.keys(formattedNetworks));
+        saveSettings(formattedNetworks[network]);
+        setNetworkState(prev => ({...prev, selectedNode: formattedNetworks[network]}));
       }
     }
   };
