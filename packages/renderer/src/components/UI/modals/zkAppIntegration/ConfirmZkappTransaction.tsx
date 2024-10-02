@@ -1,8 +1,7 @@
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {ModalContainer} from '..';
 import {walletState, zkappState} from '../../../../store';
-import {useEffect, useRef, useState} from 'react';
-import Truncate from 'react-truncate-inside/es';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import Button from '../../Button';
 import {getAccountAddress, sendResponse} from '../../../../tools/mina-zkapp-bridge';
 import {useLazyQuery} from '@apollo/client';
@@ -10,9 +9,10 @@ import {INonceQueryResult} from '../../../../pages/sendTX/SendTXHelper';
 import {GET_NONCE} from '../../../../graphql/query';
 import PasswordDecrypt from '../../../PasswordDecrypt';
 import {toast} from 'react-toastify';
-import {client} from '/@/tools';
+import {client, toMINA, toNanoMINA} from '/@/tools';
 import {mnemonicToPrivateKey} from '../../../../../../preload/src/bip';
 import {ERROR_CODES} from '/@/tools/zkapp';
+import TransactionData from './TransactionData';
 
 export default function ConfirmZkappTransaction() {
   const wallet = useRecoilValue(walletState);
@@ -71,23 +71,35 @@ export default function ConfirmZkappTransaction() {
       privateKey = (await mnemonicToPrivateKey(mnemonic, wallet.accountNumber)) || mnemonic;
     }
 
-    // const address = getAccountAddress();
-    // await fetchNonce({variables: {publicKey: address[0]}});
     if (nonceError) {
       console.error('Error in send-payment:', nonceError);
       sendResponse('error', {error: nonceError});
       return;
     }
-    // const nonce = nonceData?.accountByKey?.usableNonce;
-    const feePayer = {
-      ...transactionData?.transaction?.feePayer?.body,
-      publicKey: undefined,
-      feePayer: transactionData?.from,
-      fee: 1,
-    };
-    const payload = {zkappCommand: transactionData?.transaction, feePayer};
-    await (await client()).signZkappCommand(payload, privateKey);
-    toast.success('Transaction signed successfully');
+
+    let signResult;
+    try {
+      const signClient = await client();
+      let signBody: ZkappCommand = {};
+      const sendFee = toNanoMINA(transactionData.feePayer.fee || transactionData.fee);
+      signBody = {
+        zkappCommand: transactionData.transaction,
+        feePayer: {
+          feePayer: transactionData.from,
+          fee: transactionData.feePayer.fee || sendFee,
+          nonce: `${transactionData?.nonce || nonceData?.accountByKey?.usableNonce || 0}`,
+          memo: transactionData.feePayer.memo || '',
+        },
+      };
+      signResult = await signClient.signTransaction(signBody, privateKey);
+      sendResponse('clorio-signed-tx', {signedData: JSON.stringify(signResult.data)});
+      toast.success('Transaction signed successfully');
+    } catch (error) {
+      console.error('Error in signTransaction:', error);
+      sendResponse('error', {error});
+      return;
+    }
+
     setZkappState(state => ({
       ...state,
       isPendingConfirmation: true,
@@ -107,6 +119,45 @@ export default function ConfirmZkappTransaction() {
     setShowPassword(false);
   };
 
+  const onFeeEdit = (fee: number) => {
+    setZkappState(state => ({
+      ...state,
+      transactionData: {
+        ...state.transactionData,
+        fee,
+        feePayer: {
+          ...state.transactionData.feePayer,
+          fee: toNanoMINA(fee),
+        },
+      },
+    }));
+  };
+
+  const onNonceEdit = (nonce: number) => {
+    setZkappState(state => ({
+      ...state,
+      transactionData: {
+        ...state.transactionData,
+        nonce,
+      },
+    }));
+  };
+
+  const formatData = useCallback(
+    data => {
+      if (!data) return {};
+      const {feePayer, transaction, fee, from} = data;
+      return {
+        from,
+        fee: feePayer?.fee ? toMINA(feePayer?.fee) : fee,
+        to: transaction?.accountUpdates?.[0]?.body?.publicKey,
+        memo: JSON.stringify(shortTransactionData(), null, 2),
+        nonce: nonceData?.accountByKey?.usableNonce,
+      };
+    },
+    [transactionData],
+  );
+
   return (
     <ModalContainer
       show={showTransactionConfirmation}
@@ -124,47 +175,13 @@ export default function ConfirmZkappTransaction() {
           onSuccess={onConfirm}
         />
       ) : (
-        <div className="flex flex-col gap-4">
-          <div className="flex gap-4 confirm-transaction-data">
-            {transactionData?.from && (
-              <div ref={fromRef}>
-                <h4>From</h4>
-                <Truncate
-                  text={transactionData?.from || ''}
-                  width={fromTextWidth || 250}
-                />
-              </div>
-            )}
-            {transactionData?.to && (
-              <div>
-                <h4>To</h4>
-                <Truncate
-                  text={transactionData?.to || ''}
-                  width={fromTextWidth || 250}
-                />
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col justify-start">
-            <div className="flex w-100">
-              <div className="w-100">
-                <h4>Amount</h4>
-                <p className='data-field'>{transactionData.amount} MINA</p>
-              </div>
-              <div className="w-100">
-                <h4>Transaction fee</h4>
-                <p className='data-field'>{transactionData.fee || 0.0101} MINA</p>
-              </div>
-            </div>
-            {isZkappCommand && (
-              <div className="flex flex-col w-100">
-                <h4>Content</h4>
-                <pre className="w-100 overflow-x-auto text-start message-box">
-                  {JSON.stringify(shortTransactionData(), null, 2)}
-                </pre>
-              </div>
-            )}
-          </div>
+        <>
+          <TransactionData
+            transactionData={formatData(transactionData)}
+            onFeeEdit={onFeeEdit}
+            onNonceEdit={onNonceEdit}
+            isZkappCommand
+          />
           <div className="flex mt-2 gap-4 confirm-transaction-data sm-flex-reverse">
             <Button
               className="w-100"
@@ -180,7 +197,7 @@ export default function ConfirmZkappTransaction() {
               onClick={() => setShowPassword(true)}
             />
           </div>
-        </div>
+        </>
       )}
     </ModalContainer>
   );
