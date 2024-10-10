@@ -7,6 +7,7 @@ export const initialWalletState = {
   ledgerAccount: 0,
   mnemonic: true,
   accountNumber: 0,
+  isAuthenticated: false,
 };
 
 export const walletState = atom({

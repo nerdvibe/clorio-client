@@ -1,4 +1,4 @@
-import { app, dialog, BrowserWindow } from 'electron';
+import {app, dialog, BrowserWindow} from 'electron';
 import './security-restrictions';
 import {restoreOrCreateWindow} from '/@/mainWindow';
 import {platform} from 'node:process';
@@ -13,15 +13,29 @@ if (!isSingleInstance) {
   process.exit(0);
 }
 
-if (process.defaultApp) {
-  if (process.argv.length >= 2) {
-    app.setAsDefaultProtocolClient('clorio', process.execPath, [path.resolve(process.argv[1])]);
+if (process.platform === 'win32') {
+  const deepLink = process.argv.find(arg => arg.startsWith('clorio-wallet://'));
+  if (deepLink) {
+    console.log('Windows deep link URL:', deepLink);
   }
-} else {
-  app.setAsDefaultProtocolClient('electron-fiddle');
 }
 
-app.on('second-instance', restoreOrCreateWindow);
+if (process.defaultApp) {
+  if (process.argv.length >= 2) {
+    app.setAsDefaultProtocolClient('clorio-wallet', process.execPath, [
+      path.resolve(process.argv[1]),
+    ]);
+  }
+} else {
+  app.setAsDefaultProtocolClient('clorio-wallet');
+}
+// For macOS: Handle the URL if the app is already open
+app.on('second-instance', (event, commandLine) => {
+  const deepLink = commandLine.find(arg => arg.startsWith('clorio-wallet://'));
+  if (deepLink) {
+    console.log('Second instance deep link URL:', deepLink);
+  }
+});
 
 /**
  * Disable Hardware Acceleration to save more system resources.

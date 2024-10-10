@@ -1,18 +1,20 @@
-import {useEffect, useState} from 'react';
-import {useRecoilState} from 'recoil';
+import {useEffect, useMemo} from 'react';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import {deeplinkState} from '../store/deeplink';
 import {URLSearchParams} from 'url';
-import {IMessageToVerify} from '../types';
+import {useNavigate} from 'react-router-dom';
+import {configState} from '../store';
+import {toast} from 'react-toastify';
 
-enum DeeplinkType {
+export enum DeeplinkType {
   NULL = '',
   VERIFY_MESSAGE = 'verify-message',
-  DELEGATION = 'delegation',
-  SEND_TX = 'sendtx',
+  DELEGATION = 'stake',
+  SEND_TX = 'send-tx',
 }
 
 const parseDeeplink = (url: string) => {
-  const params = new URLSearchParams(url);
+  const params = new URLSearchParams(url.split('?')[1]);
   const payload = {
     type: DeeplinkType.NULL,
     data: {},
@@ -26,12 +28,16 @@ const parseDeeplink = (url: string) => {
   } else if (url.includes('sendtx')) {
     payload.data = parseSendTxDeeplink(params);
     payload.type = DeeplinkType.SEND_TX;
+  } else {
+    toast.error('Invalid deeplink');
+    throw new Error('Invalid deeplink');
   }
+  toast.info('Deeplink detected');
   return payload;
 };
 
 const parseDelegationDeeplink = (params: URLSearchParams) => {
-  const delegator = params.get('delegator');
+  const delegator = params.get('to');
   const fee = params.get('fee');
   return {
     delegator,
@@ -53,31 +59,35 @@ const parseVerifyMessageDeeplink = (params: URLSearchParams) => {
 };
 
 const parseSendTxDeeplink = (params: URLSearchParams) => {
-  const to = params.get('to');
-  const amount = params.get('amount');
-  const fee = params.get('fee');
-  const memo = params.get('memo');
-  return {
-    to,
-    amount,
-    fee,
-    memo,
+  const returningObject = {
+    to: '',
+    amount: 0,
+    fee: 0,
+    memo: '',
   };
+  for (const param of params.keys()) {
+    returningObject[param] = params.get(param);
+  }
+
+  if (!returningObject.to || !returningObject.amount || !returningObject.fee) {
+    throw new Error('Missing required parameters');
+  }
+
+  return returningObject;
 };
 
 function useDeeplinkHandler() {
-  const [_, setDeeplinkState] = useRecoilState(deeplinkState);
-  const [deeplinkData, setDeeplinkData] = useState<IMessageToVerify | null>(null);
+  const [deeplinkData, setDeeplinkState] = useRecoilState(deeplinkState);
+  const navigate = useNavigate();
+  const {isAuthenticated, isLocked} = useRecoilValue(configState);
+
+  const isLoggedIn = useMemo(() => isAuthenticated && !isLocked, [isAuthenticated, isLocked]);
 
   useEffect(() => {
-    const handleDeeplink = (event: any, url: string) => {
-      alert(url);
-      console.log('🚀 ~ handleDeeplink ~ url:', url);
+    const handleDeeplink = (url: string) => {
       const payload = parseDeeplink(url);
       setDeeplinkState(payload);
-      if (payload.type === DeeplinkType.VERIFY_MESSAGE) {
-        setDeeplinkData(payload.data as IMessageToVerify);
-      }
+      changeRoute();
     };
 
     if (window.deeplink) {
@@ -90,6 +100,19 @@ function useDeeplinkHandler() {
       }
     };
   }, [setDeeplinkState]);
+
+  const changeRoute = () => {
+    const {type} = deeplinkData;
+    if (isLoggedIn && type) {
+      setTimeout(() => {
+        navigate(`/${type}`);
+      }, 1000);
+    }
+  };
+
+  useEffect(() => {
+    changeRoute();
+  }, [isAuthenticated, isLocked, deeplinkData]);
 
   return {deeplinkData};
 }
