@@ -16,7 +16,7 @@ module.exports = async function () {
   return {
     protocols: {
       name: "Clorio Wallet",
-      schemes: ["clorio-wallet"]
+      schemes: ["mina"]
     },
     directories: {
       output: 'dist',

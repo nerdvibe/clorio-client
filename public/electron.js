@@ -75,7 +75,7 @@ function createWindow() {
 
 app.on('open-url', function (event, url) {
   event.preventDefault();
-  if (url.startsWith('clorio-wallet://')) {
+  if (url.startsWith('mina://')) {
     if (mainWindow) {
       mainWindow.webContents.send('deeplink', url);
     }
@@ -84,7 +84,7 @@ app.on('open-url', function (event, url) {
   }
 });
 
-app.setAsDefaultProtocolClient('clorio-wallet');
+app.setAsDefaultProtocolClient('mina');
 
 app.on('ready', createWindow);
 

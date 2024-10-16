@@ -5,7 +5,7 @@ import HelpHint from '../../UI/HelpHint';
 import Input from '../../UI/input/Input';
 import type {IMessageToVerify} from '../../../types/MessageToVerify';
 import {CheckCircle} from 'react-feather';
-import {useRecoilValue} from 'recoil';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {deeplinkState} from '/@/store';
 import {DeeplinkType} from '/@/hooks/useDeeplinkHandler';
 
@@ -20,16 +20,17 @@ const VerifyForm = ({verifyMessage, initialData}: IProps) => {
   const [field, setField] = useState<string>(initialData?.field || '');
   const [scalar, setScalar] = useState<string>(initialData?.scalar || '');
   const deeplinkData = useRecoilValue(deeplinkState);
+  const setDeeplinkData = useSetRecoilState(deeplinkState);
 
   useEffect(() => {
-    if (deeplinkData.type) {
-      const {data, type} = deeplinkData;
-      if (type === DeeplinkType.VERIFY_MESSAGE && !!data) {
-        const {message, address, field, scalar} = data;
+    if (deeplinkData.type === DeeplinkType.VERIFY_MESSAGE && deeplinkData.data) {
+      const {message, address, field, scalar} = deeplinkData.data;
+      if (message && address && field && scalar) {
         setMessage(message);
         setAddress(address);
         setField(field);
         setScalar(scalar);
+        setDeeplinkData({type: '', data: {}});
       }
     }
   }, [deeplinkData]);

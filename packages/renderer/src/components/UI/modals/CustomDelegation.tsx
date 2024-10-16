@@ -3,7 +3,7 @@ import {Row, Col} from 'react-bootstrap';
 import {ArrowLeft, ArrowRight} from 'react-feather';
 import Button from '../Button';
 import Input from '../input/Input';
-import {useRecoilValue} from 'recoil';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {deeplinkState} from '/@/store';
 
 interface IProps {
@@ -14,10 +14,12 @@ interface IProps {
 export const ConfirmCustomDelegation = ({closeModal, confirmCustomDelegate}: IProps) => {
   const [customDelegate, setCustomDelegate] = useState<string>('');
   const deeplinkData = useRecoilValue(deeplinkState);
+  const setDeeplinkData = useSetRecoilState(deeplinkState);
   const isDeeplink = !!deeplinkData?.data?.delegator;
   useEffect(() => {
     if (deeplinkData?.data?.delegator) {
       setCustomDelegate(deeplinkData.data.delegator);
+      setDeeplinkData({type: '', data: {}});
     }
   }, [deeplinkData]);
 

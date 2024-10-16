@@ -140,7 +140,7 @@
     ],
     "protocols": [{
       "name": "Clorio Wallet Protocol",
-      "schemes": ["clorio-wallet"]
+      "schemes": ["mina"]
     }],
     "directories": {
       "buildResources": "assets"
