@@ -1,7 +1,8 @@
-import {app} from 'electron';
+import {app, dialog, BrowserWindow} from 'electron';
 import './security-restrictions';
 import {restoreOrCreateWindow} from '/@/mainWindow';
 import {platform} from 'node:process';
+import * as path from 'node:path';
 
 /**
  * Prevent electron from running multiple instances.
@@ -11,7 +12,30 @@ if (!isSingleInstance) {
   app.quit();
   process.exit(0);
 }
-app.on('second-instance', restoreOrCreateWindow);
+
+if (process.platform === 'win32') {
+  const deepLink = process.argv.find(arg => arg.startsWith('mina://'));
+  if (deepLink) {
+    console.log('Windows deep link URL:', deepLink);
+  }
+}
+
+if (process.defaultApp) {
+  if (process.argv.length >= 2) {
+    app.setAsDefaultProtocolClient('mina', process.execPath, [
+      path.resolve(process.argv[1]),
+    ]);
+  }
+} else {
+  app.setAsDefaultProtocolClient('mina');
+}
+// For macOS: Handle the URL if the app is already open
+app.on('second-instance', (event, commandLine) => {
+  const deepLink = commandLine.find(arg => arg.startsWith('mina://'));
+  if (deepLink) {
+    console.log('Second instance deep link URL:', deepLink);
+  }
+});
 
 /**
  * Disable Hardware Acceleration to save more system resources.

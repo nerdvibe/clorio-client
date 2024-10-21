@@ -50,7 +50,8 @@ import {INonceDelegateQueryResult} from './StakeTypes';
 import {IKeypair} from '/@/types';
 import WaitingLedger from '/@/components/UI/modals/WaitingLedger';
 import {useRecoilValue} from 'recoil';
-import {walletState} from '/@/store';
+import {deeplinkState, walletState} from '/@/store';
+import {DeeplinkType} from '/@/hooks/useDeeplinkHandler';
 
 interface IProps {
   sessionData: IWalletData;
@@ -72,7 +73,7 @@ const Stake = ({sessionData}: IProps) => {
   const [sendTransactionFlag, setSendTransactionFlag] = useState<boolean>(false);
   // const {isLedgerEnabled} = useContext<Partial<ILedgerContext>>(LedgerContext);
   const {getBalance, setShouldBalanceUpdate} = useContext<Partial<IBalanceContext>>(BalanceContext);
-  const {address, accountNumber,ledger:isLedgerEnabled} = useRecoilValue(walletState);
+  const {address, accountNumber, ledger: isLedgerEnabled} = useRecoilValue(walletState);
 
   const balance = getBalance && getBalance(address);
   const {
@@ -82,6 +83,7 @@ const Stake = ({sessionData}: IProps) => {
   } = useQuery(GET_VALIDATORS, {variables: {offset}});
   const {data: feeData} = useQuery<IFeeQuery>(GET_AVERAGE_FEE);
   const {data: newsData} = useQuery<IValidatorsNewsQuery>(GET_VALIDATORS_NEWS);
+  const deeplinkData = useRecoilValue(deeplinkState);
   const {
     data: nonceAndDelegateData,
     refetch: nonceAndDelegateRefetch,
@@ -107,6 +109,15 @@ const Stake = ({sessionData}: IProps) => {
     });
   }, []);
 
+  useEffect(() => {
+    if (deeplinkData.type) {
+      const {data, type} = deeplinkData;
+      if (type === DeeplinkType.DELEGATION && !!data) {
+        openCustomDelegateModal();
+        setCustomDelegate(data.delegator);
+      }
+    }
+  }, [deeplinkData]);
   /**
    * If current delegate data arrived from the back-end, set it into the component state
    */
@@ -330,7 +341,10 @@ const Stake = ({sessionData}: IProps) => {
       }
       checkBalance(selectedFee, balance);
       const actualNonce = getNonce();
-      const derivedAccount = await deriveAccount(passphrase?.trim() || privateKey.trim(), accountNumber);
+      const derivedAccount = await deriveAccount(
+        passphrase?.trim() || privateKey.trim(),
+        accountNumber,
+      );
       const keypair = {
         privateKey: derivedAccount.privateKey,
         publicKey: derivedAccount.publicKey,

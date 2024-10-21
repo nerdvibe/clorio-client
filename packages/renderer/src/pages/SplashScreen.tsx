@@ -37,7 +37,13 @@ const SplashScreen = ({toggleLoader}: IProps) => {
         const id = data?.idByPublicKey.id || -1;
         const isUsingMnemonic = privateKey.trim().split(' ').length === 12;
         setPassphrase(isUsingMnemonic);
-        const success = await storeSession(derivedAccount.publicKey, +id, false, 0, isUsingMnemonic);
+        const success = await storeSession(
+          derivedAccount.publicKey,
+          +id,
+          false,
+          0,
+          isUsingMnemonic,
+        );
         updateWallet({
           address: derivedAccount.publicKey,
           id,
@@ -45,6 +51,7 @@ const SplashScreen = ({toggleLoader}: IProps) => {
           ledgerAccount: 0,
           mnemonic: isUsingMnemonic,
           accountNumber: 0,
+          isAuthenticated: true,
         });
         if (success) {
           navigate('/overview');

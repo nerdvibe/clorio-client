@@ -21,12 +21,6 @@ export default function RestoreSession({onLogin}: {onLogin: (privateKey: string)
   const updateWallet = useSetRecoilState(walletState);
   const setConfig = useSetRecoilState(configState);
 
-  useEffect(() => {
-    setConfig(prev => ({
-      ...prev,
-      isLocked: true,
-    }));
-  }, []);
 
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {

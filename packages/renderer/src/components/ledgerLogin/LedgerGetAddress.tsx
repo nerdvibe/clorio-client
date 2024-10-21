@@ -11,7 +11,7 @@ import {ArrowLeft} from 'react-feather';
 import {useNavigate} from 'react-router-dom';
 import {useSetRecoilState} from 'recoil';
 import {configState, walletState} from '/@/store';
-import { getPublicKey } from '/@/tools/ledger/ledger';
+import {getPublicKey} from '/@/tools/ledger/ledger';
 
 interface IProps {
   accountNumber?: number;
@@ -63,6 +63,7 @@ const LedgerGetAddress = ({accountNumber, toggleLoader}: IProps) => {
           isAuthenticated: true,
           isUsingMnemonic: false,
           isLedgerEnabled: true,
+          isLocked: false,
         }));
         navigate('/overview');
       }

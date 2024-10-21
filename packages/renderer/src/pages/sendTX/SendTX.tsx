@@ -37,17 +37,15 @@ import {
   SendTXPageSteps,
 } from './SendTXHelper';
 import type {IFeeQuery, IWalletData, ITransactionData, IKeypair} from '/@/types';
-import type {ILedgerContext} from '/@/contexts/ledger/LedgerTypes';
-import {LedgerContext} from '/@/contexts/ledger/LedgerContext';
 import type {IBalanceContext} from '/@/contexts/balance/BalanceTypes';
 import {BalanceContext} from '/@/contexts/balance/BalanceContext';
 import Stepper from '/@/components/UI/stepper/Stepper';
 import TransactionAuthentication from '/@/components/transactionAuthentication/TransactionAuthentication';
-import {useWallet} from '/@/contexts/WalletContext';
 import {signTransaction} from '/@/tools/utils';
 import {IBalanceQueryResult} from '/@/components/balance/BalanceTypes';
 import {useRecoilState, useRecoilValue} from 'recoil';
-import {walletState} from '/@/store';
+import {deeplinkState, walletState} from '/@/store';
+import {DeeplinkType} from '/@/hooks/useDeeplinkHandler';
 
 interface IProps {
   sessionData: IWalletData;
@@ -109,6 +107,24 @@ function SendTX(props: IProps) {
       }, 1000);
     },
   });
+
+  const deeplinkData = useRecoilValue(deeplinkState);
+
+  useEffect(() => {
+    if (deeplinkData.type) {
+      const {data, type} = deeplinkData;
+      if (type === DeeplinkType.SEND_TX && !!data) {
+        setTransactionData({
+          ...transactionData,
+          amount: toNanoMINA(data.amount),
+          fee: toMINA(data.fee),
+          receiverAddress: data.to,
+          nonce: nonceData?.accountByKey.usableNonce,
+          memo: data.memo || '',
+        });
+      }
+    }
+  }, [deeplinkData]);
 
   /**
    * Listen for ledger action

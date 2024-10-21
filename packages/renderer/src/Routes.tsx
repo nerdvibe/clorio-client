@@ -14,6 +14,7 @@ const ZkApps = lazy(() => import('./pages/ZkApps'));
 import {Routes as AppRoutes, Navigate, Route} from 'react-router-dom';
 import Spinner from './components/UI/Spinner';
 import type {INetworkData, IWalletData} from './types';
+import useDeeplinkHandler from './hooks/useDeeplinkHandler';
 
 interface IRoutesProps {
   sessionData: IWalletData;
@@ -23,6 +24,7 @@ interface IRoutesProps {
 
 const Routes = (props: IRoutesProps) => {
   const isAuthenticated = props.sessionData.address;
+  useDeeplinkHandler();
 
   return (
     <Suspense fallback={<Spinner show={true} />}>

@@ -97,6 +97,7 @@ function Login({toggleLoader}: IProps) {
       ledgerAccount: 0,
       mnemonic: isUsingMnemonic,
       accountNumber: 0,
+      isAuthenticated: true,
     });
     await storeAccounts([{accountId: 0, address: publicKey}]);
     if (success) {
@@ -105,6 +106,7 @@ function Login({toggleLoader}: IProps) {
         isAuthenticated: true,
         isUsingMnemonic,
         isLedgerEnabled: false,
+        isLocked: false,
       }));
       navigate('/overview');
       toggleLoader(false);

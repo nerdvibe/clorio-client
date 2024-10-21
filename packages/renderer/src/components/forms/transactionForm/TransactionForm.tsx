@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Row, Col} from 'react-bootstrap';
 import {toNanoMINA, toLongMINA} from '../../../tools';
 import Button from '../../UI/Button';
@@ -9,6 +9,8 @@ import {checkFieldsAndProceed} from './TransactionFormHelper';
 import type {IBalanceData} from '../../../contexts/balance/BalanceTypes';
 import Big from 'big.js';
 import {ArrowRight} from 'react-feather';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
+import {deeplinkState} from '/@/store';
 
 interface IProps {
   transactionData: ITransactionData;
@@ -29,6 +31,27 @@ const TransactionForm = ({
 }: IProps) => {
   const [amount, setAmount] = useState<number | string>(toLongMINA(transactionData.amount));
   const [fee, setFee] = useState<number | string>(toLongMINA(transactionData.fee));
+  const deeplinkData = useRecoilValue(deeplinkState);
+  const setDeeplinkData = useSetRecoilState(deeplinkState);
+
+  /**
+   * Effect to handle deeplink data.
+   * If deeplink data contains amount and fee, set them in the state.
+   */
+  useEffect(() => {
+    if (deeplinkData?.data?.amount) {
+      setAmount(deeplinkData.data.amount);
+      setData({
+        ...transactionData,
+        amount: toNanoMINA(deeplinkData.data.amount),
+        fee: deeplinkData.data.fee ? toNanoMINA(deeplinkData.data.fee) : transactionData.fee,
+      });
+      if (deeplinkData.data.fee) {
+        setFee(deeplinkData.data.fee);
+      }
+      setDeeplinkData({type: '', data: {}});
+    }
+  }, [deeplinkData, setData, transactionData]);
 
   /**
    * If a fee button has been selected (average or fast) or a fee has been entered from the input
