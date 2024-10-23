@@ -8,6 +8,7 @@ BigInt.prototype['toJSON'] = function () {
 export interface NetConfig {
   chainId: string;
   name: string;
+  networkID: string;
 }
 
 export interface TransactionParams {

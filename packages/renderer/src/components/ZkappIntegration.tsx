@@ -27,7 +27,8 @@ export default function ZkappIntegration() {
   const {address: sender} = wallet;
   const setZkappState = useSetRecoilState(zkappState);
   const config = useRecoilValue(configState);
-  const [{availableNetworks, selectedNetwork, selectedNode}, setNetworkState] = useRecoilState(networkState);
+  const [{availableNetworks, selectedNetwork, selectedNode}, setNetworkState] =
+    useRecoilState(networkState);
 
   useEffect(() => {
     setListeners();
@@ -42,7 +43,7 @@ export default function ZkappIntegration() {
   }, [config, wallet, sites]);
 
   const setListeners = () => {
-    window.ipcBridge.on('clorio-event', async (event, payload) => {
+    window.ipcBridge.on('clorio-event', async (event, payload) => { 
       const {type, data, source, title} = payload;
       if (!checkSource(source)) {
         if (type === 'clorio-get-network-config') {
@@ -147,6 +148,7 @@ export default function ZkappIntegration() {
     const netConfig: NetConfig = {
       chainId: selectedNode?.label,
       name: selectedNetwork?.name,
+      networkID: selectedNetwork?.networkID,
     } as NetConfig;
     sendResponse('clorio-set-network-config', netConfig);
   };
@@ -246,8 +248,8 @@ export default function ZkappIntegration() {
     }));
   };
 
-  const switchChain = async (chainId: string) => {
-    const networksFound = availableNetworks.filter(network => network.chainId === chainId);
+  const switchChain = async (networkID: string) => {
+    const networksFound = availableNetworks.filter(network => network.networkID === networkID);
     if (networksFound.length === 0) {
       toast.error('Network not found');
       sendResponse('error', ERROR_CODES.notSupportChain);
@@ -258,7 +260,7 @@ export default function ZkappIntegration() {
     setNetworkState(prev => ({
       ...prev,
       showChangeNetworkModal: true,
-      switchNetwork: chainId,
+      switchNetwork: networkID,
     }));
   };
 
