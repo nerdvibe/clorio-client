@@ -13,9 +13,10 @@ export const client = async () => {
     JSON.parse(localStorage.getItem('networkSettings'))?.network ||
     import.meta.env.VITE_REACT_APP_NETWORK ||
     'mainnet';
-  return await new Client({
+  const clientToReturn = new Client({
     network,
   });
+  return clientToReturn;
 };
 
 export const toNanoMINA = (amount: number | string) => {
