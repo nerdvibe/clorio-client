@@ -401,6 +401,13 @@ const createEventHandler = (type: string, response: string) => {
   };
 };
 
+app.on('open-url', (event, url) => {
+  event.preventDefault();
+  if (browserWindow) {
+    browserWindow.webContents.send('deeplink', url);
+  }
+});
+
 const eventHandlers = {
   ...createEventHandler('get-network-config', 'set-network-config'),
   ...createEventHandler('get-address', 'set-address'),
