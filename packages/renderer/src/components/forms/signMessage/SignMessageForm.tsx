@@ -12,6 +12,7 @@ import SignMessageLedgerScreen from '../../UI/signMessage/SignMessageLedgerScree
 import {Edit3} from 'react-feather';
 import useSecureStorage from '/@/hooks/useSecureStorage';
 import {useWallet} from '/@/contexts/WalletContext';
+import {useTranslation} from 'react-i18next';
 
 const SignMessageForm = () => {
   const [message, setMessage] = useState<string>('');
@@ -20,6 +21,7 @@ const SignMessageForm = () => {
   const [storedPassphrase, setStoredPassphrase] = useState('');
   const {decryptData} = useSecureStorage();
   const {wallet} = useWallet();
+  const {t} = useTranslation();
 
   const [result, setResult] = useState({
     data: '',
@@ -114,15 +116,16 @@ const SignMessageForm = () => {
       <div className="glass-card p-4">
         <div className="animate__animated animate__fadeIn align-left w-75 mx-auto">
           <h2>
-            Sign message <HelpHint hint={'Cryptographically sign a message with your keypair.'} />
+            {t('sign_message_form.sign_message')}{' '}
+            <HelpHint hint={t('sign_message_form.cryptographically_sign_message')} />
           </h2>
           <div className="divider w-100" />
           <h5>
-            <strong>Message</strong>
+            <strong>{t('sign_message_form.message')}</strong>
           </h5>
           <div
             className="wrap-input1 validate-input"
-            data-validate="Name is required"
+            data-validate={t('sign_message_form.name_is_required')}
           >
             <span className="icon" />
             <textarea
@@ -130,17 +133,17 @@ const SignMessageForm = () => {
               id="message"
               onChange={(e: any) => setMessage(e.currentTarget.value)}
               value={message}
-              placeholder="Message "
+              placeholder={t('sign_message_form.message')}
             />
           </div>
           {storedPassphrase ? (
             <>
               <h5>
-                <strong>Password</strong>
+                <strong>{t('sign_message_form.password')}</strong>
               </h5>
               <div
                 className="wrap-input1 validate-input"
-                data-validate="Name is required"
+                data-validate={t('sign_message_form.name_is_required')}
               >
                 <Input
                   type="text"
@@ -155,17 +158,17 @@ const SignMessageForm = () => {
           ) : (
             <>
               <h5>
-                <strong>Passphrase or Private key</strong>
+                <strong>{t('sign_message_form.passphrase_or_private_key')}</strong>
               </h5>
               <div
                 className="wrap-input1 validate-input"
-                data-validate="Name is required"
+                data-validate={t('sign_message_form.name_is_required')}
               >
                 <span className="icon" />
                 <Input
                   name="privateKey"
                   value={privateKey}
-                  placeholder="Passphrase or Private key"
+                  placeholder={t('sign_message_form.passphrase_or_private_key')}
                   inputHandler={e => setPrivateKey(e.currentTarget.value)}
                   hidden={true}
                   type="text"
@@ -175,7 +178,7 @@ const SignMessageForm = () => {
           )}
           <div className="fit-content mx-auto">
             <Button
-              text="Sign"
+              text={t('sign_message_form.sign')}
               style="primary"
               className="fit-content px-5 mt-4"
               icon={<Edit3 />}

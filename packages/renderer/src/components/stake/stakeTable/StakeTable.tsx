@@ -13,6 +13,7 @@ import {getTotalPages} from '../../../tools';
 import {useQuery} from '@apollo/client';
 import EpochBar from '../../UI/epochBar/EpochBar';
 import {useNetworkSettingsContext} from '/@/contexts/NetworkContext';
+import {useTranslation} from 'react-i18next';
 
 interface IProps {
   error: any;
@@ -41,6 +42,7 @@ const StakeTable = ({
   page,
   address,
 }: IProps) => {
+  const {t} = useTranslation();
   const [searchBox] = useState<string>('');
   const {data: validatorsTotalData} = useQuery(GET_VALIDATORS_TOTAL);
 
@@ -48,13 +50,6 @@ const StakeTable = ({
     validatorsTotalData?.validators_aggregate?.aggregate?.count || 0,
     false,
   );
-  /**
-   * Store search text inside component state (temporarily disabled, needs backend search query)
-   * @param search string Search text
-   */
-  // const searchBoxHandler = (search: string) => {
-  //   setSearchBox(search.toLowerCase());
-  // };
 
   const {settings} = useNetworkSettingsContext();
   const validatorsDisabled = settings?.hideValidators;
@@ -120,7 +115,7 @@ const StakeTable = ({
         <div>
           <Row>
             <Col className="mt-0">
-              <h2>Delegates</h2>
+              <h2>{t('stake_table.delegates')}</h2>
             </Col>
             <Col
               md={3}
@@ -130,13 +125,13 @@ const StakeTable = ({
             >
               <Button
                 className="link-button custom-delegate-button purple-text"
-                text="Custom delegation"
+                text={t('stake_table.custom_delegation')}
                 onClick={openCustomDelegateModal}
               />
             </Col>
           </Row>
           {validatorsDisabled ? (
-            <div>The validators list is not available for this network</div>
+            <div>{t('stake_table.validators_not_available')}</div>
           ) : (
             <>
               <Spinner

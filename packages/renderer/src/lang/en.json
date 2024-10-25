@@ -107,5 +107,128 @@
     "private_key_placeholder": "Private key",
     "cancel": "Cancel",
     "continue": "Continue"
+  },
+  "balance": {
+    "this_is_your_address": "This is your address",
+    "your_balance": "Your balance",
+    "btc_apx_value": "BTC Apx. value",
+    "usdt_apx_value": "USDT Apx. value",
+    "not_available": "Not available",
+    "loading": "Loading"
+  },
+  "sign_message_form": {
+    "sign_message": "Sign message",
+    "cryptographically_sign_message": "Cryptographically sign a message with your keypair.",
+    "message": "Message",
+    "password": "Password",
+    "passphrase_or_private_key": "Passphrase or Private key",
+    "sign": "Sign",
+    "name_is_required": "Name is required",
+    "message_header": "----- MESSAGE -----",
+    "public_key_header": "----- PUBLIC KEY -----",
+    "field_header": "----- FIELD -----",
+    "scalar_header": "----- SCALAR -----",
+    "your_signed_message": "Your signed message"
+  },
+  "sign_message_result": {
+    "your_signed_message": "Your signed message",
+    "message_header": "----- MESSAGE -----",
+    "public_key_header": "----- PUBLIC KEY -----",
+    "field_header": "----- FIELD -----",
+    "scalar_header": "----- SCALAR -----"
+  },
+  "transaction_form": {
+    "recipient": "Recipient",
+    "enter_address": "Enter address",
+    "memo": "Memo",
+    "enter_memo": "Enter memo",
+    "amount": "Amount",
+    "half": "Half",
+    "all": "All",
+    "enter_amount": "Enter an amount",
+    "fee": "Fee",
+    "avg": "Avg",
+    "fast": "Fast",
+    "enter_fee": "Enter a fee",
+    "preview": "Preview"
+  },
+  "verify_message_form": {
+    "verify_message": "Verify message",
+    "help_hint": "Paste the signature message in the fields in order to verify the cryptographic authenticity.",
+    "message": "Message",
+    "public_key": "Public key",
+    "field": "Field",
+    "scalar": "Scalar",
+    "verify": "Verify"
+  },
+  "ledger_confirm_address": {
+    "public_key": "This is your public key",
+    "confirm_address": "Please confirm your address on ledger",
+    "go_back": "Go back",
+    "access_wallet": "Access wallet"
+  },
+  "ledger_connect": {
+    "login": "Login",
+    "connect_ledger": "Connect now your Ledger wallet and open the Mina app",
+    "ledger_connected": "✅ Ledger connected",
+    "select_custom_account": "Click here to select a custom account",
+    "select_account_number": "Please select an account number",
+    "default_account_hint": "Default account number is 0. If you have created your wallet with another account index, change it here.<br/> Only change this number if you know what you are doing.",
+    "go_back": "Go back",
+    "continue": "Continue",
+    "account_number_error": "Account number should be between {{min}} and {{max}}"
+  },
+  "ledger_get_address": {
+    "login": "Login",
+    "verify_address": "Let's verify your address",
+    "looking_for_public_key": "Looking for the Public key. Please confirm it on your Ledger device",
+    "confirmation_time": "This could take up to one minute and a half",
+    "go_back": "Go back"
+  },
+  "ledger_incompatible": {
+    "login": "Login",
+    "connect_ledger": "Connect now your Ledger wallet and open the Mina app",
+    "browser_incompatible": "❌ Browser is incompatible, please use the last version of Chrome, Edge or Opera",
+    "need_ledger": "Do you need a Ledger wallet?",
+    "buy_here": "Buy it here",
+    "go_back": "Go back"
+  },
+  "ledger_search": {
+    "login": "Login",
+    "connect_ledger": "Connect your Ledger wallet and open the Mina app",
+    "need_ledger": "Do you need a Ledger wallet?",
+    "buy_here": "Buy it here",
+    "go_back": "Go back"
+  },
+  "stake_status": {
+    "your_stake": "Your stake",
+    "not_staking": "Currently you are not staking for anybody.",
+    "learn_how_to_delegate": "Click here to learn how to delegate",
+    "you_are_staking_for": "You are staking for"
+  },
+  "stake_table": {
+    "delegates": "Delegates",
+    "custom_delegation": "Custom delegation",
+    "validators_not_available": "The validators list is not available for this network"
+  },
+  "stake_table_error": {
+    "something_went_wrong": "Something went wrong, please check your connection and try again later."
+  },
+  "stake_table_row": {
+    "validator": "Validator",
+    "fee": "Fee",
+    "staked": "Staked",
+    "info": "Info",
+    "website": "Website",
+    "delegating": "Delegating",
+    "delegate": "Delegate",
+    "support_tooltip": "~Clorio is built by Carbonara. <br>Earn rewards and support Clorio <br>by delegating to Carbonara ❤️"
+  },
+  "stake_table_value": {
+    "validator": "Validator",
+    "fee": "Fee",
+    "staked": "Staked",
+    "info": "Info",
+    "website": "Website"
   }
 }

@@ -4,6 +4,7 @@ import Button from '../../UI/Button';
 import StakeTableValue from './StakeTableValue';
 import type {IValidatorData} from './ValidatorDataTypes';
 import {useEffect, useRef, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
 interface IProps {
   index: number;
@@ -14,11 +15,11 @@ interface IProps {
 }
 
 const StakeTableRow = ({element, index, toggleModal, isDelegating, loading}: IProps) => {
+  const {t} = useTranslation();
   let supportTooltip = '';
   let boostedClassName = '';
   if (+element.priority === 1) {
-    supportTooltip =
-      '~Clorio is built by Carbonara. <br>Earn rewards and support Clorio <br>by delegating to Carbonara ❤️';
+    supportTooltip = t('stake_table_row.support_tooltip');
     boostedClassName = 'is-boosted';
   }
   const [width, setWidth] = useState(0);
@@ -47,7 +48,7 @@ const StakeTableRow = ({element, index, toggleModal, isDelegating, loading}: IPr
       : isDelegating
       ? 'lightGreenButton__fullMono yellowButton__fullMono button-small-padding'
       : '';
-    const text = isDelegating ? 'Delegating' : 'Delegate';
+    const text = isDelegating ? t('stake_table_row.delegating') : t('stake_table_row.delegate');
     return (
       <Button
         className={`${buttonColor}`}
@@ -83,7 +84,7 @@ const StakeTableRow = ({element, index, toggleModal, isDelegating, loading}: IPr
             )}
           </div>
         }
-        header="Validator"
+        header={t('stake_table_row.validator')}
         ref={textRef}
         text={
           <Truncate
@@ -95,18 +96,18 @@ const StakeTableRow = ({element, index, toggleModal, isDelegating, loading}: IPr
       />
       <StakeTableValue
         className="table-element fee-column"
-        header={'Fee'}
+        header={t('stake_table_row.fee')}
         text={`${element.fee}%`}
       />
       <StakeTableValue
         className="table-element stake-column"
-        header={'Staked'}
+        header={t('stake_table_row.staked')}
         text={`${parseInt(element?.stakedSum || '0').toLocaleString()} Mina`}
       />
       <StakeTableValue
         className="table-element info-column"
-        header={'info'}
-        text={'Website'}
+        header={t('stake_table_row.info')}
+        text={t('stake_table_row.website')}
         website={element.website}
       />
       <td className="table-element stake-table-button">{delegateButton()}</td>

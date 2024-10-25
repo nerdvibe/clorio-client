@@ -11,6 +11,7 @@ import Big from 'big.js';
 import {ArrowRight} from 'react-feather';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {deeplinkState} from '/@/store';
+import { useTranslation } from 'react-i18next';
 
 interface IProps {
   transactionData: ITransactionData;
@@ -33,6 +34,7 @@ const TransactionForm = ({
   const [fee, setFee] = useState<number | string>(toLongMINA(transactionData.fee));
   const deeplinkData = useRecoilValue(deeplinkState);
   const setDeeplinkData = useSetRecoilState(deeplinkState);
+  const {t} = useTranslation();
 
   /**
    * Effect to handle deeplink data.
@@ -142,16 +144,16 @@ const TransactionForm = ({
   return (
     <div className="mx-auto w-75">
       <div className="my-5">
-        <h3>Recipient</h3>
+        <h3>{t('transaction_form.recipient')}</h3>
         <Input
           value={transactionData.receiverAddress}
-          placeholder="Enter address "
+          placeholder={t('transaction_form.enter_address')}
           inputHandler={e => addressHandler(e.currentTarget.value)}
         />
-        <h3>Memo</h3>
+        <h3>{t('transaction_form.memo')}</h3>
         <Input
           value={transactionData.memo}
-          placeholder="Enter memo "
+          placeholder={t('transaction_form.enter_memo')}
           inputHandler={e => memoHandler(e.currentTarget.value)}
         />
         <Row>
@@ -160,22 +162,22 @@ const TransactionForm = ({
             xl={6}
           >
             <div className="flex flex-row justify-between">
-              <h3>Amount</h3>
+              <h3>{t('transaction_form.amount')}</h3>
               <div className="fee-label flex flex-row">
                 <Button
                   className="link-button custom-delegate-button purple-text align-end  no-padding"
-                  text="Half"
+                  text={t('transaction_form.half')}
                   onClick={setHalfFunds}
                 />
                 <Button
                   className="link-button custom-delegate-button purple-text align-end  no-padding"
-                  text="All"
+                  text={t('transaction_form.all')}
                   onClick={setAllFunds}
                 />
               </div>
             </div>
             <Input
-              placeholder="Enter an amount "
+              placeholder={t('transaction_form.enter_amount')}
               value={amount}
               inputHandler={e => amountHandler(e.target.value)}
               type="number"
@@ -186,22 +188,22 @@ const TransactionForm = ({
             xl={6}
           >
             <div className="flex flex-row justify-between items-center">
-              <h3 className="inline-element ">Fee</h3>
+              <h3 className="inline-element ">{t('transaction_form.fee')}</h3>
               <div className="fee-label flex flex-row">
                 <Button
                   className="link-button custom-delegate-button purple-text align-end  no-padding"
-                  text="Avg"
+                  text={t('transaction_form.avg')}
                   onClick={() => setFeeHandler(averageFee)}
                 />
                 <Button
                   className="link-button custom-delegate-button purple-text align-end  no-padding"
-                  text="Fast"
+                  text={t('transaction_form.fast')}
                   onClick={() => setFeeHandler(fastFee)}
                 />
               </div>
             </div>
             <Input
-              placeholder="Enter a fee "
+              placeholder={t('transaction_form.enter_fee')}
               value={fee}
               inputHandler={e => setFeeHandler(e.target.value)}
               type="number"
@@ -211,7 +213,7 @@ const TransactionForm = ({
         <div className="w-50 py-3 mx-auto">
           <Button
             onClick={() => checkFieldsAndProceed(transactionData, nextStep)}
-            text="Preview"
+            text={t('transaction_form.preview')}
             style="primary"
             icon={<ArrowRight />}
             appendIcon
