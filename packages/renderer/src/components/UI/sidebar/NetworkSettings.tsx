@@ -13,6 +13,8 @@ import {networkState} from '/@/store';
 import {ConnectedZkapps} from './ConnectedZkapps';
 import {NetConfig, sendResponse} from '/@/tools/mina-zkapp-bridge';
 import isElectron from 'is-electron';
+import i18next from 'i18next';
+import {languages} from '/@/lang/i18n';
 
 export default function NetworkSettings({
   currentNetwork,
@@ -44,6 +46,13 @@ export default function NetworkSettings({
       setStoredPassphrase(passphrase);
     });
   }, []);
+
+  // Get the list of available languages from i18n
+  const languageSelectHandler = (e: any) => {
+    i18next.changeLanguage(e.target.value);
+  };
+
+  const currentLanguage = i18next.language;
 
   const networkSelectHandler = (e: any) => {
     const network = availableNetworks[e.target.value];
@@ -111,6 +120,25 @@ export default function NetworkSettings({
                 </div>
               </div>
             )}
+
+            <div className="flex flex-row justify-between items-center">
+              <label className="text-start">Language</label>
+              <Form.Select
+                className="w-50"
+                aria-label="Select a network"
+                onChange={languageSelectHandler}
+                defaultValue={currentLanguage}
+              >
+                {languages.map(({value, label}) => (
+                  <option
+                    key={value}
+                    value={value}
+                  >
+                    {label}
+                  </option>
+                ))}
+              </Form.Select>
+            </div>
 
             <div className="flex flex-row justify-between items-center">
               <label className="text-start">Network</label>
