@@ -19,8 +19,10 @@ import AddChain from './UI/modals/zkAppIntegration/AddChain';
 import ConfirmZkappTransaction from './UI/modals/zkAppIntegration/ConfirmZkappTransaction';
 import {ERROR_CODES} from '../tools/zkapp';
 import ConnectZkapp from './UI/modals/zkAppIntegration/ConnectZkapp';
+import {useTranslation} from 'react-i18next';
 
 export default function ZkappIntegration() {
+  const {t} = useTranslation();
   const wallet = useRecoilValue(walletState);
   const {sites} = useRecoilValue(connectedSitesState);
   const updateConnectZkapp = useSetRecoilState(connectZkappState);
@@ -126,7 +128,7 @@ export default function ZkappIntegration() {
           break;
 
         default:
-          console.error('Unknown event type:', type);
+          console.error(t('zkapp_integration.unknown_event_type'), type);
       }
     });
   };
@@ -138,7 +140,7 @@ export default function ZkappIntegration() {
     if (config.isLedgerEnabled) {
       sendResponse('clorio-error', ERROR_CODES.unsupportMethod);
       sendResponse('focus-clorio');
-      toast.error('Ledger does not support this method.');
+      toast.error(t('zkapp_integration.ledger_not_supported'));
       throw new Error('Ledger is not supported');
     }
   };
@@ -157,7 +159,7 @@ export default function ZkappIntegration() {
     console.log('Received get-address');
     if (!config.isAuthenticated) {
       sendResponse('focus-clorio');
-      toast.error('Please log into your wallet first.');
+      toast.error(t('zkapp_integration.log_in_first'));
       return;
     } else if (checkSource(source)) {
       unlockWallet();
@@ -200,7 +202,7 @@ export default function ZkappIntegration() {
   const sendPayment = async (data: any) => {
     if (!config.isAuthenticated) {
       sendResponse('focus-clorio');
-      toast.error('Please log into your wallet first.');
+      toast.error(t('zkapp_integration.log_in_first'));
       return;
     }
     try {
@@ -230,10 +232,10 @@ export default function ZkappIntegration() {
         };
       });
       sendResponse('focus-clorio');
-      toast.info('Confirm the transaction in your wallet');
+      toast.info(t('zkapp_integration.confirm_transaction'));
     } catch (error) {
       console.error('Error in send-payment:', error);
-      sendResponse('error', {message: "Transaction couldn't be sent"});
+      sendResponse('error', {message: t('zkapp_integration.transaction_error')});
     }
   };
 
@@ -251,7 +253,7 @@ export default function ZkappIntegration() {
   const switchChain = async (networkID: string) => {
     const networksFound = availableNetworks.filter(network => network.networkID === networkID);
     if (networksFound.length === 0) {
-      toast.error('Network not found');
+      toast.error(t('zkapp_integration.network_not_found'));
       sendResponse('error', ERROR_CODES.notSupportChain);
       return;
     }
@@ -289,10 +291,10 @@ export default function ZkappIntegration() {
         };
       });
       sendResponse('focus-clorio');
-      toast.info('Confirm the transaction in your wallet');
+      toast.info(t('zkapp_integration.confirm_transaction'));
     } catch (error) {
       console.error('Error in sign-tx:', error);
-      sendResponse('error', {message: "Transaction couldn't be sent"});
+      sendResponse('error', {message: t('zkapp_integration.transaction_error')});
     }
     // console.log('Received sign-tx');
     // const nextParams = {...data};
@@ -314,7 +316,7 @@ export default function ZkappIntegration() {
   const unlockWallet = () => {
     if (config.isLocked) {
       sendResponse('focus-clorio');
-      toast.info('Please unlock your wallet first');
+      toast.info(t('zkapp_integration.unlock_wallet_first'));
     }
   };
 
@@ -363,7 +365,7 @@ export default function ZkappIntegration() {
     console.log('Received stake-delegation');
     if (!config.isAuthenticated) {
       sendResponse('focus-clorio');
-      toast.error('Please log into your wallet first.');
+      toast.error(t('zkapp_integration.log_in_first'));
       return;
     }
     try {
@@ -378,10 +380,10 @@ export default function ZkappIntegration() {
         };
       });
       sendResponse('focus-clorio');
-      toast.info('Confirm the transaction in your wallet');
+      toast.info(t('zkapp_integration.confirm_transaction'));
     } catch (error) {
       console.error('Error in send-delegation:', error);
-      sendResponse('error', {message: "Transaction couldn't be sent"});
+      sendResponse('error', {message: t('zkapp_integration.transaction_error')});
     }
   };
 

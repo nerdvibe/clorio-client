@@ -1,0 +1,314 @@
+{
+  "terms_and_conditions": {
+    "welcome_message": "👋 Bienvenido a Clorio Wallet",
+    "terms_paragraph_1": "Bienvenido a ~Clorio, tu puerta de entrada a la moneda del Protocolo Mina. Es esencial reconocer que, al usar este servicio, te conviertes en el único custodio de tus claves privadas. Con esta autoridad viene una gran responsabilidad: el deber de proteger tus claves diligentemente. Bajo ninguna circunstancia debes revelar tu clave privada a nadie. Para mayor seguridad, recomendamos encarecidamente usar una billetera de hardware.",
+    "terms_paragraph_2": "Al elegir utilizar ~Clorio, reconoces que asumes toda la responsabilidad por cualquier posible pérdida. Ten en cuenta que nuestra billetera es de código abierto. Te animamos a revisar minuciosamente el código fuente antes de usar este software e incluso considerar ejecutar tu propia infraestructura. Tu opinión es invaluable: por favor, informa cualquier problema que encuentres en ",
+    "terms_paragraph_3": "Al optar por la Billetera ~Clorio, también aceptas nuestros ",
+    "terms_paragraph_4": ". Es crucial entender que ninguna parte puede ser responsable de cualquier error de software o problemas de seguridad que puedan surgir. El uso de este servicio implica tu aceptación de estos términos y tu compromiso de ejercer la debida diligencia para proteger tus activos.",
+    "link1": "discord de WeStake.Club",
+    "link2": "términos y condiciones",
+    "agree_button": "Estoy de acuerdo"
+  },
+  "waiting_ledger": {
+    "confirm_transaction": "Por favor, confirma la transacción",
+    "waiting_message": "Esperando que tu billetera de hardware confirme la transacción",
+    "time_notice": "Esto podría tardar hasta 3 minutos.",
+    "cancel_button": "Cancelar"
+  },
+  "private_key_modal": {
+    "password_required": "Se requiere contraseña",
+    "passphrase_or_private_key": "Frase de contraseña o clave privada",
+    "description": "Para confirmar la transacción, inserta la frase de contraseña o la clave privada",
+    "placeholder": "Inserta tu frase de contraseña o clave privada",
+    "cancel_button": "Cancelar",
+    "send_button": "Enviar"
+  },
+  "delegation_fee": {
+    "title": "Tarifa de Delegación",
+    "description": "Por favor, ingresa los detalles de la tarifa de delegación.",
+    "submit_button": "Enviar",
+    "cancel_button": "Cancelar",
+    "error_message": "Detalles de tarifa inválidos. Por favor, inténtalo de nuevo."
+  },
+  "custom_nonce": {
+    "insert_nonce": "Insertar nonce",
+    "fetch_nonce_error": "No podemos obtener el nonce de la blockchain.",
+    "insert_nonce_manually": "Por favor, inserta el nonce manualmente, que se puede encontrar en el explorador haciendo clic",
+    "here": "aquí",
+    "insert_zero_if_none": "Si el nonce es \"none\", inserta 0.",
+    "proceed": "Proceder"
+  },
+  "confirm_custom_delegation": {
+    "custom_delegation": "Delegación personalizada",
+    "delegate_to_someone": "Delegar a alguien que no está en la lista",
+    "public_key": "Clave pública",
+    "insert_public_key": "Inserta la clave pública",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar"
+  },
+  "confirm_transaction": {
+    "title": "Confirmar Transacción",
+    "description": "Por favor, revisa los detalles de tu transacción antes de confirmar.",
+    "amount_label": "Cantidad",
+    "recipient_label": "Destinatario",
+    "confirm_button": "Confirmar",
+    "cancel_button": "Cancelar"
+  },
+  "confirm_ledger_transaction": {
+    "create_new_transaction": "Crear nueva transacción",
+    "send_amount": "Estás a punto de enviar",
+    "with_fee": "con una tarifa de",
+    "to_address": "a",
+    "with_memo": "con memo",
+    "check_hardware_wallet": "Revisa tu billetera de hardware para proceder"
+  },
+  "confirm_delegation": {
+    "confirm_delegation": "Confirmar Delegación",
+    "are_you_sure_you_want_to_delegate_this_stake_to": "¿Estás seguro de que quieres delegar esta participación a",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar"
+  },
+  "broadcast_translation": {
+    "we_are_broadcasting_your_transaction_to_the_network": "Estamos transmitiendo tu transacción a la red"
+  },
+  "update_error": {
+    "there_is_a_new_release": "Hay una nueva versión 🎉 v",
+    "click_here": "Haz clic aquí",
+    "to_download_the_update": "para descargar la actualización."
+  },
+  "password_decrypt": {
+    "insert_your_password_to_proceed": "Inserta tu contraseña para proceder",
+    "wrong_password": "Contraseña incorrecta",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar"
+  },
+  "connected_zkapps": {
+    "show_button_text": "Mostrar",
+    "modal_title": "Zkapps Conectadas",
+    "no_connected_zkapps": "No hay zkapps conectadas"
+  },
+  "account_selection": {
+    "create_new_wallet": "Crear nueva billetera",
+    "select_an_avatar": "Selecciona un avatar",
+    "go_back": "Regresar",
+    "next": "Siguiente"
+  },
+  "pdf_encryption": {
+    "document_encryption": "Cifrado de documento",
+    "set_password": "Por favor, establece una contraseña para cifrar el documento",
+    "insert_password": "Inserta una contraseña",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "download_success": "Descargando Clorio Paper Wallet",
+    "password_empty_error": "La contraseña no puede estar vacía"
+  },
+  "validation_step": {
+    "verify_private_key": "Verifica tu clave privada",
+    "private_key_placeholder": "Clave privada",
+    "cancel": "Cancelar",
+    "continue": "Continuar"
+  },
+  "balance": {
+    "this_is_your_address": "Esta es tu dirección",
+    "your_balance": "Tu saldo",
+    "btc_apx_value": "Valor aprox. en BTC",
+    "usdt_apx_value": "Valor aprox. en USDT",
+    "not_available": "No disponible",
+    "loading": "Cargando"
+  },
+  "sign_message_form": {
+    "sign_message": "Firmar mensaje",
+    "cryptographically_sign_message": "Firma criptográficamente un mensaje con tu par de claves.",
+    "message": "Mensaje",
+    "password": "Contraseña",
+    "passphrase_or_private_key": "Frase de contraseña o clave privada",
+    "sign": "Firmar",
+    "name_is_required": "Se requiere nombre",
+    "message_header": "----- MENSAJE -----",
+    "public_key_header": "----- CLAVE PÚBLICA -----",
+    "field_header": "----- CAMPO -----",
+    "scalar_header": "----- ESCALAR -----",
+    "your_signed_message": "Tu mensaje firmado"
+  },
+  "sign_message_result": {
+    "your_signed_message": "Tu mensaje firmado",
+    "message_header": "----- MENSAJE -----",
+    "public_key_header": "----- CLAVE PÚBLICA -----",
+    "field_header": "----- CAMPO -----",
+    "scalar_header": "----- ESCALAR -----"
+  },
+  "transaction_form": {
+    "recipient": "Destinatario",
+    "enter_address": "Ingresa la dirección",
+    "memo": "Memo",
+    "enter_memo": "Ingresa el memo",
+    "amount": "Cantidad",
+    "half": "Mitad",
+    "all": "Todo",
+    "enter_amount": "Ingresa una cantidad",
+    "fee": "Tarifa",
+    "avg": "Promedio",
+    "fast": "Rápido",
+    "enter_fee": "Ingresa una tarifa",
+    "preview": "Vista previa"
+  },
+  "verify_message_form": {
+    "verify_message": "Verificar mensaje",
+    "help_hint": "Pega el mensaje de firma en los campos para verificar la autenticidad criptográfica.",
+    "message": "Mensaje",
+    "public_key": "Clave pública",
+    "field": "Campo",
+    "scalar": "Escalar",
+    "verify": "Verificar"
+  },
+  "ledger_confirm_address": {
+    "public_key": "Esta es tu clave pública",
+    "confirm_address": "Por favor, confirma tu dirección en el ledger",
+    "go_back": "Regresar",
+    "access_wallet": "Acceder a la billetera"
+  },
+  "ledger_connect": {
+    "login": "Iniciar sesión",
+    "connect_ledger": "Conecta ahora tu billetera Ledger y abre la aplicación Mina",
+    "ledger_connected": "✅ Ledger conectado",
+    "select_custom_account": "Haz clic aquí para seleccionar una cuenta personalizada",
+    "select_account_number": "Por favor, selecciona un número de cuenta",
+    "default_account_hint": "El número de cuenta predeterminado es 0. Si has creado tu billetera con otro índice de cuenta, cámbialo aquí.<br/> Solo cambia este número si sabes lo que estás haciendo.",
+    "go_back": "Regresar",
+    "continue": "Continuar",
+    "account_number_error": "El número de cuenta debe estar entre {{min}} y {{max}}"
+  },
+  "ledger_get_address": {
+    "login": "Iniciar sesión",
+    "verify_address": "Vamos a verificar tu dirección",
+    "looking_for_public_key": "Buscando la clave pública. Por favor, confírmala en tu dispositivo Ledger",
+    "confirmation_time": "Esto podría tardar hasta un minuto y medio",
+    "go_back": "Regresar"
+  },
+  "ledger_incompatible": {
+    "login": "Iniciar sesión",
+    "connect_ledger": "Conecta ahora tu billetera Ledger y abre la aplicación Mina",
+    "browser_incompatible": "❌ El navegador es incompatible, por favor usa la última versión de Chrome, Edge o Opera",
+    "need_ledger": "¿Necesitas una billetera Ledger?",
+    "buy_here": "Cómprala aquí",
+    "go_back": "Regresar"
+  },
+  "ledger_search": {
+    "login": "Iniciar sesión",
+    "connect_ledger": "Conecta tu billetera Ledger y abre la aplicación Mina",
+    "need_ledger": "¿Necesitas una billetera Ledger?",
+    "buy_here": "Cómprala aquí",
+    "go_back": "Regresar"
+  },
+  "stake_status": {
+    "your_stake": "Tu participación",
+    "not_staking": "Actualmente no estás delegando a nadie.",
+    "learn_how_to_delegate": "Haz clic aquí para aprender cómo delegar",
+    "you_are_staking_for": "Estás delegando para"
+  },
+  "stake_table": {
+    "delegates": "Delegados",
+    "custom_delegation": "Delegación personalizada",
+    "validators_not_available": "La lista de validadores no está disponible para esta red"
+  },
+  "stake_table_error": {
+    "something_went_wrong": "Algo salió mal, por favor revisa tu conexión e inténtalo de nuevo más tarde."
+  },
+  "stake_table_row": {
+    "validator": "Validador",
+    "fee": "Tarifa",
+    "staked": "Delegado",
+    "info": "Información",
+    "website": "Sitio web",
+    "delegating": "Delegando",
+    "delegate": "Delegar",
+    "support_tooltip": "~Clorio está construido por Carbonara. <br>Gana recompensas y apoya a Clorio <br>delegando a Carbonara ❤️"
+  },
+  "stake_table_value": {
+    "validator": "Validador",
+    "fee": "Tarifa",
+    "staked": "Delegado",
+    "info": "Información",
+    "website": "Sitio web"
+  },
+  "transaction_authentication": {
+    "signature_failed": "Firma fallida",
+    "signature_failed_message": "El proceso de firma a través del ledger falló",
+    "go_back": "Regresar",
+    "retry": "Reintentar",
+    "signing": "Firmando",
+    "waiting_for_ledger": "Esperando que el dispositivo Ledger firme la transacción",
+    "waiting_time": "Esto podría tardar hasta 3 minutos.",
+    "passphrase_private_key": "Frase de contraseña/Clave privada",
+    "insert_passphrase_private_key": "Inserta la frase de contraseña/Clave privada para firmar la transacción",
+    "insert_placeholder": "Inserta tu frase de contraseña o clave privada",
+    "cancel": "Cancelar",
+    "send": "Enviar"
+  },
+  "refetch_transaction": {
+    "just_fetched": "Recién obtenido",
+    "fetching_data_in": "Obteniendo datos en {{countdown}}s",
+    "refresh": "Actualizar"
+  },
+  "transaction_row": {
+    "waiting_for_confirmation": "Esperando confirmación",
+    "you": "tú",
+    "mina": "Mina",
+    "be_aware": "¡Ten cuidado! Este",
+    "receiver": "receptor",
+    "sender": "remitente",
+    "reported_as_scammer": "ha sido reportado como estafador!"
+  },
+  "transaction_error": {
+    "something_went_wrong": "Ooops... ¡Algo salió mal! Por favor, inténtalo de nuevo más tarde",
+    "no_transactions_yet": "Aún no has realizado ninguna transacción",
+    "no_transactions_or_history_unavailable": "Aún no has realizado ninguna transacción o el historial podría no estar disponible para tu dirección.",
+    "history_unavailable": "El historial podría no estar disponible para tu dirección en este momento.",
+    "consult_explorer": "Por favor, consulta tu historial de transacciones en el explorador."
+  },
+  "wallet_creation_transaction": {
+    "wallet_creation_fee": "Tarifa de creación de billetera de 1 Mina"
+  },
+  "read_secure_storage": {
+    "create_password": "Crear contraseña",
+    "encrypt_credentials": "Cifraremos tus credenciales y con la siguiente contraseña podrás acceder a tu billetera.",
+    "password_requirements": "La contraseña debe tener al menos 6 caracteres, debe contener al menos un número y al menos un carácter especial (!@#$%^&*).",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar"
+  },
+  "restore_session": {
+    "access_power": "Accede al poder de la Blockchain del Protocolo Mina.",
+    "insert_password": "Inserta tu contraseña para restaurar la sesión",
+    "logout": "Cerrar sesión",
+    "confirm": "Confirmar",
+    "wrong_password": "Contraseña incorrecta"
+  },
+  "zkapp_integration": {
+    "ledger_not_supported": "Ledger no soporta este método.",
+    "log_in_first": "Por favor, inicia sesión en tu billetera primero.",
+    "confirm_transaction": "Confirma la transacción en tu billetera",
+    "transaction_error": "No se pudo enviar la transacción",
+    "unlock_wallet_first": "Por favor, desbloquea tu billetera primero",
+    "network_not_found": "Red no encontrada",
+    "unknown_event_type": "Tipo de evento desconocido:"
+  },
+  "epoch_bar": {
+    "epoch_unavailable": "Época actualmente no disponible",
+    "epoch": "Época",
+    "slot_of": "Slot {{slot}} de {{maxSlot}}",
+    "left_to_next_epoch": "{{days}} días {{hours}} horas {{minutes}} minutos restantes para la próxima época"
+  },
+  "transaction_table": {
+    "id": "ID",
+    "date": "Fecha",
+    "sender": "Remitente",
+    "recipient": "Destinatario",
+    "amount": "Cantidad",
+    "waiting_for_confirmation": "Esperando confirmación",
+    "you": "tú",
+    "mina": "Mina",
+    "be_aware": "¡Ten cuidado! Este",
+    "receiver": "receptor",
+    "reported_as_scammer": "ha sido reportado como estafador!"
+  }
+}

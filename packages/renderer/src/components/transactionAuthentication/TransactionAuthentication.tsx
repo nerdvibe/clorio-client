@@ -4,6 +4,7 @@ import Button from '../UI/Button';
 import Input from '../UI/input/Input';
 import Spinner from '../UI/Spinner';
 import PasswordDecrypt from '../PasswordDecrypt';
+import {useTranslation} from 'react-i18next';
 
 interface IProps {
   isLedgerEnabled?: boolean;
@@ -26,6 +27,8 @@ const TransactionAuthentication = ({
   retryLedgerTransaction,
   storedPassphrase,
 }: IProps) => {
+  const {t} = useTranslation();
+
   if (storedPassphrase) {
     return (
       <PasswordDecrypt
@@ -42,21 +45,21 @@ const TransactionAuthentication = ({
       <div className="mx-auto  w-75">
         <div className="my-4 ">
           <div className="align-left mt-3 mb-2 label text-center">
-            <strong>Signature failed</strong>
+            <strong>{t('transaction_authentication.signature_failed')}</strong>
             <br />
           </div>
-          <p className="mx-auto mb-5">The signature process through the ledger failed</p>
+          <p className="mx-auto mb-5">{t('transaction_authentication.signature_failed_message')}</p>
           <Row>
             <Col xs={6}>
               <Button
                 className="big-icon-button"
-                text="Go back"
+                text={t('transaction_authentication.go_back')}
                 onClick={stepBackward}
               />
             </Col>
             <Col xs={6}>
               <Button
-                text="Retry"
+                text={t('transaction_authentication.retry')}
                 style="primary"
                 icon={<Repeat />}
                 appendIcon
@@ -79,11 +82,11 @@ const TransactionAuthentication = ({
           />
         </div>
         <div className="align-left mt-3 mb-2 label text-center">
-          <strong>Signing</strong>
+          <strong>{t('transaction_authentication.signing')}</strong>
           <br />
-          <small>Waiting for the Ledger device to sign the transaction</small>
+          <small>{t('transaction_authentication.waiting_for_ledger')}</small>
           <br />
-          <small className="w-100 text-center mb-4">This could take up to 3 minutes.</small>
+          <small className="w-100 text-center mb-4">{t('transaction_authentication.waiting_time')}</small>
         </div>
       </div>
     </div>
@@ -91,13 +94,13 @@ const TransactionAuthentication = ({
     <div className="mx-auto  w-75">
       <div className="my-5">
         <div className="align-left mt-3 mb-2 label">
-          <strong>Passphrase/Private key</strong>
+          <strong>{t('transaction_authentication.passphrase_private_key')}</strong>
           <br />
-          <small>Insert the Passphrase/Private key to sign the transaction</small>
+          <small>{t('transaction_authentication.insert_passphrase_private_key')}</small>
         </div>
         <Input
           inputHandler={e => setPrivateKey(e.currentTarget.value)}
-          placeholder="Insert your Passphrase or Private key"
+          placeholder={t('transaction_authentication.insert_placeholder')}
           hidden={true}
           type="text"
         />
@@ -105,13 +108,13 @@ const TransactionAuthentication = ({
           <Col xs={6}>
             <Button
               className="big-icon-button"
-              text="Cancel"
+              text={t('transaction_authentication.cancel')}
               onClick={stepBackwards}
             />
           </Col>
           <Col xs={6}>
             <Button
-              text="Send"
+              text={t('transaction_authentication.send')}
               style="primary"
               icon={<ArrowRight />}
               appendIcon

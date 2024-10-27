@@ -5,6 +5,7 @@ import TransactionIcon from './TransactionIcon';
 import type {ITransactionRowData} from './TransactionsTypes';
 import {useNetworkSettingsContext} from '/@/contexts/NetworkContext';
 import {formatUrl} from './TransactionsHelper';
+import {useTranslation} from 'react-i18next';
 
 const TransactionRow = (
   {
@@ -21,9 +22,10 @@ const TransactionRow = (
   }: ITransactionRowData,
   index: number,
   userAddress: string,
-  blacklist: BlacklistedAddress[],
+  blacklist: BlacklistedAddress[] = [],
   isMempool: boolean,
 ) => {
+  const {t} = useTranslation();
   let senderScam = 0;
   const isScam = blacklist.reduce((previous, actual) => {
     if (actual.address === receiver) {
@@ -38,7 +40,7 @@ const TransactionRow = (
           includeSeconds: true,
           addSuffix: true,
         })
-      : 'Waiting for confirmation';
+      : t('transaction_row.waiting_for_confirmation');
 
   const timeISOString = !isMempool && timestamp ? new Date(+timestamp).toISOString() : '';
   const isOutgoing = userAddress === sender;
@@ -54,7 +56,6 @@ const TransactionRow = (
       : 'red-text'
     : 'green-text';
 
-  const urlPath = isMempool ? 'payment' : 'tx';
   const {settings} = useNetworkSettingsContext();
 
   return (
@@ -94,13 +95,13 @@ const TransactionRow = (
         >
           {timeDistance}
         </td>
-        <td className="table-element">{sender === userAddress ? 'you' : sender}</td>
-        <td className="table-element">{receiver === userAddress ? 'you' : receiver}</td>
+        <td className="table-element">{sender === userAddress ? t('transaction_row.you') : sender}</td>
+        <td className="table-element">{receiver === userAddress ? t('transaction_row.you') : receiver}</td>
         <td
           className={`table-element ${amountColor}`}
           data-tip={fee}
         >
-          {humanAmount} Mina
+          {humanAmount} {t('transaction_row.mina')}
         </td>
       </tr>
       {isScam && (
@@ -109,11 +110,11 @@ const TransactionRow = (
           className="scam-alert-row"
         >
           <td colSpan={6}>
-            Be aware! This{' '}
+            {t('transaction_row.be_aware')}{' '}
             <strong data-tip={senderScam ? receiver : sender}>
-              {senderScam ? 'receiver' : 'sender'}
+              {t(`transaction_row.${senderScam ? 'receiver' : 'sender'}`)}
             </strong>{' '}
-            has been reported as a scammer!
+            {t('transaction_row.reported_as_scammer')}
           </td>
         </tr>
       )}

@@ -12,15 +12,15 @@ import {useNavigate} from 'react-router-dom';
 import {useSetRecoilState} from 'recoil';
 import {configState, walletState} from '../store';
 import {initialWalletState} from '../store/wallet';
+import {useTranslation} from 'react-i18next';
 
 export default function RestoreSession({onLogin}: {onLogin: (privateKey: string) => void}) {
+  const {t} = useTranslation();
   const [password, setPassword] = useState('');
   const {decryptData, clearData} = useSecureStorage();
   const navigate = useNavigate();
-  // const {updateWallet} = useWallet();
   const updateWallet = useSetRecoilState(walletState);
   const setConfig = useSetRecoilState(configState);
-
 
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
@@ -45,10 +45,10 @@ export default function RestoreSession({onLogin}: {onLogin: (privateKey: string)
           isLocked: false,
         }));
       } else {
-        toast.error('Wrong password');
+        toast.error(t('restore_session.wrong_password'));
       }
     } catch (error) {
-      toast.error('Wrong password');
+      toast.error(t('restore_session.wrong_password'));
     }
   };
 
@@ -77,12 +77,12 @@ export default function RestoreSession({onLogin}: {onLogin: (privateKey: string)
           <div className="half-card hero-banner mx-auto">
             <div className="flex flex-col">
               <Logo big />
-              <p className="text-center mt-3">Access the power of the Mina Protocol Blockchain.</p>
+              <p className="text-center mt-3">{t('restore_session.access_power')}</p>
             </div>
           </div>
           <div className="v-spacer" />
           <div className="half-card flex flex-col w-100 h-auto">
-            <p className="text-center mt-3">Insert your password to restore the session</p>
+            <p className="text-center mt-3">{t('restore_session.insert_password')}</p>
             <Input
               type="text"
               hidden
@@ -99,7 +99,7 @@ export default function RestoreSession({onLogin}: {onLogin: (privateKey: string)
               >
                 <Button
                   className="big-icon-button"
-                  text="Logout"
+                  text={t('restore_session.logout')}
                   onClick={onLogout}
                 />
               </Col>
@@ -109,7 +109,7 @@ export default function RestoreSession({onLogin}: {onLogin: (privateKey: string)
               >
                 <Button
                   onClick={onSubmitHandler}
-                  text="Confirm"
+                  text={t('restore_session.confirm')}
                   style="primary"
                   icon={<ArrowRight />}
                   disabled={disableButton}

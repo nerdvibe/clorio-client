@@ -230,5 +230,85 @@
     "staked": "Staked",
     "info": "Info",
     "website": "Website"
+  },
+  "transaction_authentication": {
+    "signature_failed": "Signature failed",
+    "signature_failed_message": "The signature process through the ledger failed",
+    "go_back": "Go back",
+    "retry": "Retry",
+    "signing": "Signing",
+    "waiting_for_ledger": "Waiting for the Ledger device to sign the transaction",
+    "waiting_time": "This could take up to 3 minutes.",
+    "passphrase_private_key": "Passphrase/Private key",
+    "insert_passphrase_private_key": "Insert the Passphrase/Private key to sign the transaction",
+    "insert_placeholder": "Insert your Passphrase or Private key",
+    "cancel": "Cancel",
+    "send": "Send"
+  },
+  "refetch_transaction": {
+    "just_fetched": "Just fetched",
+    "fetching_data_in": "Fetching data in {{countdown}}s",
+    "refresh": "Refresh"
+  },
+  "transaction_row": {
+    "waiting_for_confirmation": "Waiting for confirmation",
+    "you": "you",
+    "mina": "Mina",
+    "be_aware": "Be aware! This",
+    "receiver": "receiver",
+    "sender": "sender",
+    "reported_as_scammer": "has been reported as a scammer!"
+  },
+  "transaction_error": {
+    "something_went_wrong": "Ooops... Something went wrong! Please try again later",
+    "no_transactions_yet": "You haven't made any transaction yet",
+    "no_transactions_or_history_unavailable": "You haven't made any transaction yet or the history might not be available for your address.",
+    "history_unavailable": "The history might not be available for your address at this time.",
+    "consult_explorer": "Please consult your transaction history on the explorer."
+  },
+  "wallet_creation_transaction": {
+    "wallet_creation_fee": "1 Mina wallet creation fee"
+  },
+  "read_secure_storage": {
+    "create_password": "Create password",
+    "encrypt_credentials": "We will encrypt your credentials and with the following password you'll be able to access your wallet.",
+    "password_requirements": "The password must be at least 6 characters long, it must contain at least a number and at least one special character (!@#$%^&*).",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "restore_session": {
+    "access_power": "Access the power of the Mina Protocol Blockchain.",
+    "insert_password": "Insert your password to restore the session",
+    "logout": "Logout",
+    "confirm": "Confirm",
+    "wrong_password": "Wrong password"
+  },
+  "zkapp_integration": {
+    "ledger_not_supported": "Ledger does not support this method.",
+    "log_in_first": "Please log into your wallet first.",
+    "confirm_transaction": "Confirm the transaction in your wallet",
+    "transaction_error": "Transaction couldn't be sent",
+    "unlock_wallet_first": "Please unlock your wallet first",
+    "network_not_found": "Network not found",
+    "unknown_event_type": "Unknown event type:"
+  },
+  "epoch_bar": {
+    "epoch_unavailable": "Epoch currently unavailable",
+    "epoch": "Epoch",
+    "slot_of": "Slot {{slot}} of {{maxSlot}}",
+    "left_to_next_epoch": "{{days}} days {{hours}} hours {{minutes}} minutes left to the next epoch"
+  },
+  "transaction_table": {
+    "id": "ID",
+    "date": "Date",
+    "sender": "Sender",
+    "recipient": "Recipient",
+    "amount": "Amount",
+    "waiting_for_confirmation": "Waiting for confirmation",
+    "you": "you",
+    "mina": "Mina",
+    "be_aware": "Be aware! This",
+    "receiver": "receiver",
+    "reported_as_scammer": "has been reported as a scammer!"
   }
 }
