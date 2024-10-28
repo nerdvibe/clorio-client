@@ -7,6 +7,7 @@ import Button from '../Button';
 import Input from '../input/Input';
 import useSecureStorage from '/@/hooks/useSecureStorage';
 import {useWallet} from '/@/contexts/WalletContext';
+import {useTranslation} from 'react-i18next';
 
 interface IProps {
   closeModal: () => void;
@@ -18,6 +19,7 @@ interface IDerivedKeypair {
 }
 
 const BackupWallet = ({closeModal}: IProps) => {
+  const {t} = useTranslation();
   const [showDetails, setShowDetails] = useState(false);
   const [storedPassphrase, setStoredPassphrase] = useState('');
   const [password, setPassword] = useState('');
@@ -33,6 +35,7 @@ const BackupWallet = ({closeModal}: IProps) => {
       setStoredPassphrase(passphrase);
     });
   }, []);
+
   /**
    * Derive the keypair from the mnemonic
    */
@@ -45,7 +48,7 @@ const BackupWallet = ({closeModal}: IProps) => {
         setShowDetails(true);
       }
     } catch (e) {
-      toast.error('Private key not valid, please try again.');
+      toast.error(t('backup_wallet.error_message'));
     }
   };
 
@@ -70,17 +73,14 @@ const BackupWallet = ({closeModal}: IProps) => {
       <div className="mx-auto">
         <div className="w-100">
           <div className="flex flex-col flex-vertical-center">
-            <h1 className="mb-0">Your Private Key</h1>
+            <h1 className="mb-0">{t('backup_wallet.private_key_title')}</h1>
             <div className="divider w-100" />
           </div>
         </div>
-        <p className="disclaimer-text ">
-          This is your private key. Make sure that you safekeep this key. <br />
-          Whoever knows this string, will be able to access your funds.
-        </p>
+        <p className="disclaimer-text ">{t('backup_wallet.private_key_warning')}</p>
         <div>
           <div className="align-left mt-3 mb-2 label">
-            <strong>Private key</strong>
+            <strong>{t('backup_wallet.private_key_label')}</strong>
           </div>
           <div className="wrap-input1 validate-input passphrase-box">
             <h5 className="w-100 pl-3 selectable-text mb-0 mr-3">{keypair.privateKey}</h5>
@@ -94,7 +94,7 @@ const BackupWallet = ({closeModal}: IProps) => {
           >
             <Button
               className="big-icon-button"
-              text="Go back"
+              text={t('backup_wallet.go_back_button')}
               onClick={clearData}
             />
           </Col>
@@ -107,28 +107,32 @@ const BackupWallet = ({closeModal}: IProps) => {
     <div>
       <div className="w-100">
         <div className="flex flex-col flex-vertical-center">
-          <h1 className="mb-0">Private key backup... Are you alone? </h1>
+          <h1 className="mb-0">{t('backup_wallet.title')}</h1>
           <div className="divider w-100" />
         </div>
       </div>
-      <p className=" mx-auto disclaimer-text">
-        Anyone viewing it can steal your funds from anywhere! View it in private with no cameras
-        around.
-        <br />
-        You are about to see your raw private key. Never share it with anyone! <br />
-        No one from Clorio will ever ask for it.
-      </p>
+      <p className=" mx-auto disclaimer-text">{t('backup_wallet.warning')}</p>
 
       <>
         <p className="disclaimer-text">
-          In order to continue please insert your {storedPassphrase ? 'Password' : 'Passphrase'}
+          {t('backup_wallet.instruction', {
+            passphraseType: storedPassphrase ? 'Password' : 'Passphrase',
+          })}
         </p>
         <div className="align-left mt-3 mb-2 label">
-          <strong>{storedPassphrase ? 'Password' : 'Passphrase'}</strong>
+          <strong>
+            {t('backup_wallet.passphrase_label', {
+              passphraseType: storedPassphrase ? 'Password' : 'Passphrase',
+            })}
+          </strong>
         </div>
         <Input
           inputHandler={e => setPassword(e.currentTarget.value)}
-          placeholder={storedPassphrase ? 'Insert your password' : 'Insert your Passphrase'}
+          placeholder={
+            storedPassphrase
+              ? t('backup_wallet.password_placeholder')
+              : t('backup_wallet.passphrase_placeholder')
+          }
           hidden={true}
           type="text"
         />
@@ -137,13 +141,13 @@ const BackupWallet = ({closeModal}: IProps) => {
         <Col xs={6}>
           <Button
             className="big-icon-button"
-            text="Cancel"
+            text={t('backup_wallet.cancel_button')}
             onClick={closeModal}
           />
         </Col>
         <Col xs={6}>
           <Button
-            text="Confirm"
+            text={t('backup_wallet.confirm_button')}
             disabled={disableButton()}
             onClick={deriveKeypair}
             style="primary"

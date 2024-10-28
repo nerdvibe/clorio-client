@@ -17,6 +17,7 @@ import {useWallet} from '/@/contexts/WalletContext';
 import {Badge} from 'react-bootstrap';
 import ReactTooltip from 'react-tooltip';
 import {toast} from 'react-toastify';
+import {useTranslation} from 'react-i18next'; // Importa il hook useTranslation
 
 interface IProps {
   mnemonic?: boolean;
@@ -33,6 +34,7 @@ export const CustomSidebar = ({
   toggleLoader,
   isAuthenticated,
 }: IProps) => {
+  const {t} = useTranslation();
   const [toggled, setToggled] = useState(false);
   const {updateWallet} = useWallet();
 
@@ -69,7 +71,7 @@ export const CustomSidebar = ({
     navigate('/');
   };
 
-  const root = createRoot(document.getElementById('draggable-bar'));
+  const root = createRoot(document.getElementById('draggable-bar')!);
   isAuthenticated && root.render(<SidebarToggle setToggled={setToggled} />);
 
   const isElectron = navigator.userAgent.toLowerCase().indexOf(' electron/') > -1;
@@ -79,7 +81,7 @@ export const CustomSidebar = ({
       <Sidebar
         toggled={toggled}
         customBreakPoint="1000px"
-        onBackdropClick={setToggled}
+        onBackdropClick={() => setToggled(false)} 
       >
         <Menu>
           <MenuItem className="logo-sidebar-item">
@@ -93,7 +95,7 @@ export const CustomSidebar = ({
             <MenuItem className={'sidebar-item-container ' + isRouteActiveClass('overview')}>
               {' '}
               <span>
-                <Cpu /> Overview
+                <Cpu /> {t('sidebar.overview')}
               </span>
             </MenuItem>
           </Link>
@@ -104,7 +106,7 @@ export const CustomSidebar = ({
             <MenuItem className={'sidebar-item-container ' + isRouteActiveClass('send-tx')}>
               {' '}
               <span>
-                <LogIn /> Send TX
+                <LogIn /> {t('sidebar.send_tx')}
               </span>
             </MenuItem>
           </Link>
@@ -115,7 +117,7 @@ export const CustomSidebar = ({
             <MenuItem className={'sidebar-item-container ' + isRouteActiveClass('stake')}>
               {' '}
               <span>
-                <TrendingUp /> Staking Hub
+                <TrendingUp /> {t('sidebar.staking_hub')}
               </span>
             </MenuItem>
           </Link>
@@ -128,7 +130,7 @@ export const CustomSidebar = ({
               <MenuItem className={'sidebar-item-container ' + isRouteActiveClass('sign-message')}>
                 {' '}
                 <span>
-                  <Edit3 /> Sign message
+                  <Edit3 /> {t('sidebar.sign_message')}
                 </span>
               </MenuItem>
             </Link>
@@ -140,7 +142,7 @@ export const CustomSidebar = ({
             <MenuItem className={'sidebar-item-container ' + isRouteActiveClass('verify-message')}>
               {' '}
               <span>
-                <Check /> Verify message
+                <Check /> {t('sidebar.verify_message')}
               </span>
             </MenuItem>
           </Link>
@@ -155,30 +157,30 @@ export const CustomSidebar = ({
                 disabled
               >
                 <span>
-                  <Code /> Zkapps
+                  <Code /> {t('sidebar.zkapps')}
                 </span>
                 <Badge
                   bg="secondary"
                   className="beta-tag"
                 >
-                  Beta
+                  {t('sidebar.beta')}
                 </Badge>
               </MenuItem>
             </Link>
           ) : (
             <MenuItem
               className={`sidebar-item-container ${!isElectron ? 'disabled-sidebar-item' : ''}`}
-              onClick={() => toast.error('Zkapp feature is available only in Clorio Desktop')}
+              onClick={() => toast.error(t('sidebar.zkapps_desktop_only'))}
             >
               <>
                 <span>
-                  <Code /> zkApps
+                  <Code /> {t('sidebar.zkapps')}
                 </span>
                 <Badge
                   bg="secondary"
                   className="beta-tag"
                 >
-                  Beta
+                  {t('sidebar.beta')}
                 </Badge>
               </>
             </MenuItem>

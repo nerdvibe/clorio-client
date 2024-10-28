@@ -1,4 +1,5 @@
 import {useContext, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {DEFAULT_QUERY_REFRESH_INTERVAL, storeSession, trimMiddle} from '/@/tools';
 import Avatar from '/@/tools/avatar/avatar';
 import MnemonicAccountSelection from '../modals/accountSelection/MnemonicAccountSelection';
@@ -23,6 +24,7 @@ export default function AppSettings({
   statusDot,
   network,
 }: any | {toggleLoader: (state?: boolean) => void}) {
+  const {t} = useTranslation();
   const [showModal, setShowModal] = useState(false);
   const [wallet, updateWallet] = useRecoilState(walletState);
   const {address, mnemonic: isUsingMnemonic} = wallet;
@@ -66,6 +68,7 @@ export default function AppSettings({
         ledgerAccount: 0,
         mnemonic: true,
         accountNumber: wallet.accountId,
+        isAuthenticated: true,
       });
       await refetchBalance(wallet.publicKey);
     } catch (error) {
@@ -77,15 +80,14 @@ export default function AppSettings({
         ledgerAccount: 0,
         mnemonic: true,
         accountNumber: wallet.accountId,
+        isAuthenticated: true,
       });
       await refetchBalance(wallet.publicKey);
     } finally {
       navigate('/overview');
     }
   };
-  /**
-   * If balance update is required (shouldBalanceUpdate) refetch it
-   */
+
   const refetchBalance = async (newAddress?: string) => {
     if (shouldBalanceUpdate) {
       await balanceRefetch({publicKey: newAddress || address});
@@ -117,7 +119,7 @@ export default function AppSettings({
                 cursor={'pointer'}
                 width={15}
               />{' '}
-              Change
+              {t('app_settings.change')}
             </span>
           )}
           {isUsingMnemonic && ' | '}
@@ -146,7 +148,7 @@ export default function AppSettings({
       >
         {' '}
         <div>
-          <h2 className="text-center">Change account</h2>
+          <h2 className="text-center">{t('app_settings.change_account')}</h2>
           <hr />
           <MnemonicAccountSelection
             currentAddress={address}

@@ -4,6 +4,7 @@ import {toLongMINA, trimMiddle} from '../../../tools';
 import Button from '../Button';
 import {ArrowLeft, ArrowRight} from 'react-feather';
 import Avatar from '../../../tools/avatar/avatar';
+import {useTranslation} from 'react-i18next';
 
 interface IProps {
   transactionData: ITransactionData;
@@ -15,6 +16,7 @@ interface IProps {
 }
 
 export const ConfirmTransaction = ({stepBackward, sendTransaction, transactionData}: IProps) => {
+  const {t} = useTranslation();
   const {amount, fee, receiverAddress, memo} = transactionData;
   return (
     <div className="mx-auto  ">
@@ -26,14 +28,14 @@ export const ConfirmTransaction = ({stepBackward, sendTransaction, transactionDa
               xl={8}
             >
               <div className="mt-3 mb-2 label">
-                <p className=" text-center w-100">You are going to send </p>
+                <p className=" text-center w-100">{t('confirm_transaction.send_message')}</p>
               </div>
               <Row className="w-100 mx-auto flex-col items-center mb-2">
                 <Col xs={12}>
                   <h3 className="selectable-text mb-0 text-center w-100">
                     {toLongMINA(amount)} MINA
                   </h3>
-                  <small>Amount</small>
+                  <small>{t('confirm_transaction.amount_label')}</small>
                 </Col>
                 <Col xs={12}>
                   {' '}
@@ -41,7 +43,7 @@ export const ConfirmTransaction = ({stepBackward, sendTransaction, transactionDa
                 </Col>
                 <Col xs={12}>
                   <h3 className="selectable-text mb-0 text-center w-100">{toLongMINA(fee)} MINA</h3>
-                  <small>Fee</small>
+                  <small>{t('confirm_transaction.amount_label')}</small>
                 </Col>
               </Row>
             </Col>
@@ -51,7 +53,7 @@ export const ConfirmTransaction = ({stepBackward, sendTransaction, transactionDa
               className="justify-content-center"
             >
               <div className="align-left mt-4 mb-0 label">
-                <p className="text-center w-100">to the following address </p>
+                <p className="text-center w-100">{t('confirm_transaction.to_address_message')}</p>
               </div>
               <div className="my-3">
                 <div className="inline-block-element small-avatar vertical-align-top ">
@@ -65,7 +67,7 @@ export const ConfirmTransaction = ({stepBackward, sendTransaction, transactionDa
             {memo && (
               <Col xs={12}>
                 <div className="align-left mt-2 mb-0 label">
-                  <p className="text-center w-100">with the following memo </p>
+                  <p className="text-center w-100">{t('confirm_transaction.with_memo_message')}</p>
                 </div>
                 <div className="my-3">
                   <h4 className="inline-block-element lh-30px transaction-form-address truncate-text mb-0 text-center">
@@ -79,7 +81,7 @@ export const ConfirmTransaction = ({stepBackward, sendTransaction, transactionDa
             <div className="half-card py-3">
               <Button
                 className="big-icon-button"
-                text="Go back"
+                text={t('confirm_transaction.go_back_button')}
                 icon={<ArrowLeft />}
                 onClick={stepBackward}
               />
@@ -87,7 +89,7 @@ export const ConfirmTransaction = ({stepBackward, sendTransaction, transactionDa
             <div className="half-card py-3">
               <Button
                 onClick={sendTransaction}
-                text="Confirm"
+                text={t('confirm_transaction.confirm_button')}
                 style="primary"
                 icon={<ArrowRight />}
                 appendIcon

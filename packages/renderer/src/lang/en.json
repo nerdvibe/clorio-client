@@ -28,7 +28,18 @@
     "description": "Please enter the delegation fee details.",
     "submit_button": "Submit",
     "cancel_button": "Cancel",
-    "error_message": "Invalid fee details. Please try again."
+    "error_message": "Invalid fee details. Please try again.",
+    "insert_fee": "Insert a Fee",
+    "select_fee": "Select a fee for the delegation transaction",
+    "fee": "Fee",
+    "avg": "Avg",
+    "fast": "Fast",
+    "enter_fee": "Enter a fee",
+    "fee_too_high": "Fee too high",
+    "confirm_high_fee": "Are you sure that you want to pay this transaction with",
+    "transaction_fee_notice": "This is just the transaction fee, it's not the amount that you are going to delegate.",
+    "proceed": "Proceed",
+    "cancel": "Cancel"
   },
   "custom_nonce": {
     "insert_nonce": "Insert nonce",
@@ -52,7 +63,12 @@
     "amount_label": "Amount",
     "recipient_label": "Recipient",
     "confirm_button": "Confirm",
-    "cancel_button": "Cancel"
+    "cancel_button": "Cancel",
+    "memo_label": "Memo",
+    "send_message": "You are going to send",
+    "to_address_message": "to the following address",
+    "with_memo_message": "with the following memo",
+    "go_back_button": "Go back"
   },
   "confirm_ledger_transaction": {
     "create_new_transaction": "Create new transaction",
@@ -310,5 +326,169 @@
     "be_aware": "Be aware! This",
     "receiver": "receiver",
     "reported_as_scammer": "has been reported as a scammer!"
+  },
+  "backup_wallet": {
+    "title": "Private key backup... Are you alone?",
+    "warning": "Anyone viewing it can steal your funds from anywhere! View it in private with no cameras around. You are about to see your raw private key. Never share it with anyone! No one from Clorio will ever ask for it.",
+    "instruction": "In order to continue please insert your {{passphraseType}}",
+    "passphrase_label": "{{passphraseType}}",
+    "private_key_title": "Your Private Key",
+    "private_key_warning": "This is your private key. Make sure that you safekeep this key. Whoever knows this string, will be able to access your funds.",
+    "private_key_label": "Private key",
+    "go_back_button": "Go back",
+    "cancel_button": "Cancel",
+    "confirm_button": "Confirm",
+    "error_message": "Private key not valid, please try again.",
+    "password_placeholder": "Insert your password",
+    "passphrase_placeholder": "Insert your Passphrase"
+  },
+  "registration_step": {
+    "create_new_wallet": "Create new wallet",
+    "take_note_of_wallet": "Take a note of your wallet",
+    "passphrase": "Passphrase",
+    "write_down_words": "Please carefully write down these 12 words and store them in a safe place.",
+    "public_key": "Public key",
+    "this_is_your_address": "This is your address",
+    "private_key": "Private key",
+    "this_is_your_private_key": "This is your private key",
+    "only_time_to_see_private_key": "This is the only time you will see the private key.",
+    "write_down_private_key": "Make sure to write down your private key on a secure medium and you safe keep it.",
+    "lose_private_key_warning": "If you lose your private key you will not be able to access your funds anymore!",
+    "download_paperwallet": "Download paperwallet in PDF",
+    "go_back": "Go back",
+    "continue": "Continue",
+    "show_private_key": "Show Private key",
+    "hide_private_key": "Hide Private key"
+  },
+  "app_settings": {
+    "change_account": "Change account",
+    "change": "Change",
+    "network_settings": "Network Settings",
+    "current_network": "Current Network",
+    "account_selector": "Account Selector",
+    "address": "Address",
+    "mnemonic": "Mnemonic",
+    "ledger": "Ledger",
+    "logout": "Logout",
+    "lock_session": "Lock Session",
+    "status_dot": "Status Dot",
+    "toggle_loader": "Toggle Loader",
+    "balance": "Balance",
+    "refetch_balance": "Refetch Balance",
+    "error_message": "Error Message",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "go_back": "Go Back"
+  },
+  "network_settings": {
+    "settings": "Settings",
+    "current_version": "Current version: {{version}}",
+    "current_network": "Current network",
+    "server_status": "Server status",
+    "connected_zkapps": "Connected zkapps",
+    "backup_wallet": "Backup wallet",
+    "backup": "Backup",
+    "language": "Language",
+    "network": "Network",
+    "lock_session": "Lock session",
+    "logout": "Logout"
+  },
+  "sidebar": {
+    "overview": "Overview",
+    "send_tx": "Send TX",
+    "staking_hub": "Staking Hub",
+    "sign_message": "Sign message",
+    "verify_message": "Verify message",
+    "zkapps": "zkApps",
+    "beta": "Beta",
+    "zkapps_desktop_only": "Zkapp feature is available only in Clorio Desktop"
+  },
+  "app_banner": {
+    "enhance_security": "To enhance your security we recommend to download Clorio Desktop.",
+    "download_here": "Download Clorio Desktop here."
+  },
+  "footer": {
+    "wallet_info": "~Clorio is a wallet for Mina Protocol offered by WeStake.Club.",
+    "network_unavailable": "Network unavailable"
+  },
+  "homepage": {
+    "access_power": "Access the power of the Mina Protocol Blockchain.",
+    "create_wallet": "Create new wallet",
+    "or": "or",
+    "login": "Log-in"
+  },
+  "login_selection": {
+    "login": "Login",
+    "select_method": "Select a method to login",
+    "hardware_wallet": "Hardware wallet",
+    "private_key_passphrase": "Private key\nPassphrase",
+    "go_back": "Go back"
+  },
+  "verify_mnemonic": {
+    "create_new_wallet": "Create new wallet",
+    "verify_passphrase": "Verify your passphrase",
+    "store_passphrase_tooltip": "For your security, you can store the passphrase only on Clorio Desktop",
+    "store_passphrase": "Store the passphrase",
+    "go_back": "Go back",
+    "complete": "Complete"
+  },
+  "send_tx": {
+    "new_transaction": "New Transaction",
+    "next_step": "Next Step",
+    "previous_step": "Previous Step",
+    "confirm_transaction": "Confirm Transaction",
+    "broadcasting_transaction": "Broadcasting Transaction",
+    "transaction_success": "Transaction successfully broadcasted",
+    "transaction_error": "There was an error broadcasting delegation",
+    "check_passphrase_private_key": "Please check your Passphrase or Private key",
+    "check_receiver_passphrase": "Check if the receiver address and/or the passphrase/private key are right",
+    "ledger_error": "An error occurred while loading hardware wallet",
+    "nonce_error": "There was an error fetching the nonce",
+    "balance_error": "There was an error fetching the balance",
+    "memo_length_error": "Memo length exceeds the limit",
+    "amount_error": "Invalid amount",
+    "fee_error": "Invalid fee",
+    "transaction_fields_error": "Invalid transaction fields",
+    "ledger_not_open": "Please open the Mina app on your Ledger device",
+    "ledger_signature_failed": "The signature process through the ledger failed",
+    "ledger_waiting": "Waiting for the Ledger device to sign the transaction",
+    "ledger_waiting_time": "This could take up to 3 minutes.",
+    "ledger_retry": "Retry",
+    "ledger_go_back": "Go back",
+    "broadcasting": "Broadcasting",
+    "broadcasting_message": "We are broadcasting your transaction to the network",
+    "nonce_loading": "Loading nonce...",
+    "nonce_custom": "Insert custom nonce",
+    "nonce_proceed": "Proceed",
+    "nonce_close": "Close"
+  },
+  "stake": {
+    "delegation_success": "Delegation successfully broadcasted",
+    "broadcasting_delegation": "Broadcasting delegation",
+    "error_loading_hardware_wallet": "An error occurred while loading hardware wallet",
+    "error_processing_delegation": "There was an error processing your delegation, please try again later.",
+    "error_missing_public_key": "The Public key of the selected delegate is missing",
+    "error_recipient_public_key": "Recipient Public key is not defined",
+    "error_balance": "Insufficient balance to cover the fee",
+    "error_nonce": "Failed to fetch nonce, please try again later.",
+    "error_general": "An error occurred, please try again later."
+  },
+  "login": {
+    "title": "Login",
+    "subtitle": "Sign in with your passphrase or private key",
+    "no_wallet": "Don't have a wallet?",
+    "create_one": "Create one",
+    "enter_here": "Enter here",
+    "store_passphrase": "Store the passphrase",
+    "store_passphrase_tooltip": "Available only on desktop version",
+    "go_back": "Go back",
+    "access_wallet": "Access the wallet",
+    "passphrase_error": "You misspelled the following words: ",
+    "private_key_error": "Private key not valid, please try again.",
+    "offline_warning": "You are currently offline."
+  },
+  "verify_message": {
+    "message_valid": "Message is valid",
+    "message_invalid": "Message is not valid"
   }
 }

@@ -3,8 +3,10 @@ import {GET_NETWORK} from '../../graphql/query';
 import {storeNetworkData} from '../../tools';
 import type {INetworkData} from '../../types/NetworkData';
 import NetworkSettings from './sidebar/NetworkSettings';
+import {useTranslation} from 'react-i18next';
 
 const Footer = () => {
+  const {t} = useTranslation();
   const {data: network} = useQuery<INetworkData>(GET_NETWORK, {
     onCompleted: async data => {
       if (data?.nodeInfo) {
@@ -14,11 +16,11 @@ const Footer = () => {
   });
   const renderNetwork = network?.nodeInfo
     ? `${network.nodeInfo.name} | ${network.nodeInfo.network}`
-    : 'Network unavailable';
+    : t('footer.network_unavailable');
 
   return (
     <div className="full-width-align-center footer-text">
-      ~Clorio is a wallet for Mina Protocol offered by WeStake.Club.
+      {t('footer.wallet_info')}
       <br />
       <div>{renderNetwork}</div>
       <NetworkSettings
