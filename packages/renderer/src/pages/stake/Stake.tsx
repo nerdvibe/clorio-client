@@ -2,6 +2,7 @@ import {useState, useContext, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {toast} from 'react-toastify';
 import {useQuery, useMutation} from '@apollo/client';
+import {useTranslation} from 'react-i18next'; // Importa il hook useTranslation
 import NewsBanner from '../../components/UI/NewsBanner';
 import Hoc from '../../components/UI/Hoc';
 import type {IValidatorData} from '/@/components/stake/stakeTableRow/ValidatorDataTypes';
@@ -58,6 +59,7 @@ interface IProps {
 }
 
 const Stake = ({sessionData}: IProps) => {
+  const {t} = useTranslation();
   const [storedPassphrase, setStoredPassphrase] = useState<boolean>(false);
   const navigate = useNavigate();
   const [delegateData, setDelegate] = useState<IValidatorData>(initialDelegateData);
@@ -160,7 +162,7 @@ const Stake = ({sessionData}: IProps) => {
         setShouldBalanceUpdate(true);
       }
       nonceAndDelegateRefetch({publicKey: sessionData.address});
-      toast.success('Delegation successfully broadcasted');
+      toast.success(t('stake.delegation_success'));
       navigate('/stake');
     }
     broadcastLedgerTransaction();
@@ -195,7 +197,7 @@ const Stake = ({sessionData}: IProps) => {
         });
         setSendTransactionFlag(true);
       }
-    } catch (e) {
+    } catch (e: any) {
       toast.error(e.message);
     }
   };
@@ -307,7 +309,7 @@ const Stake = ({sessionData}: IProps) => {
   const signLedgerDelegation = async () => {
     try {
       if (!delegateData?.publicKey) {
-        throw new Error('Recipient Public key is not defined');
+        throw new Error(t('stake.error_recipient_public_key'));
       }
       checkBalance(selectedFee, balance);
       // Check if the mina app is open
@@ -325,8 +327,8 @@ const Stake = ({sessionData}: IProps) => {
       const signature = await signTransaction(transactionToSend);
       setShowModal(ModalStates.BROADCASTING);
       setLedgerTransactionData(signature.signature);
-    } catch (e) {
-      toast.error(e.message || 'An error occurred while loading hardware wallet');
+    } catch (e: any) {
+      toast.error(e.message || t('stake.error_loading_hardware_wallet'));
       setShowModal('');
     }
   };
@@ -337,7 +339,7 @@ const Stake = ({sessionData}: IProps) => {
   const signDelegation = async (passphrase?: string) => {
     try {
       if (!delegateData?.publicKey) {
-        throw new Error('The Public key of the selected delegate is missing');
+        throw new Error(t('stake.error_missing_public_key'));
       }
       checkBalance(selectedFee, balance);
       const actualNonce = getNonce();
@@ -369,16 +371,14 @@ const Stake = ({sessionData}: IProps) => {
             signature: signatureInput,
           },
         });
-        toast.info('Broadcasting delegation');
+        toast.info(t('stake.broadcasting_delegation'));
         setSendTransactionFlag(true);
         setShowModal('');
         setPrivateKey('');
       }
-    } catch (e) {
+    } catch (e: any) {
       setPrivateKey('');
-      toast.error(
-        e.message || 'There was an error processing your delegation, please try again later.',
-      );
+      toast.error(e.message || t('stake.error_processing_delegation'));
     }
   };
 

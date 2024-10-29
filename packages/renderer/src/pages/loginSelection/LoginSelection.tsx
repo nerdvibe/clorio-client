@@ -1,17 +1,20 @@
 import {Link} from 'react-router-dom';
 import {ArrowLeft} from 'react-feather';
+import {useTranslation} from 'react-i18next';
 import UsbDrive from './assets/usb-drive.svg';
 import FileLock from './assets/file-lock.svg';
 import Button from '../../components/UI/Button';
 
 function LoginSelection() {
+  const {t} = useTranslation();
+
   return (
     <div className="full-screen-container-center animate__animated animate__fadeIn">
       <div className="homepage-card glass-card flex flex-col flex-vertical-center">
         <div className="w-100">
           <div className="flex flex-col flex-vertical-center">
-            <h1>Login</h1>
-            <p className="text-center mt-1">Select a method to login</p>
+            <h1>{t('login_selection.login')}</h1>
+            <p className="text-center mt-1">{t('login_selection.select_method')}</p>
             <div className="divider" />
           </div>
         </div>
@@ -24,7 +27,7 @@ function LoginSelection() {
                   alt="Ledger login"
                   className="big-icon"
                 />
-                <p className="mt-2">Hardware wallet</p>
+                <p className="mt-2">{t('login_selection.hardware_wallet')}</p>
               </div>
             </Link>
           </div>
@@ -36,10 +39,7 @@ function LoginSelection() {
                   alt="Private key"
                   className="big-icon"
                 />
-                <p className="mt-2">
-                  Private key <br />
-                  Passphrase
-                </p>
+                <p className="mt-2">{t('login_selection.private_key_passphrase')}</p>
               </div>
             </Link>
           </div>
@@ -47,7 +47,7 @@ function LoginSelection() {
         <div className="w-50 mt-5">
           <Button
             className="big-icon-button"
-            text="Go back"
+            text={t('login_selection.go_back')}
             link="/"
             icon={<ArrowLeft />}
           />

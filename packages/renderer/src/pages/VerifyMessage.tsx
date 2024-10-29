@@ -4,8 +4,11 @@ import VerifyForm from '../components/forms/verifyMessage/VerifyMessageForm';
 import type {IMessageToVerify} from '../types/MessageToVerify';
 import ReactTooltip from 'react-tooltip';
 import {client} from '../tools';
+import {useTranslation} from 'react-i18next';
 
 function VerifyMessage() {
+  const {t} = useTranslation();
+
   const verifySignedMessage = async (messageToVerify: IMessageToVerify) => {
     const {address, message, field, scalar} = messageToVerify;
     try {
@@ -19,13 +22,13 @@ function VerifyMessage() {
           },
         };
         if ((await client()).verifyMessage(signedMessage)) {
-          toast.success('Message is valid');
+          toast.success(t('verify_message.message_valid'));
         } else {
-          toast.error('Message is not valid');
+          toast.error(t('verify_message.message_invalid'));
         }
       }
     } catch (e) {
-      toast.error('Message is not valid');
+      toast.error(t('verify_message.message_invalid'));
     }
   };
 

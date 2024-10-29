@@ -2,6 +2,7 @@ import {useState, useEffect, useContext} from 'react';
 import {useQuery, useMutation, useLazyQuery} from '@apollo/client';
 import {useNavigate} from 'react-router-dom';
 import {toast} from 'react-toastify';
+import {useTranslation} from 'react-i18next';
 import TransactionForm from '/@/components/forms/transactionForm/TransactionForm';
 import {
   ConfirmTransaction,
@@ -52,6 +53,7 @@ interface IProps {
 }
 
 function SendTX(props: IProps) {
+  const {t} = useTranslation();
   const navigate = useNavigate();
   const numberOfSteps = Object.values(SendTXPageSteps).filter(val => !isNaN(+val)).length;
   const [privateKey, setPrivateKey] = useState<string>('');
@@ -173,7 +175,7 @@ function SendTX(props: IProps) {
         if (setShouldBalanceUpdate) {
           setShouldBalanceUpdate(true);
         }
-        toast.success('Transaction successfully broadcasted');
+        toast.success(t('send_tx.transaction_success'));
         setStep(SendTXPageSteps.FORM);
         navigate('/send-tx');
       }, 3000);
@@ -209,7 +211,7 @@ function SendTX(props: IProps) {
         setSendTransactionFlag(true);
       }
     } catch (e) {
-      toast.error('There was an error broadcasting delegation');
+      toast.error(t('send_tx.transaction_error'));
     }
   };
 
@@ -237,7 +239,7 @@ function SendTX(props: IProps) {
         setShowModal('');
       }
     } catch (e) {
-      toast.error(e.message);
+      toast.error(t('send_tx.balance_error'));
     }
   };
 
@@ -261,7 +263,7 @@ function SendTX(props: IProps) {
       setKeypair(derivedData);
       setStep(SendTXPageSteps.CONFIRMATION);
     } catch (e) {
-      toast.error('Please check your Passphrase or Private key');
+      toast.error(t('send_tx.check_passphrase_private_key'));
     }
   };
 
@@ -326,7 +328,7 @@ function SendTX(props: IProps) {
       setLedgerTransactionData(signature.signature);
       setStep(SendTXPageSteps.CONFIRMATION);
     } catch (e) {
-      toast.error(e.message || 'An error occurred while loading hardware wallet');
+      toast.error(t('send_tx.ledger_error'));
       setLedgerError(true);
     }
   };
@@ -374,7 +376,7 @@ function SendTX(props: IProps) {
       }
     } catch (e) {
       setShowModal('');
-      toast.error('Check if the receiver address and/or the passphrase/private key are right');
+      toast.error(t('send_tx.check_receiver_passphrase'));
       stepBackwards();
       setPrivateKey('');
     }
@@ -394,7 +396,7 @@ function SendTX(props: IProps) {
         <div>
           <div className="w-100">
             <div className="flex flex-col flex-vertical-center">
-              <h1>New Transaction</h1>
+              <h1>{t('send_tx.new_transaction')}</h1>
               <Stepper
                 max={numberOfSteps}
                 step={step + 1}

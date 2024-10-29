@@ -4,6 +4,7 @@ import {Row, Col} from 'react-bootstrap';
 import {ArrowLeft, ArrowRight} from 'react-feather';
 import Button from '../../components/UI/Button';
 import ReactTooltip from 'react-tooltip';
+import {useTranslation} from 'react-i18next';
 
 interface IProps {
   mnemonic: string;
@@ -22,6 +23,7 @@ export function VerifyMnemonic({
   storePassphrase,
   goBack,
 }: IProps) {
+  const {t} = useTranslation();
   const [disableButton, setDisableButton] = useState<boolean>(true);
   const [wordsFoundArray, setWordsFoundArray] = useState<string[]>([]);
 
@@ -89,8 +91,8 @@ export function VerifyMnemonic({
       <div className="">
         <div className="w-100">
           <div className="flex flex-col flex-vertical-center">
-            <h1>Create new wallet</h1>
-            <p className="text-center mt-1">Verify your passphrase</p>
+            <h1>{t('verify_mnemonic.create_new_wallet')}</h1>
+            <p className="text-center mt-1">{t('verify_mnemonic.verify_passphrase')}</p>
             <div className="divider" />
           </div>
         </div>
@@ -123,11 +125,7 @@ export function VerifyMnemonic({
         <div>
           <span
             className="checkbox-container"
-            data-tip={
-              !isElectron()
-                ? 'For your security, you can store the passphrase only on Clorio Desktop'
-                : undefined
-            }
+            data-tip={!isElectron() ? t('verify_mnemonic.store_passphrase_tooltip') : undefined}
           >
             <input
               className="checkbox"
@@ -143,7 +141,7 @@ export function VerifyMnemonic({
               className="ml-2 checkbox-label"
               htmlFor="storePassphrase"
             >
-              Store the passphrase
+              {t('verify_mnemonic.store_passphrase')}
             </label>
           </span>
         </div>
@@ -152,7 +150,7 @@ export function VerifyMnemonic({
             <Button
               className="big-icon-button"
               icon={<ArrowLeft />}
-              text="Go back"
+              text={t('verify_mnemonic.go_back')}
               onClick={() => {
                 goBack();
                 closeVerification();
@@ -161,7 +159,7 @@ export function VerifyMnemonic({
           </Col>
           <Col xs={6}>
             <Button
-              text="Complete"
+              text={t('verify_mnemonic.complete')}
               style="primary"
               icon={<ArrowRight />}
               appendIcon
