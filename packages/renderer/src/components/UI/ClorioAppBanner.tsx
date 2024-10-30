@@ -1,8 +1,10 @@
 import isElectron from 'is-electron';
-import { useState } from 'react';
-import { X } from 'react-feather';
+import {useState} from 'react';
+import {X} from 'react-feather';
+import {useTranslation} from 'react-i18next';
 
 export const ClorioAppBanner = () => {
+  const {t} = useTranslation();
   const [show, setShow] = useState(true);
   return !isElectron() ? (
     <div
@@ -12,21 +14,22 @@ export const ClorioAppBanner = () => {
     >
       <div>
         <div>
+          <p>{t('app_banner.enhance_security')}</p>
           <p>
-            To enhance your security we recommend to download Clorio Desktop.
-          </p>
-          <p>
-            Download Clorio Desktop{' '}
+            {t('app_banner.download_here')}{' '}
             <a
               href={import.meta.env.VITE_REACT_APP_GITHUB_RELEASE_URL}
               target="_blank"
               rel="noreferrer"
             >
-              here.
+              {t('app_banner.download_here')}
             </a>
           </p>
         </div>
-        <div className="close-button" onClick={() => setShow(false)}>
+        <div
+          className="close-button"
+          onClick={() => setShow(false)}
+        >
           <X />
         </div>
       </div>

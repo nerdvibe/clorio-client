@@ -1,23 +1,26 @@
 import {ArrowLeft} from 'react-feather';
 import Button from '../UI/Button';
+import {useTranslation} from 'react-i18next';
 
 const LedgerIncompatible = () => {
+  const {t} = useTranslation();
+
   return (
     <div>
       <div className="w-100">
         <div className="flex flex-col flex-vertical-center">
-          <h1>Login</h1>
-          <p className="text-center mt-1">Connect now your Ledger wallet and open the Mina app</p>
+          <h1>{t('ledger_incompatible.login')}</h1>
+          <p className="text-center mt-1">{t('ledger_incompatible.connect_ledger')}</p>
           <div className="divider w-100" />
         </div>
       </div>
-      <div className="pt-2 mb-3 Your Gift Card Balance: €39.03 ">
+      <div className="pt-2 mb-3">
         <div>
           <h6 className="full-width-align-center">
-            ❌ Browser is incompatible, please use the last version of Chrome, Edge or Opera
+            {t('ledger_incompatible.browser_incompatible')}
           </h6>
           <div className="mt-5">
-            Do you need a Ledger wallet?
+            {t('ledger_incompatible.need_ledger')}
             <a
               className="inline-block-element"
               href={import.meta.env.VITE_REACT_APP_LEDGER_URL}
@@ -26,7 +29,7 @@ const LedgerIncompatible = () => {
               <Button
                 style="no-style"
                 className="purple-text"
-                text="Buy it here"
+                text={t('ledger_incompatible.buy_here')}
               />
             </a>
           </div>
@@ -37,7 +40,7 @@ const LedgerIncompatible = () => {
         <Button
           className="big-icon-button"
           icon={<ArrowLeft />}
-          text="Go back"
+          text={t('ledger_incompatible.go_back')}
           link="/login-selection"
         />
       </div>

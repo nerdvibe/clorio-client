@@ -14,14 +14,16 @@ import {BalanceContext} from '../../contexts/balance/BalanceContext';
 import {balanceTooltip} from './util';
 import CustomSkeleton from '../CustomSkeleton';
 import Truncate from 'react-truncate-inside';
-import { useRecoilValue } from 'recoil';
-import { walletState } from '/@/store';
+import {useRecoilValue} from 'recoil';
+import {walletState} from '/@/store';
+import {useTranslation} from 'react-i18next';
 
 const Balance = () => {
   const wallet = useRecoilValue(walletState);
   const {address} = wallet;
   const textRef = useRef(null);
   const bigTextRef = useRef(null);
+  const {t} = useTranslation();
 
   const [width, setwidth] = useState(0);
   const [widthBigText, setwidthBigText] = useState(0);
@@ -133,7 +135,7 @@ const Balance = () => {
               <Col xs={12}>
                 <div className="flex my-2 items-center justify-start gap-2">
                   <h6 className="secondaryText width-fit">
-                    This is your address
+                    {t('balance.this_is_your_address')}
                     <Button
                       className="inline-element"
                       icon={<Copy size={20} />}
@@ -160,7 +162,7 @@ const Balance = () => {
             </Row>
             <div className="flex flex-row justify-start">
               <div className="inline-block-element">
-                <h6 className="secondaryText">Your balance</h6>
+                <h6 className="secondaryText">{t('balance.your_balance')}</h6>
                 <CustomSkeleton
                   show={(!balanceLoading && balanceData && userBalance) || balanceError}
                   altProps={{height: 20, width: 150}}
@@ -170,7 +172,7 @@ const Balance = () => {
                     className="animate__animated animate__fadeIn"
                   >
                     {balanceError
-                      ? 'Not available'
+                      ? t('balance.not_available')
                       : renderBalance({balanceData, balanceLoading, userBalance})}
                   </h5>
                 </CustomSkeleton>
@@ -180,14 +182,14 @@ const Balance = () => {
               </div>
               <div className="inline-block-element ml-2">
                 <span>
-                  <h6 className="secondaryText">BTC Apx. value</h6>
+                  <h6 className="secondaryText">{t('balance.btc_apx_value')}</h6>
                   <CustomSkeleton
                     show={(!tickerLoading && tickerData && userBalance) || tickerError}
                     altProps={{height: 20, width: 150}}
                   >
                     <h5 data-tip={balanceTooltip(balanceData)}>
                       {tickerError
-                        ? 'Not available'
+                        ? t('balance.not_available')
                         : userBalanceToSymbolValue({
                             tickerData,
                             tickerLoading,
@@ -204,14 +206,14 @@ const Balance = () => {
               </div>
               <div className="inline-block-element ml-2">
                 <span>
-                  <h6 className="secondaryText">USDT Apx. value</h6>
+                  <h6 className="secondaryText">{t('balance.usdt_apx_value')}</h6>
                   <CustomSkeleton
                     show={(!tickerLoading && tickerData && userBalance) || tickerError}
                     altProps={{height: 20, width: 150}}
                   >
                     <h5 data-tip={balanceTooltip(balanceData)}>
                       {tickerError
-                        ? 'Not available'
+                        ? t('balance.not_available')
                         : userBalanceToSymbolValue({
                             tickerData,
                             tickerLoading,
@@ -252,7 +254,7 @@ const Balance = () => {
               <Col xs={12}>
                 <div className="flex my-2 items-center justify-start gap-2">
                   <h6 className="secondaryText width-fit">
-                    This is your address
+                    {t('balance.this_is_your_address')}
                     <Button
                       className="inline-element"
                       icon={<Copy size={18} />}
@@ -282,7 +284,7 @@ const Balance = () => {
         <div>
           <div className="flex flex-row justify-between px-4 mt-4">
             <div className="inline-block-element text-center w-100">
-              <h6 className="secondaryText text-center">Your balance</h6>
+              <h6 className="secondaryText text-center">{t('balance.your_balance')}</h6>
               <CustomSkeleton
                 show={(!balanceLoading && balanceData && userBalance) || balanceError}
                 altProps={{height: 20, width: 150}}
@@ -292,7 +294,7 @@ const Balance = () => {
                   className="animate__animated animate__fadeIn text-center"
                 >
                   {balanceError
-                    ? 'Not available'
+                    ? t('balance.not_available')
                     : renderBalance({balanceData, balanceLoading, userBalance})}
                 </h6>
               </CustomSkeleton>
@@ -302,7 +304,7 @@ const Balance = () => {
             </div>
             <div className="inline-block-element ml-2 w-100">
               <span>
-                <h6 className="secondaryText text-center">BTC Apx. value</h6>
+                <h6 className="secondaryText text-center">{t('balance.btc_apx_value')}</h6>
                 <CustomSkeleton
                   show={(!tickerLoading && tickerData && userBalance) || tickerError}
                   altProps={{height: 20, width: 150}}
@@ -312,7 +314,7 @@ const Balance = () => {
                     className="text-center"
                   >
                     {tickerError
-                      ? 'Not available'
+                      ? t('balance.not_available')
                       : userBalanceToSymbolValue({
                           tickerData,
                           tickerLoading,

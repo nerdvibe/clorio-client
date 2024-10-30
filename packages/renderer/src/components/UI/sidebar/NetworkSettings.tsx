@@ -13,6 +13,9 @@ import {networkState} from '/@/store';
 import {ConnectedZkapps} from './ConnectedZkapps';
 import {NetConfig, sendResponse} from '/@/tools/mina-zkapp-bridge';
 import isElectron from 'is-electron';
+import i18next from 'i18next';
+import {useTranslation} from 'react-i18next'; // Import corretto
+import {languages} from '/@/lang/i18n';
 
 export default function NetworkSettings({
   currentNetwork,
@@ -27,6 +30,8 @@ export default function NetworkSettings({
   lockSession?: () => void;
   hideBackup?: boolean;
 }) {
+  const {t} = useTranslation();
+
   /**
    * Show private key backup modal
    */
@@ -45,7 +50,15 @@ export default function NetworkSettings({
     });
   }, []);
 
+  // Get the list of available languages from i18n
+  const languageSelectHandler = (e: any) => {
+    i18next.changeLanguage(e.target.value);
+  };
+
+  const currentLanguage = i18next.language;
+
   const networkSelectHandler = (e: any) => {
+    if (!availableNetworks) return;
     const network = availableNetworks[e.target.value];
     saveSettings(network);
     setNetworkState(prev => ({
@@ -62,6 +75,7 @@ export default function NetworkSettings({
     } as NetConfig);
     navigate('/overview');
   };
+
   return (
     <>
       <span
@@ -72,40 +86,42 @@ export default function NetworkSettings({
           cursor={'pointer'}
           width={15}
         />{' '}
-        Settings
+        {t('network_settings.settings')}
       </span>
       <ModalContainer
         show={showModal}
         close={() => setShowModal(false)}
       >
         <div className="settings-modal-container">
-          <h1 className="w-100 text-center">Settings</h1>
-          <p className="w-100 text-center small">Current version: 2.1.3</p>
+          <h1 className="w-100 text-center">{t('network_settings.settings')}</h1>
+          <p className="w-100 text-center small">
+            {t('network_settings.current_version', {version: '2.1.3'})}
+          </p>
           <hr />
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
               <div className="flex flex-row justify-between items-center">
-                <label className="text-start">Current network</label>
+                <label className="text-start">{t('network_settings.current_network')}</label>
                 {currentNetwork}
               </div>
               {network?.nodeInfo?.syncStatus && (
                 <div className="flex flex-row justify-between items-center">
-                  <label className="text-start">Server status</label>
+                  <label className="text-start">{t('network_settings.server_status')}</label>
                   {network.nodeInfo.syncStatus}
                 </div>
               )}
             </div>
             <div className="flex flex-row justify-between items-center">
-              <label className="text-start">Connected zkapps</label>
+              <label className="text-start">{t('network_settings.connected_zkapps')}</label>
               <ConnectedZkapps />
             </div>
             {!hideBackup && storedPassphrase && (
               <div className="flex flex-col gap-2">
                 <div className="flex flex-row gap-4 justify-between">
-                  <label className="text-start">Backup wallet</label>
+                  <label className="text-start">{t('network_settings.backup_wallet')}</label>
                   <Button
                     onClick={toggleBackupModal}
-                    text="Backup"
+                    text={t('network_settings.backup')}
                     className="link-button custom-delegate-button purple-text align-end  no-padding"
                   />
                 </div>
@@ -113,24 +129,44 @@ export default function NetworkSettings({
             )}
 
             <div className="flex flex-row justify-between items-center">
-              <label className="text-start">Network</label>
+              <label className="text-start">{t('network_settings.language')}</label>
+              <Form.Select
+                className="w-50"
+                aria-label="Select a network"
+                onChange={languageSelectHandler}
+                defaultValue={currentLanguage}
+              >
+                {languages.map(({value, label}) => (
+                  <option
+                    key={value}
+                    value={value}
+                  >
+                    {label}
+                  </option>
+                ))}
+              </Form.Select>
+            </div>
+
+            <div className="flex flex-row justify-between items-center">
+              <label className="text-start">{t('network_settings.network')}</label>
               <Form.Select
                 className="w-50"
                 aria-label="Select a network"
                 onChange={networkSelectHandler}
                 defaultValue={settings?.label?.toLowerCase()}
               >
-                {Object.keys(availableNetworks).map(network => {
-                  const networkData = availableNetworks[network];
-                  return (
-                    <option
-                      key={networkData.label}
-                      value={network}
-                    >
-                      {networkData.label}
-                    </option>
-                  );
-                })}
+                {availableNetworks &&
+                  Object.keys(availableNetworks).map(network => {
+                    const networkData = availableNetworks[network];
+                    return (
+                      <option
+                        key={networkData.label}
+                        value={network}
+                      >
+                        {networkData.label}
+                      </option>
+                    );
+                  })}
               </Form.Select>
             </div>
             <div className="flex flex-row">
@@ -140,7 +176,7 @@ export default function NetworkSettings({
                   onClick={lockSession}
                 >
                   <Lock className="large-icon" />
-                  <p className="mt-2">Lock session</p>
+                  <p className="mt-2">{t('network_settings.lock_session')}</p>
                 </div>
               )}
               {logout && (
@@ -149,7 +185,7 @@ export default function NetworkSettings({
                   onClick={logout}
                 >
                   <LogOut className="large-icon" />
-                  <p className="mt-2">Logout</p>
+                  <p className="mt-2">{t('network_settings.logout')}</p>
                 </div>
               )}
             </div>

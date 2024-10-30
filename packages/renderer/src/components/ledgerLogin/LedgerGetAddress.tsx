@@ -12,6 +12,7 @@ import {useNavigate} from 'react-router-dom';
 import {useSetRecoilState} from 'recoil';
 import {configState, walletState} from '/@/store';
 import {getPublicKey} from '/@/tools/ledger/ledger';
+import {useTranslation} from 'react-i18next';
 
 interface IProps {
   accountNumber?: number;
@@ -19,6 +20,7 @@ interface IProps {
 }
 
 const LedgerGetAddress = ({accountNumber, toggleLoader}: IProps) => {
+  const {t} = useTranslation();
   const [publicKey, setPublicKey] = useState<string>('');
   const [ledgerAccount] = useState<number>(accountNumber || 0);
   const navigate = useNavigate();
@@ -90,8 +92,8 @@ const LedgerGetAddress = ({accountNumber, toggleLoader}: IProps) => {
         <div>
           <div className="w-100">
             <div className="flex flex-col flex-vertical-center">
-              <h1>Login</h1>
-              <p className="text-center mt-1">Let&apos;s verify the your address</p>
+              <h1>{t('ledger_get_address.login')}</h1>
+              <p className="text-center mt-1">{t('ledger_get_address.verify_address')}</p>
               <div className="divider w-100" />
             </div>
           </div>
@@ -99,15 +101,15 @@ const LedgerGetAddress = ({accountNumber, toggleLoader}: IProps) => {
             <div>
               <LedgerLoader width="500px" />
               <p className="full-width-align-center my-4">
-                Looking for the Public key. Please confirm it on your Ledger device
+                {t('ledger_get_address.looking_for_public_key')}
               </p>
               <h6 className="w-100 text-center mb-4">
-                This could take up to one minute and a half
+                {t('ledger_get_address.confirmation_time')}
               </h6>
               <Button
                 className="big-icon-button w-50 mx-auto"
                 icon={<ArrowLeft />}
-                text="Go back"
+                text={t('ledger_get_address.go_back')}
                 link="/login-selection"
               />
             </div>

@@ -7,6 +7,7 @@ import Input from '../input/Input';
 import { Col, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { ArrowLeft, ArrowRight } from 'react-feather';
+import { useTranslation } from 'react-i18next';
 
 interface IProps {
   keypair: IKeypair;
@@ -14,6 +15,7 @@ interface IProps {
 }
 
 export const PdfEncryption = ({ keypair, closeModal }: IProps) => {
+  const { t } = useTranslation();
   const [pdfPassword, setPDFPassword] = useState('');
 
   /**
@@ -23,9 +25,9 @@ export const PdfEncryption = ({ keypair, closeModal }: IProps) => {
     if (pdfPassword.trim() !== '') {
       downloadPaperWalletPDF(keypair, pdfPassword);
       closeModal();
-      toast.info('Downloading Clorio Paper Wallet');
+      toast.info(t('pdf_encryption.download_success'));
     } else {
-      toast.error('Password cannot be empty');
+      toast.error(t('pdf_encryption.password_empty_error'));
     }
   };
 
@@ -34,9 +36,9 @@ export const PdfEncryption = ({ keypair, closeModal }: IProps) => {
       <div>
         <div className="w-100">
           <div className="flex flex-col flex-vertical-center">
-            <h1>Document encryption</h1>
+            <h1>{t('pdf_encryption.document_encryption')}</h1>
             <p className="text-center mt-1">
-              Please set a password to encrypt the document
+              {t('pdf_encryption.set_password')}
             </p>
             <div className="divider w-100" />
           </div>
@@ -44,7 +46,7 @@ export const PdfEncryption = ({ keypair, closeModal }: IProps) => {
         <div className="v-spacer" />
         <Input
           inputHandler={(e) => setPDFPassword(e.currentTarget.value)}
-          placeholder="Insert a password"
+          placeholder={t('pdf_encryption.insert_password')}
           hidden={true}
           type="text"
         />
@@ -54,14 +56,14 @@ export const PdfEncryption = ({ keypair, closeModal }: IProps) => {
             <Button
               className="big-icon-button"
               icon={<ArrowLeft />}
-              text="Cancel"
+              text={t('pdf_encryption.cancel')}
               onClick={closeModal}
             />
           </Col>
           <Col xs={6}>
             <Button
               onClick={downloadPdfAndCloseModal}
-              text="Save"
+              text={t('pdf_encryption.save')}
               style="primary"
               icon={<ArrowRight />}
               disabled={pdfPassword.length < 1}

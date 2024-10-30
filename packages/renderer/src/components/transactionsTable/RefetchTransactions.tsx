@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import Button from '../UI/Button';
-import { DEFAULT_REFRESH_COUNTDOWN } from '../../tools';
+import {DEFAULT_REFRESH_COUNTDOWN} from '../../tools';
+import {useTranslation} from 'react-i18next';
 
-const RefetchTransactions = ({ refetch }: any) => {
+const RefetchTransactions = ({refetch}: any) => {
+  const {t} = useTranslation();
   const [countdown, setCountdown] = useState(DEFAULT_REFRESH_COUNTDOWN);
 
   const countdownHandler = () => {
@@ -38,15 +40,15 @@ const RefetchTransactions = ({ refetch }: any) => {
   };
 
   if (countdown >= 20) {
-    return <div className="small-text pt-3 mb-1 px-3">Just fetched</div>;
+    return <div className="small-text pt-3 mb-1 px-3">{t('refetch_transaction.just_fetched')}</div>;
   }
 
   return (
     <div className="small-text pt-3 mb-1">
-      Fetching data in {countdown}s
+      {t('refetch_transaction.fetching_data_in', {countdown})}
       <Button
         className="inline-element link-button"
-        text="Refresh"
+        text={t('refetch_transaction.refresh')}
         onClick={refetchAndResetTimer}
       />
     </div>

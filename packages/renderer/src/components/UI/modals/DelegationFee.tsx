@@ -13,6 +13,7 @@ import Button from '../Button';
 import Input from '../input/Input';
 import type {IEstimatedFee} from '../../../types/Fee';
 import {ArrowLeft, ArrowRight} from 'react-feather';
+import {useTranslation} from 'react-i18next';
 
 interface IProps {
   proceedHandler: (fee: number) => void;
@@ -23,6 +24,7 @@ interface IProps {
 }
 
 export const DelegationFee = ({proceedHandler, fees, closeModal}: IProps) => {
+  const {t} = useTranslation();
   const averageFee = feeOrDefault(fees?.estimatedFee?.txFees?.average || 0);
   const fastFee = feeOrDefault(fees?.estimatedFee?.txFees?.fast || 0);
   const [fee, setFee] = useState<number>(feeOrDefault(averageFee));
@@ -46,35 +48,31 @@ export const DelegationFee = ({proceedHandler, fees, closeModal}: IProps) => {
       proceedHandler(feeToSend);
       return;
     }
-    const message = `Fee ${fee} is less than the minimum fee (${toMINA(MINIMUM_FEE)})`;
+    const message = `${t('delegation_fee.error_message')} (${toMINA(MINIMUM_FEE)})`;
     toast.error(message);
   };
 
   const highFeeWarningContent = () => (
     <div className="min-width-500">
       <div className="flex flex-col flex-vertical-center">
-        <h1 className="text-center mb-0">Fee too high</h1>
+        <h1 className="text-center mb-0">{t('delegation_fee.fee_too_high')}</h1>
         <div className="divider" />
       </div>
       <p className="text-center">
-        Are you sure that you want to pay
-        <br /> this transaction with <strong>{fee}</strong> Mina? <br />
+        {t('delegation_fee.confirm_high_fee')} <br /> <strong>{fee}</strong> Mina? <br />
       </p>
-      <p className="text-center mb-4">
-        This is just the transaction fee, it&apos;s not <br /> the amount that you are going to
-        delegate.
-      </p>
+      <p className="text-center mb-4">{t('delegation_fee.transaction_fee_notice')}</p>
       <Row>
         <Col xs={6}>
           <Button
             className="big-icon-button"
-            text="Cancel"
+            text={t('delegation_fee.cancel')}
             onClick={() => setHighFeeWarning(false)}
           />
         </Col>
         <Col xs={6}>
           <Button
-            text="Proceed"
+            text={t('delegation_fee.proceed')}
             style="primary"
             icon={<ArrowRight />}
             appendIcon
@@ -91,31 +89,31 @@ export const DelegationFee = ({proceedHandler, fees, closeModal}: IProps) => {
     <div className="min-width-500">
       <div className="w-100">
         <div className="flex flex-col flex-vertical-center">
-          <h1 className="mb-0">Insert a Fee </h1>
-          <p className="text-center mt-1 mb-1">Select a fee for the delegation transaction</p>
+          <h1 className="mb-0">{t('delegation_fee.insert_fee')}</h1>
+          <p className="text-center mt-1 mb-1">{t('delegation_fee.select_fee')}</p>
           <div className="divider w-100" />
         </div>
       </div>
       <div className="w-75 mx-auto">
         <div className="flex flex-row justify-between">
           <div className="align-left mt-1 mb-2 label">
-            <strong>Fee</strong>
+            <strong>{t('delegation_fee.fee')}</strong>
           </div>
           <div className="fee-label flex flex-row ">
             <Button
               className="link-button custom-delegate-button purple-text align-end  no-padding"
-              text="Avg"
+              text={t('delegation_fee.avg')}
               onClick={() => setFee(averageFee)}
             />
             <Button
               className="link-button custom-delegate-button purple-text align-end  no-padding"
-              text="Fast"
+              text={t('delegation_fee.fast')}
               onClick={() => setFee(fastFee)}
             />
           </div>
         </div>
         <Input
-          placeholder="Enter a fee "
+          placeholder={t('delegation_fee.enter_fee')}
           value={fee}
           inputHandler={e => setFee(+e.target.value)}
           type="number"
@@ -125,13 +123,13 @@ export const DelegationFee = ({proceedHandler, fees, closeModal}: IProps) => {
             <Button
               className="big-icon-button"
               icon={<ArrowLeft />}
-              text="Cancel"
+              text={t('delegation_fee.cancel')}
               onClick={closeModal}
             />
           </Col>
           <Col xs={6}>
             <Button
-              text="Proceed"
+              text={t('delegation_fee.proceed')}
               style="primary"
               icon={<ArrowRight />}
               appendIcon

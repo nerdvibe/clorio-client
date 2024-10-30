@@ -1,6 +1,6 @@
 import {Link, useNavigate} from 'react-router-dom';
 import {useState, useEffect, useCallback} from 'react';
-import {useLazyQuery, useQuery} from '@apollo/client';
+import {useLazyQuery} from '@apollo/client';
 import {toast} from 'react-toastify';
 import {ArrowLeft, ArrowRight} from 'react-feather';
 import {deriveAccount, setPassphrase, spellMnemonic, storeAccounts, storeSession} from '/@/tools';
@@ -14,12 +14,14 @@ import useSecureStorage from '../hooks/useSecureStorage';
 import {useSetRecoilState} from 'recoil';
 import {configState, walletState} from '../store';
 import isElectron from 'is-electron';
+import {useTranslation} from 'react-i18next';
 
 interface IProps {
   toggleLoader: (state: boolean) => void;
 }
 
 function Login({toggleLoader}: IProps) {
+  const {t} = useTranslation();
   const [publicKey, setPublicKey] = useState<string>('');
   const [privateKey, setPrivateKey] = useState<string>('');
   const [storePassphrase, setStorePassphrase] = useState<boolean>(isElectron());
@@ -140,7 +142,7 @@ function Login({toggleLoader}: IProps) {
       const mnemonicErrors = spellMnemonic(mnemonic);
       if (mnemonicErrors.length > 0) {
         setPassphraseError(
-          `You misspelled the following words: ${mnemonicErrors.join(', ')}`.slice(0, 200),
+          `${t('login.passphrase_error')}${mnemonicErrors.join(', ')}`.slice(0, 200),
         );
       } else {
         setPassphraseError(null);
@@ -171,10 +173,10 @@ function Login({toggleLoader}: IProps) {
       }
     } catch (e) {
       if (navigator.onLine) {
-        toast.error('Private key not valid, please try again.');
+        toast.error(t('login.private_key_error'));
       } else {
         setShowPasswordModal(true);
-        toast.warning('You are currently offline.');
+        toast.warning(t('login.offline_warning'));
       }
     }
   };
@@ -207,24 +209,24 @@ function Login({toggleLoader}: IProps) {
       <div className="homepage-card glass-card flex-vertical-center flex flex-col">
         <div className="w-100">
           <div className="flex-vertical-center flex flex-col">
-            <h1>Login</h1>
-            <p className="mt-1 text-center">Sign in with your passphrase or private key</p>
+            <h1>{t('login.title')}</h1>
+            <p className="mt-1 text-center">{t('login.subtitle')}</p>
             <div className="divider w-100" />
           </div>
         </div>
         <div className="text-white">
-          Don&apos;t have an wallet?{' '}
+          {t('login.no_wallet')}{' '}
           <Link
             className="orange-text"
             to="/register"
           >
-            Create one
+            {t('login.create_one')}
           </Link>
         </div>
         <div className="min-height-200 mt-3 w-100">
           <Input
             inputHandler={inputHandler}
-            placeholder="Enter here"
+            placeholder={t('login.enter_here')}
             hidden
             type="text"
           />
@@ -248,9 +250,9 @@ function Login({toggleLoader}: IProps) {
               <label
                 className="checkbox-label ml-2"
                 htmlFor="storePassphrase"
-                data-tip="Available only on desktop version"
+                data-tip={t('login.store_passphrase_tooltip')}
               >
-                Store the passphrase
+                {t('login.store_passphrase')}
               </label>
               <ReactTooltip multiline />
             </span>
@@ -259,7 +261,7 @@ function Login({toggleLoader}: IProps) {
             <div className="half-card py-3">
               <Button
                 className="big-icon-button"
-                text="Go back"
+                text={t('login.go_back')}
                 icon={<ArrowLeft />}
                 link="/login-selection"
               />
@@ -267,7 +269,7 @@ function Login({toggleLoader}: IProps) {
             <div className="half-card py-3">
               <Button
                 onClick={checkCredentials}
-                text="Access the wallet"
+                text={t('login.access_wallet')}
                 style="primary"
                 icon={<ArrowRight />}
                 appendIcon

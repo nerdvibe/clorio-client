@@ -1,0 +1,494 @@
+{
+  "terms_and_conditions": {
+    "welcome_message": "👋 Welcome to Clorio Wallet",
+    "terms_paragraph_1": "Welcome to ~Clorio, your gateway to the Mina Protocol currency. It's essential to recognize that, when using this service, you become the sole custodian of your private keys. With this authority comes significant responsibility – the duty to safeguard your keys diligently. Under no circumstances should you ever disclose your private key to anyone. For enhanced security, we strongly recommend using a hardware wallet.",
+    "terms_paragraph_2": "By choosing to utilize ~Clorio, you acknowledge that you are assuming full responsibility for any potential losses. Please note that our wallet is open source. We encourage you to thoroughly review the source code before employing this software and even consider running your infrastructure. Your feedback is invaluable – kindly report any issues you encounter on ",
+    "terms_paragraph_3": "When you opt for the ~Clorio Wallet, you are also agreeing to our ",
+    "terms_paragraph_4": ". It is crucial to understand that no party can be held liable for any software bugs or security concerns that may arise.Your use of this service implies your acceptance of these terms and your commitment to exercising due diligence in safeguarding your assets.",
+    "link1": "WeStake.Club's discord",
+    "link2": "terms and conditions",
+    "agree_button": "I agree"
+  },
+  "waiting_ledger": {
+    "confirm_transaction": "Please confirm transaction",
+    "waiting_message": "Waiting for your hardware wallet to confirm the transaction",
+    "time_notice": "This could take up to 3 minutes.",
+    "cancel_button": "Cancel"
+  },
+  "private_key_modal": {
+    "password_required": "Password required",
+    "passphrase_or_private_key": "Passphrase or Private key",
+    "description": "To confirm the transaction insert the passphrase or private key",
+    "placeholder": "Insert your Passphrase or Private key",
+    "cancel_button": "Cancel",
+    "send_button": "Send"
+  },
+  "delegation_fee": {
+    "title": "Delegation Fee",
+    "description": "Please enter the delegation fee details.",
+    "submit_button": "Submit",
+    "cancel_button": "Cancel",
+    "error_message": "Invalid fee details. Please try again.",
+    "insert_fee": "Insert a Fee",
+    "select_fee": "Select a fee for the delegation transaction",
+    "fee": "Fee",
+    "avg": "Avg",
+    "fast": "Fast",
+    "enter_fee": "Enter a fee",
+    "fee_too_high": "Fee too high",
+    "confirm_high_fee": "Are you sure that you want to pay this transaction with",
+    "transaction_fee_notice": "This is just the transaction fee, it's not the amount that you are going to delegate.",
+    "proceed": "Proceed",
+    "cancel": "Cancel"
+  },
+  "custom_nonce": {
+    "insert_nonce": "Insert nonce",
+    "fetch_nonce_error": "We are not able to fetch the nonce from the blockchain.",
+    "insert_nonce_manually": "Please insert the nonce manually, which can be found on the explorer by clicking",
+    "here": "here",
+    "insert_zero_if_none": "If the nonce is \"none\" insert 0.",
+    "proceed": "Proceed"
+  },
+  "confirm_custom_delegation": {
+    "custom_delegation": "Custom delegation",
+    "delegate_to_someone": "Delegate to someone that is not in the list",
+    "public_key": "Public key",
+    "insert_public_key": "Insert public key",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "confirm_transaction": {
+    "title": "Confirm Transaction",
+    "description": "Please review the details of your transaction before confirming.",
+    "amount_label": "Amount",
+    "recipient_label": "Recipient",
+    "confirm_button": "Confirm",
+    "cancel_button": "Cancel",
+    "memo_label": "Memo",
+    "send_message": "You are going to send",
+    "to_address_message": "to the following address",
+    "with_memo_message": "with the following memo",
+    "go_back_button": "Go back"
+  },
+  "confirm_ledger_transaction": {
+    "create_new_transaction": "Create new transaction",
+    "send_amount": "You are about to send",
+    "with_fee": "with a fee of",
+    "to_address": "to",
+    "with_memo": "with memo",
+    "check_hardware_wallet": "Check your hardware wallet to proceed"
+  },
+  "confirm_delegation": {
+    "confirm_delegation": "Confirm Delegation",
+    "are_you_sure_you_want_to_delegate_this_stake_to": "Are you sure you want to delegate this stake to",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "broadcast_translation": {
+    "we_are_broadcasting_your_transaction_to_the_network": "We are broadcasting your transaction to the network"
+  },
+  "update_error": {
+    "there_is_a_new_release": "There is a new release 🎉 v",
+    "click_here": "Click here",
+    "to_download_the_update": "to download the update."
+  },
+  "password_decrypt": {
+    "insert_your_password_to_proceed": "Insert your password to proceed",
+    "wrong_password": "Wrong password",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "connected_zkapps": {
+    "show_button_text": "Show",
+    "modal_title": "Connected Zkapps",
+    "no_connected_zkapps": "There are no zkapps connected"
+  },
+  "account_selection": {
+    "create_new_wallet": "Create new wallet",
+    "select_an_avatar": "Select an avatar",
+    "go_back": "Go back",
+    "next": "Next"
+  },
+  "pdf_encryption": {
+    "document_encryption": "Document encryption",
+    "set_password": "Please set a password to encrypt the document",
+    "insert_password": "Insert a password",
+    "cancel": "Cancel",
+    "save": "Save",
+    "download_success": "Downloading Clorio Paper Wallet",
+    "password_empty_error": "Password cannot be empty"
+  },
+  "validation_step": {
+    "verify_private_key": "Verify your Private key",
+    "private_key_placeholder": "Private key",
+    "cancel": "Cancel",
+    "continue": "Continue"
+  },
+  "balance": {
+    "this_is_your_address": "This is your address",
+    "your_balance": "Your balance",
+    "btc_apx_value": "BTC Apx. value",
+    "usdt_apx_value": "USDT Apx. value",
+    "not_available": "Not available",
+    "loading": "Loading"
+  },
+  "sign_message_form": {
+    "sign_message": "Sign message",
+    "cryptographically_sign_message": "Cryptographically sign a message with your keypair.",
+    "message": "Message",
+    "password": "Password",
+    "passphrase_or_private_key": "Passphrase or Private key",
+    "sign": "Sign",
+    "name_is_required": "Name is required",
+    "message_header": "----- MESSAGE -----",
+    "public_key_header": "----- PUBLIC KEY -----",
+    "field_header": "----- FIELD -----",
+    "scalar_header": "----- SCALAR -----",
+    "your_signed_message": "Your signed message"
+  },
+  "sign_message_result": {
+    "your_signed_message": "Your signed message",
+    "message_header": "----- MESSAGE -----",
+    "public_key_header": "----- PUBLIC KEY -----",
+    "field_header": "----- FIELD -----",
+    "scalar_header": "----- SCALAR -----"
+  },
+  "transaction_form": {
+    "recipient": "Recipient",
+    "enter_address": "Enter address",
+    "memo": "Memo",
+    "enter_memo": "Enter memo",
+    "amount": "Amount",
+    "half": "Half",
+    "all": "All",
+    "enter_amount": "Enter an amount",
+    "fee": "Fee",
+    "avg": "Avg",
+    "fast": "Fast",
+    "enter_fee": "Enter a fee",
+    "preview": "Preview"
+  },
+  "verify_message_form": {
+    "verify_message": "Verify message",
+    "help_hint": "Paste the signature message in the fields in order to verify the cryptographic authenticity.",
+    "message": "Message",
+    "public_key": "Public key",
+    "field": "Field",
+    "scalar": "Scalar",
+    "verify": "Verify"
+  },
+  "ledger_confirm_address": {
+    "public_key": "This is your public key",
+    "confirm_address": "Please confirm your address on ledger",
+    "go_back": "Go back",
+    "access_wallet": "Access wallet"
+  },
+  "ledger_connect": {
+    "login": "Login",
+    "connect_ledger": "Connect now your Ledger wallet and open the Mina app",
+    "ledger_connected": "✅ Ledger connected",
+    "select_custom_account": "Click here to select a custom account",
+    "select_account_number": "Please select an account number",
+    "default_account_hint": "Default account number is 0. If you have created your wallet with another account index, change it here.<br/> Only change this number if you know what you are doing.",
+    "go_back": "Go back",
+    "continue": "Continue",
+    "account_number_error": "Account number should be between {{min}} and {{max}}"
+  },
+  "ledger_get_address": {
+    "login": "Login",
+    "verify_address": "Let's verify your address",
+    "looking_for_public_key": "Looking for the Public key. Please confirm it on your Ledger device",
+    "confirmation_time": "This could take up to one minute and a half",
+    "go_back": "Go back"
+  },
+  "ledger_incompatible": {
+    "login": "Login",
+    "connect_ledger": "Connect now your Ledger wallet and open the Mina app",
+    "browser_incompatible": "❌ Browser is incompatible, please use the last version of Chrome, Edge or Opera",
+    "need_ledger": "Do you need a Ledger wallet?",
+    "buy_here": "Buy it here",
+    "go_back": "Go back"
+  },
+  "ledger_search": {
+    "login": "Login",
+    "connect_ledger": "Connect your Ledger wallet and open the Mina app",
+    "need_ledger": "Do you need a Ledger wallet?",
+    "buy_here": "Buy it here",
+    "go_back": "Go back"
+  },
+  "stake_status": {
+    "your_stake": "Your stake",
+    "not_staking": "Currently you are not staking for anybody.",
+    "learn_how_to_delegate": "Click here to learn how to delegate",
+    "you_are_staking_for": "You are staking for"
+  },
+  "stake_table": {
+    "delegates": "Delegates",
+    "custom_delegation": "Custom delegation",
+    "validators_not_available": "The validators list is not available for this network"
+  },
+  "stake_table_error": {
+    "something_went_wrong": "Something went wrong, please check your connection and try again later."
+  },
+  "stake_table_row": {
+    "validator": "Validator",
+    "fee": "Fee",
+    "staked": "Staked",
+    "info": "Info",
+    "website": "Website",
+    "delegating": "Delegating",
+    "delegate": "Delegate",
+    "support_tooltip": "~Clorio is built by Carbonara. <br>Earn rewards and support Clorio <br>by delegating to Carbonara ❤️"
+  },
+  "stake_table_value": {
+    "validator": "Validator",
+    "fee": "Fee",
+    "staked": "Staked",
+    "info": "Info",
+    "website": "Website"
+  },
+  "transaction_authentication": {
+    "signature_failed": "Signature failed",
+    "signature_failed_message": "The signature process through the ledger failed",
+    "go_back": "Go back",
+    "retry": "Retry",
+    "signing": "Signing",
+    "waiting_for_ledger": "Waiting for the Ledger device to sign the transaction",
+    "waiting_time": "This could take up to 3 minutes.",
+    "passphrase_private_key": "Passphrase/Private key",
+    "insert_passphrase_private_key": "Insert the Passphrase/Private key to sign the transaction",
+    "insert_placeholder": "Insert your Passphrase or Private key",
+    "cancel": "Cancel",
+    "send": "Send"
+  },
+  "refetch_transaction": {
+    "just_fetched": "Just fetched",
+    "fetching_data_in": "Fetching data in {{countdown}}s",
+    "refresh": "Refresh"
+  },
+  "transaction_row": {
+    "waiting_for_confirmation": "Waiting for confirmation",
+    "you": "you",
+    "mina": "Mina",
+    "be_aware": "Be aware! This",
+    "receiver": "receiver",
+    "sender": "sender",
+    "reported_as_scammer": "has been reported as a scammer!"
+  },
+  "transaction_error": {
+    "something_went_wrong": "Ooops... Something went wrong! Please try again later",
+    "no_transactions_yet": "You haven't made any transaction yet",
+    "no_transactions_or_history_unavailable": "You haven't made any transaction yet or the history might not be available for your address.",
+    "history_unavailable": "The history might not be available for your address at this time.",
+    "consult_explorer": "Please consult your transaction history on the explorer."
+  },
+  "wallet_creation_transaction": {
+    "wallet_creation_fee": "1 Mina wallet creation fee"
+  },
+  "read_secure_storage": {
+    "create_password": "Create password",
+    "encrypt_credentials": "We will encrypt your credentials and with the following password you'll be able to access your wallet.",
+    "password_requirements": "The password must be at least 6 characters long, it must contain at least a number and at least one special character (!@#$%^&*).",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "restore_session": {
+    "access_power": "Access the power of the Mina Protocol Blockchain.",
+    "insert_password": "Insert your password to restore the session",
+    "logout": "Logout",
+    "confirm": "Confirm",
+    "wrong_password": "Wrong password"
+  },
+  "zkapp_integration": {
+    "ledger_not_supported": "Ledger does not support this method.",
+    "log_in_first": "Please log into your wallet first.",
+    "confirm_transaction": "Confirm the transaction in your wallet",
+    "transaction_error": "Transaction couldn't be sent",
+    "unlock_wallet_first": "Please unlock your wallet first",
+    "network_not_found": "Network not found",
+    "unknown_event_type": "Unknown event type:"
+  },
+  "epoch_bar": {
+    "epoch_unavailable": "Epoch currently unavailable",
+    "epoch": "Epoch",
+    "slot_of": "Slot {{slot}} of {{maxSlot}}",
+    "left_to_next_epoch": "{{days}} days {{hours}} hours {{minutes}} minutes left to the next epoch"
+  },
+  "transaction_table": {
+    "id": "ID",
+    "date": "Date",
+    "sender": "Sender",
+    "recipient": "Recipient",
+    "amount": "Amount",
+    "waiting_for_confirmation": "Waiting for confirmation",
+    "you": "you",
+    "mina": "Mina",
+    "be_aware": "Be aware! This",
+    "receiver": "receiver",
+    "reported_as_scammer": "has been reported as a scammer!"
+  },
+  "backup_wallet": {
+    "title": "Private key backup... Are you alone?",
+    "warning": "Anyone viewing it can steal your funds from anywhere! View it in private with no cameras around. You are about to see your raw private key. Never share it with anyone! No one from Clorio will ever ask for it.",
+    "instruction": "In order to continue please insert your {{passphraseType}}",
+    "passphrase_label": "{{passphraseType}}",
+    "private_key_title": "Your Private Key",
+    "private_key_warning": "This is your private key. Make sure that you safekeep this key. Whoever knows this string, will be able to access your funds.",
+    "private_key_label": "Private key",
+    "go_back_button": "Go back",
+    "cancel_button": "Cancel",
+    "confirm_button": "Confirm",
+    "error_message": "Private key not valid, please try again.",
+    "password_placeholder": "Insert your password",
+    "passphrase_placeholder": "Insert your Passphrase"
+  },
+  "registration_step": {
+    "create_new_wallet": "Create new wallet",
+    "take_note_of_wallet": "Take a note of your wallet",
+    "passphrase": "Passphrase",
+    "write_down_words": "Please carefully write down these 12 words and store them in a safe place.",
+    "public_key": "Public key",
+    "this_is_your_address": "This is your address",
+    "private_key": "Private key",
+    "this_is_your_private_key": "This is your private key",
+    "only_time_to_see_private_key": "This is the only time you will see the private key.",
+    "write_down_private_key": "Make sure to write down your private key on a secure medium and you safe keep it.",
+    "lose_private_key_warning": "If you lose your private key you will not be able to access your funds anymore!",
+    "download_paperwallet": "Download paperwallet in PDF",
+    "go_back": "Go back",
+    "continue": "Continue",
+    "show_private_key": "Show Private key",
+    "hide_private_key": "Hide Private key"
+  },
+  "app_settings": {
+    "change_account": "Change account",
+    "change": "Change",
+    "network_settings": "Network Settings",
+    "current_network": "Current Network",
+    "account_selector": "Account Selector",
+    "address": "Address",
+    "mnemonic": "Mnemonic",
+    "ledger": "Ledger",
+    "logout": "Logout",
+    "lock_session": "Lock Session",
+    "status_dot": "Status Dot",
+    "toggle_loader": "Toggle Loader",
+    "balance": "Balance",
+    "refetch_balance": "Refetch Balance",
+    "error_message": "Error Message",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "go_back": "Go Back"
+  },
+  "network_settings": {
+    "settings": "Settings",
+    "current_version": "Current version: {{version}}",
+    "current_network": "Current network",
+    "server_status": "Server status",
+    "connected_zkapps": "Connected zkapps",
+    "backup_wallet": "Backup wallet",
+    "backup": "Backup",
+    "language": "Language",
+    "network": "Network",
+    "lock_session": "Lock session",
+    "logout": "Logout"
+  },
+  "sidebar": {
+    "overview": "Overview",
+    "send_tx": "Send TX",
+    "staking_hub": "Staking Hub",
+    "sign_message": "Sign message",
+    "verify_message": "Verify message",
+    "zkapps": "zkApps",
+    "beta": "Beta",
+    "zkapps_desktop_only": "Zkapp feature is available only in Clorio Desktop"
+  },
+  "app_banner": {
+    "enhance_security": "To enhance your security we recommend to download Clorio Desktop.",
+    "download_here": "Download Clorio Desktop here."
+  },
+  "footer": {
+    "wallet_info": "~Clorio is a wallet for Mina Protocol offered by WeStake.Club.",
+    "network_unavailable": "Network unavailable"
+  },
+  "homepage": {
+    "access_power": "Access the power of the Mina Protocol Blockchain.",
+    "create_wallet": "Create new wallet",
+    "or": "or",
+    "login": "Log-in"
+  },
+  "login_selection": {
+    "login": "Login",
+    "select_method": "Select a method to login",
+    "hardware_wallet": "Hardware wallet",
+    "private_key_passphrase": "Private key\nPassphrase",
+    "go_back": "Go back"
+  },
+  "verify_mnemonic": {
+    "create_new_wallet": "Create new wallet",
+    "verify_passphrase": "Verify your passphrase",
+    "store_passphrase_tooltip": "For your security, you can store the passphrase only on Clorio Desktop",
+    "store_passphrase": "Store the passphrase",
+    "go_back": "Go back",
+    "complete": "Complete"
+  },
+  "send_tx": {
+    "new_transaction": "New Transaction",
+    "next_step": "Next Step",
+    "previous_step": "Previous Step",
+    "confirm_transaction": "Confirm Transaction",
+    "broadcasting_transaction": "Broadcasting Transaction",
+    "transaction_success": "Transaction successfully broadcasted",
+    "transaction_error": "There was an error broadcasting delegation",
+    "check_passphrase_private_key": "Please check your Passphrase or Private key",
+    "check_receiver_passphrase": "Check if the receiver address and/or the passphrase/private key are right",
+    "ledger_error": "An error occurred while loading hardware wallet",
+    "nonce_error": "There was an error fetching the nonce",
+    "balance_error": "There was an error fetching the balance",
+    "memo_length_error": "Memo length exceeds the limit",
+    "amount_error": "Invalid amount",
+    "fee_error": "Invalid fee",
+    "transaction_fields_error": "Invalid transaction fields",
+    "ledger_not_open": "Please open the Mina app on your Ledger device",
+    "ledger_signature_failed": "The signature process through the ledger failed",
+    "ledger_waiting": "Waiting for the Ledger device to sign the transaction",
+    "ledger_waiting_time": "This could take up to 3 minutes.",
+    "ledger_retry": "Retry",
+    "ledger_go_back": "Go back",
+    "broadcasting": "Broadcasting",
+    "broadcasting_message": "We are broadcasting your transaction to the network",
+    "nonce_loading": "Loading nonce...",
+    "nonce_custom": "Insert custom nonce",
+    "nonce_proceed": "Proceed",
+    "nonce_close": "Close"
+  },
+  "stake": {
+    "delegation_success": "Delegation successfully broadcasted",
+    "broadcasting_delegation": "Broadcasting delegation",
+    "error_loading_hardware_wallet": "An error occurred while loading hardware wallet",
+    "error_processing_delegation": "There was an error processing your delegation, please try again later.",
+    "error_missing_public_key": "The Public key of the selected delegate is missing",
+    "error_recipient_public_key": "Recipient Public key is not defined",
+    "error_balance": "Insufficient balance to cover the fee",
+    "error_nonce": "Failed to fetch nonce, please try again later.",
+    "error_general": "An error occurred, please try again later."
+  },
+  "login": {
+    "title": "Login",
+    "subtitle": "Sign in with your passphrase or private key",
+    "no_wallet": "Don't have a wallet?",
+    "create_one": "Create one",
+    "enter_here": "Enter here",
+    "store_passphrase": "Store the passphrase",
+    "store_passphrase_tooltip": "Available only on desktop version",
+    "go_back": "Go back",
+    "access_wallet": "Access the wallet",
+    "passphrase_error": "You misspelled the following words: ",
+    "private_key_error": "Private key not valid, please try again.",
+    "offline_warning": "You are currently offline."
+  },
+  "verify_message": {
+    "message_valid": "Message is valid",
+    "message_invalid": "Message is not valid"
+  }
+}

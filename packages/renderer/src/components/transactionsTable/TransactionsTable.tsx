@@ -17,6 +17,7 @@ import WalletCreationTransaction from './WalletCreationTransaction';
 import RefetchTransactions from './RefetchTransactions';
 import type {Blacklist} from '../../types/Blacklist';
 import {TRANSACTIONS_TABLE_ITEMS_PER_PAGE} from '/@/tools';
+import {useTranslation} from 'react-i18next';
 
 const TransactionsTable = ({
   transactions,
@@ -30,6 +31,7 @@ const TransactionsTable = ({
   balance,
   refetchData,
 }: ITransactionTableProps) => {
+  const {t} = useTranslation();
   const {data: totalData} = useQuery<ITransactionTotalQueryResult>(GET_TRANSACTIONS_TOTAL, {
     variables: {accountId: userId},
     skip: !userId || userId === -1,
@@ -46,10 +48,15 @@ const TransactionsTable = ({
       !transactions ||
       transactions?.transactions === null ||
       (transactions?.transactions && transactions?.transactions.length === 0) ||
-      !totalData ||
       totalData?.transactionsCount?.count === 0)
   ) {
-    return TransactionsTableError(balance, error, refetchData);
+    return (
+      <TransactionsTableError
+        balance={balance}
+        hasErrors={!!error}
+        refetchData={refetchData}
+      />
+    );
   }
 
   /**
@@ -60,11 +67,11 @@ const TransactionsTable = ({
     return (
       <tr className="th-background">
         <th className="th-first-item"></th>
-        <th>ID</th>
-        <th>Date</th>
-        <th>Sender</th>
-        <th>Recipient</th>
-        <th className="th-last-item">Amount</th>
+        <th>{t('transaction_table.id')}</th>
+        <th>{t('transaction_table.date')}</th>
+        <th>{t('transaction_table.sender')}</th>
+        <th>{t('transaction_table.recipient')}</th>
+        <th className="th-last-item">{t('transaction_table.amount')}</th>
       </tr>
     );
   };
@@ -78,22 +85,28 @@ const TransactionsTable = ({
       <tbody>
         {mempool?.mempool?.map((row, index) => {
           const rowData: ITransactionRowData = mempoolQueryRowToTableRow(row);
-          return TransactionRow(
-            rowData,
-            index,
-            userAddress,
-            blacklist?.blacklistedAddresses || [],
-            true,
+          return (
+            <TransactionRow
+              key={index}
+              {...rowData}
+              index={index}
+              userAddress={userAddress}
+              blacklist={blacklist?.blacklistedAddresses || []}
+              isMempool={true}
+            />
           );
         })}
         {transactions?.transactions?.map((row, index) => {
           const rowData: ITransactionRowData = transactionQueryRowToTableRow(row);
-          return TransactionRow(
-            rowData,
-            index,
-            userAddress,
-            blacklist?.blacklistedAddresses || [],
-            false,
+          return (
+            <TransactionRow
+              key={index}
+              {...rowData}
+              index={index}
+              userAddress={userAddress}
+              blacklist={blacklist?.blacklistedAddresses || []}
+              isMempool={false}
+            />
           );
         })}
         {lastTransaction()}
@@ -110,7 +123,7 @@ const TransactionsTable = ({
     const isLastPage = +page === +getTotalPages(totalRows);
     if (transactions?.transactions?.length) {
       if (transactions?.transactions?.length < TRANSACTIONS_TABLE_ITEMS_PER_PAGE || isLastPage) {
-        return WalletCreationTransaction(totalRows + 1);
+        return <WalletCreationTransaction key={totalRows + 1} />;
       }
     }
   };

@@ -4,6 +4,7 @@ import type {IKeypair} from '../../../types';
 import Button from '../Button';
 import Spinner from '../Spinner';
 import AccountAvatar from './AccountAvatar';
+import {useTranslation} from 'react-i18next';
 
 interface IProps {
   generateKeypair: () => Promise<IKeypair | undefined>;
@@ -13,15 +14,18 @@ interface IProps {
 }
 
 const AccountSelection = ({generateKeypair, setKeypair, goToNext, selectedKeypair}: IProps) => {
+  const {t} = useTranslation();
+
   const isNextDisabled = () => {
     return !selectedKeypair?.privateKey;
   };
+
   return (
     <div className="animate__animated animate__fadeIn glass-card ">
       <div className="w-100">
         <div className="flex flex-col flex-vertical-center">
-          <h1>Create new wallet</h1>
-          <p className="text-center mt-1">Select an avatar</p>
+          <h1>{t('account_selection.create_new_wallet')}</h1>
+          <p className="text-center mt-1">{t('account_selection.select_an_avatar')}</p>
           <div className="divider" />
         </div>
       </div>
@@ -62,7 +66,7 @@ const AccountSelection = ({generateKeypair, setKeypair, goToNext, selectedKeypai
           <div className="half-card py-3">
             <Button
               className="big-icon-button"
-              text="Go back"
+              text={t('account_selection.go_back')}
               icon={<ArrowLeft />}
               link={'/'}
             />
@@ -70,7 +74,7 @@ const AccountSelection = ({generateKeypair, setKeypair, goToNext, selectedKeypai
           <div className="half-card py-3">
             <Button
               onClick={goToNext}
-              text="Next"
+              text={t('account_selection.next')}
               style="primary"
               icon={<ArrowRight />}
               appendIcon

@@ -8,6 +8,7 @@ import {CheckCircle} from 'react-feather';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {deeplinkState} from '/@/store';
 import {DeeplinkType} from '/@/hooks/useDeeplinkHandler';
+import { useTranslation } from 'react-i18next';
 
 interface IProps {
   verifyMessage: (messageToVerify: IMessageToVerify) => void;
@@ -21,6 +22,7 @@ const VerifyForm = ({verifyMessage, initialData}: IProps) => {
   const [scalar, setScalar] = useState<string>(initialData?.scalar || '');
   const deeplinkData = useRecoilValue(deeplinkState);
   const setDeeplinkData = useSetRecoilState(deeplinkState);
+  const {t} = useTranslation();
 
   useEffect(() => {
     if (deeplinkData.type === DeeplinkType.VERIFY_MESSAGE && deeplinkData.data) {
@@ -70,12 +72,12 @@ const VerifyForm = ({verifyMessage, initialData}: IProps) => {
       <div className="glass-card p-4">
         <div className="animate__animated animate__fadeIn w-75 mx-auto ">
           <h2>
-            Verify message{' '}
-            <HelpHint hint="Paste the signature message in the fields in order to verify the cryptographic authenticity." />
+            {t('verify_message_form.verify_message')}{' '}
+            <HelpHint hint={t('verify_message_form.help_hint')} />
           </h2>
           <div className="divider w-100" />
           <h5>
-            <strong>Message</strong>
+            <strong>{t('verify_message_form.message')}</strong>
           </h5>
           <div
             className="wrap-input1 validate-input"
@@ -87,11 +89,11 @@ const VerifyForm = ({verifyMessage, initialData}: IProps) => {
               id="message"
               onChange={e => setMessage(e.currentTarget.value)}
               value={message}
-              placeholder="Message "
+              placeholder={t('verify_message_form.message')}
             />
           </div>
           <h5>
-            <strong>Public key</strong>
+            <strong>{t('verify_message_form.public_key')}</strong>
           </h5>
           <div
             className="wrap-input1 validate-input"
@@ -103,14 +105,14 @@ const VerifyForm = ({verifyMessage, initialData}: IProps) => {
               type="text"
               name="message"
               value={address}
-              placeholder="Public key "
+              placeholder={t('verify_message_form.public_key')}
               inputHandler={e => setAddress(e.currentTarget.value)}
             />
           </div>
           <div className="flex verify-message-form gap-2">
             <Col>
               <h5>
-                <strong>Field</strong>
+                <strong>{t('verify_message_form.field')}</strong>
               </h5>
               <div
                 className="wrap-input1 validate-input"
@@ -121,13 +123,13 @@ const VerifyForm = ({verifyMessage, initialData}: IProps) => {
                   id="field"
                   onChange={e => setField(e.currentTarget.value)}
                   value={field}
-                  placeholder="Field "
+                  placeholder={t('verify_message_form.field')}
                 />
               </div>
             </Col>
             <Col>
               <h5>
-                <strong>Scalar</strong>
+                <strong>{t('verify_message_form.scalar')}</strong>
               </h5>
               <div className="wrap-input1 validate-input">
                 <textarea
@@ -135,13 +137,13 @@ const VerifyForm = ({verifyMessage, initialData}: IProps) => {
                   id="scalar"
                   onChange={e => setScalar(e.currentTarget.value)}
                   value={scalar}
-                  placeholder="Scalar "
+                  placeholder={t('verify_message_form.scalar')}
                 />
               </div>
             </Col>
           </div>
           <Button
-            text="Verify"
+            text={t('verify_message_form.verify')}
             style="primary"
             className="fit-content px-5 mt-4"
             icon={<CheckCircle />}

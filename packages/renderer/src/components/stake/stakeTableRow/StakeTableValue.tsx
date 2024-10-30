@@ -1,6 +1,6 @@
 import {Row, Col} from 'react-bootstrap';
-// @ts-ignore Missing interface
 import React, {LegacyRef, ReactNode, forwardRef} from 'react';
+import {useTranslation} from 'react-i18next';
 
 interface IProps {
   avatar?: React.ReactNode;
@@ -11,7 +11,9 @@ interface IProps {
 }
 
 const StakeTableValue = forwardRef(function StakeTableValue(props: IProps, ref) {
+  const {t} = useTranslation();
   const {avatar, className, header, text, website} = props;
+
   if (avatar) {
     return (
       <td
@@ -26,7 +28,7 @@ const StakeTableValue = forwardRef(function StakeTableValue(props: IProps, ref) 
             >
               <div className="inline-block-element">{avatar}</div>
               <div className="inline-block-element">
-                <p className="secondaryText no-bottom selectable-text">{header}</p>
+                <p className="secondaryText no-bottom selectable-text">{t(`stake_table_value.${header.toLowerCase()}`)}</p>
                 <h5 className="selectable-text">{text}</h5>
               </div>
             </Col>
@@ -35,6 +37,7 @@ const StakeTableValue = forwardRef(function StakeTableValue(props: IProps, ref) 
       </td>
     );
   }
+
   if (header.toLowerCase() === 'info') {
     return (
       <td
@@ -47,7 +50,7 @@ const StakeTableValue = forwardRef(function StakeTableValue(props: IProps, ref) 
               sm={9}
               className="small-screen-stake-table-text"
             >
-              <p className="secondaryText no-bottom">{header}</p>
+              <p className="secondaryText no-bottom">{t('stake_table_value.info')}</p>
               {website ? (
                 <a
                   href={`${website}?ref=clorio`}
@@ -75,7 +78,7 @@ const StakeTableValue = forwardRef(function StakeTableValue(props: IProps, ref) 
             sm={9}
             className="small-screen-stake-table-text"
           >
-            <p className="secondaryText no-bottom">{header}</p>
+            <p className="secondaryText no-bottom">{t(`stake_table_value.${header.toLowerCase()}`)}</p>
             <h5>{text}</h5>
           </Col>
         </Row>

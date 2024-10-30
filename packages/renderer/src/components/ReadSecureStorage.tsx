@@ -4,6 +4,7 @@ import Input from './UI/input/Input';
 import {ModalContainer} from './UI/modals';
 import {useState} from 'react';
 import {ArrowLeft, ArrowRight} from 'react-feather';
+import {useTranslation} from 'react-i18next';
 
 interface ISecureDataStorageComponent {
   show: boolean;
@@ -12,6 +13,7 @@ interface ISecureDataStorageComponent {
 }
 
 function SecureDataStorageComponent({show, onClose, onSubmit}: ISecureDataStorageComponent) {
+  const {t} = useTranslation();
   const [password, setPassword] = useState('');
 
   const onCloseHandler = () => {
@@ -31,10 +33,9 @@ function SecureDataStorageComponent({show, onClose, onSubmit}: ISecureDataStorag
       <div className='max-w-600'>
         <div className="w-100 ">
           <div className="flex flex-col flex-vertical-center">
-            <h1>Create password</h1>
+            <h1>{t('read_secure_storage.create_password')}</h1>
             <p className="text-center mt-1">
-              We will encrypt your credentials and with the following password you&apos;ll be able to
-              access your wallet.
+              {t('read_secure_storage.encrypt_credentials')}
               <br />
             </p>
             <div className="divider w-100" />
@@ -45,8 +46,7 @@ function SecureDataStorageComponent({show, onClose, onSubmit}: ISecureDataStorag
           className="text-center"
           style={{fontSize: 'medium'}}
         >
-          The password must be at least 6 characters long, it must contain at least a number and at
-          least one special character (!@#$%^&*).
+          {t('read_secure_storage.password_requirements')}
         </p>
         <Input
           type="text"
@@ -62,14 +62,14 @@ function SecureDataStorageComponent({show, onClose, onSubmit}: ISecureDataStorag
             <Button
               className="big-icon-button"
               icon={<ArrowLeft />}
-              text="Cancel"
+              text={t('read_secure_storage.cancel')}
               onClick={onCloseHandler}
             />
           </Col>
           <Col xs={6}>
             <Button
               onClick={onSubmitHandler}
-              text="Confirm"
+              text={t('read_secure_storage.confirm')}
               style="primary"
               icon={<ArrowRight />}
               disabled={disableButton}

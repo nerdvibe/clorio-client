@@ -1,22 +1,20 @@
 import RefetchTransactions from './RefetchTransactions';
 import Animation from '../UI/Animation';
 import MissingAnimation from './assets/missing.json';
+import {useTranslation} from 'react-i18next';
 
-const TransactionsTableError = (
-  balance: number,
-  hasErrors: boolean,
-  refetchData: () => void,
-) => {
+const TransactionsTableError = (balance: number, hasErrors: boolean, refetchData: () => void) => {
+  const {t} = useTranslation();
+
   let secondaryText = '';
   let text = hasErrors
-    ? 'Ooops... Something went wrong! Please try again later'
-    : "You haven't made any transaction yet";
+    ? t('transaction_error.something_went_wrong')
+    : t('transaction_error.no_transactions_yet');
   if (balance === 0) {
-    text =
-      "You haven't made any transaction yet or the history might not be available for your address.";
+    text = t('transaction_error.no_transactions_or_history_unavailable');
   } else if (balance > 0) {
-    text = 'The history might not be available for your address at this time.';
-    secondaryText = 'Please consult your transaction history on the explorer.';
+    text = t('transaction_error.history_unavailable');
+    secondaryText = t('transaction_error.consult_explorer');
   }
   return (
     <div className="glass-card">
