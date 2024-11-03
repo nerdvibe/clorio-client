@@ -40,10 +40,10 @@ export default function ZkappIntegration() {
 
   useEffect(() => {
     setListeners();
-  }, [config, wallet, sites]);
+  }, [config, wallet, sites, selectedNetwork, selectedNode]);
 
   const setListeners = () => {
-    window.ipcBridge.on('clorio-event', async (event, payload) => { 
+    window.ipcBridge.on('clorio-event', async (event, payload) => {
       const {type, data, source, title} = payload;
       if (!checkSource(source)) {
         if (type === 'clorio-get-network-config') {
