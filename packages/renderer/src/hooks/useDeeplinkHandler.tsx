@@ -14,7 +14,8 @@ export enum DeeplinkType {
 }
 
 const parseDeeplink = (url: string) => {
-  const params = new URLSearchParams(url.split('?')[1]);
+  const urlObj = new URL(url);
+  const params = new URLSearchParams(urlObj.search);
   const payload = {
     type: DeeplinkType.NULL,
     data: {},
@@ -25,7 +26,7 @@ const parseDeeplink = (url: string) => {
   } else if (url.includes('delegation')) {
     payload.data = parseDelegationDeeplink(params);
     payload.type = DeeplinkType.DELEGATION;
-  } else if (url.includes('sendtx')) {
+  } else if (url.includes('sendtx') || url.includes('send-tx')) {
     payload.data = parseSendTxDeeplink(params);
     payload.type = DeeplinkType.SEND_TX;
   } else {
@@ -83,6 +84,12 @@ function useDeeplinkHandler() {
 
   const isLoggedIn = useMemo(() => isAuthenticated && !isLocked, [isAuthenticated, isLocked]);
 
+  const openDeeplink = (url: string) => {
+    const payload = parseDeeplink(url);
+    setDeeplinkState(payload);
+    changeRoute();
+  };
+
   useEffect(() => {
     const handleDeeplink = (url: string) => {
       const payload = parseDeeplink(url);
@@ -114,7 +121,9 @@ function useDeeplinkHandler() {
     changeRoute();
   }, [isAuthenticated, isLocked, deeplinkData]);
 
-  return {deeplinkData};
+  return {deeplinkData, openDeeplink};
 }
+
+export {parseDeeplink};
 
 export default useDeeplinkHandler;

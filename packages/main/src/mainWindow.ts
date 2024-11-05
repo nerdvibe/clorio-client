@@ -3,7 +3,7 @@
  * It imports necessary modules and defines functions for creating, restoring, and handling events in the main window.
  * It also includes IPC communication between the main process and child windows.
  */
-import {app, BrowserWindow, ipcMain, Menu} from 'electron';
+import {app, BrowserWindow, ipcMain, Menu, session} from 'electron';
 import * as path from 'node:path';
 import {join, resolve} from 'node:path';
 const {MinaLedgerJS} = require('mina-ledger-js');
@@ -94,7 +94,6 @@ async function createWindow() {
       preload: join(app.getAppPath(), 'packages/preload/dist/index.cjs'),
     },
   });
-  // browserWindow.webContents.openDevTools();
   /**
    * If the 'show' property of the BrowserWindow's constructor is omitted from the initialization options,
    * it then defaults to 'true'. This can cause flickering as the window loads the html content,
@@ -110,6 +109,14 @@ async function createWindow() {
       browserWindow?.webContents.openDevTools();
     }
     // browserWindow?.webContents.openDevTools();
+  });
+
+  session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
+    if (permission === 'media') {
+      callback(true); // Concede il permesso per l'accesso ai media
+    } else {
+      callback(false);
+    }
   });
 
   /**
@@ -205,7 +212,7 @@ ipcMain.handle('open-win', (_: Electron.IpcMainInvokeEvent, arg) => {
     draggableBar.style.color = '#fff';
     draggableBar.style.margin = '0';
     draggableBar.style.padding = '0';
-    
+
     document.body.appendChild(draggableBar);
     document.body.style.paddingTop = '40px'; // Push the content below the bar
   `);
@@ -234,12 +241,12 @@ ipcMain.handle('open-win', (_: Electron.IpcMainInvokeEvent, arg) => {
       cursor: pointer;
       margin: 0 !important;
     }
-    
+
     .bar:active,
     .bar:hover {
       outline: 0;
     }
-    
+
     .bar span {
       background-color: rgb(5, 6, 45);
       // padding: 16px 24px;
@@ -267,7 +274,7 @@ ipcMain.handle('open-win', (_: Electron.IpcMainInvokeEvent, arg) => {
     .right-string{
       text-align: right;
     }
-    
+
     @media (min-width: 768px) {
       .bar {
         font-size: 24px;
@@ -317,11 +324,11 @@ ipcMain.handle('open-win', (_: Electron.IpcMainInvokeEvent, arg) => {
       leftStringTitle.textContent = '';
       leftString.textContent = "Clorio wallet not connected";
     }
-    
+
     leftContainer.appendChild(leftStringTitle);
     leftContainer.appendChild(leftString);
     bar.appendChild(leftContainer);
-    
+
     const rightString = document.createElement('span');
     rightContainer.style.display = 'flex';
     rightContainer.style.flexDirection = 'row';
@@ -332,7 +339,7 @@ ipcMain.handle('open-win', (_: Electron.IpcMainInvokeEvent, arg) => {
     const network = await window.mina.requestNetwork()
     if(network.name) {
       rightString.textContent = (account.length>0 ? 'Clorio connected | ': '') + network.name;
-    } 
+    }
     rightContainer.appendChild(rightString);
     bar.appendChild(rightContainer);
 
@@ -349,8 +356,8 @@ ipcMain.handle('open-win', (_: Electron.IpcMainInvokeEvent, arg) => {
         rightString.textContent = 'Clorio connected | ' + data.name;
       })
     }
-  
-    
+
+
     bar.addEventListener('click', () => {
       window.mina.focusClorio();
     });
