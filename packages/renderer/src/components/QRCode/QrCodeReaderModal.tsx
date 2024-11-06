@@ -4,6 +4,7 @@ import Button from '../UI/Button';
 import QRCodeImage from '../../assets/qrcode.svg';
 import TypeSeleciton from './TypeSelection';
 import {QrCodeCameraReader} from './QrCodeCamReader';
+import {QrCodeUploadReader} from './QrCodeUploadReader';
 import useDeeplinkHandler from '/@/hooks/useDeeplinkHandler';
 import QrCodeResult from './QrCodeResult';
 
@@ -46,8 +47,8 @@ export const QrCodeReader: React.FC = () => {
         className="big-icon-button"
         onClick={() => setShowQrCodeModal(true)}
         appendIcon={true}
-        style='standard'
-        variant='white'
+        style="standard"
+        variant="white"
         icon={
           <img
             src={QRCodeImage}
@@ -75,6 +76,12 @@ export const QrCodeReader: React.FC = () => {
           )}
           {step === STEPS.CAMERA && (
             <QrCodeCameraReader
+              goBack={onGoBack}
+              setUrl={onUrlChange}
+            />
+          )}
+          {step === STEPS.UPLOAD && (
+            <QrCodeUploadReader
               goBack={onGoBack}
               setUrl={onUrlChange}
             />
