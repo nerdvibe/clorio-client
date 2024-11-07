@@ -30,14 +30,14 @@ const QrCodeResult: React.FC<IProps> = ({url, onConfirm, onCancel}) => {
   return (
     <div className="qr-code-result">
       <h1>Summary - {labels[formattedData?.type]}</h1>
-      <div>
+      <div className='mb-4'>
         {formattedData &&
           typeof formattedData === 'object' &&
           formattedData.data &&
           Object.keys(formattedData.data).map(key => (
             <React.Fragment key={key}>
               <hr />
-              <div className="flex flex-row justify-between">
+              <div className="flex flex-row justify-between qr-code-data-row">
                 <h5>{capitalizeFirstLetter(key)}</h5>
                 <p>{formattedData.data[key]}</p>
               </div>

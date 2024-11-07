@@ -39,7 +39,11 @@ export const QrCodeUploadReader: React.FC = ({goBack, setUrl}: IProps) => {
               handleError(err);
               return;
             }
-            handleScan(value.result);
+            if (value && value.result) {
+              handleScan(value.result);
+            } else {
+              handleError(new Error('Could not decode QR code'));
+            }
           };
           qr.decode(image.bitmap);
         })
