@@ -400,6 +400,18 @@ p {
   max-width: 800px;
 }
 
+.qr-code-data-row{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 150px;
+  p{
+    line-break: anywhere;
+    text-align: right;
+    margin-bottom: 0;
+  }
+}
+
 @media screen and (max-width: 850px) {
   .md-flex-col {
     flex-direction: column !important;
