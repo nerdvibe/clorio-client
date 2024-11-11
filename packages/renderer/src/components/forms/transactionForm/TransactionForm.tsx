@@ -11,6 +11,7 @@ import Big from 'big.js';
 import {ArrowRight} from 'react-feather';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {deeplinkState} from '/@/store';
+import QRCodeGenerator from '../../QRCode/QRCodeGenerator';
 
 interface IProps {
   transactionData: ITransactionData;
@@ -139,6 +140,8 @@ const TransactionForm = ({
     }
   };
 
+  const qrCodeUrl = `mina://send-tx?to=${transactionData.receiverAddress}&amount=${transactionData.amount}&fee=${transactionData.fee}&memo=${transactionData.memo}`;
+
   return (
     <div className="mx-auto w-75">
       <div className="my-5">
@@ -208,11 +211,19 @@ const TransactionForm = ({
             />
           </Col>
         </Row>
-        <div className="w-50 py-3 mx-auto">
+        <div className="py-3 row w-full">
+          <div className='w-50 col'>
+            <QRCodeGenerator
+              url={qrCodeUrl}
+              extended
+            />
+          </div>
+
           <Button
             onClick={() => checkFieldsAndProceed(transactionData, nextStep)}
             text="Preview"
             style="primary"
+            className='w-50 col'
             icon={<ArrowRight />}
             appendIcon
           />
