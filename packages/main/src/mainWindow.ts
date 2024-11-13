@@ -285,7 +285,6 @@ ipcMain.handle('open-win', (_: Electron.IpcMainInvokeEvent, arg) => {
   document.head.appendChild(style);
 
 `);
-
   childWindow.webContents.executeJavaScript(`
   const bar = document.createElement('div');
   bar.style.position = 'fixed';
@@ -328,6 +327,20 @@ ipcMain.handle('open-win', (_: Electron.IpcMainInvokeEvent, arg) => {
     leftContainer.appendChild(leftStringTitle);
     leftContainer.appendChild(leftString);
     bar.appendChild(leftContainer);
+    const shareButton = document.createElement('button');
+    shareButton.textContent = 'Share';
+    shareButton.style.marginLeft = '10px';
+    shareButton.style.padding = '5px 10px';
+    shareButton.style.color = '#fff';
+    shareButton.style.backgroundColor = 'transparent';
+    shareButton.style.border = 'none';
+    shareButton.style.borderRadius = '4px';
+    shareButton.style.cursor = 'pointer';
+    rightContainer.appendChild(shareButton);
+    const divider = document.createElement('span');
+    divider.textContent = ' | ';
+    divider.style.paddingRight = '5px';
+    rightContainer.appendChild(divider);
 
     const rightString = document.createElement('span');
     rightContainer.style.display = 'flex';
@@ -357,6 +370,10 @@ ipcMain.handle('open-win', (_: Electron.IpcMainInvokeEvent, arg) => {
       })
     }
 
+    shareButton.addEventListener('click', () => {
+      const currentUrl = window.location.href;
+      window.mina.shareUrl(currentUrl);
+    });
 
     bar.addEventListener('click', () => {
       window.mina.focusClorio();
@@ -431,6 +448,7 @@ const eventHandlers = {
   ...createEventHandler('stake-delegation', 'staked-delegation'),
   ...createEventHandler('sign-fields', 'signed-fields'),
   ...createEventHandler('verify-fields', 'verified-fields'),
+  ...createEventHandler('share-url', 'share-url'),
   'focus-clorio': () => {
     console.log('Focus main window');
     browserWindow.focus();

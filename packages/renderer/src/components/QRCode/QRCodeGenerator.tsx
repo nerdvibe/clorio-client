@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useImperativeHandle, forwardRef} from 'react';
 import {QRCode} from 'react-qrcode-logo';
 import Logo from '../UI/logo/Logo';
 import {ModalContainer} from '../UI/modals';
@@ -10,15 +10,21 @@ import html2canvas from 'html2canvas';
 interface IProps {
   url?: string;
   extended?: boolean;
+  hideButton?: boolean;
 }
 
-export default function QRCodeGenerator({url, extended}: IProps) {
+const QRCodeGenerator = forwardRef(function QRCodeGenerator({url, extended, hideButton = false}: IProps, ref) {
   const [showQRCode, setShowQRCode] = useState(false);
 
+  useImperativeHandle(ref, () => ({
+    open: () => setShowQRCode(true),
+    close: () => setShowQRCode(false),
+  }));
+
   const onDownload = () => {
-    const modalContainer = document.querySelector('.modal-container');
+    const modalContainer = document.querySelector('.modal-container') as HTMLElement;
     if (modalContainer) {
-      const downloadButton = modalContainer.querySelector('#downloadButton');
+      const downloadButton = modalContainer.querySelector('#downloadButton') as HTMLElement;
       if (downloadButton) {
         downloadButton.style.display = 'none';
       }
@@ -37,7 +43,7 @@ export default function QRCodeGenerator({url, extended}: IProps) {
 
   return (
     <>
-      <Button
+      {!hideButton && <Button
         className="big-icon-button"
         onClick={() => setShowQRCode(true)}
         appendIcon={!extended}
@@ -54,7 +60,7 @@ export default function QRCodeGenerator({url, extended}: IProps) {
             }}
           />
         }
-      />
+      />}
       <ModalContainer
         show={showQRCode}
         secondaryStyle
@@ -95,4 +101,6 @@ export default function QRCodeGenerator({url, extended}: IProps) {
       </ModalContainer>
     </>
   );
-}
+});
+
+export default QRCodeGenerator;
