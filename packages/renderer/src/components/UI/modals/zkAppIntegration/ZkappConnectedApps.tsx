@@ -1,5 +1,5 @@
-import {useState} from 'react';
-import {AlertOctagon} from 'react-feather';
+import {useState, useRef} from 'react';
+import {AlertOctagon, MoreVertical} from 'react-feather';
 import Hoc from '../../Hoc';
 import Button from '../../Button';
 import {useRecoilValue} from 'recoil';
@@ -7,6 +7,8 @@ import {connectedSitesState} from '/@/store';
 import NewZkappConnectionModal from './NewZkappConnectionModal';
 import Input from '../../input/Input';
 import {toast} from 'react-toastify';
+import DropdownMenu from '../../DropdownMenu';
+import QRCodeGenerator from '/@/components/QRCode/QRCodeGenerator';
 const GOOGLE_FAVICON_URL = 'https://s2.googleusercontent.com/s2/favicons?domain_url=';
 
 const initialZkappData = {
@@ -18,6 +20,8 @@ export const ZkappConnectedApps = () => {
   const [showNewZkapp, setShowNewZkapp] = useState(false);
   const {sites} = useRecoilValue(connectedSitesState);
   const [newZkapp, setNewZkapp] = useState(initialZkappData);
+  const [qrCodeUrl, setQrCodeUrl] = useState('');
+  const qrCodeRef = useRef<{open: () => void}>(null);
 
   const openLink = (url: string) => {
     (window.ipcBridge as any).invoke('open-win', JSON.stringify({url}));
@@ -42,8 +46,16 @@ export const ZkappConnectedApps = () => {
     setShowNewZkapp(false);
   };
 
+  const onQRCodeClick = (url: string) => {
+    if (qrCodeRef.current) {
+      const deeplink = new URL(`mina://zkapp?${url}`);
+      setQrCodeUrl(deeplink.toString());
+      qrCodeRef.current.open();
+    }
+  };
+
   return (
-    <div className='flex flex-col w-100'>
+    <div className="flex flex-col w-100">
       <div
         className="alert alert-warning zkapp-warning-alert"
         role="alert"
@@ -84,11 +96,17 @@ export const ZkappConnectedApps = () => {
                 className="glass-card py-2 px-4 cursor-pointer zkapp-list-item flex-1"
                 onClick={() => openLink(source)}
               >
-                <img
-                  src={`${GOOGLE_FAVICON_URL}${source}`}
-                  alt="favicon"
-                  className="zkapp-favicon"
-                />
+                <div className="zkapp-image">
+                  <div />
+                  <img
+                    src={`${GOOGLE_FAVICON_URL}${source}`}
+                    alt="favicon"
+                    className="zkapp-favicon"
+                  />
+                  <DropdownMenu buttonLabel={<MoreVertical className="cursor-pointer" />}>
+                    <div onClick={() => onQRCodeClick(source)}>QR Code</div>
+                  </DropdownMenu>
+                </div>
                 <h4>{title}</h4>
                 <p>{source}</p>
               </div>
@@ -101,6 +119,11 @@ export const ZkappConnectedApps = () => {
           showNewZkapp={showNewZkapp}
         />
       </Hoc>
+      <QRCodeGenerator
+        ref={qrCodeRef}
+        url={qrCodeUrl}
+        hideButton
+      />
     </div>
   );
 };
