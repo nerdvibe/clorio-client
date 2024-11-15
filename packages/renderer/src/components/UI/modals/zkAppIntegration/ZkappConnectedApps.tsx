@@ -1,14 +1,15 @@
-import {useState, useRef} from 'react';
+import {useState, useRef, useEffect} from 'react';
 import {AlertOctagon, MoreVertical} from 'react-feather';
 import Hoc from '../../Hoc';
 import Button from '../../Button';
-import {useRecoilValue} from 'recoil';
-import {connectedSitesState} from '/@/store';
+import {useRecoilState, useRecoilValue} from 'recoil';
+import {connectedSitesState, deeplinkState} from '/@/store';
 import NewZkappConnectionModal from './NewZkappConnectionModal';
 import Input from '../../input/Input';
 import {toast} from 'react-toastify';
 import DropdownMenu from '../../DropdownMenu';
 import QRCodeGenerator from '/@/components/QRCode/QRCodeGenerator';
+import {DeeplinkType} from '/@/hooks/useDeeplinkHandler';
 const GOOGLE_FAVICON_URL = 'https://s2.googleusercontent.com/s2/favicons?domain_url=';
 
 const initialZkappData = {
@@ -22,6 +23,14 @@ export const ZkappConnectedApps = () => {
   const [newZkapp, setNewZkapp] = useState(initialZkappData);
   const [qrCodeUrl, setQrCodeUrl] = useState('');
   const qrCodeRef = useRef<{open: () => void}>(null);
+  const [{type, data}, setDeeplinkData] = useRecoilState(deeplinkState);
+
+  useEffect(() => {
+    if (type === DeeplinkType.ZKAPPS && data) {
+      openLink(data.URL);
+      setDeeplinkData({type: '', data: ''});
+    }
+  }, [data, type]);
 
   const openLink = (url: string) => {
     (window.ipcBridge as any).invoke('open-win', JSON.stringify({url}));
@@ -48,7 +57,7 @@ export const ZkappConnectedApps = () => {
 
   const onQRCodeClick = (url: string) => {
     if (qrCodeRef.current) {
-      const deeplink = new URL(`mina://zkapp?${url}`);
+      const deeplink = new URL(`mina://zkapp?URL=${url}`);
       setQrCodeUrl(deeplink.toString());
       qrCodeRef.current.open();
     }

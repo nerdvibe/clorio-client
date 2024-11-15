@@ -11,6 +11,7 @@ export enum DeeplinkType {
   VERIFY_MESSAGE = 'verify-message',
   DELEGATION = 'stake',
   SEND_TX = 'send-tx',
+  ZKAPPS = 'zkapps',
 }
 
 const parseDeeplink = (url: string) => {
@@ -29,6 +30,9 @@ const parseDeeplink = (url: string) => {
   } else if (url.includes('sendtx') || url.includes('send-tx')) {
     payload.data = parseSendTxDeeplink(params);
     payload.type = DeeplinkType.SEND_TX;
+  } else if (url.includes('zkapp')) {
+    payload.data = parseZkappDeeplink(params);
+    payload.type = DeeplinkType.ZKAPPS;
   } else {
     toast.error('Invalid deeplink');
     throw new Error('Invalid deeplink');
@@ -71,6 +75,21 @@ const parseSendTxDeeplink = (params: URLSearchParams) => {
   }
 
   if (!returningObject.to || !returningObject.amount || !returningObject.fee) {
+    throw new Error('Missing required parameters');
+  }
+
+  return returningObject;
+};
+
+const parseZkappDeeplink = (params: URLSearchParams) => {
+  const returningObject = {
+    URL: '',
+  };
+  for (const param of params.keys()) {
+    returningObject[param] = params.get(param);
+  }
+
+  if (!returningObject.URL) {
     throw new Error('Missing required parameters');
   }
 
