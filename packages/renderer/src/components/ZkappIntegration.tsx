@@ -48,7 +48,6 @@ export default function ZkappIntegration() {
 
   const setListeners = () => {
     window.ipcBridge.on('clorio-event', async (event, payload) => {
-      console.log('Received event:', payload);
       const {type, data, source, title} = payload;
       if (!checkSource(source)) {
         if (type === 'clorio-get-network-config') {
@@ -420,7 +419,7 @@ export default function ZkappIntegration() {
 
   const shareUrl = async (url: any) => {
     if (qrCodeRef.current) {
-      const deeplink = new URL(`mina://zkapp?${url}`);
+      const deeplink = new URL(`mina://zkapp?URL=${url}`);
       setQrCodeUrl(deeplink.toString());
       qrCodeRef.current.open();
     }

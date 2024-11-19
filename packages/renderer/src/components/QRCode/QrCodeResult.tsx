@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '../UI/Button';
 import {parseDeeplink} from '../../hooks/useDeeplinkHandler';
+import ZkappConnectDisclaimer from '../UI/ZkappConnectDisclaimer';
 
 interface IProps {
   url: string;
@@ -9,9 +10,10 @@ interface IProps {
 }
 
 const labels = {
-  'send-tx': 'Send Transaction',
+  'send-tx': 'Send transaction',
   stake: 'Delegation',
-  'verify-message': 'Verify Message',
+  'verify-message': 'Verify message',
+  zkapps: 'Open ZkApp',
 };
 
 const capitalizeFirstLetter = (string: string) => {
@@ -30,7 +32,8 @@ const QrCodeResult: React.FC<IProps> = ({url, onConfirm, onCancel}) => {
   return (
     <div className="qr-code-result">
       <h1>Summary - {labels[formattedData?.type]}</h1>
-      <div className='mb-4'>
+      {formattedData?.type === 'zkapps' && <ZkappConnectDisclaimer alt />}
+      <div className="mb-4">
         {formattedData &&
           typeof formattedData === 'object' &&
           formattedData.data &&
