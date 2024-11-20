@@ -1,5 +1,5 @@
 import {useState, useRef, useEffect} from 'react';
-import {AlertOctagon, MoreVertical} from 'react-feather';
+import {AlertOctagon, MoreVertical, Trash2} from 'react-feather';
 import Hoc from '../../Hoc';
 import Button from '../../Button';
 import {useRecoilState, useRecoilValue} from 'recoil';
@@ -10,6 +10,7 @@ import {toast} from 'react-toastify';
 import DropdownMenu from '../../DropdownMenu';
 import QRCodeGenerator from '/@/components/QRCode/QRCodeGenerator';
 import {DeeplinkType} from '/@/hooks/useDeeplinkHandler';
+import QRCodeImage from '../../../../assets/qrcode.svg';
 const GOOGLE_FAVICON_URL = 'https://s2.googleusercontent.com/s2/favicons?domain_url=';
 
 const initialZkappData = {
@@ -19,7 +20,7 @@ const initialZkappData = {
 
 export const ZkappConnectedApps = () => {
   const [showNewZkapp, setShowNewZkapp] = useState(false);
-  const {sites} = useRecoilValue(connectedSitesState);
+  const [{sites}, setConnectedSites] = useRecoilState(connectedSitesState);
   const [newZkapp, setNewZkapp] = useState(initialZkappData);
   const [qrCodeUrl, setQrCodeUrl] = useState('');
   const qrCodeRef = useRef<{open: () => void}>(null);
@@ -61,6 +62,13 @@ export const ZkappConnectedApps = () => {
       setQrCodeUrl(deeplink.toString());
       qrCodeRef.current.open();
     }
+  };
+
+  const onDelete = (url: string) => {
+    setConnectedSites(prev => ({
+      ...prev,
+      sites: prev.sites.filter(({source}: {source: string}) => source !== url),
+    }));
   };
 
   return (
@@ -113,7 +121,26 @@ export const ZkappConnectedApps = () => {
                     className="zkapp-favicon"
                   />
                   <DropdownMenu buttonLabel={<MoreVertical className="cursor-pointer" />}>
-                    <div onClick={() => onQRCodeClick(source)}>QR Code</div>
+                    <div
+                      className="zkapp-dropdown-item"
+                      onClick={() => onQRCodeClick(source)}
+                    >
+                      <img
+                        src={QRCodeImage}
+                        className="zkapp-qr-code-icon"
+                        style={{
+                          filter: 'invert(1)',
+                        }}
+                      />
+                      QR Code
+                    </div>
+                    <div
+                      onClick={() => onDelete(source)}
+                      className="zkapp-dropdown-item zkapp-dropdown-item-danger"
+                    >
+                      <Trash2 />
+                      Remove
+                    </div>
                   </DropdownMenu>
                 </div>
                 <h4>{title}</h4>
