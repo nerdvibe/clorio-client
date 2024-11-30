@@ -174,8 +174,7 @@
     "dmg": {
       "title": "Clorio Wallet",
       "background": "assets/background.png",
-      "contents": [
-        {
+      "contents": [{
           "x": "320",
           "y": "280",
           "type": "file"
