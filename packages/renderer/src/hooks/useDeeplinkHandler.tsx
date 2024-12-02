@@ -74,7 +74,7 @@ const parseSendTxDeeplink = (params: URLSearchParams) => {
     returningObject[param] = params.get(param);
   }
 
-  if (!returningObject.to || !returningObject.amount || !returningObject.fee) {
+  if (!returningObject.to || !returningObject.amount) {
     throw new Error('Missing required parameters');
   }
 

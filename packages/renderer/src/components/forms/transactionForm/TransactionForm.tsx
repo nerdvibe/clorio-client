@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {Row, Col} from 'react-bootstrap';
-import {toNanoMINA, toLongMINA} from '../../../tools';
+import {toNanoMINA, toLongMINA, toMINA} from '../../../tools';
 import Button from '../../UI/Button';
 import Input from '../../UI/input/Input';
 import {toast} from 'react-toastify';
@@ -41,16 +41,11 @@ const TransactionForm = ({
    */
   useEffect(() => {
     if (deeplinkData?.data?.amount) {
-      setAmount(deeplinkData.data.amount);
-      setData({
-        ...transactionData,
-        amount: toNanoMINA(deeplinkData.data.amount),
-        fee: deeplinkData.data.fee ? toNanoMINA(deeplinkData.data.fee) : transactionData.fee,
-      });
-      if (deeplinkData.data.fee) {
-        setFee(deeplinkData.data.fee);
-      }
+      amountHandler(deeplinkData.data.amount);
       setDeeplinkData({type: '', data: {}});
+      if (deeplinkData.data.fee > 0) {
+        setFeeHandler(deeplinkData.data.fee);
+      }
     }
   }, [deeplinkData, setData, transactionData]);
 
@@ -140,7 +135,9 @@ const TransactionForm = ({
     }
   };
 
-  const qrCodeUrl = `mina://send-tx?to=${transactionData.receiverAddress}&amount=${transactionData.amount}&fee=${transactionData.fee}&memo=${transactionData.memo}`;
+  const qrCodeUrl = `mina://send-tx?to=${transactionData.receiverAddress}&amount=${toMINA(
+    transactionData.amount,
+  )}&memo=${transactionData.memo}`;
 
   return (
     <div className="mx-auto w-75">
@@ -212,7 +209,7 @@ const TransactionForm = ({
           </Col>
         </Row>
         <div className="py-3 row w-full">
-          <div className='w-50 col'>
+          <div className="w-50 col">
             <QRCodeGenerator
               url={qrCodeUrl}
               extended
@@ -223,7 +220,7 @@ const TransactionForm = ({
             onClick={() => checkFieldsAndProceed(transactionData, nextStep)}
             text="Preview"
             style="primary"
-            className='w-50 col'
+            className="w-50 col"
             icon={<ArrowRight />}
             appendIcon
           />
