@@ -39,6 +39,17 @@ export default function NetworkSettings({
   const navigate = useNavigate();
   const [{selectedNetwork}, setNetworkState] = useRecoilState(networkState);
 
+  const defaultNetworkValue =
+    availableNetworks.length > 1
+      ? !settings?.label
+        ? (availableNetworks as any[]).findIndex((network: any) =>
+            network.label.includes('mainnet'),
+          )
+        : (availableNetworks as any[]).findIndex(
+            (network: any) => network.label === settings?.label,
+          )
+      : 0;
+
   useEffect(() => {
     getPassphrase().then(passphrase => {
       setStoredPassphrase(passphrase);
@@ -118,7 +129,7 @@ export default function NetworkSettings({
                 className="w-50"
                 aria-label="Select a network"
                 onChange={networkSelectHandler}
-                defaultValue={settings?.label?.toLowerCase()}
+                defaultValue={defaultNetworkValue}
               >
                 {Object.keys(availableNetworks).map(network => {
                   const networkData = availableNetworks[network];

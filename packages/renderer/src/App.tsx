@@ -39,7 +39,7 @@ function App() {
   };
 
   const getNetworks = async () => {
-    const hasInitialSettings = settings?.url;
+    const hasInitialSettings = !!settings?.url;
     const data = await fetch(import.meta.env.VITE_REACT_APP_NETWORK_LIST)
       .then(response => response.json())
       .then(data => data);
@@ -58,20 +58,24 @@ function App() {
       setAvailableNetworks(formattedNetworks);
 
       if (!selectedNetwork) {
-        const defaultNetwork = selectDefaultNetwork(Object.keys(formattedNetworks));
+        const defaultNetwork = selectDefaultNetwork(
+          formattedNetworks.map(({label}) => {
+            return label;
+          }),
+        );
         setNetworkState(prev => ({
           ...prev,
           selectedNetwork: {
-            chainId: formattedNetworks[defaultNetwork].network,
-            name: formattedNetworks[defaultNetwork].name,
-            networkID: formattedNetworks[defaultNetwork].networkID,
+            chainId: data[defaultNetwork].network,
+            name: data[defaultNetwork].name,
+            networkID: `mina:${data.network}`,
           },
         }));
       }
       if (!hasInitialSettings) {
-        const network = selectDefaultNetwork(Object.keys(formattedNetworks));
-        saveSettings(formattedNetworks[network]);
-        setNetworkState(prev => ({...prev, selectedNode: formattedNetworks[network]}));
+        const network = selectDefaultNetwork(Object.keys(data));
+        saveSettings(data[network]);
+        setNetworkState(prev => ({...prev, selectedNode: data[network]}));
       }
     }
   };
