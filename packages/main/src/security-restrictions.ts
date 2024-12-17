@@ -45,13 +45,6 @@ app.on('web-contents-created', (_, contents) => {
     if (ALLOWED_ORIGINS_AND_PERMISSIONS.has(origin)) {
       return;
     }
-
-    // Prevent navigation
-    event.preventDefault();
-
-    if (import.meta.env.DEV) {
-      console.warn(`Blocked navigating to disallowed origin: ${origin}`);
-    }
   });
 
   /**
