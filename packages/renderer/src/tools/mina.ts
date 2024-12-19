@@ -64,11 +64,11 @@ export const deriveAccount = async (value: string, accountId?: number) => {
  */
 export const deriveAccountFromMnemonic = async (mnemonic: string, accountId?: number) => {
   const mneList = mnemonic.trim().split(' ');
-  if (mneList.length !== 12) {
-    throw new Error('Passphrase should be 12 words long');
+  if (!(mneList.length === 12 || mneList.length === 24)) {
+    throw new Error('Passphrase should be 12 or 24 words long');
   }
   const validMnemonic = bip39.validateMnemonic(mnemonic.trim());
-  if (!validMnemonic) {
+  if (!validMnemonic && mneList.length !== 24) {
     throw new Error('Invalid passphrase');
   }
   const wallet = await deriveWalletByMnemonic(mnemonic, accountId);
