@@ -1,7 +1,7 @@
 {
   "name": "clorio-wallet",
   "description": "Clorio wallet",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "private": true,
   "main": "packages/main/dist/index.cjs",
   "author": {
