@@ -37,9 +37,9 @@ export const toLongMINA = (amount: number | string) => {
  * @param value Private key or Passphrase
  * @returns Keypair
  */
-export const deriveAccount = async (value: string, accountId?: number) => {
+export const deriveAccount = async (value: string, accountId?: number, skipChecks?: boolean) => {
   if (value.trim().split(' ').length > 2) {
-    const derivedAccount = await deriveAccountFromMnemonic(value, accountId);
+    const derivedAccount = await deriveAccountFromMnemonic(value, accountId, skipChecks);
     return {
       publicKey: derivedAccount?.pubKey,
       privateKey: derivedAccount?.priKey,
@@ -62,14 +62,20 @@ export const deriveAccount = async (value: string, accountId?: number) => {
  * @param mnemonic mnemonic passphrase
  * @returns Keypair
  */
-export const deriveAccountFromMnemonic = async (mnemonic: string, accountId?: number) => {
+export const deriveAccountFromMnemonic = async (
+  mnemonic: string,
+  accountId?: number,
+  skipChecks?: boolean,
+) => {
   const mneList = mnemonic.trim().split(' ');
-  if (!(mneList.length === 12 || mneList.length === 24)) {
-    throw new Error('Passphrase should be 12 or 24 words long');
-  }
-  const validMnemonic = bip39.validateMnemonic(mnemonic.trim());
-  if (!validMnemonic && mneList.length !== 24) {
-    throw new Error('Invalid passphrase');
+  if (!skipChecks) {
+    if (!(mneList.length === 12 || mneList.length === 24)) {
+      throw new Error('Passphrase should be 12 or 24 words long');
+    }
+    const validMnemonic = bip39.validateMnemonic(mnemonic.trim());
+    if (!validMnemonic && mneList.length !== 24) {
+      throw new Error('Invalid passphrase');
+    }
   }
   const wallet = await deriveWalletByMnemonic(mnemonic, accountId);
   return wallet;

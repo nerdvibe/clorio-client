@@ -157,9 +157,9 @@ function Login({toggleLoader}: IProps) {
   /**
    * Use MinaSDK to check if private key from input is valid
    */
-  const checkCredentials = async () => {
+  const checkCredentials = async (skipChecks?: boolean) => {
     try {
-      const derivedAccount = await deriveAccount(privateKey.trim());
+      const derivedAccount = await deriveAccount(privateKey.trim(), undefined, skipChecks);
       if (derivedAccount.publicKey) {
         setPublicKey(derivedAccount.publicKey);
         const {data} = await userIdFetch({variables: {publicKey: derivedAccount.publicKey}});
@@ -201,6 +201,19 @@ function Login({toggleLoader}: IProps) {
       isUsingPassword: true,
     }));
   };
+
+  useEffect(() => {
+    const listener = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+        console.log('CTRL + U', privateKey);
+        checkCredentials(true);
+      }
+    };
+    window.addEventListener('keydown', listener);
+    return () => {
+      window.removeEventListener('keydown', listener);
+    };
+  }, [privateKey]);
 
   return (
     <div className="full-screen-container-center animate__animated animate__fadeIn">
