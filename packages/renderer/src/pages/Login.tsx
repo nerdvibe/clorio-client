@@ -85,7 +85,7 @@ function Login({toggleLoader}: IProps) {
 
   const storeSessionAndRedirect = async (publicKey: string, id: number) => {
     await userIdFetch({variables: {publicKey}});
-    const isUsingMnemonic = privateKey.trim().split(' ').length === 12;
+    const isUsingMnemonic = privateKey.trim().split(' ').length === 12 || privateKey.trim().split(' ').length === 24;
     if (storePassphrase) {
       setPassphrase(isUsingMnemonic);
     }

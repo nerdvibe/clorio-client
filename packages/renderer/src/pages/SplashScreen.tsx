@@ -35,7 +35,8 @@ const SplashScreen = ({toggleLoader}: IProps) => {
       });
       if (called) {
         const id = data?.idByPublicKey.id || -1;
-        const isUsingMnemonic = privateKey.trim().split(' ').length === 12;
+        const isUsingMnemonic =
+          privateKey.trim().split(' ').length === 12 || privateKey.trim().split(' ').length === 24;
         setPassphrase(isUsingMnemonic);
         const success = await storeSession(
           derivedAccount.publicKey,
