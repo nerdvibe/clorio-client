@@ -1,7 +1,7 @@
 {
   "name": "clorio-wallet",
   "description": "Clorio wallet",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "private": true,
   "main": "packages/main/dist/index.cjs",
   "author": {
@@ -16,7 +16,7 @@
     "build:renderer": "cd ./packages/renderer && vite build",
     "build:web": "cd ./packages/renderer && yarn build",
     "compile": "cross-env MODE=production npm run build && electron-builder build --config .electron-builder.config.cjs --dir --config.asar=false",
-    "compile:mac": "yarn build && ./node_modules/.bin/electron-builder --config .electron-builder.config.cjs --publish never",
+    "compile:mac": "CSC_IDENTITY_AUTO_DISCOVERY=false pyarn build && ./node_modules/.bin/electron-builder --config .electron-builder.config.cjs --publish never",
     "compile:all": "CSC_IDENTITY_AUTO_DISCOVERY=false yarn build && ./node_modules/.bin/electron-builder -mwl --config .electron-builder.config.cjs --publish never",
     "compile:linux": "CSC_IDENTITY_AUTO_DISCOVERY=false yarn build && ./node_modules/.bin/electron-builder -l --config .electron-builder.config.cjs --publish never",
     "compile:ml": "CSC_IDENTITY_AUTO_DISCOVERY=false yarn build && ./node_modules/.bin/electron-builder -ml --config .electron-builder.config.cjs --publish never",
