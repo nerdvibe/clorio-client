@@ -410,6 +410,11 @@ p {
   max-width: 800px;
 }
 
+.warning-card{
+  border-color: rgb(214, 170, 10);
+  background-color: rgba(214, 170, 10, 0.122);
+}
+
 .message-box {
   max-height: 300px;
   overflow-y: auto;

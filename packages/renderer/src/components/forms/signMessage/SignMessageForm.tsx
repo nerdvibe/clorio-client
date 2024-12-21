@@ -18,6 +18,7 @@ const SignMessageForm = () => {
   const [privateKey, setPrivateKey] = useState<string>('');
   const [password, setPassword] = useState('');
   const [storedPassphrase, setStoredPassphrase] = useState('');
+  const [proceedWithLedger, setProceedWithLedger] = useState(false);
   const {decryptData} = useSecureStorage();
   const {wallet} = useWallet();
 
@@ -105,8 +106,12 @@ const SignMessageForm = () => {
     submitHandler(messageToSign);
   };
 
-  if (isLedgerEnabled) {
-    return <SignMessageLedgerScreen />;
+  const onProceedLedger = () => {
+    setProceedWithLedger(true);
+  };
+
+  if (isLedgerEnabled && !proceedWithLedger) {
+    return <SignMessageLedgerScreen onProceed={onProceedLedger} />;
   }
 
   return (
@@ -133,7 +138,27 @@ const SignMessageForm = () => {
               placeholder="Message "
             />
           </div>
-          {storedPassphrase ? (
+          {proceedWithLedger ? (
+            <>
+              <h5>
+                <strong>Passphrase or Private key</strong>
+              </h5>
+              <div
+                className="wrap-input1 validate-input"
+                data-validate="Name is required"
+              >
+                <span className="icon" />
+                <Input
+                  name="privateKey"
+                  value={privateKey}
+                  placeholder="Passphrase or Private key"
+                  inputHandler={e => setPrivateKey(e.currentTarget.value)}
+                  hidden={true}
+                  type="text"
+                />
+              </div>
+            </>
+          ) : storedPassphrase ? (
             <>
               <h5>
                 <strong>Password</strong>
