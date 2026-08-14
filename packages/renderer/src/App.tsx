@@ -1,6 +1,7 @@
 import {HashRouter} from 'react-router-dom';
 import Layout from './Layout';
 import {ApolloProvider} from '@apollo/client';
+import {QueryClientProvider} from '@tanstack/react-query';
 import {LedgerContextProvider} from './contexts/ledger/LedgerContext';
 import {apolloClient} from './graphql/api';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -14,6 +15,7 @@ import {clearSession} from './tools';
 import {networkState} from './store';
 import {useRecoilState} from 'recoil';
 import * as React from 'react';
+import {queryClient} from './api/queryClient';
 
 // Dynamic import for DevTools to avoid build errors if the folder is ignored/missing
 const DevTools = React.lazy(() =>
@@ -124,22 +126,24 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <BalanceContextProvider>
-        <React.Suspense fallback={null}>
-          <DevTools />
-        </React.Suspense>
-        {activeNode ? (
-          <ApolloProvider client={apolloClient(activeNode)}>
-            <LedgerContextProvider>
-              <HashRouter>
-                <Layout />
-              </HashRouter>
-            </LedgerContextProvider>
-          </ApolloProvider>
-        ) : null}
-      </BalanceContextProvider>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <div className="App">
+        <BalanceContextProvider>
+          <React.Suspense fallback={null}>
+            <DevTools />
+          </React.Suspense>
+          {activeNode ? (
+            <ApolloProvider client={apolloClient(activeNode)}>
+              <LedgerContextProvider>
+                <HashRouter>
+                  <Layout />
+                </HashRouter>
+              </LedgerContextProvider>
+            </ApolloProvider>
+          ) : null}
+        </BalanceContextProvider>
+      </div>
+    </QueryClientProvider>
   );
 }
 
