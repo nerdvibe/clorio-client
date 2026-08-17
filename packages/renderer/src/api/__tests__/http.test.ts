@@ -48,6 +48,21 @@ describe('normalizeApiUrl', () => {
 });
 
 describe('request', () => {
+  it.each(['https://attacker.example/health', '//attacker.example/health'])(
+    'rejects unsafe request URL %s without calling the adapter',
+    async url => {
+      const adapter = vi.fn(jsonResponse('{}'));
+
+      await expect(
+        request('https://api.example.com', {
+          url,
+          adapter,
+        }),
+      ).rejects.toThrow(TypeError);
+      expect(adapter).not.toHaveBeenCalled();
+    },
+  );
+
   it('returns parsed JSON and applies the explicit API URL, JSON headers, and signal', async () => {
     const controller = new AbortController();
     const adapter = vi.fn<Parameters<AxiosAdapter>, ReturnType<AxiosAdapter>>(async config => {
@@ -96,8 +111,11 @@ describe('request', () => {
     ).rejects.toEqual(new ApiError('HTTP_ERROR', 'API request failed with status 503', 503));
   });
 
-  it('normalizes network failures', async () => {
-    const error = axiosError('Network Error', 'ERR_NETWORK');
+  it.each([
+    ['Network Error', 'ERR_NETWORK'],
+    ['Bad response without response metadata', 'ERR_BAD_RESPONSE'],
+  ])('normalizes %s as a network failure', async (message, code) => {
+    const error = axiosError(message, code);
 
     await expect(
       request('https://api.example.com', {

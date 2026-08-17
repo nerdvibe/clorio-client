@@ -39,7 +39,8 @@ const normalizeError = (error: unknown): ApiError => {
   }
   if (
     error.code === AxiosError.ERR_BAD_RESPONSE &&
-    (!error.response || error.response.status < 400)
+    error.response &&
+    error.response.status < 400
   ) {
     return new ApiError('INVALID_RESPONSE', 'API returned malformed JSON');
   }
@@ -54,6 +55,10 @@ const normalizeError = (error: unknown): ApiError => {
 };
 
 export const request = async <T>(apiUrl: string, config: AxiosRequestConfig): Promise<T> => {
+  if (config.url && /^([a-z][a-z\d+\-.]*:)?\/\//i.test(config.url)) {
+    throw new TypeError('Request URL must be relative');
+  }
+
   try {
     const response = await axios.request<T>({
       ...config,
