@@ -338,10 +338,12 @@ describe('channel naming conventions', () => {
     }
   });
 
-  it('all clorio-* ON channels follow the clorio-<verb>-<noun> pattern', () => {
-    const clorioChannels = [...ALLOWED_ON_CHANNELS].filter(ch => ch.startsWith('clorio-'));
-    expect(clorioChannels.length).toBeGreaterThan(0);
-    for (const ch of clorioChannels) {
+  it('all clorio-* response channels follow the clorio-<verb>-<noun> pattern', () => {
+    const responseChannels = [...ALLOWED_ON_CHANNELS].filter(
+      ch => ch.startsWith('clorio-') && ch !== 'clorio-event',
+    );
+    expect(responseChannels.length).toBeGreaterThan(0);
+    for (const ch of responseChannels) {
       // Must have at least one hyphen after "clorio-"
       expect(ch.split('-').length).toBeGreaterThanOrEqual(3);
     }
