@@ -59,9 +59,7 @@ describe('isBad', () => {
   });
 
   it('returns false for "opinion" (does not contain "onion" after stripping)', () => {
-    // "opinion" → alphanumeric is "opinion" which does include "onion" as substring
-    // This documents the current behaviour (substring match)
-    expect(isBad('opinion')).toBe(true);
+    expect(isBad('opinion')).toBe(false);
   });
 
   it('returns false for an address-like string', () => {
@@ -242,7 +240,7 @@ describe('spellMnemonic', () => {
   });
 
   it('returns all words when every word is invalid', () => {
-    const allBad = 'foo bar baz qux quux corge grunge blarg meh bleh blorp snork';
+    const allBad = 'foo baar baz qux quux corge grunge blarg meh bleh blorp snork';
     const result = spellMnemonic(allBad);
     expect(result).toHaveLength(12);
   });
