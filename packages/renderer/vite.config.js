@@ -153,6 +153,8 @@ const config = {
     'process.env': {
       'NODE_DEBUG': false,
     },
+    // Legacy readable-stream checks this flag before accessing process.version.
+    'process.browser': true,
   },
   optimizeDeps: {
     exclude: ['react-content-loader', 'react-truncate-inside'],
