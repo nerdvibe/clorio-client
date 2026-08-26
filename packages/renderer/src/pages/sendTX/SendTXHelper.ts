@@ -47,11 +47,12 @@ export const initialTransactionData = {
 };
 
 /**
- * Check if nonce is not empty
- * @returns number Wallet usable nonce
+ * Check if nonce is a non-negative integer
+ * @returns boolean
  */
-export const checkNonce = (nonceData?: INonceQueryResult) => {
-  return nonceData?.accountByKey?.usableNonce || nonceData?.accountByKey?.usableNonce === 0;
+export const checkNonce = (nonceData?: INonceQueryResult): boolean => {
+  const nonce = nonceData?.accountByKey?.usableNonce;
+  return Number.isInteger(nonce) && nonce >= 0;
 };
 
 interface IBalanceBeforeTransaction {
