@@ -186,8 +186,8 @@ describe('getCurrentNetConfig — final fallback to Mainnet', () => {
   it('returns "mainnet" as netType when localStorage is empty and env is unset', () => {
     vi.stubEnv('VITE_REACT_APP_NETWORK', '');
     const config = getCurrentNetConfig();
-    // Empty string is falsy → should fall through to 'Mainnet'
-    expect(config.netType).toBe('Mainnet');
+    // Empty string is falsy → should fall through to canonical lowercase mainnet
+    expect(config.netType).toBe(NET_CONFIG_TYPE.Mainnet);
   });
 
   it('returns "Mainnet" as name when no settings or env are available', () => {
