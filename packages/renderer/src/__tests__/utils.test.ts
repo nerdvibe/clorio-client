@@ -58,6 +58,10 @@ describe('isBad', () => {
     expect(isBad('ONION')).toBe(true);
   });
 
+  it('detects mixed-case blacklisted words separated by punctuation', () => {
+    expect(isBad('O-n_I.oN')).toBe(true);
+  });
+
   it('returns false for "opinion" (does not contain "onion" after stripping)', () => {
     expect(isBad('opinion')).toBe(false);
   });
@@ -381,24 +385,31 @@ describe('getTotalPages', () => {
   });
 
   it('returns 2 when totalItems is one more than one page', () => {
-    expect(Number(getTotalPages(TRANSACTIONS_TABLE_ITEMS_PER_PAGE + 1))).toBe(2);
+    expect(getTotalPages(TRANSACTIONS_TABLE_ITEMS_PER_PAGE + 1)).toBe(2);
   });
 
   it('returns the correct number of pages for transactions (15 per page)', () => {
-    expect(Number(getTotalPages(30))).toBe(2);
-    expect(Number(getTotalPages(45))).toBe(3);
+    expect(getTotalPages(30)).toBe(2);
+    expect(getTotalPages(45)).toBe(3);
   });
 
   it('uses VALIDATORS_TABLE_ITEMS_PER_PAGE when transactions=false', () => {
     // validators have 100 per page
-    expect(Number(getTotalPages(VALIDATORS_TABLE_ITEMS_PER_PAGE, false))).toBe(1);
-    expect(Number(getTotalPages(VALIDATORS_TABLE_ITEMS_PER_PAGE + 1, false))).toBe(2);
+    expect(getTotalPages(VALIDATORS_TABLE_ITEMS_PER_PAGE, false)).toBe(1);
+    expect(getTotalPages(VALIDATORS_TABLE_ITEMS_PER_PAGE + 1, false)).toBe(2);
   });
 
-  it('returns at least 1 for any input', () => {
-    for (const n of [0, 1, 5, 14, 15, 16, 100, 1000]) {
-      expect(Number(getTotalPages(n))).toBeGreaterThanOrEqual(1);
-    }
+  it('returns exact page counts across transaction totals', () => {
+    expect(getTotalPages(1)).toBe(1);
+    expect(getTotalPages(14)).toBe(1);
+    expect(getTotalPages(16)).toBe(2);
+    expect(getTotalPages(100)).toBe(7);
+    expect(getTotalPages(1000)).toBe(67);
+  });
+
+  it('returns a number type', () => {
+    expect(typeof getTotalPages(30)).toBe('number');
+    expect(typeof getTotalPages(200, false)).toBe('number');
   });
 });
 
