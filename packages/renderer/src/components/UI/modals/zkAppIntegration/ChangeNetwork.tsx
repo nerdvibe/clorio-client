@@ -34,9 +34,8 @@ export default function ChangeNetwork() {
     'Network not found';
 
   const networkName =
-    switchNetwork && availableNetworks[switchNetwork.split(':')[1]]
-      ? availableNetworks[switchNetwork.split(':')[1]].name
-      : 'Network not found';
+    availableNetworks.find(network => network.network === switchNetwork?.split(':')[1])?.name ||
+    'Network not found';
 
   const onConfirm = async () => {
     networkSelectHandler();
@@ -58,17 +57,14 @@ export default function ChangeNetwork() {
       return;
     }
     try {
-      const networksFound =
-        switchNetwork &&
-        availableNetworks.filter(network => network.networkID === switchNetwork)[0];
-      await saveSettings(networksFound);
+      saveSettings(network);
       setNetworkState(prev => ({
         ...prev,
         selectedNetwork: network,
         switchNetwork: undefined,
         showChangeNetworkModal: false,
         isAddingChain: false,
-        selectedNode: networksFound,
+        selectedNode: network,
       }));
       sendResponse('clorio-switched-chain', {newtorkID: `mina:${switchNetwork}`});
       navigate('/overview');

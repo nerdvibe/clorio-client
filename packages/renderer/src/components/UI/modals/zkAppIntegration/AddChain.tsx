@@ -6,6 +6,7 @@ import {sendResponse} from '../../../../tools/mina-zkapp-bridge';
 import {toast} from 'react-toastify';
 import {useNavigate} from 'react-router-dom';
 import {useNetworkSettingsContext} from '/@/contexts/NetworkContext';
+import {normalizeNetworkSettings} from '/@/hooks/useNetworkSettings';
 import {ERROR_CODES} from '/@/tools/zkapp';
 import {AlertOctagon} from 'react-feather';
 
@@ -82,13 +83,18 @@ export default function AddChain() {
 
   const networkSelectHandler = async () => {
     try {
-      const networkData = {
-        url: addChainData?.url ?? '',
+      const legacyUrl = addChainData?.url ?? '';
+      const restSettings = normalizeNetworkSettings({
+        url: legacyUrl,
         network: addChainData?.name ?? '',
         name: addChainData?.name ?? '',
         label: addChainData?.name ?? '',
-      };
-      setAvailableNetworks({...availableNetworks, [networkData.name]: networkData});
+      });
+      if (!restSettings) {
+        throw new Error('A valid HTTP(S) REST base is required');
+      }
+      const networkData = {...restSettings, url: legacyUrl};
+      setAvailableNetworks([...availableNetworks, networkData]);
       saveSettings(networkData);
       setNetworkState(prev => ({
         ...prev,

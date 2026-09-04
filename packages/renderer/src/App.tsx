@@ -6,7 +6,11 @@ import {LedgerContextProvider} from './contexts/ledger/LedgerContext';
 import {apolloClient} from './graphql/api';
 import 'react-loading-skeleton/dist/skeleton.css';
 import './App.scss';
-import {formatNetworks, useNetworkSettingsContext} from './contexts/NetworkContext';
+import {
+  findMatchingNetwork,
+  formatNetworks,
+  useNetworkSettingsContext,
+} from './contexts/NetworkContext';
 import type {INetworkOption} from './hooks/useNetworkSettings';
 import {BalanceContextProvider} from './contexts/balance/BalanceContext';
 import {useEffect, useState} from 'react';
@@ -76,14 +80,7 @@ function App() {
       }));
       setAvailableNetworks(formattedNetworks);
 
-      const matchingNetwork =
-        formattedNetworks.find(({url, label, name}) => {
-          return url === settings?.url || label === settings?.label || name === settings?.name;
-        }) ||
-        formattedNetworks.find(({network}) => {
-          return network === settings?.network;
-        }) ||
-        null;
+      const matchingNetwork = findMatchingNetwork(formattedNetworks, settings);
 
       if (matchingNetwork) {
         setNetworkState(prev => ({
@@ -99,25 +96,29 @@ function App() {
         return;
       }
 
+      const defaultNetworkName = selectDefaultNetwork(
+        formattedNetworks.map(({label}) => label),
+      );
+      const defaultNetwork =
+        formattedNetworks.find(({label}) => label === defaultNetworkName) || formattedNetworks[0];
+      if (!defaultNetwork) {
+        setNetworksReady(true);
+        return;
+      }
+
       if (!selectedNetwork) {
-        const defaultNetwork = selectDefaultNetwork(
-          formattedNetworks.map(({label}) => {
-            return label;
-          }),
-        );
         setNetworkState(prev => ({
           ...prev,
           selectedNetwork: {
-            chainId: data[defaultNetwork].network,
-            name: data[defaultNetwork].name,
-            networkID: `mina:${data[defaultNetwork].network}`,
+            chainId: defaultNetwork.network,
+            name: defaultNetwork.name,
+            networkID: `mina:${defaultNetwork.network}`,
           },
         }));
       }
 
-      const network = selectDefaultNetwork(Object.keys(data));
-      saveSettings(data[network]);
-      setNetworkState(prev => ({...prev, selectedNode: data[network]}));
+      saveSettings(defaultNetwork);
+      setNetworkState(prev => ({...prev, selectedNode: defaultNetwork}));
       setNetworksReady(true);
       return;
     }
