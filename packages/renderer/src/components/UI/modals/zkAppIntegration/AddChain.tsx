@@ -7,6 +7,7 @@ import {toast} from 'react-toastify';
 import {useNavigate} from 'react-router-dom';
 import {useNetworkSettingsContext} from '/@/contexts/NetworkContext';
 import {normalizeNetworkSettings} from '/@/hooks/useNetworkSettings';
+import {normalizeApiUrl} from '/@/api/http';
 import {ERROR_CODES} from '/@/tools/zkapp';
 import {AlertOctagon} from 'react-feather';
 
@@ -42,15 +43,6 @@ export default function AddChain() {
     }
   };
 
-  const trimSpace = (str: string) => {
-    if (typeof str !== 'string') {
-      return str;
-    }
-    let res = str.replace(/(^\s*)|(\s*$)/g, '');
-    res = res.replace(/[\r\n]/g, '');
-    return res;
-  };
-
   // TODO: Check url before submit
   // const urlValid = (url: string) => {
   //   if (validUrl.isWebUri(url)) {
@@ -83,9 +75,9 @@ export default function AddChain() {
 
   const networkSelectHandler = async () => {
     try {
-      const legacyUrl = addChainData?.url ?? '';
+      const legacyUrl = normalizeApiUrl(addChainData?.url ?? '');
       const restSettings = normalizeNetworkSettings({
-        url: legacyUrl,
+        apiUrl: new URL(legacyUrl).origin,
         network: addChainData?.name ?? '',
         name: addChainData?.name ?? '',
         label: addChainData?.name ?? '',
@@ -115,7 +107,8 @@ export default function AddChain() {
       navigate('/overview');
       toast.success('Network switched successfully');
     } catch (error) {
-      toast.error(`Failed to switch network: ${error.message}`);
+      const message = error instanceof Error ? error.message : String(error);
+      toast.error(`Failed to switch network: ${message}`);
       sendResponse('error', ERROR_CODES.notSupportChain);
     }
   };
@@ -123,7 +116,11 @@ export default function AddChain() {
   // Test network node quering for the network details before switching
   const testNetworkNode = async () => {
     try {
-      const resp = await fetch(addChainData?.url, {
+      const legacyUrl = addChainData?.url;
+      if (!legacyUrl) {
+        throw new Error('A node URL is required');
+      }
+      const resp = await fetch(legacyUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

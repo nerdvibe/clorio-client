@@ -2,7 +2,7 @@ import {createContext, useContext, ReactNode} from 'react';
 import {
   IAvailableNetworks,
   INetworkOption,
-  NetworkOptionInput,
+  NetworkSettingsInput,
   normalizeNetworkSettings,
   useNetworkSettings,
 } from '../hooks/useNetworkSettings';
@@ -10,7 +10,8 @@ import {normalizeApiUrl} from '../api/http';
 
 interface NetworkSettingsContextType {
   settings: INetworkOption | null;
-  saveSettings: (settings: NetworkOptionInput) => boolean;
+  isInitialized: boolean;
+  saveSettings: (settings: NetworkSettingsInput) => boolean;
   clearSettings: () => void;
   setAvailableNetworks: (networks: IAvailableNetworks) => void;
   availableNetworks: IAvailableNetworks;
@@ -19,12 +20,25 @@ interface NetworkSettingsContextType {
 const NetworkSettingsContext = createContext<NetworkSettingsContextType | undefined>(undefined);
 
 export function NetworkSettingsProvider({children}: {children: ReactNode}) {
-  const {settings, saveSettings, clearSettings, setAvailableNetworks, availableNetworks} =
-    useNetworkSettings();
+  const {
+    settings,
+    isInitialized,
+    saveSettings,
+    clearSettings,
+    setAvailableNetworks,
+    availableNetworks,
+  } = useNetworkSettings();
 
   return (
     <NetworkSettingsContext.Provider
-      value={{settings, saveSettings, clearSettings, setAvailableNetworks, availableNetworks}}
+      value={{
+        settings,
+        isInitialized,
+        saveSettings,
+        clearSettings,
+        setAvailableNetworks,
+        availableNetworks,
+      }}
     >
       {children}
     </NetworkSettingsContext.Provider>
@@ -58,7 +72,12 @@ export function formatNetworks(data: unknown): IAvailableNetworks {
 
   return Object.values(data).flatMap(value => {
     const network = normalizeNetworkSettings(value);
-    if (!network) {
+    if (
+      !network ||
+      !network.network.trim() ||
+      !network.label.trim() ||
+      !network.name.trim()
+    ) {
       return [];
     }
     const compatibilityUrl = getApolloCompatibilityUrl(value as Record<string, unknown>);

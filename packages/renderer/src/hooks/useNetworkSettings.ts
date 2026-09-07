@@ -15,8 +15,19 @@ export interface INetworkOption {
   networkID?: string;
 }
 
-export type NetworkOptionInput = Partial<INetworkOption>;
+export type NetworkSettingsInput = Pick<INetworkOption, 'apiUrl'> &
+  Partial<Omit<INetworkOption, 'apiUrl'>>;
 export type IAvailableNetworks = INetworkOption[];
+
+interface LegacyPersistedNetworkSettingsRaw {
+  apiUrl?: unknown;
+  url?: unknown;
+  network?: unknown;
+  label?: unknown;
+  name?: unknown;
+  epochUrl?: unknown;
+  explorerUrl?: unknown;
+}
 
 type NetworkSettingsStorage = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
 
@@ -30,12 +41,7 @@ export function normalizeNetworkSettings(value: unknown): INetworkOption | null 
   const input = value as Record<string, unknown>;
   let apiUrl: string;
   try {
-    if (Object.prototype.hasOwnProperty.call(input, 'apiUrl')) {
-      apiUrl = normalizeApiUrl(input.apiUrl as string);
-    } else {
-      const legacyUrl = normalizeApiUrl(input.url as string);
-      apiUrl = new URL(legacyUrl).origin;
-    }
+    apiUrl = normalizeApiUrl(input.apiUrl as string);
   } catch {
     return null;
   }
@@ -75,7 +81,17 @@ export function loadNetworkSettings(
   }
 
   try {
-    const settings = normalizeNetworkSettings(JSON.parse(saved));
+    const persisted = JSON.parse(saved) as LegacyPersistedNetworkSettingsRaw;
+    let candidate: unknown = persisted;
+    if (
+      persisted &&
+      typeof persisted === 'object' &&
+      !Object.prototype.hasOwnProperty.call(persisted, 'apiUrl')
+    ) {
+      const legacyUrl = normalizeApiUrl(persisted.url as string);
+      candidate = {...persisted, apiUrl: new URL(legacyUrl).origin};
+    }
+    const settings = normalizeNetworkSettings(candidate);
     if (!settings) {
       return null;
     }
@@ -91,7 +107,7 @@ export function loadNetworkSettings(
 
 export function saveNetworkSettings(
   storage: NetworkSettingsStorage,
-  value: NetworkOptionInput,
+  value: NetworkSettingsInput,
 ): INetworkOption | null {
   const settings = normalizeNetworkSettings(value);
   if (!settings) {
@@ -115,12 +131,14 @@ export function removeOldNetworkQueries(
 export function useNetworkSettings() {
   const [settings, setSettings] = useState<INetworkOption | null>(null);
   const [availableNetworks, setAvailableNetworks] = useState<IAvailableNetworks>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     setSettings(loadNetworkSettings(localStorage));
+    setIsInitialized(true);
   }, []);
 
-  const saveSettings = (newSettings: NetworkOptionInput): boolean => {
+  const saveSettings = (newSettings: NetworkSettingsInput): boolean => {
     const normalized = saveNetworkSettings(localStorage, newSettings);
     if (!normalized) {
       return false;
@@ -135,5 +153,12 @@ export function useNetworkSettings() {
     setSettings(null);
   };
 
-  return {settings, saveSettings, clearSettings, setAvailableNetworks, availableNetworks};
+  return {
+    settings,
+    isInitialized,
+    saveSettings,
+    clearSettings,
+    setAvailableNetworks,
+    availableNetworks,
+  };
 }

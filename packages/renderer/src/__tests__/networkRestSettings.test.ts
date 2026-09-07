@@ -80,23 +80,25 @@ describe('REST network settings', () => {
     {apiUrl: ''},
     {apiUrl: 'ws://api.example.com'},
     {apiUrl: 'https://user:secret@api.example.com'},
+    {url: 'https://legacy.example.com/v1/graphql'},
     {url: '/v1/graphql'},
     {url: 'not a URL'},
-  ])('fails closed without a valid explicit or legacy REST base: %j', value => {
+  ])('fails closed without a valid explicit REST base: %j', value => {
     expect(normalizeNetworkSettings(value)).toBeNull();
   });
 
-  it('does not replace an existing valid setting with an invalid selection', () => {
+  it('does not infer an API URL while saving a legacy-shaped selection', () => {
     localStorage.setItem('networkSettings', JSON.stringify(mainnet));
 
-    expect(saveNetworkSettings(localStorage, {name: 'Broken network'})).toBeNull();
+    // @ts-expect-error Public save input requires an explicit apiUrl.
+    expect(saveNetworkSettings(localStorage, {url: 'https://legacy.example.com/graphql'})).toBeNull();
     expect(JSON.parse(localStorage.getItem('networkSettings') || 'null')).toEqual(mainnet);
   });
 
-  it('saves only the normalized REST shape', () => {
+  it('saves only settings with an explicit API URL', () => {
     expect(
       saveNetworkSettings(localStorage, {
-        url: 'https://custom.example.com/graphql',
+        apiUrl: 'https://custom.example.com/v1/',
         network: 'custom',
         label: 'custom',
         name: 'Custom',
@@ -104,7 +106,7 @@ describe('REST network settings', () => {
         explorerUrl: 'https://explorer.example.com',
       }),
     ).toEqual({
-      apiUrl: 'https://custom.example.com',
+      apiUrl: 'https://custom.example.com/v1',
       network: 'custom',
       label: 'custom',
       name: 'Custom',
@@ -112,7 +114,7 @@ describe('REST network settings', () => {
       explorerUrl: 'https://explorer.example.com',
     });
     expect(JSON.parse(localStorage.getItem('networkSettings') || 'null')).toEqual({
-      apiUrl: 'https://custom.example.com',
+      apiUrl: 'https://custom.example.com/v1',
       network: 'custom',
       label: 'custom',
       name: 'Custom',
@@ -121,7 +123,7 @@ describe('REST network settings', () => {
     });
   });
 
-  it('normalizes remote legacy URLs while retaining them only for Apollo compatibility', () => {
+  it('rejects remote networks without explicit API URLs or complete identity fields', () => {
     expect(
       formatNetworks({
         mainnet: {
@@ -137,11 +139,21 @@ describe('REST network settings', () => {
           label: 'legacy',
           name: 'Legacy',
         },
-        invalid: {
-          url: 'ws://invalid.example.com/graphql',
-          network: 'invalid',
-          label: 'invalid',
-          name: 'Invalid',
+        missingNetwork: {
+          apiUrl: 'https://missing-network.example.com',
+          label: 'missing-network',
+          name: 'Missing network',
+        },
+        blankLabel: {
+          apiUrl: 'https://blank-label.example.com',
+          network: 'blank-label',
+          label: '   ',
+          name: 'Blank label',
+        },
+        missingName: {
+          apiUrl: 'https://missing-name.example.com',
+          network: 'missing-name',
+          label: 'missing-name',
         },
       }),
     ).toEqual([
@@ -149,14 +161,6 @@ describe('REST network settings', () => {
         ...mainnet,
         url: 'https://graphql.example.com/v1/graphql',
         networkID: 'mina:mainnet',
-      },
-      {
-        apiUrl: 'https://legacy.example.com',
-        url: 'https://legacy.example.com/graphql',
-        network: 'legacy',
-        label: 'legacy',
-        name: 'Legacy',
-        networkID: 'mina:legacy',
       },
     ]);
   });

@@ -27,7 +27,8 @@ const DevTools = React.lazy(() =>
 );
 
 function App() {
-  const {settings, setAvailableNetworks, saveSettings} = useNetworkSettingsContext();
+  const {settings, isInitialized, setAvailableNetworks, saveSettings} =
+    useNetworkSettingsContext();
   const [{selectedNetwork, selectedNode}, setNetworkState] = useRecoilState(networkState);
   const [networksReady, setNetworksReady] = useState(false);
 
@@ -37,19 +38,25 @@ function App() {
    * `selectedNode` is still undefined on the first render — prevents
    * Apollo from firing requests to localhost:3000/graphql.
    */
-  const activeNode: INetworkOption | null = networksReady ? selectedNode ?? settings : null;
+  const activeNode: INetworkOption | null =
+    networksReady && settings ? selectedNode ?? settings : null;
+  const showConfigurationState = isInitialized && networksReady && !activeNode;
 
   useEffect(() => {
     clearSession();
   }, []);
 
   useEffect(() => {
+    if (!isInitialized) {
+      return;
+    }
     if (!settings) {
+      setNetworksReady(true);
       return;
     }
 
-    getNetworks();
-  }, [settings]);
+    getNetworks(settings);
+  }, [isInitialized, settings]);
 
   const selectDefaultNetwork = (networks: string[]) => {
     if (networks.includes('mainnet')) {
@@ -61,9 +68,14 @@ function App() {
     }
   };
 
-  const getNetworks = async () => {
+  const getNetworks = async (currentSettings: INetworkOption) => {
     setNetworksReady(false);
-    const data = await fetch(import.meta.env.VITE_REACT_APP_NETWORK_LIST)
+    const networkListUrl = import.meta.env.VITE_REACT_APP_NETWORK_LIST;
+    if (!networkListUrl) {
+      setNetworksReady(true);
+      return;
+    }
+    const data = await fetch(networkListUrl)
       .then(response => response.json())
       .then(data => data);
     if (data) {
@@ -80,9 +92,16 @@ function App() {
       }));
       setAvailableNetworks(formattedNetworks);
 
-      const matchingNetwork = findMatchingNetwork(formattedNetworks, settings);
+      const matchingNetwork = findMatchingNetwork(formattedNetworks, currentSettings);
 
       if (matchingNetwork) {
+        if (
+          matchingNetwork.apiUrl !== currentSettings.apiUrl &&
+          !saveSettings(matchingNetwork)
+        ) {
+          setNetworksReady(true);
+          return;
+        }
         setNetworkState(prev => ({
           ...prev,
           selectedNode: matchingNetwork,
@@ -141,6 +160,14 @@ function App() {
                 </HashRouter>
               </LedgerContextProvider>
             </ApolloProvider>
+          ) : showConfigurationState ? (
+            <main
+              role="alert"
+              aria-labelledby="network-configuration-heading"
+            >
+              <h1 id="network-configuration-heading">Network configuration required</h1>
+              <p>Configure a valid REST API URL before using the wallet.</p>
+            </main>
           ) : null}
         </BalanceContextProvider>
       </div>
