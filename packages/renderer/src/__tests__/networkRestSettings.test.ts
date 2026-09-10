@@ -9,6 +9,7 @@ import {
 } from '../hooks/useNetworkSettings';
 import {findMatchingNetwork, formatNetworks} from '../contexts/NetworkContext';
 import {getCurrentNetConfig} from '../tools/zkapp';
+import {createAddChainNetworkData} from '../components/UI/modals/zkAppIntegration/addChainNetworkData';
 
 const mainnet = {
   apiUrl: 'https://api.example.com/v1',
@@ -120,6 +121,16 @@ describe('REST network settings', () => {
       name: 'Custom',
       epochUrl: 'https://epochs.example.com',
       explorerUrl: 'https://explorer.example.com',
+    });
+  });
+
+  it('preserves the exact Apollo URL while deriving the REST API origin for added chains', () => {
+    expect(createAddChainNetworkData('https://node.example/graphql/', 'custom')).toEqual({
+      apiUrl: 'https://node.example',
+      url: 'https://node.example/graphql/',
+      network: 'custom',
+      label: 'custom',
+      name: 'custom',
     });
   });
 
