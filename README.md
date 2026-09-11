@@ -6,7 +6,7 @@
 
 ## Introduction
 
-Clorio is a full-stack wallet for Mina Protocol. It is built with Typescript, communicates with the backend with GraphQL, and is offered in three versions. Hosted wallet on https://clor.io , the desktop builds compiled by Electron and Mobile.
+Clorio is a full-stack wallet for Mina Protocol. It is built with Typescript, communicates with the backend through network-aware REST APIs, and is offered in three versions. Hosted wallet on https://clor.io, the desktop builds compiled by Electron and Mobile.
 
 ## Hosted wallet
 
