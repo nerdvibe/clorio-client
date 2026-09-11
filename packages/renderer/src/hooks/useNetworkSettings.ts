@@ -10,8 +10,6 @@ export interface INetworkOption {
   name: string;
   epochUrl?: string;
   explorerUrl?: string;
-  /** Apollo compatibility only; remove with Apollo in Task 10. */
-  url?: string;
   networkID?: string;
 }
 

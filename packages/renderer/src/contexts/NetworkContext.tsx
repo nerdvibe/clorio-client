@@ -6,7 +6,6 @@ import {
   normalizeNetworkSettings,
   useNetworkSettings,
 } from '../hooks/useNetworkSettings';
-import {normalizeApiUrl} from '../api/http';
 
 interface NetworkSettingsContextType {
   settings: INetworkOption | null;
@@ -53,25 +52,28 @@ export function useNetworkSettingsContext() {
   return context;
 }
 
-const getApolloCompatibilityUrl = (network: Record<string, unknown>): string | undefined => {
-  if (typeof network.url !== 'string') {
-    return undefined;
-  }
-  try {
-    normalizeApiUrl(network.url);
-    return network.url;
-  } catch {
-    return undefined;
-  }
-};
-
 export function formatNetworks(data: unknown): IAvailableNetworks {
   if (!data || typeof data !== 'object') {
     return [];
   }
 
   return Object.values(data).flatMap(value => {
-    const network = normalizeNetworkSettings(value);
+    if (!value || typeof value !== 'object') {
+      return [];
+    }
+
+    const input = value as Record<string, unknown>;
+    let apiUrl = input.apiUrl;
+    if (typeof apiUrl !== 'string' && typeof input.url === 'string') {
+      try {
+        // The published network list still uses the legacy node URL field.
+        apiUrl = new URL(input.url).origin;
+      } catch {
+        return [];
+      }
+    }
+
+    const network = normalizeNetworkSettings({...input, apiUrl});
     if (
       !network ||
       !network.network.trim() ||
@@ -80,11 +82,9 @@ export function formatNetworks(data: unknown): IAvailableNetworks {
     ) {
       return [];
     }
-    const compatibilityUrl = getApolloCompatibilityUrl(value as Record<string, unknown>);
     return [
       {
         ...network,
-        ...(compatibilityUrl ? {url: compatibilityUrl} : {}),
         networkID: `mina:${network.network}`,
       },
     ];

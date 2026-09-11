@@ -12,7 +12,7 @@ export interface NetworkSettingsType {
   showChangeNetworkModal: boolean;
   selectedNetwork?: NetworkConfigType | INetworkOption;
   switchNetwork?: string;
-  /** Legacy GraphQL input retained for the existing Apollo add-chain flow. */
+  /** External add-chain payload before REST origin validation. */
   addChainData?: {name: string; url: string};
   isAddingChain: boolean;
   selectedNode?: INetworkOption;

@@ -1,9 +1,7 @@
 import {HashRouter} from 'react-router-dom';
 import Layout from './Layout';
-import {ApolloProvider} from '@apollo/client';
 import {QueryClientProvider} from '@tanstack/react-query';
 import {LedgerContextProvider} from './contexts/ledger/LedgerContext';
-import {apolloClient} from './graphql/api';
 import 'react-loading-skeleton/dist/skeleton.css';
 import './App.scss';
 import {
@@ -26,21 +24,25 @@ const DevTools = React.lazy(() =>
   import('./dev-tools/DevTools').catch(() => ({default: () => null})),
 );
 
+const networkFallback = (settings: INetworkOption): INetworkOption => {
+  const network = settings.network.trim() || 'custom';
+  const label = settings.label.trim() || network;
+  return {
+    ...settings,
+    network,
+    label,
+    name: settings.name.trim() || label,
+  };
+};
+
 function App() {
   const {settings, isInitialized, setAvailableNetworks, saveSettings} =
     useNetworkSettingsContext();
-  const [{selectedNetwork, selectedNode}, setNetworkState] = useRecoilState(networkState);
+  const [{selectedNetwork}, setNetworkState] = useRecoilState(networkState);
   const [networksReady, setNetworksReady] = useState(false);
 
-  /**
-   * Returns the active network node for ApolloProvider.
-   * Falls back to `settings` (loaded from localStorage or env) when
-   * `selectedNode` is still undefined on the first render — prevents
-   * Apollo from firing requests to localhost:3000/graphql.
-   */
-  const activeNode: INetworkOption | null =
-    networksReady && settings ? selectedNode ?? settings : null;
-  const showConfigurationState = isInitialized && networksReady && !activeNode;
+  const activeNetwork = networksReady && settings ? settings : null;
+  const showConfigurationState = isInitialized && networksReady && !activeNetwork;
 
   useEffect(() => {
     clearSession();
@@ -75,11 +77,29 @@ function App() {
       setNetworksReady(true);
       return;
     }
-    const data = await fetch(networkListUrl)
-      .then(response => response.json())
-      .then(data => data);
+    let data: unknown;
+    try {
+      const response = await fetch(networkListUrl);
+      if (response.ok === false) throw new Error(`Network list request failed: ${response.status}`);
+      data = await response.json();
+    } catch {
+      const fallback = networkFallback(currentSettings);
+      setAvailableNetworks([fallback]);
+      setNetworkState(prev => ({
+        ...prev,
+        availableNetworks: [{chainId: fallback.network, name: fallback.name}],
+        selectedNode: fallback,
+      }));
+      setNetworksReady(true);
+      return;
+    }
     if (data) {
-      const formattedNetworks = formatNetworks(data);
+      const remoteNetworks = formatNetworks(data);
+      // Keep the active network selectable when the optional network-list service
+      // is unavailable or temporarily returns an empty payload.
+      const formattedNetworks = remoteNetworks.length
+        ? remoteNetworks
+        : [networkFallback(currentSettings)];
       const newAvailableNetworks = Object.values(formattedNetworks).map(
         ({network, name}: {network: string; name: string}) => {
           return {chainId: network, name: name, networkID: `mina:${network}`};
@@ -152,14 +172,12 @@ function App() {
           <React.Suspense fallback={null}>
             <DevTools />
           </React.Suspense>
-          {activeNode ? (
-            <ApolloProvider client={apolloClient(activeNode)}>
-              <LedgerContextProvider>
-                <HashRouter>
-                  <Layout />
-                </HashRouter>
-              </LedgerContextProvider>
-            </ApolloProvider>
+          {activeNetwork ? (
+            <LedgerContextProvider>
+              <HashRouter>
+                <Layout />
+              </HashRouter>
+            </LedgerContextProvider>
           ) : showConfigurationState ? (
             <main
               role="alert"

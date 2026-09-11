@@ -5,15 +5,15 @@ import Routes from './Routes';
 import {isEmptyObject} from './tools';
 import {isElectron} from './tools/environment';
 import Spinner from './components/UI/Spinner';
-import UserIDUpdater from './components/userIdUpdater/UserIDUpdater';
-import {useQuery} from '@apollo/client';
+import {useQuery} from '@tanstack/react-query';
 import Alert from './components/UI/Alert';
 import Balance from './components/balance/Balance';
-import {GET_NETWORK} from './graphql/query';
+import {getNetworkData} from './api/network';
 import {TermsAndConditions} from './components/UI/modals';
 import type {INetworkData} from './types';
 import ZkappIntegration from './components/ZkappIntegration';
 import {useWallet} from './contexts/WalletContext';
+import {useNetworkSettingsContext} from './contexts/NetworkContext';
 
 import {useLocation} from 'react-router-dom';
 
@@ -21,8 +21,17 @@ const Layout = () => {
   const [showLoader, setShowLoader] = useState<boolean>(false);
   const {wallet: sessionData, updateWallet} = useWallet();
   const location = useLocation();
+  const {settings} = useNetworkSettingsContext();
 
-  const {data: networkData} = useQuery<INetworkData>(GET_NETWORK);
+  const {data: networkData} = useQuery<INetworkData>({
+    queryKey: ['network', settings?.apiUrl, settings?.network],
+    queryFn: () =>
+      getNetworkData(settings!.apiUrl, {
+        network: settings!.network,
+        name: settings!.name,
+      }),
+    enabled: Boolean(settings),
+  });
 
   const toggleLoader = (state?: boolean) => {
     setShowLoader(state ? state : !showLoader);
@@ -64,7 +73,6 @@ const Layout = () => {
                 clearSessionData={clearSessionData}
                 isAuthenticated={isAuthenticated}
               />
-              <UserIDUpdater />
             </>
           )}
           <div
