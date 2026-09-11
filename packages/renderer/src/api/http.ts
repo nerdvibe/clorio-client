@@ -60,9 +60,16 @@ export const request = async <T>(apiUrl: string, config: AxiosRequestConfig): Pr
   }
 
   try {
+    const normalizedApiUrl = normalizeApiUrl(apiUrl);
+    const apiPath = new URL(normalizedApiUrl).pathname.replace(/\/+$/, '');
+    const requestUrl =
+      config.url && apiPath.endsWith('/v1') && config.url.startsWith('/v1/')
+        ? config.url.slice('/v1'.length)
+        : config.url;
     const response = await axios.request<T>({
       ...config,
-      baseURL: normalizeApiUrl(apiUrl),
+      url: requestUrl,
+      baseURL: normalizedApiUrl,
       headers: {
         ...config.headers,
         Accept: 'application/json',
