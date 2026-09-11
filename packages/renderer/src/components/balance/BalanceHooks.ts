@@ -1,10 +1,12 @@
-import {useEffect, useContext, useRef, useState} from 'react';
+import {useEffect, useContext, useMemo, useRef, useState} from 'react';
 import {useRecoilValue} from 'recoil';
-import {useQuery} from '@apollo/client';
+import {useQuery as useRestQuery} from '@tanstack/react-query';
 import {walletState} from '/@/store';
 import {BalanceContext} from '../../contexts/balance/BalanceContext';
 import {IBalanceContext} from '../../contexts/balance/BalanceTypes';
-import {GET_TICKER, GET_BALANCE} from '../../graphql/query';
+import {getTicker} from '../../api/content';
+import {getAccount, AccountData} from '../../api/account';
+import {useNetworkSettingsContext} from '../../contexts/NetworkContext';
 import {DEFAULT_QUERY_REFRESH_INTERVAL} from '../../tools';
 import {IBalanceQueryResult, ITicker} from './BalanceTypes';
 
@@ -26,9 +28,22 @@ export const useElementWidth = (offset = 150) => {
   return {ref, width};
 };
 
+export const toBalanceQueryResult = (account: AccountData): IBalanceQueryResult => ({
+  accountByKey: {
+    balance: {
+      total: Number(account.balance.total),
+      liquid: Number(account.balance.liquid),
+      locked: Number(account.balance.locked),
+      liquidUnconfirmed: Number(account.balance.liquidUnconfirmed),
+      unconfirmedTotal: Number(account.balance.unconfirmedTotal),
+    },
+  },
+});
+
 export const useBalanceData = () => {
   const wallet = useRecoilValue(walletState);
   const {address} = wallet;
+  const {settings} = useNetworkSettingsContext();
 
   const {
     addBalance,
@@ -40,9 +55,13 @@ export const useBalanceData = () => {
 
   const {
     data: tickerData,
-    loading: tickerLoading,
+    isLoading: tickerLoading,
     error: tickerError,
-  } = useQuery<ITicker>(GET_TICKER);
+  } = useRestQuery<ITicker>({
+    queryKey: ['ticker', settings?.apiUrl],
+    queryFn: () => getTicker(settings!.apiUrl),
+    enabled: Boolean(settings),
+  });
 
   const formatBalanceForContext = (balance: any) => ({
     liquid: String(balance.liquid),
@@ -53,29 +72,28 @@ export const useBalanceData = () => {
   });
 
   const {
-    data: balanceData,
-    loading: balanceLoading,
-    error: balanceError,
+    data: accountData,
+    isLoading: accountLoading,
+    isFetching: accountFetching,
+    error: accountError,
     refetch: balanceRefetch,
-  } = useQuery<IBalanceQueryResult>(GET_BALANCE, {
-    variables: {
-      publicKey: address,
-      notifyOnNetworkStatusChange: true,
-    },
-    fetchPolicy: 'network-only',
-    skip: !address,
-    pollInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
-    onCompleted: data => {
-      if (addBalance && data?.accountByKey?.balance) {
-        addBalance(address, formatBalanceForContext(data.accountByKey.balance));
-      }
-    },
+  } = useRestQuery({
+    queryKey: ['account', settings?.apiUrl, address],
+    queryFn: () => getAccount(settings!.apiUrl, address),
+    enabled: Boolean(settings && address),
+    refetchInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
   });
+  const balanceData = useMemo(
+    () => (accountData ? toBalanceQueryResult(accountData) : undefined),
+    [accountData],
+  );
+  const balanceLoading = accountLoading || accountFetching;
+  const balanceError = accountError;
 
   useEffect(() => {
-    const refetchBalance = async (newAddress?: string) => {
+    const refetchBalance = async () => {
       if (shouldBalanceUpdate) {
-        await balanceRefetch({publicKey: newAddress || address});
+        await balanceRefetch();
         if (setShouldBalanceUpdate) {
           setShouldBalanceUpdate(false);
         }

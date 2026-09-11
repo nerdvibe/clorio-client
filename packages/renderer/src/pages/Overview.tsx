@@ -1,24 +1,18 @@
-import {useQuery} from '@apollo/client';
-import {useCallback, useContext, useEffect, useState} from 'react';
+import {useQuery as useRestQuery} from '@tanstack/react-query';
+import {useContext, useEffect, useState} from 'react';
 import NewsBanner from '../components/UI/NewsBanner';
 import Hoc from '../components/UI/Hoc';
 import TransactionsTable from '../components/transactionsTable/TransactionsTable';
-import type {
-  IMempoolQueryResult,
-  ITransactionQueryResult,
-} from '../components/transactionsTable/TransactionsTypes';
 import {BalanceContext} from '/@/contexts/balance/BalanceContext';
 import type {IBalanceContext} from '/@/contexts/balance/BalanceTypes';
-import {GET_HOME_NEWS, GET_ID, GET_MEMPOOL, GET_TRANSACTIONS} from '/@/graphql/query';
-import {useWallet} from '../contexts/WalletContext';
 import {
   DEFAULT_QUERY_REFRESH_INTERVAL,
   getPageFromOffset,
-  readSession,
   TRANSACTIONS_TABLE_ITEMS_PER_PAGE,
 } from '/@/tools';
-import {IWalletIdData} from '../types';
-import type {IHomeNewsQuery} from '/@/types/NewsData';
+import {getNews} from '/@/api/content';
+import {getMempool, getTransactions} from '/@/api/transactions';
+import {useNetworkSettingsContext} from '/@/contexts/NetworkContext';
 import type {IWalletData} from '/@/types/WalletData';
 
 interface IProps {
@@ -28,78 +22,51 @@ interface IProps {
 const Overview = ({sessionData}: IProps) => {
   const {balanceData} = useContext<Partial<IBalanceContext>>(BalanceContext);
   const balance = balanceData?.balances?.[sessionData.address];
-  const {wallet, updateWallet: updateWalletState} = useWallet();
-  const {id, address} = wallet;
+  const {settings} = useNetworkSettingsContext();
   const [offset, setOffset] = useState<number>(0);
-  const [walletId, setWalletId] = useState<number>(+sessionData.id);
   const [loading, setLoading] = useState(true);
-  
-  const {data: newsData} = useQuery<IHomeNewsQuery>(GET_HOME_NEWS);
-  
-  const {data: walletIDData} = useQuery<IWalletIdData>(GET_ID, {
-    variables: {
-      publicKey: address,
-    },
-    skip: !address,
-  });
 
-  const lastNews = newsData?.newsHome && newsData?.newsHome.length > 0 && newsData?.newsHome[0];
+  const {data: newsData} = useRestQuery({
+    queryKey: ['news', settings?.apiUrl, 'home'],
+    queryFn: () => getNews(settings!.apiUrl, 'home'),
+    enabled: Boolean(settings),
+  });
 
   const {
     data: transactionsData,
-    loading: transactionsLoading,
+    isLoading: transactionsLoading,
     error: transactionsError,
     refetch: transactionsRefetch,
-    stopPolling: transactionStopPolling,
-    startPolling: transactionStartPolling,
-  } = useQuery<ITransactionQueryResult>(GET_TRANSACTIONS, {
-    variables: {accountId: +id || walletId, offset},
-    fetchPolicy: 'network-only',
-    skip: !id && walletId === -1,
-    pollInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
+  } = useRestQuery({
+    queryKey: [
+      'transactions',
+      settings?.apiUrl,
+      sessionData.address,
+      offset,
+      TRANSACTIONS_TABLE_ITEMS_PER_PAGE,
+    ],
+    queryFn: () =>
+      getTransactions(
+        settings!.apiUrl,
+        sessionData.address,
+        offset,
+        TRANSACTIONS_TABLE_ITEMS_PER_PAGE,
+      ),
+    enabled: Boolean(settings && sessionData.address),
   });
 
   const {
     data: mempoolData,
-    loading: mempoolLoading,
+    isLoading: mempoolLoading,
     refetch: mempoolRefetch,
-    stopPolling: mempoolStopPolling,
-    startPolling: mempoolStartPolling,
-  } = useQuery<IMempoolQueryResult>(GET_MEMPOOL, {
-    variables: {publicKey: sessionData.address},
-    skip: !sessionData.address,
-    fetchPolicy: 'network-only',
-    pollInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
+  } = useRestQuery({
+    queryKey: ['mempool', settings?.apiUrl, sessionData.address],
+    queryFn: () => getMempool(settings!.apiUrl, sessionData.address),
+    enabled: Boolean(settings && sessionData.address),
+    refetchInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
   });
 
-  const readWalletData = useCallback(async () => {
-    const sessionWallet = await readSession();
-    if (sessionWallet && sessionWallet.id !== -1 && sessionWallet.id !== walletId) {
-      setWalletId(sessionWallet.id);
-    }
-  }, [walletId]);
-
-  useEffect(() => {
-    if (walletId !== -1) return;
-    
-    const interval = setInterval(() => {
-      readWalletData();
-    }, 10000);
-    
-    return () => clearInterval(interval);
-  }, [walletId]);
-
-  useEffect(() => {
-    if (walletIDData?.idByPublicKey) {
-      const newId = walletIDData.idByPublicKey.id;
-      
-      if (newId !== null && newId !== id) {
-        updateWalletState({id: newId});
-      } else if (newId === null && id !== -1) {
-        updateWalletState({id: -1});
-      }
-    }
-  }, [walletIDData, id, updateWalletState]);
+  const lastNews = newsData?.[0];
 
   const changeOffset = (page: number) => {
     setLoading(true);
@@ -108,16 +75,10 @@ const Overview = ({sessionData}: IProps) => {
   };
 
   const refetchData = (refetch = false) => {
-    transactionStopPolling();
-    mempoolStopPolling();
     if (refetch) {
-      mempoolRefetch();
-      transactionsRefetch();
+      void mempoolRefetch();
+      void transactionsRefetch();
     }
-    setTimeout(() => {
-      transactionStartPolling(DEFAULT_QUERY_REFRESH_INTERVAL);
-      mempoolStartPolling(DEFAULT_QUERY_REFRESH_INTERVAL);
-    }, 500);
   };
 
   useEffect(() => {
@@ -140,7 +101,6 @@ const Overview = ({sessionData}: IProps) => {
           balance={currentBalance}
           setOffset={changeOffset}
           page={getPageFromOffset(offset)}
-          userId={+id || walletId}
           userAddress={sessionData.address}
           refetchData={refetchData}
         />

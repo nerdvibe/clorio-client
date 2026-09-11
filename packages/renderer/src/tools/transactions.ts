@@ -59,6 +59,7 @@ export const createPaymentInputFromPayload = (payload: ITransactionPayload) => {
 export const createDelegationPaymentInputFromPayload = (payload: ITransactionPayload) => {
   return {
     nonce: payload.nonce,
+    memo: payload.memo ?? '',
     fee: payload.fee,
     validUntil: payload.validUntil,
     to: payload.to,

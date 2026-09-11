@@ -1,5 +1,5 @@
-import {useState, useEffect, useContext, useRef} from 'react';
-import {useQuery, useMutation, useLazyQuery} from '@apollo/client';
+import {useState, useEffect, useContext, useMemo, useRef} from 'react';
+import {useQuery as useRestQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import {useNavigate} from 'react-router-dom';
 import {toast} from 'react-toastify';
 import TransactionForm from '/@/components/forms/transactionForm/TransactionForm';
@@ -24,8 +24,10 @@ import {
   toMINA,
 } from '/@/tools';
 import Spinner from '/@/components/UI/Spinner';
-import {BROADCAST_TRANSACTION, GET_BALANCE, GET_FEE, GET_NONCE} from '/@/graphql/query';
-import type {INonceQueryResult} from './SendTXHelper';
+import {getAccount, toNonceQueryResult} from '/@/api/account';
+import {getFees} from '/@/api/content';
+import {broadcastPayment} from '/@/api/transactions';
+import {useNetworkSettingsContext} from '/@/contexts/NetworkContext';
 import {
   checkBalanceAfterTransaction,
   checkMemoLength,
@@ -40,7 +42,6 @@ import type {IBalanceContext} from '/@/contexts/balance/BalanceTypes';
 import {BalanceContext} from '/@/contexts/balance/BalanceContext';
 import TransactionAuthentication from '/@/components/transactionAuthentication/TransactionAuthentication';
 import {signTransaction} from '/@/tools/utils';
-import {IBalanceQueryResult} from '/@/components/balance/BalanceTypes';
 import {useRecoilValue} from 'recoil';
 import {deeplinkState, walletState} from '/@/store';
 import {DeeplinkType} from '/@/hooks/useDeeplinkHandler';
@@ -70,45 +71,65 @@ function SendTX(props: IProps) {
 
   const {getBalance, setShouldBalanceUpdate} = useContext<Partial<IBalanceContext>>(BalanceContext);
   const wallet = useRecoilValue(walletState);
+  const {settings} = useNetworkSettingsContext();
   const senderAddress = wallet.address;
   const balance = getBalance && getBalance(wallet.address);
   const isLedgerEnabled = wallet.ledger;
   const {
-    data: nonceData,
+    data: accountData,
     refetch: nonceRefetch,
-    loading: nonceLoading,
+    isLoading: accountLoading,
+    isFetching: accountFetching,
     error: nonceError,
-  } = useQuery<INonceQueryResult>(GET_NONCE, {
-    variables: {publicKey: senderAddress},
-    skip: !senderAddress,
-    fetchPolicy: 'network-only',
+  } = useRestQuery({
+    queryKey: ['account', settings?.apiUrl, senderAddress],
+    queryFn: () => getAccount(settings!.apiUrl, senderAddress),
+    enabled: Boolean(settings && senderAddress),
   });
-
-  const [fetchBalance] = useLazyQuery<IBalanceQueryResult>(GET_BALANCE);
+  const nonceData = useMemo(
+    () => (accountData ? toNonceQueryResult(accountData) : undefined),
+    [accountData],
+  );
+  const nonceLoading = accountLoading || accountFetching;
 
   const deeplinkData = useRecoilValue(deeplinkState);
 
-  const feeQuery = useQuery<IFeeQuery>(GET_FEE, {
-    onCompleted: data => {
-      const avgFee = data?.estimatedFee?.txFees?.average;
-      if (avgFee !== undefined) {
-        setTransactionData(prev => ({
-          ...prev,
-          fee: toNanoMINA(avgFee),
-        }));
-      }
-    },
-    onError: () => {},
+  const feeQuery = useRestQuery<IFeeQuery>({
+    queryKey: ['fees', settings?.apiUrl],
+    queryFn: () => getFees(settings!.apiUrl),
+    enabled: Boolean(settings),
   });
 
-  const [broadcastTransaction, broadcastResult] = useMutation(BROADCAST_TRANSACTION, {
+  useEffect(() => {
+    const avgFee = feeQuery.data?.estimatedFee?.txFees?.average;
+    if (avgFee !== undefined) {
+      setTransactionData(prev => ({
+        ...prev,
+        fee: toNanoMINA(avgFee),
+      }));
+    }
+  }, [feeQuery.data]);
+
+  const queryClient = useQueryClient();
+  const broadcastTransaction = useMutation({
+    mutationFn: ({input, signature}: {input: unknown; signature: unknown}) => {
+      if (!settings) throw new Error('REST API settings are unavailable');
+      return broadcastPayment(settings.apiUrl, input, signature);
+    },
+    retry: false,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({queryKey: ['account', settings?.apiUrl, senderAddress]});
+      void queryClient.invalidateQueries({queryKey: ['mempool', settings?.apiUrl, senderAddress]});
+      void queryClient.invalidateQueries({queryKey: ['transactions', settings?.apiUrl, senderAddress]});
+    },
     onError: error => {
       setTimeout(() => {
-        toast.error(error.message);
+        toast.error(error instanceof Error ? error.message : 'Transaction broadcast failed');
         clearState();
       }, 1000);
     },
   });
+  const broadcastResult = broadcastTransaction;
 
   useEffect(() => {
     setStoredPassphrase(getPassphraseFlag());
@@ -152,10 +173,10 @@ function SendTX(props: IProps) {
   }, [waitingNonce, nonceLoading]);
 
   useEffect(() => {
-    if (showModal && broadcastResult?.data && sendTransactionFlag) {
+    if (showModal && broadcastResult.isSuccess && sendTransactionFlag) {
       clearState(false);
       setTimeout(() => {
-        nonceRefetch({publicKey: senderAddress});
+        nonceRefetch();
         if (setShouldBalanceUpdate) {
           setShouldBalanceUpdate(true);
         }
@@ -187,9 +208,7 @@ function SendTX(props: IProps) {
           senderAddress,
         });
         const SignatureInput = {rawSignature: ledgerTransactionData};
-        broadcastTransaction({
-          variables: {input: SendPaymentInput, signature: SignatureInput},
-        });
+        broadcastTransaction.mutate({input: SendPaymentInput, signature: SignatureInput});
         setSendTransactionFlag(true);
       }
     } catch {
@@ -207,9 +226,9 @@ function SendTX(props: IProps) {
         return setShowModal(ModalStates.NONCE);
       }
       if (getBalance) {
-        const {data} = await fetchBalance({variables: {publicKey: wallet.address}});
+        const {data: refreshedAccount} = await nonceRefetch();
         checkBalanceAfterTransaction({
-          balance: data?.accountByKey?.balance,
+          balance: refreshedAccount?.balance,
           transactionData,
         });
         checkTransactionFields(transactionData);
@@ -318,9 +337,7 @@ function SendTX(props: IProps) {
       if (signedPayment) {
         const signatureInput = createSignatureInputFromSignature(signedPayment.signature);
         const paymentInput = createPaymentInputFromPayload(signedPayment.data);
-        broadcastTransaction({
-          variables: {input: paymentInput, signature: signatureInput},
-        });
+        broadcastTransaction.mutate({input: paymentInput, signature: signatureInput});
         setPrivateKey('');
         setSendTransactionFlag(true);
       }
