@@ -62,7 +62,6 @@ export default function OnboardingCreate({ network, toggleLoader }: IProps) {
   const saveAndStoreSession = async () => {
     await storeSession({
       address: keypair.publicKey,
-      id: -1,
       ledger: false,
       ledgerAccount: 0,
       mnemonic: true,
@@ -70,7 +69,6 @@ export default function OnboardingCreate({ network, toggleLoader }: IProps) {
     });
     await updateWallet({
       address: keypair.publicKey,
-      id: -1,
       ledger: false,
       ledgerAccount: 0,
       mnemonic: true,

@@ -1,6 +1,17 @@
 import {atom} from 'recoil';
 
-export const initialWalletState = {
+export interface WalletState {
+  address: string;
+  /** Legacy backend account ID retained only for history compatibility. */
+  id?: number;
+  ledger: boolean;
+  ledgerAccount: number;
+  mnemonic: boolean;
+  accountNumber: number;
+  isAuthenticated: boolean;
+}
+
+export const initialWalletState: WalletState = {
   address: '',
   id: -1,
   ledger: false,
