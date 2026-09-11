@@ -9,7 +9,6 @@ const mocks = vi.hoisted(() => ({
       network: string;
       label: string;
       name: string;
-      url?: string;
     },
     isInitialized: false,
     saveSettings: vi.fn(),
@@ -32,9 +31,6 @@ vi.mock('../store', () => ({networkState: {}}));
 vi.mock('@tanstack/react-query', () => ({
   QueryClientProvider: ({children}: {children: ReactNode}) => children,
 }));
-vi.mock('@apollo/client', () => ({
-  ApolloProvider: ({children}: {children: ReactNode}) => children,
-}));
 vi.mock('../contexts/balance/BalanceContext', () => ({
   BalanceContextProvider: ({children}: {children: ReactNode}) => children,
 }));
@@ -45,7 +41,6 @@ vi.mock('react-router-dom', () => ({
   HashRouter: ({children}: {children: ReactNode}) => children,
 }));
 vi.mock('../Layout', () => ({default: () => <div>Wallet</div>}));
-vi.mock('../graphql/api', () => ({apolloClient: vi.fn(() => ({}))}));
 vi.mock('../api/queryClient', () => ({queryClient: {}}));
 vi.mock('../tools', () => ({clearSession: vi.fn()}));
 vi.mock('../dev-tools/DevTools', () => ({default: () => null}));
@@ -88,11 +83,30 @@ describe('App network bootstrap', () => {
     expect(alert?.textContent).toContain('Network configuration required');
   });
 
-  it('saves a label match with a changed API URL before selecting it for Apollo', async () => {
+  it('keeps the active network visible when the network list is empty', async () => {
+    const current = {
+      apiUrl: 'https://current-api.example.com',
+      network: 'mainnet',
+      label: 'mainnet',
+      name: 'Mainnet',
+    };
+    mocks.context.settings = current;
+    mocks.context.isInitialized = true;
+    vi.mocked(fetch).mockResolvedValue({json: async () => ({})} as Response);
+
+    await act(async () => {
+      root.render(<App />);
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    expect(mocks.context.setAvailableNetworks).toHaveBeenCalledWith([current]);
+  });
+
+  it('saves a label match with a changed API URL before selecting it', async () => {
     const events: string[] = [];
     const selected = {
       apiUrl: 'https://new-api.example.com',
-      url: 'https://graphql.example.com',
       network: 'mainnet',
       label: 'mainnet',
       name: 'Mainnet',

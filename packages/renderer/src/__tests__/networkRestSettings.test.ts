@@ -29,14 +29,13 @@ describe('REST network settings', () => {
       normalizeNetworkSettings({
         ...mainnet,
         apiUrl: 'https://api.example.com/v1///',
-        url: 'https://graphql.example.com/v1/graphql',
+        url: 'https://legacy.example.com/v1/legacy',
       }),
     ).toEqual(mainnet);
   });
 
   it('uses only the explicit API environment variable for REST defaults', () => {
     vi.stubEnv('VITE_REACT_APP_NETWORK', 'mainnet');
-    vi.stubEnv('VITE_REACT_APP_GQL_SERVER', 'https://graphql.example.com/v1/graphql');
     vi.stubEnv('VITE_REACT_APP_API_SERVER', '');
     expect(getEnvironmentNetworkSettings()).toBeNull();
 
@@ -48,7 +47,7 @@ describe('REST network settings', () => {
     localStorage.setItem(
       'networkSettings',
       JSON.stringify({
-        url: 'https://legacy.example.com/v1/graphql?network=mainnet',
+        url: 'https://legacy.example.com/v1/legacy?network=mainnet',
         network: 'mainnet',
         label: 'mainnet',
         name: 'Mainnet',
@@ -81,8 +80,8 @@ describe('REST network settings', () => {
     {apiUrl: ''},
     {apiUrl: 'ws://api.example.com'},
     {apiUrl: 'https://user:secret@api.example.com'},
-    {url: 'https://legacy.example.com/v1/graphql'},
-    {url: '/v1/graphql'},
+    {url: 'https://legacy.example.com/v1/legacy'},
+    {url: '/v1/legacy'},
     {url: 'not a URL'},
   ])('fails closed without a valid explicit REST base: %j', value => {
     expect(normalizeNetworkSettings(value)).toBeNull();
@@ -92,7 +91,7 @@ describe('REST network settings', () => {
     localStorage.setItem('networkSettings', JSON.stringify(mainnet));
 
     // @ts-expect-error Public save input requires an explicit apiUrl.
-    expect(saveNetworkSettings(localStorage, {url: 'https://legacy.example.com/graphql'})).toBeNull();
+    expect(saveNetworkSettings(localStorage, {url: 'https://legacy.example.com/v1/legacy'})).toBeNull();
     expect(JSON.parse(localStorage.getItem('networkSettings') || 'null')).toEqual(mainnet);
   });
 
@@ -124,28 +123,27 @@ describe('REST network settings', () => {
     });
   });
 
-  it('preserves the exact Apollo URL while deriving the REST API origin for added chains', () => {
-    expect(createAddChainNetworkData('https://node.example/graphql/', 'custom')).toEqual({
+  it('derives the REST API origin for added chains', () => {
+    expect(createAddChainNetworkData('https://node.example/v1/legacy/', 'custom')).toEqual({
       apiUrl: 'https://node.example',
-      url: 'https://node.example/graphql/',
       network: 'custom',
       label: 'custom',
       name: 'custom',
     });
   });
 
-  it('rejects remote networks without explicit API URLs or complete identity fields', () => {
+  it('normalizes published legacy URLs and rejects incomplete remote networks', () => {
     expect(
       formatNetworks({
         mainnet: {
           apiUrl: 'https://api.example.com/v1/',
-          url: 'https://graphql.example.com/v1/graphql',
+          url: 'https://legacy.example.com/v1/legacy',
           network: 'mainnet',
           label: 'mainnet',
           name: 'Mainnet',
         },
         legacy: {
-          url: 'https://legacy.example.com/graphql',
+          url: 'https://legacy.example.com/v1/legacy',
           network: 'legacy',
           label: 'legacy',
           name: 'Legacy',
@@ -170,10 +168,47 @@ describe('REST network settings', () => {
     ).toEqual([
       {
         ...mainnet,
-        url: 'https://graphql.example.com/v1/graphql',
         networkID: 'mina:mainnet',
       },
+      {
+        apiUrl: 'https://legacy.example.com',
+        network: 'legacy',
+        label: 'legacy',
+        name: 'Legacy',
+        networkID: 'mina:legacy',
+      },
     ]);
+  });
+
+  it('formats all four published network-list entries', () => {
+    expect(
+      formatNetworks({
+        devnet: {
+          name: 'Devnet',
+          url: 'https://devnet.clor.io/',
+          network: 'testnet',
+          label: 'devnet',
+        },
+        mainnet: {
+          name: 'Mainnet',
+          url: 'https://mainnetv2.clor.io/',
+          network: 'mainnet',
+          label: 'mainnet',
+        },
+        mainnet2: {
+          name: 'Mainnet-clorio-2',
+          url: 'https://mainnet-clorio-2.clor.io/',
+          network: 'mainnet',
+          label: 'mainnet-clorio-2',
+        },
+        mainnetNext: {
+          name: 'Mainnet-next',
+          url: 'https://mainnet-next.clor.io/',
+          network: 'mainnet',
+          label: 'mainnet-next',
+        },
+      }),
+    ).toHaveLength(4);
   });
 
   it.each([

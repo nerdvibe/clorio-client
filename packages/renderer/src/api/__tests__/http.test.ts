@@ -63,6 +63,22 @@ describe('request', () => {
     },
   );
 
+  it('does not duplicate the version prefix when apiUrl already includes /v1', async () => {
+    const adapter = vi.fn<Parameters<AxiosAdapter>, ReturnType<AxiosAdapter>>(async config => {
+      expect(config.baseURL).toBe('https://api.example.com/v1');
+      expect(config.url).toBe('/health/');
+      return jsonResponse('{"healthy":true}')(config);
+    });
+
+    await expect(
+      request<{healthy: boolean}>('https://api.example.com/v1', {
+        method: 'GET',
+        url: '/v1/health/',
+        adapter,
+      }),
+    ).resolves.toEqual({healthy: true});
+  });
+
   it('returns parsed JSON and applies the explicit API URL, JSON headers, and signal', async () => {
     const controller = new AbortController();
     const adapter = vi.fn<Parameters<AxiosAdapter>, ReturnType<AxiosAdapter>>(async config => {
