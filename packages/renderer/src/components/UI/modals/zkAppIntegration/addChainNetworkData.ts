@@ -12,5 +12,5 @@ export function createAddChainNetworkData(url: string, name: string): INetworkOp
   if (!restSettings) {
     throw new Error('A valid HTTP(S) REST base is required');
   }
-  return {...restSettings, url};
+  return restSettings;
 }
