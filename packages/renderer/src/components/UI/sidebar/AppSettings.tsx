@@ -1,13 +1,12 @@
 import {useCallback, useContext, useMemo, useState} from 'react';
-import {DEFAULT_QUERY_REFRESH_INTERVAL, storeSession, trimMiddle} from '/@/tools';
+import {storeSession, trimMiddle} from '/@/tools';
 import Avatar from '/@/tools/avatar/avatar';
 import MnemonicAccountSelection from '../modals/accountSelection/MnemonicAccountSelection';
 import {IBalanceContext} from '/@/contexts/balance/BalanceTypes';
 import {BalanceContext} from '/@/contexts/balance/BalanceContext';
-import {IBalanceQueryResult} from '../../balance/BalanceTypes';
-import {GET_BALANCE, GET_ID} from '/@/graphql/query';
-import {useLazyQuery} from '@apollo/client';
-import {IWalletIdData} from '/@/types';
+import {getAccount} from '/@/api/account';
+import {queryClient} from '/@/api/queryClient';
+import {useNetworkSettingsContext} from '/@/contexts/NetworkContext';
 import {useNavigate} from 'react-router-dom';
 import {ModalContainer} from '../modals';
 import NetworkSettings from './NetworkSettings';
@@ -34,88 +33,52 @@ export default function AppSettings({
 }: AppSettingsProps) {
   const [showModal, setShowModal] = useState(false);
   const {wallet, updateWallet} = useWallet();
+  const {settings} = useNetworkSettingsContext();
   const {address, mnemonic: hasMnemonic} = wallet;
   const {addBalance, shouldBalanceUpdate, setShouldBalanceUpdate} =
     useContext<Partial<IBalanceContext>>(BalanceContext);
   const navigate = useNavigate();
 
-  const [fetchWalletID] = useLazyQuery<IWalletIdData>(GET_ID, {
-    variables: {publicKey: address, skip: !address},
-  });
-
-  const [balanceRefetch] = useLazyQuery<IBalanceQueryResult>(GET_BALANCE, {
-    variables: {
-      publicKey: address,
-      notifyOnNetworkStatusChange: true,
-    },
-    fetchPolicy: 'network-only',
-    pollInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
-    onCompleted: useCallback(
-      (data: IBalanceQueryResult) => {
-        if (addBalance && data) {
-          addBalance(address, data?.accountByKey?.balance || {});
-        }
-      },
-      [addBalance, address],
-    ),
-  });
-
   const refetchBalance = useCallback(
     async (newAddress?: string) => {
-      if (shouldBalanceUpdate) {
-        await balanceRefetch({publicKey: newAddress || address});
-        if (setShouldBalanceUpdate) {
-          setShouldBalanceUpdate(false);
-        }
+      const targetAddress = newAddress || address;
+      if (!settings?.apiUrl || !targetAddress || (!shouldBalanceUpdate && !newAddress)) {
+        return;
+      }
+      const account = await queryClient.fetchQuery({
+        queryKey: ['account', settings.apiUrl, targetAddress],
+        queryFn: () => getAccount(settings.apiUrl, targetAddress),
+      });
+      if (addBalance) {
+        addBalance(targetAddress, account.balance);
+      }
+      if (setShouldBalanceUpdate) {
+        setShouldBalanceUpdate(false);
       }
     },
-    [shouldBalanceUpdate, balanceRefetch, address, setShouldBalanceUpdate],
+    [shouldBalanceUpdate, address, settings, addBalance, setShouldBalanceUpdate],
   );
 
   const handleAccountChange = useCallback(
     async (selectedWallet: {publicKey: string; accountId: number}) => {
-      try {
-        const walletId = await fetchWalletID({variables: {publicKey: selectedWallet.publicKey}});
-        await storeSession({
-          address: selectedWallet.publicKey,
-          id: +walletId?.data?.idByPublicKey?.id || -1,
-          ledger: false,
-          ledgerAccount: 0,
-          mnemonic: true,
-          accountNumber: selectedWallet.accountId,
-        });
-        await updateWallet({
-          address: selectedWallet.publicKey,
-          id: +walletId?.data?.idByPublicKey?.id || -1,
-          ledger: false,
-          ledgerAccount: 0,
-          mnemonic: true,
-          accountNumber: selectedWallet.accountId,
-        });
-        await refetchBalance(selectedWallet.publicKey);
-      } catch {
-        await storeSession({
-          address: selectedWallet.publicKey,
-          id: -1,
-          ledger: false,
-          ledgerAccount: 0,
-          mnemonic: true,
-          accountNumber: selectedWallet.accountId,
-        });
-        await updateWallet({
-          address: selectedWallet.publicKey,
-          id: -1,
-          ledger: false,
-          ledgerAccount: 0,
-          mnemonic: true,
-          accountNumber: selectedWallet.accountId,
-        });
-        await refetchBalance(selectedWallet.publicKey);
-      } finally {
-        navigate('/overview');
-      }
+      await storeSession({
+        address: selectedWallet.publicKey,
+        ledger: false,
+        ledgerAccount: 0,
+        mnemonic: true,
+        accountNumber: selectedWallet.accountId,
+      });
+      await updateWallet({
+        address: selectedWallet.publicKey,
+        ledger: false,
+        ledgerAccount: 0,
+        mnemonic: true,
+        accountNumber: selectedWallet.accountId,
+      });
+      await refetchBalance(selectedWallet.publicKey);
+      navigate('/overview');
     },
-    [fetchWalletID, updateWallet, refetchBalance, navigate],
+    [updateWallet, refetchBalance, navigate],
   );
 
   const openModal = useCallback(() => setShowModal(true), []);

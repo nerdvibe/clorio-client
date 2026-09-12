@@ -1,125 +1,67 @@
-import {useEffect, useState} from 'react';
+import {useQuery} from '@tanstack/react-query';
 import {useNetworkSettingsContext} from '/@/contexts/NetworkContext';
+import {getEpochInfo} from '/@/api/network';
+import {DEFAULT_QUERY_REFRESH_INTERVAL} from '/@/tools';
 
 export const MIN_SLOT = 0;
 export const MAX_SLOT = 7140;
-export const SLOT_DURATION = 180000;
-
-interface RemainingTime {
-  days: number;
-  hours: number;
-  minutes: number;
-}
 
 const EpochBar = () => {
   const {settings} = useNetworkSettingsContext();
-  const [epochError, setEpochError] = useState(false);
-  const [epochData, setEpochData] = useState({
-    slot: 0,
-    epoch: 0,
-  });
-  const [percentage, setPercentage] = useState(0);
-  const [remainingTime, setRemainingTime] = useState<RemainingTime>({
-    days: 0,
-    hours: 0,
-    minutes: 0,
+  const {data: epochData, isError, isLoading} = useQuery({
+    queryKey: ['epoch', settings?.apiUrl],
+    queryFn: () => getEpochInfo(settings!.apiUrl),
+    enabled: Boolean(settings?.apiUrl),
+    refetchInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
   });
 
-  const calculateTime = (time: number) => {
-    const days = Math.floor(time / 60 / 60 / 24);
-    const leave1 = time % (24 * 3600);
-    const hours = Math.floor(leave1 / 3600);
-    const leave2 = leave1 % 3600;
-    const minutes = Math.floor(leave2 / 60);
-    return {
-      days,
-      hours,
-      minutes,
-    };
-  };
-
-  useEffect(() => {
-    fetchEpochData();
-  }, []);
-
-  const fetchEpochData = async () => {
-    try {
-      const data = await fetch(settings?.epochUrl || '')
-        .then(response => response.json())
-        .then(data => data);
-      const realSlot = +data.slot % (MAX_SLOT + 1);
-      const lastTime = ((MAX_SLOT - +realSlot) * SLOT_DURATION) / 1000;
-      setEpochData(data);
-      setRemainingTime(calculateTime(lastTime));
-      setPercentage(parseInt(((100 * +realSlot) / MAX_SLOT).toFixed(0)));
-    } catch (error) {
-      setEpochError(true);
-    }
-  };
-
-  if (!settings?.epochUrl || epochError) {
+  if (!epochData || isError) {
     return (
-      <div
-        className="w-100 h-80"
-        style={{minWidth: '400px'}}
-      >
-        <div
-          className="progress-bar-container mx-auto w-100 flex items-center"
-          style={{height: '104px'}}
-        >
-          Epoch currently unavailable
+      <div className="epoch-widget epoch-widget--unavailable">
+        <div className="epoch-widget__container">
+          {isLoading ? 'Loading epoch…' : 'Epoch currently unavailable'}
         </div>
       </div>
     );
   }
 
+  const percentage = Math.min(
+    100,
+    Math.round((100 * (epochData.slot % (MAX_SLOT + 1))) / MAX_SLOT),
+  );
+
   return (
-    <div
-      className="w-100 h-80"
-      style={{minWidth: '400px'}}
-    >
-      <div
-        className="progress-bar-container mx-auto w-100 flex items-center"
-        style={{height: '104px'}}
-      >
-        <div className="flex flex-row gap-4 w-100">
-          <div className="">
+    <div className="epoch-widget">
+      <div className="epoch-widget__container">
+        <div className="epoch-widget__content">
+          <div className="epoch-widget__marker">
             <p className="light-grey-text">Epoch</p>
-            <h4 className="">{+epochData.epoch}</h4>
+            <h4>{epochData.epoch}</h4>
           </div>
-          <div className="progress-bar-col w-100">
-            <div className="loading w-100">
+          <div className="epoch-widget__progress">
+            <div className="loading epoch-widget__track">
               <div
                 className="loading-after"
                 style={{width: `${percentage}%`}}
-              ></div>
+              />
             </div>
-            <div className="flex flex-row justify-between">
-              <div>
-                <p
-                  className="value-text align-left"
-                  style={{lineHeight: '17px'}}
-                >
-                  {percentage}% <br />
-                  Slot {epochData.slot} of {MAX_SLOT}
-                </p>
-              </div>
-              <div>
-                {remainingTime && (
-                  <p className="value-text align-end">
-                    {!!remainingTime.days && `${remainingTime.days} days`}{' '}
-                    {(!!remainingTime.days || !!remainingTime.hours) &&
-                      `${remainingTime.hours} hours`}{' '}
-                    {!remainingTime.days && `${remainingTime.minutes} minutes`} <br />
-                    left to the next epoch
-                  </p>
-                )}
-              </div>
+            <div className="epoch-widget__labels">
+              <p className="value-text">
+                {percentage}% <br />
+                Slot {epochData.slot} of {MAX_SLOT}
+              </p>
+              <p className="value-text epoch-widget__remaining">
+                {!!epochData.remainingTime.days && `${epochData.remainingTime.days} days`}{' '}
+                {(!!epochData.remainingTime.days || !!epochData.remainingTime.hours) &&
+                  `${epochData.remainingTime.hours} hours`}{' '}
+                {!epochData.remainingTime.days && `${epochData.remainingTime.minutes} minutes`} <br />
+                left to the next epoch
+              </p>
             </div>
           </div>
-          <div>
+          <div className="epoch-widget__marker epoch-widget__marker--next">
             <p className="light-grey-text">Epoch</p>
-            <h4 className="ml-2">{+epochData.epoch + 1}</h4>
+            <h4>{epochData.epoch + 1}</h4>
           </div>
         </div>
       </div>

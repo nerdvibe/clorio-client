@@ -1263,6 +1263,11 @@ p {
   opacity: 0.6;
   max-width: 520px;
   margin: 0;
+
+  &--left {
+    align-self: flex-start;
+    text-align: left;
+  }
 }
 
 .oi-grid {
@@ -1517,6 +1522,28 @@ p {
   gap: 20px;
 }
 
+.oi-actions--wide {
+  width: 100%;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+
+  .oi-cancel-button,
+  .oi-continue-button {
+    flex: 0 0 auto;
+    margin: 0;
+  }
+
+  .oi-cancel-button {
+    overflow: visible;
+  }
+
+  .oi-continue-button {
+    width: auto;
+    min-width: 180px;
+  }
+}
+
 .oi-back {
   color: rgba(255, 255, 255, 0.6) !important;
   font-size: 0.9rem;
@@ -1548,6 +1575,10 @@ p {
   .oi-actions {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .oi-actions--wide {
+    gap: 16px;
   }
 }
 

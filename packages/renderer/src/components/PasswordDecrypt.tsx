@@ -2,7 +2,6 @@ import {useEffect, useState} from 'react';
 import useSecureStorage from '../hooks/useSecureStorage';
 import {toast} from 'react-toastify';
 import Input from './UI/input/Input';
-import {Col, Row} from 'react-bootstrap';
 import Button from './UI/Button';
 import {ArrowRight} from 'react-feather';
 
@@ -44,38 +43,43 @@ export default function PasswordDecrypt({onSuccess, onClose}: IPasswordDecrypt) 
   };
 
   return (
-    <div>
-      <p className="mt-3 text-center">Insert your password to proceed</p>
+    <div className="tx-auth__password-form">
+      <label
+        className="tx-auth__password-prompt"
+        htmlFor="tx-auth-password"
+      >
+        Password
+      </label>
       <div className="password-input">
         <Input
+          id="tx-auth-password"
           type="text"
           hidden
           value={password}
+          placeholder="Enter your password"
           inputHandler={e => {
             setPassword(e.target.value);
           }}
         />
       </div>
       <div className="v-spacer" />
-      <Row>
-        <Col>
-          <Button
-            className="big-icon-button"
-            text="Cancel"
-            onClick={onClose}
-          />
-        </Col>
-        <Col>
-          <Button
-            onClick={onSubmitHandler}
-            text="Confirm"
-            style="primary"
-            icon={<ArrowRight />}
-            disabled={disableButton}
-            appendIcon
-          />
-        </Col>
-      </Row>
+      <div className="tx-auth__password-actions">
+        <Button
+          className="tx-auth__password-cancel"
+          text="Cancel"
+          onClick={onClose}
+          style="ghost"
+        />
+        <Button
+          className="tx-auth__password-confirm"
+          onClick={onSubmitHandler}
+          text="Confirm"
+          style="primary"
+          icon={<ArrowRight />}
+          disabled={disableButton}
+          appendIcon
+        />
+      </div>
     </div>
   );
 }

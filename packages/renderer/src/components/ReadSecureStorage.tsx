@@ -33,7 +33,7 @@ function SecureDataStorageComponent({show, onClose, onSubmit}: ISecureDataStorag
             <Shield size={32} className="purple-text" />
           </div>
           <h1 className="oi-title">Set up a password</h1>
-          <p className="oi-description">
+          <p className="oi-description oi-description--left">
             Create a password to unlock your wallet on this device.
           </p>
         </div>
@@ -68,11 +68,13 @@ function SecureDataStorageComponent({show, onClose, onSubmit}: ISecureDataStorag
               icon={<ArrowLeft />}
               onClick={onCloseHandler}
               style="no-style"
+              className="oi-cancel-button"
             />
             <Button
               onClick={onSubmitHandler}
               text="Continue"
               style="primary"
+              className="oi-continue-button"
               icon={<ArrowRight />}
               disabled={disableButton}
               appendIcon
