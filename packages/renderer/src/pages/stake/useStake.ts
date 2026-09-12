@@ -1,18 +1,11 @@
-import {useMutation, useQuery} from '@apollo/client';
-import {useContext, useEffect, useState} from 'react';
+import {useMutation, useQuery as useRestQuery, useQueryClient} from '@tanstack/react-query';
+import {useContext, useEffect, useMemo, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {toast} from 'react-toastify';
 import {useRecoilValue} from 'recoil';
 import type {IValidatorData} from '/@/components/stake/stakeTableRow/ValidatorDataTypes';
 import {BalanceContext} from '/@/contexts/balance/BalanceContext';
 import {IBalanceContext} from '/@/contexts/balance/BalanceTypes';
-import {
-  BROADCAST_DELEGATION,
-  GET_AVERAGE_FEE,
-  GET_NONCE_AND_DELEGATE,
-  GET_VALIDATORS,
-  GET_VALIDATORS_NEWS,
-} from '/@/graphql/query';
 import {DeeplinkType} from '/@/hooks/useDeeplinkHandler';
 import {deeplinkState, walletState} from '/@/store';
 import {
@@ -34,10 +27,13 @@ import {
 } from '/@/tools/ledger/ledger';
 import {IKeypair} from '/@/types';
 import {IFeeQuery} from '/@/types/Fee';
-import {IValidatorsNewsQuery} from '/@/types/NewsData';
 import {IWalletData} from '/@/types/WalletData';
 import {checkBalance, initialDelegateData, ModalStates} from './StakeHelper';
-import {INonceDelegateQueryResult} from './StakeTypes';
+import {getAccount} from '/@/api/account';
+import {getFees, getNews} from '/@/api/content';
+import {getValidators} from '/@/api/validators';
+import {broadcastDelegation as postDelegation} from '/@/api/transactions';
+import {useNetworkSettingsContext} from '/@/contexts/NetworkContext';
 
 export const useStake = (sessionData: IWalletData) => {
   const [storedPassphrase, setStoredPassphrase] = useState<boolean>(false);
@@ -55,34 +51,73 @@ export const useStake = (sessionData: IWalletData) => {
   const [sendTransactionFlag, setSendTransactionFlag] = useState<boolean>(false);
   const {getBalance, setShouldBalanceUpdate} = useContext<Partial<IBalanceContext>>(BalanceContext);
   const {address, accountNumber, ledger: isLedgerEnabled} = useRecoilValue(walletState);
+  const {settings} = useNetworkSettingsContext();
 
   const balance = getBalance && getBalance(address);
   const {
     data: validatorsData,
     error: validatorsError,
-    loading: validatorsLoading,
-  } = useQuery(GET_VALIDATORS, {variables: {offset}});
-  const {data: feeData} = useQuery<IFeeQuery>(GET_AVERAGE_FEE);
-  const {data: newsData} = useQuery<IValidatorsNewsQuery>(GET_VALIDATORS_NEWS);
+    isLoading: validatorsLoading,
+  } = useRestQuery({
+    queryKey: ['validators', settings?.apiUrl, offset, VALIDATORS_TABLE_ITEMS_PER_PAGE],
+    queryFn: () => getValidators(settings!.apiUrl, offset, VALIDATORS_TABLE_ITEMS_PER_PAGE),
+    enabled: Boolean(settings),
+  });
+  const {data: feeData} = useRestQuery<IFeeQuery>({
+    queryKey: ['fees', settings?.apiUrl],
+    queryFn: () => getFees(settings!.apiUrl),
+    enabled: Boolean(settings),
+  });
+  const {data: newsData} = useRestQuery({
+    queryKey: ['news', settings?.apiUrl, 'validators'],
+    queryFn: () => getNews(settings!.apiUrl, 'validators'),
+    enabled: Boolean(settings),
+  });
   const deeplinkData = useRecoilValue(deeplinkState);
   const {
-    data: nonceAndDelegateData,
+    data: accountData,
     refetch: nonceAndDelegateRefetch,
-    loading: nonceAndDelegateLoading,
+    isLoading: accountLoading,
+    isFetching: accountFetching,
     error: nonceAndDelegateError,
-  } = useQuery<INonceDelegateQueryResult>(GET_NONCE_AND_DELEGATE, {
-    variables: {publicKey: address},
-    fetchPolicy: 'network-only',
-    pollInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
+  } = useRestQuery({
+    queryKey: ['account', settings?.apiUrl, address],
+    queryFn: () => getAccount(settings!.apiUrl, address),
+    enabled: Boolean(settings && address),
+    refetchInterval: DEFAULT_QUERY_REFRESH_INTERVAL,
   });
-  const latestNews =
-    newsData && newsData?.newsValidators.length > 0 ? newsData?.newsValidators[0] : {};
-  const [broadcastDelegation, broadcastResult] = useMutation(BROADCAST_DELEGATION, {
+  const nonceAndDelegateData = useMemo(
+    () =>
+      accountData
+        ? {
+            accountByKey: {
+              usableNonce: accountData.pendingNonce,
+              delegate: accountData.delegate,
+            },
+          }
+        : undefined,
+    [accountData],
+  );
+  const nonceAndDelegateLoading = accountLoading || accountFetching;
+  const latestNews = newsData?.[0] || {};
+  const queryClient = useQueryClient();
+  const broadcastDelegation = useMutation({
+    mutationFn: ({input, signature}: {input: unknown; signature: unknown}) => {
+      if (!settings) throw new Error('REST API settings are unavailable');
+      return postDelegation(settings.apiUrl, input, signature);
+    },
+    retry: false,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({queryKey: ['account', settings?.apiUrl, address]});
+      void queryClient.invalidateQueries({queryKey: ['mempool', settings?.apiUrl, address]});
+      void queryClient.invalidateQueries({queryKey: ['transactions', settings?.apiUrl, address]});
+    },
     onError: error => {
-      toast.error(error.message);
-      return clearState();
+      toast.error(error instanceof Error ? error.message : 'Delegation broadcast failed');
+      clearState();
     },
   });
+  const broadcastResult = broadcastDelegation;
 
   useEffect(() => {
     setStoredPassphrase(getPassphraseFlag());
@@ -101,7 +136,7 @@ export const useStake = (sessionData: IWalletData) => {
   useEffect(() => {
     if (nonceAndDelegateData?.accountByKey?.delegate?.publicKey) {
       setCurrentDelegate(nonceAndDelegateData?.accountByKey.delegate.publicKey);
-      setCurrentDelegateName(nonceAndDelegateData.accountByKey.delegate.name);
+      setCurrentDelegateName(nonceAndDelegateData.accountByKey.delegate.name || '');
     }
   }, [nonceAndDelegateData]);
 
@@ -122,12 +157,12 @@ export const useStake = (sessionData: IWalletData) => {
   }, [ledgerTransactionData, showModal]);
 
   useEffect(() => {
-    if (sendTransactionFlag && broadcastResult?.data) {
+    if (sendTransactionFlag && broadcastResult.isSuccess) {
       clearState();
       if (setShouldBalanceUpdate) {
         setShouldBalanceUpdate(true);
       }
-      nonceAndDelegateRefetch({publicKey: sessionData.address});
+      nonceAndDelegateRefetch();
       toast.success('Delegation successfully broadcasted');
       navigate('/stake');
     }
@@ -148,9 +183,7 @@ export const useStake = (sessionData: IWalletData) => {
           from: address,
           validUntil: getDefaultValidUntilField(),
         };
-        broadcastDelegation({
-          variables: {input: SendPaymentInput, signature: SignatureInput},
-        });
+        broadcastDelegation.mutate({input: SendPaymentInput, signature: SignatureInput});
         setSendTransactionFlag(true);
       }
     } catch (e: any) {
@@ -190,7 +223,7 @@ export const useStake = (sessionData: IWalletData) => {
 
   const confirmCustomDelegate = (delegate: string) => {
     try {
-      nonceAndDelegateRefetch({publicKey: sessionData.address});
+      nonceAndDelegateRefetch();
       setShowModal(ModalStates.FEE);
       setDelegate({publicKey: delegate});
     } catch (e: any) {
@@ -281,12 +314,7 @@ export const useStake = (sessionData: IWalletData) => {
       if (signedTransaction) {
         const signatureInput = createSignatureInputFromSignature(signedTransaction.signature);
         const sendPaymentInput = createDelegationPaymentInputFromPayload(signedTransaction.data);
-        broadcastDelegation({
-          variables: {
-            input: sendPaymentInput,
-            signature: signatureInput,
-          },
-        });
+        broadcastDelegation.mutate({input: sendPaymentInput, signature: signatureInput});
         toast.info('Broadcasting delegation');
         setSendTransactionFlag(true);
         setShowModal('');

@@ -49,6 +49,7 @@ const Stake = ({sessionData}: IProps) => {
           address={address}
           toggleModal={openModal}
           validators={validatorsData?.validators}
+          validatorsTotal={validatorsData?.total || 0}
           loading={validatorsLoading}
           error={validatorsError}
           currentDelegate={currentDelegate}

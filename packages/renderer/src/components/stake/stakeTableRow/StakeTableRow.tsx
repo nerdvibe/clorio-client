@@ -9,6 +9,8 @@ interface IProps {
   isDelegating?: boolean;
   loading?: boolean;
   mode?: 'table' | 'card';
+  showInfo?: boolean;
+  showStaked?: boolean;
 }
 
 const BOOSTED_TOOLTIP =
@@ -22,6 +24,8 @@ const StakeTableRow = ({
   isDelegating,
   loading,
   mode = 'table',
+  showInfo = true,
+  showStaked = true,
 }: IProps) => {
   const isBoosted = +element.priority === 1;
   const supportTooltip = isBoosted ? BOOSTED_TOOLTIP : '';
@@ -110,25 +114,29 @@ const StakeTableRow = ({
             <span className="stake-card__label">Fee</span>
             <strong className="stake-card__value">{element.fee}%</strong>
           </div>
-          <div className="stake-card__metric">
-            <span className="stake-card__label">Staked</span>
-            <strong className="stake-card__value">{formatStakedAmount(element.stakedSum)}</strong>
-          </div>
-          <div className="stake-card__metric stake-card__metric--wide">
-            <span className="stake-card__label">Info</span>
-            {element.website ? (
-              <a
-                className="stake-card__link"
-                href={websiteHref}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {websiteLabel}
-              </a>
-            ) : (
-              <span className="stake-card__muted">{websiteLabel}</span>
-            )}
-          </div>
+          {showStaked && (
+            <div className="stake-card__metric">
+              <span className="stake-card__label">Staked</span>
+              <strong className="stake-card__value">{formatStakedAmount(element.stakedSum)}</strong>
+            </div>
+          )}
+          {showInfo && (
+            <div className="stake-card__metric stake-card__metric--wide">
+              <span className="stake-card__label">Info</span>
+              {element.website ? (
+                <a
+                  className="stake-card__link"
+                  href={websiteHref}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {websiteLabel}
+                </a>
+              ) : (
+                <span className="stake-card__muted">{websiteLabel}</span>
+              )}
+            </div>
+          )}
         </div>
       </article>
     );
@@ -143,23 +151,27 @@ const StakeTableRow = ({
       <td className="stake-row__cell">
         <span className="stake-row__value">{element.fee}%</span>
       </td>
-      <td className="stake-row__cell">
-        <span className="stake-row__value">{formatStakedAmount(element.stakedSum)}</span>
-      </td>
-      <td className="stake-row__cell">
-        {element.website ? (
-          <a
-            className="stake-row__link"
-            href={websiteHref}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {websiteLabel}
-          </a>
-        ) : (
-          <span className="stake-row__muted">{websiteLabel}</span>
-        )}
-      </td>
+      {showStaked && (
+        <td className="stake-row__cell">
+          <span className="stake-row__value">{formatStakedAmount(element.stakedSum)}</span>
+        </td>
+      )}
+      {showInfo && (
+        <td className="stake-row__cell">
+          {element.website ? (
+            <a
+              className="stake-row__link"
+              href={websiteHref}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {websiteLabel}
+            </a>
+          ) : (
+            <span className="stake-row__muted">{websiteLabel}</span>
+          )}
+        </td>
+      )}
       <td className="stake-row__cell stake-row__cell--action">{actionButton}</td>
     </tr>
   );
