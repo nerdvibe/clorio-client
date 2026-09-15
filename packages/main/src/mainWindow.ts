@@ -146,7 +146,9 @@ async function createWindow() {
       contextIsolation: true,
       webSecurity: true,
       devTools: import.meta.env.DEV,
-      sandbox: false, // Sandbox disabled because the preload script depends on the Node.js api
+      // The preload is bundled to a single file and only uses Electron's sandbox-safe
+      // bridge plus polyfilled Buffer/process globals.
+      sandbox: true,
       webviewTag: false, // The webview tag is not recommended. Consider alternatives like an iframe or Electron's BrowserView. @see https://www.electronjs.org/docs/latest/api/webview-tag#warning
       preload: join(app.getAppPath(), 'packages/preload/dist/index.cjs'),
     },
@@ -253,7 +255,7 @@ ipcMain.handle('open-win', (_: Electron.IpcMainInvokeEvent, arg) => {
       preload: join(app.getAppPath(), 'packages/preload/dist/index.cjs'),
       nodeIntegration: false,
       contextIsolation: true,
-      sandbox: false, // Sandbox disabled because the preload script depends on the Node.js api
+      sandbox: true,
       webSecurity: true,
     },
   });

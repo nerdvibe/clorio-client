@@ -1,6 +1,6 @@
 import Big from 'big.js';
 import * as bip39 from 'bip39';
-import {mnemonicToPrivateKey} from '#preload';
+import {mnemonicToPrivateKey} from '../../../preload/src/bip';
 // @ts-ignore
 import * as bs58check from 'bs58check';
 // @ts-ignore

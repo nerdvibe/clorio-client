@@ -5,21 +5,6 @@
  * Any call with a channel name not in the list is silently rejected.
  */
 import {contextBridge, ipcRenderer} from 'electron';
-// @ts-ignore
-import appendQuery from 'append-query';
-import type {Query} from 'append-query';
-
-window.__dirname = __dirname;
-
-export {
-  bip32,
-  bip39,
-  generateKeypair,
-  ecc,
-  fromSeed,
-  mnemonicToSeed,
-  mnemonicToPrivateKey,
-} from './bip';
 
 import zkappIntegration from './zkapp-mina-env';
 
@@ -150,13 +135,3 @@ contextBridge.exposeInMainWorld('ipcBridge', {
 // ---------------------------------------------------------------------------
 
 contextBridge.exposeInMainWorld('mina', zkappIntegration);
-
-// ---------------------------------------------------------------------------
-// URL utility
-// ---------------------------------------------------------------------------
-
-const appendQueryParams = (url: string, params: string | Query): string => {
-  return appendQuery(url, params);
-};
-
-export {appendQueryParams};

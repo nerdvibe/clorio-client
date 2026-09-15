@@ -5,7 +5,7 @@ import RegisterStep from '../../components/UI/registration/RegistrationStep';
 import AccountSelection from '../../components/UI/registration/AccountSelection';
 import type { IKeypair, INetworkData } from '/@/types';
 import { deriveWalletByMnemonic, setPassphrase, storeAccounts, storeSession } from '/@/tools';
-import { generateKeypair } from '#preload';
+import {generateKeypair} from '../../../../preload/src/bip';
 import { generateMnemonic } from 'bip39';
 import SecureDataStorageComponent from '/@/components/ReadSecureStorage';
 import useSecureStorage from '/@/hooks/useSecureStorage';

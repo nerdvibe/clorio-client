@@ -96,7 +96,9 @@ export default function NetworkSettings({
             </div>
             <div>
               <h2 className="onboarding-settings-title">Settings</h2>
-              <p className="onboarding-settings-version">Version 2.1.6</p>
+              <p className="onboarding-settings-version">
+                Version {import.meta.env.VITE_APP_VERSION}
+              </p>
             </div>
           </div>
         </header>
