@@ -18,6 +18,9 @@ const ALLOWED_INVOKE_CHANNELS: ReadonlySet<string> = new Set([
   'ledger-get-name-version',
   'ledger-get-address',
   'ledger-sign-transaction',
+  'presentation-prepare',
+  'presentation-finalize',
+  'presentation-abort',
   'open-win',
 ]);
 
@@ -26,6 +29,26 @@ const ALLOWED_SEND_CHANNELS: ReadonlySet<string> = new Set([
   'CHECK_FOR_UPDATE_PENDING',
   'account-change',
   'chain-change',
+  // Explicit responses from the trusted wallet renderer to a zkApp child window.
+  'clorio-set-network-config',
+  'clorio-set-address',
+  'clorio-set-accounts',
+  'clorio-signed-tx',
+  'clorio-signed-message',
+  'clorio-signed-payment',
+  'clorio-added-chain',
+  'clorio-switched-chain',
+  'clorio-verified-message',
+  'clorio-signed-json-message',
+  'clorio-verified-json-message',
+  'clorio-created-nullifier',
+  'clorio-staked-delegation',
+  'clorio-signed-fields',
+  'clorio-verified-fields',
+  'clorio-stored-private-credential',
+  'clorio-presentation-created',
+  'clorio-error',
+  'focus-clorio',
 ]);
 
 /** Channels the renderer may subscribe to with .on() */
@@ -52,6 +75,7 @@ const ALLOWED_ON_CHANNELS: ReadonlySet<string> = new Set([
   'clorio-staked-delegation',
   'clorio-signed-fields',
   'clorio-verified-fields',
+  'clorio-presentation-created',
   'error',
 ]);
 
