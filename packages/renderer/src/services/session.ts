@@ -18,7 +18,8 @@ const PASSPHRASE_FLAG_KEY = 'clorio:passphrase_flag';
 
 export interface WalletSession {
   address: string;
-  id: number;
+  /** Legacy backend account ID retained only when restoring old sessions. */
+  id?: number;
   ledger: boolean;
   ledgerAccount: number;
   mnemonic: boolean;

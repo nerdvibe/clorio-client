@@ -6,9 +6,10 @@ import {useContext, useEffect, useRef, useState} from 'react';
 import Truncate from 'react-truncate-inside/es';
 import Button from '../../Button';
 import {getAccountAddress, sendResponse} from '../../../../tools/mina-zkapp-bridge';
-import {useLazyQuery, useMutation} from '@apollo/client';
-import {INonceAndBalanceQueryResult} from '../../../../pages/sendTX/SendTXHelper';
-import {BROADCAST_DELEGATION, GET_NONCE_AND_BALANCE} from '../../../../graphql/query';
+import {useMutation, useQuery as useRestQuery, useQueryClient} from '@tanstack/react-query';
+import {broadcastDelegation} from '../../../../api/transactions';
+import {getAccount} from '../../../../api/account';
+import {useNetworkSettingsContext} from '../../../../contexts/NetworkContext';
 import PasswordDecrypt from '../../../PasswordDecrypt';
 import {toast} from 'react-toastify';
 import {client, toNanoMINA} from '/@/tools';
@@ -38,24 +39,47 @@ interface SignedTx {
 
 export default function ConfirmZkappDelegation() {
   const wallet = useRecoilValue(walletState);
+  const {settings} = useNetworkSettingsContext();
   const isLedgerEnabled = wallet.ledger;
   const fromRef = useRef(null);
   const [fromTextWidth, setFromTextWidth] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
-  const [fetchNonce, {data: nonceData, error: nonceError}] =
-    useLazyQuery<INonceAndBalanceQueryResult>(GET_NONCE_AND_BALANCE);
   const [{transactionData, showDelegationConfirmation}, setZkappState] = useRecoilState(zkappState);
+  const {data: accountData, error: nonceError} = useRestQuery({
+    queryKey: ['account', settings?.apiUrl, wallet.address],
+    queryFn: () => getAccount(settings!.apiUrl, wallet.address),
+    enabled: Boolean(showDelegationConfirmation && settings && wallet.address),
+  });
   const {getBalance} = useContext<Partial<IBalanceContext>>(BalanceContext);
-  const [broadcastDelegation] = useMutation(BROADCAST_DELEGATION, {
+  const queryClient = useQueryClient();
+  const broadcastMutation = useMutation({
+    mutationFn: ({input, signature}: {input: unknown; signature: unknown}) => {
+      if (!settings) throw new Error('REST API settings are unavailable');
+      return broadcastDelegation(settings.apiUrl, input, signature);
+    },
+    retry: false,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({queryKey: ['account', settings?.apiUrl, wallet.address]});
+      void queryClient.invalidateQueries({queryKey: ['mempool', settings?.apiUrl, wallet.address]});
+      void queryClient.invalidateQueries({queryKey: ['transactions', settings?.apiUrl, wallet.address]});
+    },
     onError: error => {
-      toast.error(error.message);
+      toast.error(error instanceof Error ? error.message : 'Delegation broadcast failed');
       return onClose();
     },
   });
 
   useEffect(() => {
-    fetchAndSetNonce();
-  }, [showDelegationConfirmation]);
+    if (showDelegationConfirmation && accountData) {
+      setZkappState(state => ({
+        ...state,
+        transactionData: {
+          ...state.transactionData,
+          nonce: accountData.pendingNonce,
+        },
+      }));
+    }
+  }, [accountData, showDelegationConfirmation, setZkappState]);
 
   useEffect(() => {
     if (fromRef.current) {
@@ -71,21 +95,6 @@ export default function ConfirmZkappDelegation() {
     }));
     setShowPassword(false);
     sendResponse('clorio-error', ERROR_CODES.userRejectedRequest);
-  };
-
-  const fetchAndSetNonce = async () => {
-    if (showDelegationConfirmation) {
-      const {data: nonceData} = await fetchNonce({variables: {publicKey: wallet.address}});
-      if (nonceData?.accountByKey?.usableNonce || nonceData?.accountByKey?.usableNonce === 0) {
-        setZkappState(state => ({
-          ...state,
-          transactionData: {
-            ...state.transactionData,
-            nonce: nonceData.accountByKey.usableNonce,
-          },
-        }));
-      }
-    }
   };
 
   // Check with BigJs if the balance is enough
@@ -150,9 +159,7 @@ export default function ConfirmZkappDelegation() {
   };
 
   const broadcastDelegationTx = async (signedTx: SignedTx, hashedTx?: any) => {
-    await broadcastDelegation({
-      variables: {input: signedTx.data, signature: signedTx.signature},
-    });
+    await broadcastMutation.mutateAsync({input: signedTx.data, signature: signedTx.signature});
     sendResponse('clorio-staked-delegation', {hash: hashedTx || ''});
     onPostSign();
   };

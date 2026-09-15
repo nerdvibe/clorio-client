@@ -27,13 +27,25 @@ export const mempoolQueryRowToTableRow = (mempoolRow: IMempoolQueryData) => {
   };
 };
 
+const timestampToMilliseconds = (timestamp?: string): number | undefined => {
+  if (!timestamp) return undefined;
+
+  const numericTimestamp = Number(timestamp);
+  if (Number.isFinite(numericTimestamp)) {
+    return numericTimestamp < 1_000_000_000_000 ? numericTimestamp * 1000 : numericTimestamp;
+  }
+
+  const parsedTimestamp = Date.parse(timestamp);
+  return Number.isNaN(parsedTimestamp) ? undefined : parsedTimestamp;
+};
+
 /**
  * Take the transactions query result object and convert it to a table row object
  * @param transactionRow
  * @returns ITransactionRowData
  */
 export const transactionQueryRowToTableRow = (transactionRow: ITransactionQueryData) => {
-  const {timestamp, status, failure_reason} = transactionRow;
+  const {status, failure_reason} = transactionRow;
   const id = transactionRow.hash;
   const amount = transactionRow.amount ? toMINA(transactionRow.amount) : 0;
   const sender = transactionRow.sender_public_key;
@@ -51,7 +63,7 @@ export const transactionQueryRowToTableRow = (transactionRow: ITransactionQueryD
     isSelf,
     fee,
     memo,
-    timestamp,
+    timestamp: timestampToMilliseconds(transactionRow.timestamp),
     type,
     status,
     failure_reason,

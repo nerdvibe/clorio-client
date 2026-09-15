@@ -1,20 +1,21 @@
 import React, {useMemo} from 'react';
+import {AlertTriangle} from 'react-feather';
 import Spinner from '../UI/Spinner';
 import {getTotalPages} from '../../tools/utils';
-import {useQuery} from '@apollo/client';
+import {useQuery} from '@tanstack/react-query';
 import Pagination from '../UI/pagination/Pagination';
 import ReactTooltip from 'react-tooltip';
-import {GET_BLACKLIST, GET_TRANSACTIONS_TOTAL} from '../../graphql/query';
+import {getBlacklist} from '../../api/content';
+import {useNetworkSettingsContext} from '../../contexts/NetworkContext';
 import type {
   ITransactionRowData,
   ITransactionTableProps,
-  ITransactionTotalQueryResult,
 } from './TransactionsTypes';
 import TransactionRow from './TransactionRow';
 import TransactionCard from './TransactionCard';
 import TransactionsTableError from './TransactionsTableError';
 import {mempoolQueryRowToTableRow, transactionQueryRowToTableRow} from './TransactionsHelper';
-import WalletCreationTransaction from './WalletCreationTransaction';
+import WalletCreationTransaction, {WalletCreationTransactionCard} from './WalletCreationTransaction';
 import RefetchTransactions from './RefetchTransactions';
 import type {Blacklist} from '../../types/Blacklist';
 import {TRANSACTIONS_TABLE_ITEMS_PER_PAGE} from '/@/tools';
@@ -25,21 +26,18 @@ const TransactionsTable = ({
   error,
   mempool,
   loading,
-  userId,
   userAddress,
   page,
   setOffset,
   balance,
   refetchData,
 }: ITransactionTableProps) => {
-  const {data: totalData} = useQuery<ITransactionTotalQueryResult>(GET_TRANSACTIONS_TOTAL, {
-    variables: {accountId: userId},
-    skip: !userId || userId === -1,
-    fetchPolicy: 'network-only',
-  });
-
-  const {data: blacklist} = useQuery<Blacklist>(GET_BLACKLIST, {
-    fetchPolicy: 'network-only',
+  const {settings} = useNetworkSettingsContext();
+  const {data: blacklist, error: blacklistError} = useQuery<Blacklist>({
+    queryKey: ['blacklist', settings?.apiUrl],
+    queryFn: () => getBlacklist(settings!.apiUrl),
+    enabled: Boolean(settings),
+    retry: false,
   });
 
   const blacklistAddresses = blacklist?.blacklistedAddresses || [];
@@ -118,16 +116,18 @@ const TransactionsTable = ({
     [transactions, userAddress, blacklistAddresses, mempoolCount],
   );
 
-  const walletCreationRow = useMemo(() => {
-    const totalRows = totalData?.transactionsCount?.count || 0;
+  const showWalletCreationFee = useMemo(() => {
+    const totalRows = transactions?.total || 0;
     const isLastPage = +page === +getTotalPages(totalRows);
-    if (transactions?.transactions?.length) {
-      if (transactions?.transactions?.length < TRANSACTIONS_TABLE_ITEMS_PER_PAGE || isLastPage) {
-        return WalletCreationTransaction(totalRows + 1);
-      }
-    }
-    return null;
-  }, [transactions, totalData, page]);
+    return Boolean(
+      transactions?.transactions?.length &&
+        (transactions.transactions.length < TRANSACTIONS_TABLE_ITEMS_PER_PAGE || isLastPage),
+    );
+  }, [transactions, page]);
+
+  const walletCreationRow = showWalletCreationFee
+    ? WalletCreationTransaction((transactions?.total || 0) + 1)
+    : null;
 
   if (
     !loading &&
@@ -135,8 +135,7 @@ const TransactionsTable = ({
       !transactions ||
       transactions?.transactions === null ||
       (transactions?.transactions && transactions?.transactions.length === 0) ||
-      !totalData ||
-      totalData?.transactionsCount?.count === 0)
+      !transactions.total)
   ) {
     return TransactionsTableError(balance, error, refetchData);
   }
@@ -148,7 +147,25 @@ const TransactionsTable = ({
         show={loading}
       >
         <ReactTooltip multiline={true} />
-        <RefetchTransactions refetch={refetchData} />
+        <div className="tx-table-toolbar">
+          {blacklistError && (
+            <div className="tx-safety-warning" role="status">
+              <span
+                className="tx-safety-warning__icon"
+                role="img"
+                tabIndex={0}
+                aria-label="Blacklist safety data unavailable"
+                title="Blacklist safety data is unavailable. Review transaction addresses carefully."
+                data-tooltip="Blacklist safety data is unavailable. Review transaction addresses carefully."
+                data-tip="Blacklist safety data is unavailable. Review transaction addresses carefully."
+                data-place="top"
+              >
+                <AlertTriangle size={18} />
+              </span>
+            </div>
+          )}
+          <RefetchTransactions refetch={refetchData} />
+        </div>
 
         <div className="tx-table-container">
           <table className="tx-table animate__animated animate__fadeIn">
@@ -178,12 +195,13 @@ const TransactionsTable = ({
         <div className="tx-card-list animate__animated animate__fadeIn">
           {mempoolCards}
           {txCards}
+          {showWalletCreationFee && <WalletCreationTransactionCard />}
         </div>
 
         <Pagination
           page={page}
           setOffset={setOffset}
-          total={getTotalPages(totalData?.transactionsCount?.count || 0)}
+          total={getTotalPages(transactions?.total || 0)}
         />
       </Spinner>
     </div>

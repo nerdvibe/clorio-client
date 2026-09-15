@@ -4,9 +4,9 @@ import {walletState, zkappState} from '../../../../store';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import Button from '../../Button';
 import {getAccountAddress, sendResponse} from '../../../../tools/mina-zkapp-bridge';
-import {useLazyQuery} from '@apollo/client';
-import {INonceQueryResult} from '../../../../pages/sendTX/SendTXHelper';
-import {GET_NONCE} from '../../../../graphql/query';
+import {useQuery as useRestQuery} from '@tanstack/react-query';
+import {getAccount, toNonceQueryResult} from '../../../../api/account';
+import {useNetworkSettingsContext} from '../../../../contexts/NetworkContext';
 import PasswordDecrypt from '../../../PasswordDecrypt';
 import {toast} from 'react-toastify';
 import {client, toMINA, toNanoMINA} from '/@/tools';
@@ -16,20 +16,18 @@ import TransactionData from './TransactionData';
 
 export default function ConfirmZkappTransaction() {
   const wallet = useRecoilValue(walletState);
+  const {settings} = useNetworkSettingsContext();
   const fromRef = useRef(null);
   const [fromTextWidth, setFromTextWidth] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
-  const [fetchNonce, {data: nonceData, error: nonceError}] =
-    useLazyQuery<INonceQueryResult>(GET_NONCE);
   const [{transactionData, showTransactionConfirmation, isZkappCommand}, setZkappState] =
     useRecoilState(zkappState);
-
-  useEffect(() => {
-    if (showTransactionConfirmation) {
-      const address = getAccountAddress();
-      fetchNonce({variables: {publicKey: address[0]}});
-    }
-  }, [showTransactionConfirmation]);
+  const {data: accountData, error: nonceError} = useRestQuery({
+    queryKey: ['account', settings?.apiUrl, wallet.address],
+    queryFn: () => getAccount(settings!.apiUrl, getAccountAddress()[0]),
+    enabled: Boolean(showTransactionConfirmation && settings && wallet.address),
+  });
+  const nonceData = accountData ? toNonceQueryResult(accountData) : undefined;
 
   useEffect(() => {
     if (fromRef.current) {

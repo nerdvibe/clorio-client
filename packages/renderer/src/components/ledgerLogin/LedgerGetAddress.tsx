@@ -2,15 +2,12 @@ import {useState, useEffect} from 'react';
 import {getPublicKey} from '/@/tools/ledger/ledger';
 import {toast} from 'react-toastify';
 import {storeAccounts, storeSession} from '/@/tools';
-import {useLazyQuery} from '@apollo/client';
 import LedgerConfirmAddress from './LedgerConfirmAddress';
-import type {IWalletIdData} from '../../types/WalletIdData';
 import LedgerLoader from '../UI/ledgerLogin/LedgerLoader';
 import {ArrowLeft} from 'react-feather';
 import {useNavigate} from 'react-router-dom';
 import {useSetRecoilState} from 'recoil';
 import {configState, walletState} from '/@/store';
-import {GET_ID} from '/@/graphql/query';
 import Button from '../UI/Button';
 
 interface IProps {
@@ -25,25 +22,15 @@ const LedgerGetAddress = ({accountNumber, toggleLoader}: IProps) => {
   const setConfig = useSetRecoilState(configState);
   const updateWallet = useSetRecoilState(walletState);
 
-  const [userIdFetch, {data: walletIdData}] = useLazyQuery<IWalletIdData>(GET_ID);
-
   useEffect(() => {
     getPublicAddress();
   }, []);
 
-  useEffect(() => {
-    if (publicKey) {
-      userIdFetch({variables: {publicKey}});
-    }
-  }, [publicKey]);
-
   const setSession = async () => {
-    if (walletIdData && !!publicKey) {
+    if (publicKey) {
       toggleLoader();
-      const id = +walletIdData?.idByPublicKey?.id || -1;
       storeSession({
         address: publicKey,
-        id,
         ledger: true,
         ledgerAccount,
         mnemonic: false,
@@ -52,7 +39,6 @@ const LedgerGetAddress = ({accountNumber, toggleLoader}: IProps) => {
 
       await updateWallet({
         address: publicKey,
-        id,
         ledger: true,
         ledgerAccount,
         mnemonic: false,

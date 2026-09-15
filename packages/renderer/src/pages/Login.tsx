@@ -1,13 +1,10 @@
 import {Link, useNavigate} from 'react-router-dom';
 import {useState, useEffect, useCallback} from 'react';
-import {useLazyQuery, useQuery} from '@apollo/client';
 import {toast} from 'react-toastify';
 import {ArrowLeft, ArrowRight} from 'react-feather';
 import {deriveAccount, setPassphrase, spellMnemonic, storeAccounts, storeSession} from '/@/tools';
-import {GET_ID} from '/@/graphql/query';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/input/Input';
-import type {IWalletIdData} from '/@/types/WalletIdData';
 import ReactTooltip from 'react-tooltip';
 import SecureDataStorageComponent from '../components/ReadSecureStorage';
 import useSecureStorage from '../hooks/useSecureStorage';
@@ -26,10 +23,6 @@ function Login({toggleLoader}: IProps) {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [passphraseError, setPassphraseError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const [userIdFetch, {data: userIdData, error: userIdError, loading: userIdLoading}] =
-    useLazyQuery<IWalletIdData>(GET_ID, {
-      variables: {publicKey},
-    });
   const setConfig = useSetRecoilState(configState);
 
   const {encryptData} = useSecureStorage();
@@ -53,51 +46,34 @@ function Login({toggleLoader}: IProps) {
     };
   }, []);
 
-  const saveAndStoreSession = (userId?: string | number, derivedPublicKey?: string) => {
-    if (publicKey && publicKey !== '' && !userIdLoading && userIdData) {
+  const saveAndStoreSession = (derivedPublicKey?: string) => {
+    const address = derivedPublicKey || publicKey;
+    if (address) {
       toggleLoader(true);
-      const id = +userIdData?.idByPublicKey.id || -1;
-      storeSessionAndRedirect(derivedPublicKey || publicKey, id);
-    } else if (derivedPublicKey) {
-      toggleLoader(true);
-      const id = +userId! || -1;
-      storeSessionAndRedirect(derivedPublicKey || publicKey, id);
+      storeSessionAndRedirect(address);
     }
   };
-  useEffect(() => {
-    if (userIdError) {
-      if (storePassphrase) {
-        setShowPasswordModal(true);
-      } else {
-        toggleLoader(true);
-        storeSessionAndRedirect(publicKey, -1);
-      }
-    }
-  }, [userIdError]);
 
-  const storeSessionAndRedirect = async (publicKey: string, id: number) => {
-    await userIdFetch({variables: {publicKey}});
+  const storeSessionAndRedirect = async (address: string) => {
     const isUsingMnemonic =
       privateKey.trim().split(' ').length === 12 || privateKey.trim().split(' ').length === 24;
     setPassphrase(isUsingMnemonic);
     await storeSession({
-      address: publicKey,
-      id,
+      address,
       ledger: false,
       ledgerAccount: 0,
       mnemonic: isUsingMnemonic,
       accountNumber: 0,
     });
     await updateWallet({
-      address: publicKey,
-      id,
+      address,
       ledger: false,
       ledgerAccount: 0,
       mnemonic: isUsingMnemonic,
       accountNumber: 0,
       isAuthenticated: true,
     });
-    await storeAccounts([{accountId: 0, address: publicKey}]);
+    await storeAccounts([{accountId: 0, address}]);
     setConfig(prev => ({
       ...prev,
       isAuthenticated: true,
@@ -148,11 +124,11 @@ function Login({toggleLoader}: IProps) {
       const derivedAccount = await deriveAccount(privateKey.trim(), undefined, skipChecks);
       if (derivedAccount.publicKey) {
         setPublicKey(derivedAccount.publicKey);
-        const {data} = await userIdFetch({variables: {publicKey: derivedAccount.publicKey}});
         if (storePassphrase) {
+          setPublicKey(derivedAccount.publicKey);
           setShowPasswordModal(true);
         } else {
-          saveAndStoreSession(data?.idByPublicKey?.id, derivedAccount.publicKey);
+          saveAndStoreSession(derivedAccount.publicKey);
         }
       }
     } catch (e) {
@@ -170,12 +146,8 @@ function Login({toggleLoader}: IProps) {
 
   const onSecureStorageSubmit = (key: string) => {
     encryptData({key, data: privateKey.trim()});
-    if (userIdData) {
-      saveAndStoreSession();
-    } else {
-      toggleLoader(true);
-      storeSessionAndRedirect(publicKey, -1);
-    }
+    toggleLoader(true);
+    storeSessionAndRedirect(publicKey);
     setShowPasswordModal(false);
     setConfig(old => ({
       ...old,

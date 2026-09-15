@@ -37,14 +37,10 @@ export default function NetworkSettings({
   const [, setNetworkState] = useRecoilState(networkState);
 
   const selectedNetworkValue =
-    availableNetworks && Object.keys(availableNetworks).length > 1
+    availableNetworks.length > 1
       ? !settings?.label
-        ? Object.keys(availableNetworks).findIndex((key: string) =>
-            availableNetworks[key].label?.includes('mainnet'),
-          )
-        : Object.keys(availableNetworks).findIndex(
-            (key: string) => availableNetworks[key].label === settings?.label,
-          )
+        ? availableNetworks.findIndex(network => network.label.includes('mainnet'))
+        : availableNetworks.findIndex(network => network.label === settings.label)
       : 0;
 
   useEffect(() => {
@@ -54,10 +50,7 @@ export default function NetworkSettings({
 
   const networkSelectHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (!availableNetworks) return;
-    const selectedKey = Object.keys(availableNetworks)[parseInt(e.target.value)];
-    if (!selectedKey) return;
-
-    const selectedNetwork = availableNetworks[selectedKey];
+    const selectedNetwork = availableNetworks[parseInt(e.target.value)];
     if (!selectedNetwork) return;
 
     saveSettings(selectedNetwork);
@@ -103,7 +96,9 @@ export default function NetworkSettings({
             </div>
             <div>
               <h2 className="onboarding-settings-title">Settings</h2>
-              <p className="onboarding-settings-version">Version 2.1.6</p>
+              <p className="onboarding-settings-version">
+                Version {import.meta.env.VITE_APP_VERSION}
+              </p>
             </div>
           </div>
         </header>
@@ -135,18 +130,14 @@ export default function NetworkSettings({
                     onChange={networkSelectHandler}
                     value={selectedNetworkValue}
                   >
-                    {availableNetworks &&
-                      Object.keys(availableNetworks).map((key, index) => {
-                        const networkData = availableNetworks[key];
-                        return (
-                          <option
-                            key={networkData.label || key}
-                            value={index}
-                          >
-                            {networkData.label || key}
-                          </option>
-                        );
-                      })}
+                    {availableNetworks.map((networkData, index) => (
+                      <option
+                        key={networkData.label || index}
+                        value={index}
+                      >
+                        {networkData.label}
+                      </option>
+                    ))}
                   </Form.Select>
                   <ChevronDown
                     size={16}

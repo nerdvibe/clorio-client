@@ -15,7 +15,7 @@ interface ImportMetaEnv {
    * This variable is initialized in scripts/watch.ts
    */
   readonly VITE_DEV_SERVER_URL: undefined | string;
-  readonly VITE_REACT_APP_GQL_SERVER: undefined | string;
+  readonly VITE_REACT_APP_API_SERVER: undefined | string;
   readonly VITE_REACT_APP_NETWORK: undefined | string;
   readonly VITE_REACT_APP_EPOCH_URL: undefined | string;
   readonly VITE_REACT_APP_EXPLORER_URL: undefined | string;

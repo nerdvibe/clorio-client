@@ -72,10 +72,10 @@ export const initHtmlElements = () => {
  * @returns boolean
  */
 export const isEmptyObject = (objectToCheck: any) => {
-  return (
+  return Boolean(
     objectToCheck &&
-    Object.entries(objectToCheck).length === 0 &&
-    objectToCheck.constructor === Object
+      Object.entries(objectToCheck).length === 0 &&
+      objectToCheck.constructor === Object,
   );
 };
 
@@ -95,15 +95,7 @@ export const getTotalPages = (totalItems = 0, transactions = true) => {
   const itemsPerPage = transactions
     ? TRANSACTIONS_TABLE_ITEMS_PER_PAGE
     : VALIDATORS_TABLE_ITEMS_PER_PAGE;
-  const halfItemsPerPage = itemsPerPage / 2;
-  if (totalItems) {
-    const pages = (totalItems / itemsPerPage).toFixed(0);
-    if (totalItems % itemsPerPage < halfItemsPerPage && totalItems % itemsPerPage !== 0) {
-      return parseInt(pages) === 0 ? 1 : parseInt(pages) + 1;
-    }
-    return parseInt(pages) === 0 ? 1 : pages;
-  }
-  return 1;
+  return Math.max(1, Math.ceil(totalItems / itemsPerPage));
 };
 
 /**
@@ -200,11 +192,12 @@ export const isBad = (value: string): boolean => {
     return false;
   }
 
-  const alphaValue = value.replace(/[^a-zA-Z0-9]/g, '');
+  const alphaValue = value.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
 
   for (const bad of blacklist.concat(shortUrls)) {
-    const badDirectly = alphaValue.includes(bad);
-    const badVariation = alphaValue.includes(bad.replace(/[^a-zA-Z0-9]/g, ''));
+    const normalizedBad = bad.toLowerCase();
+    const badDirectly = alphaValue.includes(normalizedBad);
+    const badVariation = alphaValue.includes(normalizedBad.replace(/[^a-zA-Z0-9]/g, ''));
 
     if (badDirectly || badVariation) {
       return true;

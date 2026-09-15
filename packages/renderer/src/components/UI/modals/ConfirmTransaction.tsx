@@ -115,13 +115,14 @@ export const ConfirmTransaction = ({
       <div className="confirm-transaction__actions">
         <Button
           className="confirm-transaction__back"
-          style="no-style"
+          style="ghost"
           onClick={stepBackward}
           disabled={isDisabled}
           icon={<ArrowLeft size={16} />}
           text="Back"
         />
         <Button
+          className="confirm-transaction__confirm"
           style="primary"
           onClick={handleConfirm}
           disabled={isDisabled}

@@ -1,12 +1,9 @@
 import {useNavigate} from 'react-router-dom';
 import {useState, useEffect, useCallback, useRef} from 'react';
-import {useLazyQuery} from '@apollo/client';
 import {toast} from 'react-toastify';
 import {ArrowLeft, ArrowRight} from 'react-feather';
 import {deriveAccount, setPassphrase, spellMnemonic, storeAccounts, storeSession} from '/@/tools';
-import {GET_ID} from '/@/graphql/query';
 import Button from '../../components/UI/Button';
-import type {IWalletIdData} from '/@/types/WalletIdData';
 import SecureDataStorageComponent from '../../components/ReadSecureStorage';
 import useSecureStorage from '../../hooks/useSecureStorage';
 import {useSetRecoilState} from 'recoil';
@@ -30,8 +27,6 @@ export default function OnboardingImport({toggleLoader}: IProps) {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const navigate = useNavigate();
-  const [userIdFetch, {data: userIdData, error: userIdError, loading: userIdLoading}] =
-    useLazyQuery<IWalletIdData>(GET_ID, {variables: {publicKey}});
   const {encryptData} = useSecureStorage();
   const setConfig = useSetRecoilState(configState);
   const updateWallet = useSetRecoilState(walletState);
@@ -68,17 +63,6 @@ export default function OnboardingImport({toggleLoader}: IProps) {
     window.addEventListener('keydown', listener);
     return () => window.removeEventListener('keydown', listener);
   }, [mnemonic]);
-
-  useEffect(() => {
-    if (userIdError) {
-      if (storePassphrase) {
-        setShowPasswordModal(true);
-      } else {
-        toggleLoader(true);
-        storeSessionAndRedirect(publicKey, -1);
-      }
-    }
-  }, [userIdError]);
 
   // ── Word input handlers ────────────────────────────────────
   const updateWord = (index: number, raw: string) => {
@@ -141,23 +125,19 @@ export default function OnboardingImport({toggleLoader}: IProps) {
   const debouncedVerify = useCallback(debounce(verifyMnemonicSpell, 300), []);
 
   // ── Session helpers ────────────────────────────────────────
-  const saveAndStoreSession = (userId?: string | number, derivedPublicKey?: string) => {
-    if (publicKey && publicKey !== '' && !userIdLoading && userIdData) {
+  const saveAndStoreSession = (derivedPublicKey?: string) => {
+    const address = derivedPublicKey || publicKey;
+    if (address) {
       toggleLoader(true);
-      storeSessionAndRedirect(derivedPublicKey || publicKey, +userIdData.idByPublicKey.id || -1);
-    } else if (derivedPublicKey) {
-      toggleLoader(true);
-      storeSessionAndRedirect(derivedPublicKey, +(userId ?? -1));
+      storeSessionAndRedirect(address);
     }
   };
 
-  const storeSessionAndRedirect = async (pk: string, id: number) => {
-    await userIdFetch({variables: {publicKey: pk}});
+  const storeSessionAndRedirect = async (pk: string) => {
     const isUsingMnemonic = mnemonic.split(' ').length === 12 || mnemonic.split(' ').length === 24;
     setPassphrase(isUsingMnemonic);
     await storeSession({
       address: pk,
-      id,
       ledger: false,
       ledgerAccount: 0,
       mnemonic: isUsingMnemonic,
@@ -165,7 +145,6 @@ export default function OnboardingImport({toggleLoader}: IProps) {
     });
     await updateWallet({
       address: pk,
-      id,
       ledger: false,
       ledgerAccount: 0,
       mnemonic: isUsingMnemonic,
@@ -189,11 +168,11 @@ export default function OnboardingImport({toggleLoader}: IProps) {
       const derived = await deriveAccount(mnemonic, undefined, skipChecks);
       if (derived.publicKey) {
         setPublicKey(derived.publicKey);
-        const {data} = await userIdFetch({variables: {publicKey: derived.publicKey}});
         if (storePassphrase) {
+          setPublicKey(derived.publicKey);
           setShowPasswordModal(true);
         } else {
-          saveAndStoreSession(data?.idByPublicKey?.id, derived.publicKey);
+          saveAndStoreSession(derived.publicKey);
         }
       }
     } catch {
@@ -208,12 +187,8 @@ export default function OnboardingImport({toggleLoader}: IProps) {
 
   const onSecureStorageSubmit = (key: string) => {
     encryptData({key, data: mnemonic});
-    if (userIdData) {
-      saveAndStoreSession();
-    } else {
-      toggleLoader(true);
-      storeSessionAndRedirect(publicKey, -1);
-    }
+    toggleLoader(true);
+    storeSessionAndRedirect(publicKey);
     setShowPasswordModal(false);
     setConfig(old => ({...old, isUsingPassword: true}));
   };

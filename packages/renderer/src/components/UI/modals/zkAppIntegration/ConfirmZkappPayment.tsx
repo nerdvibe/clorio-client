@@ -5,9 +5,10 @@ import {zkappInitialState} from '../../../../store/zkapp';
 import {useContext, useEffect, useState} from 'react';
 import Button from '../../Button';
 import {getAccountAddress, sendResponse} from '../../../../tools/mina-zkapp-bridge';
-import {useLazyQuery, useMutation} from '@apollo/client';
-import {INonceQueryResult} from '../../../../pages/sendTX/SendTXHelper';
-import {BROADCAST_TRANSACTION, GET_NONCE} from '../../../../graphql/query';
+import {useMutation, useQuery as useRestQuery, useQueryClient} from '@tanstack/react-query';
+import {broadcastPayment as postPayment} from '../../../../api/transactions';
+import {getAccount} from '../../../../api/account';
+import {useNetworkSettingsContext} from '../../../../contexts/NetworkContext';
 import {signTransaction} from '../../../../tools/utils';
 import PasswordDecrypt from '../../../PasswordDecrypt';
 import {toast} from 'react-toastify';
@@ -27,40 +28,48 @@ import Big from 'big.js';
 
 export default function ConfirmZkappPayment() {
   const wallet = useRecoilValue(walletState);
+  const {settings} = useNetworkSettingsContext();
   const {isLedgerEnabled} = useRecoilValue(configState);
   const [showPassword, setShowPassword] = useState(false);
-  const [fetchNonce, {data: nonceData, error: nonceError}] =
-    useLazyQuery<INonceQueryResult>(GET_NONCE);
   const [{transactionData, showPaymentConfirmation}, setZkappState] = useRecoilState(zkappState);
+  const {data: accountData, error: nonceError} = useRestQuery({
+    queryKey: ['account', settings?.apiUrl, wallet.address],
+    queryFn: () => getAccount(settings!.apiUrl, wallet.address),
+    enabled: Boolean(showPaymentConfirmation && settings && wallet.address),
+  });
   const {getBalance} = useContext<Partial<IBalanceContext>>(BalanceContext);
 
-  const [broadcastTransaction] = useMutation(BROADCAST_TRANSACTION, {
+  const queryClient = useQueryClient();
+  const broadcastTransaction = useMutation({
+    mutationFn: ({input, signature}: {input: unknown; signature: unknown}) => {
+      if (!settings) throw new Error('REST API settings are unavailable');
+      return postPayment(settings.apiUrl, input, signature);
+    },
+    retry: false,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({queryKey: ['account', settings?.apiUrl, wallet.address]});
+      void queryClient.invalidateQueries({queryKey: ['mempool', settings?.apiUrl, wallet.address]});
+      void queryClient.invalidateQueries({queryKey: ['transactions', settings?.apiUrl, wallet.address]});
+    },
     onError: error => {
       setTimeout(() => {
-        toast.error(error.message);
+        toast.error(error instanceof Error ? error.message : 'Transaction broadcast failed');
         onClose();
       }, 1000);
     },
   });
 
   useEffect(() => {
-    fetchAndSetNonce();
-  }, [showPaymentConfirmation]);
-
-  const fetchAndSetNonce = async () => {
-    if (showPaymentConfirmation) {
-      const {data: nonceData} = await fetchNonce({variables: {publicKey: wallet.address}});
-      if (nonceData?.accountByKey?.usableNonce || nonceData?.accountByKey?.usableNonce === 0) {
-        setZkappState(state => ({
-          ...state,
-          transactionData: {
-            ...state.transactionData,
-            nonce: nonceData.accountByKey.usableNonce,
-          },
-        }));
-      }
+    if (showPaymentConfirmation && accountData) {
+      setZkappState(state => ({
+        ...state,
+        transactionData: {
+          ...state.transactionData,
+          nonce: accountData.pendingNonce,
+        },
+      }));
     }
-  };
+  }, [accountData, showPaymentConfirmation, setZkappState]);
 
   const onClose = () => {
     setZkappState(zkappInitialState);
@@ -128,9 +137,7 @@ export default function ConfirmZkappPayment() {
       signatureInput = createSignatureInputFromSignature(signedTx.signature);
     }
     const paymentInput = createPaymentInputFromPayload(signedTx.data);
-    await broadcastTransaction({
-      variables: {input: paymentInput, signature: signatureInput},
-    });
+    await broadcastTransaction.mutateAsync({input: paymentInput, signature: signatureInput});
   };
 
   const onSign = async () => {

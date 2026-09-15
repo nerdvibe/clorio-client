@@ -34,10 +34,10 @@ const TransactionAuthentication = ({
     return (
       <div className="tx-auth tx-auth--password">
         <div className="tx-auth__header">
-          <span className="tx-auth__eyebrow">Unlock</span>
+          <span className="tx-auth__eyebrow">Signing</span>
           <h3 className="tx-auth__title">Enter your password</h3>
           <p className="tx-auth__subtitle">
-            Unlock this device to sign the transaction.
+            Enter your password to sign the transaction.
           </p>
         </div>
         <div className="tx-auth__panel tx-auth__panel--password">
@@ -149,7 +149,7 @@ const TransactionAuthentication = ({
           className="big-icon-button"
           text="Cancel"
           onClick={stepBackwards}
-          style='quiet'
+          style="ghost"
         />
         <Button
           text="Sign transaction"

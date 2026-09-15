@@ -111,8 +111,8 @@ function buildCSP(isDev: boolean): string {
       `style-src ${self} 'unsafe-inline' ${fonts}`,
       `font-src ${self} ${fonts}`,
       // ws:/wss: required for Vite HMR WebSocket
-      `connect-src ${self} ws: wss: ${api} https://*.clor.io/v1/graphql https://api.mina.tools/v1/epoch`,
-      `img-src ${self} data: https://*.staketab.com`,
+      `connect-src ${self} ws: wss: ${api} https://api.mina.tools/v1/epoch`,
+      `img-src ${self} data: https://*.staketab.com https://clorio-public.s3.fr-par.scw.cloud`,
       'object-src \'none\'',
       `worker-src blob: ${self}`,
     ].join('; ');
@@ -124,8 +124,8 @@ function buildCSP(isDev: boolean): string {
     `script-src ${self} 'wasm-unsafe-eval'`,
     `style-src ${self} ${fonts}`,
     `font-src ${self} ${fonts}`,
-    `connect-src ${self} ${api} https://*.clor.io/v1/graphql https://api.mina.tools/v1/epoch`,
-    `img-src ${self} data: https://*.staketab.com`,
+    `connect-src ${self} ${api} https://api.mina.tools/v1/epoch`,
+    `img-src ${self} data: https://*.staketab.com https://clorio-public.s3.fr-par.scw.cloud`,
     'object-src \'none\'',
     `worker-src blob: ${self}`,
   ].join('; ');
@@ -146,12 +146,13 @@ async function createWindow() {
       contextIsolation: true,
       webSecurity: true,
       devTools: import.meta.env.DEV,
-      sandbox: false, // Sandbox disabled because the preload script depends on the Node.js api
+      // The preload is bundled to a single file and only uses Electron's sandbox-safe
+      // bridge plus polyfilled Buffer/process globals.
+      sandbox: true,
       webviewTag: false, // The webview tag is not recommended. Consider alternatives like an iframe or Electron's BrowserView. @see https://www.electronjs.org/docs/latest/api/webview-tag#warning
       preload: join(app.getAppPath(), 'packages/preload/dist/index.cjs'),
     },
   });
-  // browserWindow.webContents.openDevTools();
   /**
    * If the 'show' property of the BrowserWindow's constructor is omitted from the initialization options,
    * it then defaults to 'true'. This can cause flickering as the window loads the html content,
@@ -254,7 +255,7 @@ ipcMain.handle('open-win', (_: Electron.IpcMainInvokeEvent, arg) => {
       preload: join(app.getAppPath(), 'packages/preload/dist/index.cjs'),
       nodeIntegration: false,
       contextIsolation: true,
-      sandbox: false, // Sandbox disabled because the preload script depends on the Node.js api
+      sandbox: true,
       webSecurity: true,
     },
   });

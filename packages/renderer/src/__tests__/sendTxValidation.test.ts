@@ -63,6 +63,14 @@ describe('checkNonce', () => {
     expect(checkNonce(makeNonceResult(9999))).toBe(true);
   });
 
+  it('returns false when usableNonce is negative', () => {
+    expect(checkNonce(makeNonceResult(-1))).toBe(false);
+  });
+
+  it('returns false when usableNonce is fractional', () => {
+    expect(checkNonce(makeNonceResult(1.5))).toBe(false);
+  });
+
   it('returns false when nonceData is undefined', () => {
     expect(checkNonce(undefined)).toBe(false);
   });

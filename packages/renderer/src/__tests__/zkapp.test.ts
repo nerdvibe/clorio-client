@@ -128,8 +128,20 @@ describe('getCurrentNetConfig — reads from localStorage', () => {
     expect(config.netType).toBe('mainnet');
   });
 
+  it('falls back to label when the persisted network is blank', () => {
+    setNetworkSettings({network: '   ', label: 'devnet', name: 'Devnet'});
+    const config = getCurrentNetConfig();
+    expect(config.netType).toBe('devnet');
+  });
+
   it('uses netType "unknown" when both network and label are absent', () => {
     setNetworkSettings({name: 'Some Network'});
+    const config = getCurrentNetConfig();
+    expect(config.netType).toBe('unknown');
+  });
+
+  it('uses netType "unknown" when persisted network and label are blank', () => {
+    setNetworkSettings({network: '   ', label: '   ', name: 'Some Network'});
     const config = getCurrentNetConfig();
     expect(config.netType).toBe('unknown');
   });
@@ -144,6 +156,12 @@ describe('getCurrentNetConfig — reads from localStorage', () => {
     setNetworkSettings({network: 'mainnet'});
     const config = getCurrentNetConfig();
     expect(config.name).toBe('mainnet');
+  });
+
+  it('falls back to netType as name when the persisted name is blank', () => {
+    setNetworkSettings({network: 'devnet', name: '   '});
+    const config = getCurrentNetConfig();
+    expect(config.name).toBe('devnet');
   });
 
   it('handles an arbitrary custom network name in localStorage', () => {
@@ -186,8 +204,14 @@ describe('getCurrentNetConfig — final fallback to Mainnet', () => {
   it('returns "mainnet" as netType when localStorage is empty and env is unset', () => {
     vi.stubEnv('VITE_REACT_APP_NETWORK', '');
     const config = getCurrentNetConfig();
-    // Empty string is falsy → should fall through to 'Mainnet'
-    expect(config.netType).toBe('Mainnet');
+    // Empty string is falsy → should fall through to canonical lowercase mainnet
+    expect(config.netType).toBe(NET_CONFIG_TYPE.Mainnet);
+  });
+
+  it('falls back to Mainnet when the environment network is whitespace-only', () => {
+    vi.stubEnv('VITE_REACT_APP_NETWORK', '   ');
+    const config = getCurrentNetConfig();
+    expect(config).toEqual({netType: 'mainnet', name: 'Mainnet'});
   });
 
   it('returns "Mainnet" as name when no settings or env are available', () => {

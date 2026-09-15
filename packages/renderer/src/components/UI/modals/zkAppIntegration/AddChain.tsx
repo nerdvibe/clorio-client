@@ -6,18 +6,11 @@ import {sendResponse} from '../../../../tools/mina-zkapp-bridge';
 import {toast} from 'react-toastify';
 import {useNavigate} from 'react-router-dom';
 import {useNetworkSettingsContext} from '/@/contexts/NetworkContext';
+import {createAddChainNetworkData} from './addChainNetworkData';
 import {ERROR_CODES} from '/@/tools/zkapp';
 import {AlertOctagon} from 'react-feather';
-
-const NODE_INFO: string = `
-query NodeInfo {
-    nodeInfo {
-      height
-      name
-      network
-      version
-    }
-  }`;
+import {getNetworkData} from '../../../../api/network';
+import {normalizeApiUrl} from '../../../../api/http';
 
 export default function AddChain() {
   const {saveSettings, availableNetworks, setAvailableNetworks} = useNetworkSettingsContext();
@@ -39,15 +32,6 @@ export default function AddChain() {
     if (await testNetworkNode()) {
       networkSelectHandler();
     }
-  };
-
-  const trimSpace = (str: string) => {
-    if (typeof str !== 'string') {
-      return str;
-    }
-    let res = str.replace(/(^\s*)|(\s*$)/g, '');
-    res = res.replace(/[\r\n]/g, '');
-    return res;
   };
 
   // TODO: Check url before submit
@@ -82,13 +66,11 @@ export default function AddChain() {
 
   const networkSelectHandler = async () => {
     try {
-      const networkData = {
-        url: addChainData?.url ?? '',
-        network: addChainData?.name ?? '',
-        name: addChainData?.name ?? '',
-        label: addChainData?.name ?? '',
-      };
-      setAvailableNetworks({...availableNetworks, [networkData.name]: networkData});
+      const networkData = createAddChainNetworkData(
+        addChainData?.url ?? '',
+        addChainData?.name ?? '',
+      );
+      setAvailableNetworks([...availableNetworks, networkData]);
       saveSettings(networkData);
       setNetworkState(prev => ({
         ...prev,
@@ -109,7 +91,8 @@ export default function AddChain() {
       navigate('/overview');
       toast.success('Network switched successfully');
     } catch (error) {
-      toast.error(`Failed to switch network: ${error.message}`);
+      const message = error instanceof Error ? error.message : String(error);
+      toast.error(`Failed to switch network: ${message}`);
       sendResponse('error', ERROR_CODES.notSupportChain);
     }
   };
@@ -117,17 +100,20 @@ export default function AddChain() {
   // Test network node quering for the network details before switching
   const testNetworkNode = async () => {
     try {
-      const resp = await fetch(addChainData?.url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: NODE_INFO,
-        }),
-      }).then(res => res.json());
-      if (resp.errors) {
-        throw new Error(resp.errors[0].message);
+      const suppliedUrl = addChainData?.url;
+      if (!suppliedUrl) {
+        throw new Error('A REST API URL is required');
+      }
+      const normalizedUrl = normalizeApiUrl(suppliedUrl);
+      const apiUrl = new URL(normalizedUrl).origin;
+      const data = await getNetworkData(apiUrl, {
+        network: addChainData?.name || '',
+        name: addChainData?.name || '',
+      });
+      const requestedNetwork = (addChainData?.name || '').trim().toLowerCase();
+      const reportedNetwork = data.nodeInfo.network.trim().toLowerCase();
+      if (requestedNetwork && reportedNetwork && requestedNetwork !== reportedNetwork) {
+        throw new Error(`Network mismatch: expected ${addChainData?.name}`);
       }
       return true;
     } catch (error) {
@@ -152,7 +138,7 @@ export default function AddChain() {
             <p className="data-field">{addChainData?.name}</p>
           </div>
           <div className="w-100">
-            <h4>Node URL</h4>
+            <h4>REST API URL</h4>
             <p className="data-field">{addChainData?.url}</p>
           </div>
         </div>

@@ -12,7 +12,6 @@ import {
   storeSession,
   toMINA,
 } from '/@/tools';
-import {IWalletIdData} from '/@/types';
 import {IBalanceContext} from '/@/contexts/balance/BalanceTypes';
 import {BalanceContext} from '/@/contexts/balance/BalanceContext';
 import {useNavigate} from 'react-router-dom';
@@ -20,8 +19,6 @@ import Avatar from '/@/tools/avatar/avatar';
 import {Check, Trash, Plus, Key} from 'react-feather';
 import {toast} from 'react-toastify';
 import {useWallet} from '/@/contexts/WalletContext';
-import {useLazyQuery} from '@apollo/client';
-import {GET_ID} from '/@/graphql/query';
 import useSecureStorage from '/@/hooks/useSecureStorage';
 import {sendResponse} from '/@/tools/mina-zkapp-bridge';
 import Button from '../../Button';
@@ -49,9 +46,6 @@ const MnemonicAccountSelection = ({
   const {updateWallet} = useWallet();
   const {decryptData, hasEncryptedData} = useSecureStorage();
 
-  const [fetchUserId] = useLazyQuery<IWalletIdData>(GET_ID, {
-    variables: {publicKey: ''},
-  });
   const {getBalance, setShouldBalanceUpdate, removeBalance} =
     useContext<Partial<IBalanceContext>>(BalanceContext);
 
@@ -119,12 +113,9 @@ const MnemonicAccountSelection = ({
       const keypair = await deriveAccountFromMnemonic(mnemonic || passphrase, accountId);
       if (!accountExists(keypair?.pubKey as string)) {
         if (keypair) {
-          const {data} = await fetchUserId({variables: {publicKey: keypair.pubKey}});
-          const userId = data?.idByPublicKey?.id ? +data.idByPublicKey.id : -1;
           await pushAccount({address: keypair.pubKey, accountId});
           await storeSession({
             address: keypair.pubKey,
-            id: userId,
             ledger: false,
             ledgerAccount: 0,
             mnemonic: true,
@@ -132,7 +123,6 @@ const MnemonicAccountSelection = ({
           });
           await updateWallet({
             address: keypair.pubKey,
-            id: userId,
             ledger: false,
             ledgerAccount: 0,
             mnemonic: true,

@@ -2,6 +2,7 @@ node_modules
 scripts/.verify-snapshot.json
 .DS_Store
 dist
+release/
 *.local
 thumbs.db
 

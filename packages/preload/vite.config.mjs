@@ -14,6 +14,12 @@ const config = {
   mode: process.env.MODE,
   root: PACKAGE_ROOT,
   envDir: PROJECT_ROOT,
+  // Sandboxed preload scripts may only require Electron and a small set of
+  // Node built-ins. Bundle all application dependencies into this one file.
+  ssr: {
+    noExternal: true,
+    target: 'webworker',
+  },
   build: {
     ssr: true,
     sourcemap: 'inline',
@@ -26,6 +32,7 @@ const config = {
       formats: ['cjs'],
     },
     rollupOptions: {
+      external: ['electron'],
       output: {
         entryFileNames: '[name].cjs',
       },

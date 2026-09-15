@@ -9,4 +9,3 @@ export * from './Signature';
 export * from './TransactionData';
 export * from './TransactionPayload';
 export * from './WalletData';
-export * from './WalletIdData';

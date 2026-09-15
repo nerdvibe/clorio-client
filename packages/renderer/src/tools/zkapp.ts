@@ -24,19 +24,20 @@ export function getCurrentNetConfig(): NetConfigResult {
     const saved = localStorage.getItem('networkSettings');
     if (saved) {
       const settings = JSON.parse(saved);
-      const netType: string = settings.network ?? settings.label ?? NET_CONFIG_TYPE.Unknown;
+      const netType: string =
+        settings.network?.trim() || settings.label?.trim() || NET_CONFIG_TYPE.Unknown;
       return {
         netType,
-        name: settings.name ?? netType,
+        name: settings.name?.trim() || netType,
       };
     }
   } catch {
     // localStorage unavailable or JSON malformed — fall through to default
   }
-  const envNetwork = import.meta.env.VITE_REACT_APP_NETWORK as string | undefined;
+  const envNetwork = (import.meta.env.VITE_REACT_APP_NETWORK as string | undefined)?.trim();
   return {
-    netType: envNetwork ?? NET_CONFIG_TYPE.Mainnet,
-    name: envNetwork ?? 'Mainnet',
+    netType: envNetwork || NET_CONFIG_TYPE.Mainnet,
+    name: envNetwork || 'Mainnet',
   };
 }
 

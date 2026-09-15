@@ -4,6 +4,7 @@ import {INetworkOption} from '../hooks/useNetworkSettings';
 export interface NetworkConfigType {
   chainId: string;
   name: string;
+  networkID?: string;
 }
 
 export interface NetworkSettingsType {
@@ -11,6 +12,7 @@ export interface NetworkSettingsType {
   showChangeNetworkModal: boolean;
   selectedNetwork?: NetworkConfigType | INetworkOption;
   switchNetwork?: string;
+  /** External add-chain payload before REST origin validation. */
   addChainData?: {name: string; url: string};
   isAddingChain: boolean;
   selectedNode?: INetworkOption;
